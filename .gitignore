@@ -4,3 +4,4 @@
 *.bu
 *.log
 __pycache__
+.directory
