@@ -1,14 +1,30 @@
-from typing import List, Dict, Any
-import pandas as pd
 import json
+from utils import log_init
+from pprint import pformat
+from typing import Any, Dict, List, Optional, Tuple
 
-words = open('wordlist.txt', 'r').read().splitlines()
-points = json.load(open('points.json', 'r'))
-#default_board = pd.read_pickle('default_board.pkl')
+import pandas as pd
+import regex
 
-#board = pd.read_pickle('board.pkl')
-#letters = open('letters.txt', 'r').read().splitlines()
+#todo: profiling
+#check for unused
+#combine stuffz
 
+#log_level = 'DEBUG'
+log_level = 'INFO'
+#log_level = 'WARNING'
+#log_level = 'SUCCESS'
+
+lo = log_init(log_level)
+
+words = open('data/wordlist.txt', 'r').read().splitlines()
+points = json.load(open('data/points.json', 'r'))
+
+default_board = pd.read_pickle('data/default_board.pkl')
+#board = pd.read_pickle('data/board.pkl')
+#letters = open('data/letters.txt', 'r').read().splitlines()
+
+'''
 default_board =pd.DataFrame([
     ['3l','','3w'] + ['']*5 + ['3w','','3l'],
     ['','2w','','','','2w','','','','2w',''],
@@ -24,14 +40,17 @@ default_board =pd.DataFrame([
     ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
     ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
 ])
+'''
 
-print(default_board)
+lo.i('\n{}'.format(default_board))
 
+''' # old1
 board = pd.DataFrame([
     ['']*11,
     ['']*11,
     ['']*11,
     ['']*3 + ['J'] + ['']*7,
+    #[''] + ['X'] + [''] + ['J'] + [''] + ['Y'] + ['']*5,
     ['']*3 + ['O'] + ['']*7,
     ['']*2 + ['P', 'E', 'R', 'V', 'S'] + ['']*4,
     [''] + ['M', 'A', 'S'] + ['', ''] + ['E'] + ['']*4,
@@ -40,9 +59,51 @@ board = pd.DataFrame([
     ['']*7 + ['Y', 'A', 'G', 'I'],
     ['']*8 + ['X', 'I', 'S']
 ])
-print(board)
-letters = ['A', 'E', 'Z', 'L', 'D', '?', 'E']
+'''
+board = [['' for _ in range(15)] for _ in range(15)]
 
+board[2][14] = 'C'
+
+board[3][14] = 'H'
+board[4][13:15] = 'GI'
+
+board[5][9] = 'J'
+board[5][13] = 'R'
+
+board[6][9] = 'O'
+board[6][13:15] = 'ID'
+
+board[7][5:12] = 'THISTLE'
+board[7][13:15] = 'NA'
+
+board[8][4:8] = 'GOAD'
+board[8][9:14] = 'SITED'
+
+board[9][5:7] = 'GO'
+board[9][10:15] = 'TAMER'
+
+board[10][7:11] = 'ECRU'
+board[10][13:15] = 'RE'
+
+board[11][5:8] = 'WAX'
+#board[11][14] = 'P' #old2
+board[11][11:15] = 'WASP'
+
+#new2
+board[12][11] = 'I'
+board[13][11] = 'M'
+board[14][11] = 'P'
+#-new2
+
+board = pd.DataFrame(board)
+
+lo.s('\n{}'.format(board))
+
+#letters = ['A', 'E', 'Z', 'L', 'D', '?', 'E'] # old1
+#letters = list('LTWSOAU') # old2
+letters = list('LTOUFOQ')
+lo.s(letters)
+print()
 
 class Node:
     def __init__(self, x, y, multiplier=None, value=None):
@@ -64,66 +125,118 @@ class Node:
         if self.value:
             self.points = points.get(self.value)[1]
 
-        self.poss_value = None
+        # direc -> word -> idx = letter
+        self.poss_values: Dict[Optional[str], Dict[Optional[str], Dict[Optional[int], str]]] = None
+        self.clear_poss_val()
+        self.poss_blank = False  # todo: fix
 
         self.up = None
         self.left = None
         self.down = None
         self.right = None
-        self.row = None
-        self.col = None
+        self.row: List['Node'] = None
+        self.col: List['Node'] = None
 
-    def poss_points(self):
-        if self.poss_value:
-            pp = points.get(self.poss_value)[1]
+    def has_edge(self) -> bool:
+        return (self.right and self.right.value) or\
+               (self.left and self.left.value) or\
+               (self.up and self.up.value) or\
+               (self.down and self.down.value)
+
+    def clear_poss_val(self):
+        self.poss_values = {
+            'row': {},
+            'col': {},
+        }
+
+    def get_poss_val(self, direc: str = None, word: str = None, idx: int = None) -> Optional[str]:
+        return self.poss_values.get(direc, {}).get(word, {}).get(idx) # ''?
+
+    def set_poss_val(self, direc: str, word: str, idx: int, v: str):
+        pv_info = self.poss_values[direc]
+        if word not in pv_info:
+            pv_info[word] = {idx: v}
+        else:
+            pv_info_word = pv_info[word]
+            if idx not in pv_info_word:
+                pv_info_word[idx] = v
+            else:
+                #todo: Node (12, 7),
+                lo.e('COLLISION! {} to {} for {}:{}'.format(pv_info_word[idx], v, word, idx))
+
+    def poss_points(self, direc: str, word: str, idx: int) -> int:
+        val = self.get_poss_val(direc, word, idx)
+        if val:
+            if self.poss_blank: # todo: fix
+                return 0
+            pp = points.get(val)[1]
             if self.multiplier:
                 mval = self.multiplier[0]
                 mtyp = self.multiplier[1]
                 if mtyp == 'l':
                     pp *= mval
+        elif not self.points:
+            lo.e('ERROR: node has no points or poss points')
+            lo.v('%s %s %s', direc, word, idx)
+            lo.e(self)
+            pp = 0
         else:
             pp = self.points
         return pp
 
-    def row_vals(self):
-        return [rr.value for rr in self.row]
+    #def row_vals(self):
+    #    return [rr.value for rr in self.row]
 
-    def col_vals(self):
-        return [cc.value for cc in self.col]
+    #def col_vals(self):
+    #    return [cc.value for cc in self.col]
 
-    def get_word_nodes(self, typ):
-        if typ == 'row':
+    def get_other_nodes(self, check_typ) -> Tuple[List['Node'], List['Node']]:
+        if check_typ == 'row':
             nodes = self.row
-            bef = nodes[:self.y][::-1]
-            aft = nodes[self.y:]
-        elif typ == 'col':
+            bef = nodes[:self.y]
+            aft = nodes[self.y+1:]
+        elif check_typ == 'col':
             nodes = self.col
-            bef = nodes[:self.x][::-1]
-            aft = nodes[self.x:]
+            bef = nodes[:self.x]
+            aft = nodes[self.x+1:]
         else:
-            return
+            raise Exception('Incorrect check_typ: {}'.format(check_typ))
 
-        word_nodes = []
+        return bef, aft
 
-        for l in bef:
+    def get_word_nodes(
+            self, check_typ: str = None, nodes: Tuple[List['Node'], List['Node']] = None
+    ) -> Tuple[List['Node'], List['Node']]:
+        if nodes is None:
+            if check_typ is None:
+                raise Exception('check_typ required with no nodes given')
+            bef, aft = self.get_other_nodes(check_typ)
+        else:
+            bef, aft = nodes
+
+        nodes_bef: List[Node] = []
+        nodes_aft: List[Node] = []
+
+        for l in bef[::-1]:
             if not l.value:
                 break
             else:
-                word_nodes.insert(0, l)
+                nodes_bef.insert(0, l)
 
         for l in aft:
             if not l.value:
                 break
             else:
-                word_nodes.append(l)
+                nodes_aft.append(l)
 
-        return word_nodes
+        return nodes_bef, nodes_aft
 
-    def get_word(self, typ=None, nodes=None):
-        if nodes is None:
-            nodes = self.get_word_nodes(typ)
 
-        return ''.join([nw.value or nw.poss_value for nw in nodes])
+    def __str__(self):
+        return '<Node>: ({},{}) v: "{}" p: "{}"'.format(self.x, self.y, self.value, self.poss_values)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Board:
@@ -131,7 +244,7 @@ class Board:
         self.default_board = default_board
         self.board = board
 
-        self.nodes = []
+        self.nodes: List[Node] = []
 
         self.setup()
 
@@ -161,195 +274,450 @@ class Board:
             n.row = self.get_row(n.x)
             n.col = self.get_col(n.y)
 
-    def get(self, x, y) -> Node:
-        return next(filter(lambda obj: obj.x == x and obj.y == y, self.nodes), None)
+    def get(self, x, y) -> Optional[Node]:
+        f = filter(lambda obj: obj.x == x and obj.y == y, self.nodes)
+        return next(f, None)
 
-    def get_row(self, x):
+    def get_row(self, x) -> List[Node]:
         return list(filter(lambda obj: obj.x == x, self.nodes))
 
-    def get_col(self, y):
+    def get_col(self, y) -> List[Node]:
         return list(filter(lambda obj: obj.y == y, self.nodes))
 
 
-def can_spell(avail, word, lets=None):
-    if lets is None:
-        lets = letters
-
-    newword = word.replace(avail, '', 1)
-
-    if word == newword or len(newword) == 0:
-        return False
-
-    word_list = list(newword)
-
-    has_blank = 0
-
-    for letter in lets:
-        if len(word_list) == 0:
-            return True
-        elif letter == '?':
-            has_blank += 1
-        elif letter in word_list:
-            word_list.remove(letter)
-
-    for blank in range(has_blank):
-        if len(word_list):
-            word_list.pop()
-
-    return len(word_list) == 0
+def get_word(nodes: List[Node], direc: str = None, word: str = None, idx: int = None) -> str:
+    return ''.join([nw.value or nw.get_poss_val(direc, word, idx) or '' for nw in nodes])
 
 
-def is_valid(typ, this_cell, n_idx, word):
-    word = list(word)
+def check_extra(word_lets: List[str], board_lets: List[Node]) -> Optional[List[str]]:
+    word_lets_len = len(word_lets)
+    lo.d(word_lets)
+    lo.d(board_lets)
+
+    for i, b in enumerate(board_lets):
+        bval = b.value
+        if i >= word_lets_len:
+            if bval:
+                lo.i('failed on new word')
+                return None
+            else:
+                return word_lets
+        elif bval:
+            nl_val = word_lets[i]
+            if nl_val != '_' and bval != nl_val: # todo: ?
+                lo.i('failed on mismatch')
+                return None
+            else:
+                word_lets[i] = '_'
+                lo.i('subbing letter {} for {}'.format(bval, nl_val))
+
+    return word_lets
+
+def can_spell(
+        info: Dict[str, Any],
+        direc: str,
+        word: str
+) -> List[int]:
+    lo.i('---')
+    lo.i(word)
+    lo.i(direc)
+
+    word_l = list(word)
+
+    #bef_nodes = info['word_nodes_bef']
+    #aft_nodes = info['word_nodes_aft']
+    word_bef: str = info['word_bef']
+    word_aft: str = info['word_aft']
+
+    lo.d(word_bef)
+    lo.d(word_aft)
+
+    extra_bef: List[Node] = info['other_nodes_bef']
+    extra_bef_bwrds: List[Node] = info['other_nodes_bef_bwrds']
+    extra_aft: List[Node] = info['other_nodes_aft']
+
+    extra_bef_len = info['other_nodes_bef_len']
+    extra_aft_len = info['other_nodes_aft_len']
+
+    results = []
+
+    reg = info['reg']
+
+    rr = reg.finditer(word, overlapped=True)
+    for r in rr:
+        new_word_list = word_l
+
+        match_st, match_en = r.span()
+        match_bef, match_aft = r.groups()
+
+        lo.d('%s,%s', match_st, match_en)
+        lo.d('%s,%s', match_bef, match_aft)
+
+        match_bef_len = len(match_bef)
+        match_aft_len = len(match_aft)
+
+        idx = match_st
+        if match_bef:
+            idx += match_bef_len
+        
+        new_word_list[match_st:idx] = '_' * match_bef_len
+        new_word_list[idx+1:match_en] = '_' * match_aft_len
+
+        lo.d(new_word_list)
+
+        new_letters_bef = new_word_list[:match_st]
+        #new_letters_mid = new_word_list[match_st:match_en]
+        new_letters_mid = [new_word_list[idx]]
+        #new_letters_aft = new_word_list[match_en:]
+        new_letters_aft = new_word_list[idx + 1:]
+
+        lo.d([v.value or '_' for v in extra_bef]) # lambda?
+        lo.d([v.value or '_' for v in extra_aft])
+        lo.d(new_letters_bef)
+        lo.d(new_letters_mid)
+        lo.d(new_letters_aft)
+
+        if extra_bef_len < len(new_letters_bef):
+            lo.i('not enough space before')
+            continue
+        if extra_aft_len < len(new_letters_aft):
+            lo.i('not enough space after')
+            continue
+
+        lo.i('extra bef')
+        extra_letters_bef = check_extra(new_letters_bef[::-1], extra_bef_bwrds)
+        if extra_letters_bef is None:
+            continue
+        else:
+            extra_letters_bef = extra_letters_bef[::-1]
+
+        lo.i('extra aft')
+        extra_letters_aft = check_extra(new_letters_aft, extra_aft)
+        if extra_letters_aft is None:
+            continue
+
+        new_word_list = extra_letters_bef + new_letters_mid + extra_letters_aft
+        lo.d(new_word_list)
+
+        cut_word_list = [v for v in new_word_list if v != '_']
+
+        if len(cut_word_list) == 0:
+            lo.i('cant use any letters')
+            continue
+
+        has_blank = 0
+
+        for letter in letters:
+            if len(cut_word_list) == 0:
+                break
+            elif letter == '?':
+                has_blank += 1
+            elif letter in cut_word_list:
+                cut_word_list.remove(letter)
+
+        for blank in range(has_blank):
+            if len(cut_word_list):
+                cut_word_list.pop()
+
+        if len(cut_word_list) == 0:
+            results.append(idx)
+
+    return results
+
+chk_dir_dict = {
+    'row': {
+        'bef_dir': 'left',
+        'aft_dir': 'right',
+        'bef_chk': 'up',
+        'aft_chk': 'down',
+        'chk_typ': 'col',
+    },
+    'col': {
+        'bef_dir': 'up',
+        'aft_dir': 'down',
+        'bef_chk': 'left',
+        'aft_chk': 'right',
+        'chk_typ': 'row'
+    }
+}
+
+def _get_side_words(
+        this_cell: Node,
+        bef_letters: List[str],
+        aft_letters: List[str],
+        typ: str,
+        word: str,
+        n_idx: int,
+        chk_typs: dict
+) -> List[List[Node]]:
 
     word_list = []
-    w_bef_list = []
-    w_aft_list = []
+    w_bef_list: List[Node] = []
+    w_aft_list: List[Node] = []
 
-    if typ == 'row':
-        sides = ('left', 'right')
-        bef_typ = 'up'
-        aft_typ = 'down'
-        node_typ = 'col'
-    elif typ == 'col':
-        sides = ('up', 'down')
-        bef_typ = 'left'
-        aft_typ = 'right'
-        node_typ = 'row'
-    else:
-        return False
+    bef_dir = chk_typs['bef_dir']
+    aft_dir = chk_typs['aft_dir']
+    bef_chk = chk_typs['bef_chk']
+    aft_chk = chk_typs['aft_chk']
+    chk_typ = chk_typs['chk_typ']
 
-    for side in sides:
-        cell = this_cell
+    #todo: only if dirs are both blank i guess
+    #break this into new fnc
 
-        if side in ('left', 'up'):
-            let_list = word[:n_idx][::-1]
-            #print('bef', let_list)
-        elif side in ('right', 'down'):
-            let_list = word[n_idx + 1:]
-            #print('aft', let_list)
+    cell_bef: Node = getattr(this_cell, bef_chk)
+    cell_aft: Node = getattr(this_cell, aft_chk)
+
+    bef_nodes: List[Node] = []
+    aft_nodes: List[Node] = []
+
+    cell_word_nodes = this_cell.get_word_nodes(chk_typ)
+
+    if cell_bef and cell_bef.value:
+        bef_nodes = cell_word_nodes[0]
+        oldbefword = get_word(nodes=bef_nodes)
+        lo.i(bef_nodes)
+        lo.i(oldbefword)
+
+    if cell_aft and cell_aft.value:
+        aft_nodes = cell_word_nodes[1]
+        oldaftword = get_word(nodes=aft_nodes)
+        lo.i(aft_nodes)
+        lo.i(oldaftword)
+
+    if bef_nodes or aft_nodes:
+        new_nodes = bef_nodes + [this_cell] + aft_nodes
+        newword = get_word(nodes=new_nodes)
+
+        if newword:
+            if newword not in words:
+                lo.i('New word not valid: %s', newword)
+                return []
+
+            lo.i(newword)
+            lo.i(new_nodes)
+            word_list.append(new_nodes)
+
+    for side in (bef_dir, aft_dir):
+        cell: Node = this_cell
+
+        if side == bef_dir:
+            chk_letters = bef_letters
         else:
-            return False
+            chk_letters = aft_letters
 
-        for let_v in let_list:
-            cell: Node = getattr(cell, side)
-            if not cell:
-                return False
+        for let_v in chk_letters:
+            cell = getattr(cell, side)
+            if not cell:  # these should never happen
+                lo.w('No cell to check')
+                return []
 
             if cell.value:
                 if cell.value != let_v:
-                    return False
+                    lo.w('Cell val does not match')
+                    return []
             else:
-                cell.poss_value = let_v
+                cell.set_poss_val(typ, word, n_idx, let_v)
 
-                cell_bef: Node = getattr(cell, bef_typ)
-                cell_aft: Node = getattr(cell, aft_typ)
+                cell_bef = getattr(cell, bef_chk)
+                cell_aft = getattr(cell, aft_chk)
 
                 bef_nodes = []
                 aft_nodes = []
 
+                cell_word_nodes = cell.get_word_nodes(chk_typ)
+
                 if cell_bef and cell_bef.value:
-                    bef_nodes = cell_bef.get_word_nodes(node_typ)
-                    #oldword = cell_bef.get_word(nodes=oldnodes)
+                    bef_nodes = cell_word_nodes[0]
+                    oldbefword = get_word(nodes=bef_nodes)
+                    lo.i(bef_nodes)
+                    lo.i(oldbefword)
 
                 if cell_aft and cell_aft.value:
-                    aft_nodes = cell_aft.get_word_nodes(node_typ)
-                    #oldword = cell_aft.get_word(nodes=oldnodes)
+                    aft_nodes = cell_word_nodes[1]
+                    oldaftword = get_word(nodes=aft_nodes)
+                    lo.i(aft_nodes)
+                    lo.i(oldaftword)
 
                 if bef_nodes or aft_nodes:
                     new_nodes = bef_nodes + [cell] + aft_nodes
-                    newword = cell.get_word(nodes=new_nodes)
+                    newword = get_word(nodes=new_nodes)
 
                     if newword:
                         if newword not in words:
-                            return False
+                            lo.w('New word not valid: %s', newword)
+                            return []
 
+                        lo.w(newword)
                         word_list.append(new_nodes)
 
-            if side in ('left', 'up'):
+            if side == bef_dir:
                 w_bef_list.insert(0, cell)
-            elif side in ('right', 'down'):
+            else:
                 w_aft_list.append(cell)
 
-    word_list.append(w_bef_list + [this_cell] + w_aft_list)
-
-    # check letters before and new word
-    #?
-    # check letters after and new word
+    combined_word = w_bef_list + [this_cell] + w_aft_list
+    word_list.append(combined_word)
 
     return word_list
 
 
-def word_points(nodelist):
-    let_pts = sum([n.poss_points() for n in nodelist])
-    mults = [n.multiplier[0] for n in nodelist if n.multiplier and n.multiplier[1] == 'w']
+def is_valid(typ: str, this_cell: Node, n_idxs: List[int], word: str) -> List[Tuple[int, List[List[Node]]]]:
+    lo.i(word)
+    word_l = list(word)
+
+    full_list = []
+
+    chk_typs = chk_dir_dict.get(typ)
+    if not chk_typs:
+        raise Exception('Incorrect type for valid check: {}'.format(typ))
+
+    for n_idx in n_idxs:
+        lo.i(n_idx)
+
+        bef_letters = word_l[:n_idx][::-1]
+        cur_letter  = word_l[n_idx]
+        aft_letters = word_l[n_idx + 1:]
+
+        lo.d(bef_letters[::-1])
+        lo.d(cur_letter)
+        lo.d(aft_letters)
+
+        this_cell.set_poss_val(typ, word, n_idx, cur_letter)
+
+        side_words = _get_side_words(this_cell, bef_letters, aft_letters, typ, word, n_idx, chk_typs)
+
+        if side_words:
+            full_list.append((n_idx, side_words))
+
+    return full_list
+
+
+def word_points(nodelist: List[Node], direc: str, word: str, idx: int) -> int:
+    let_pts = sum([n.poss_points(direc, word, idx) for n in nodelist])
+    mults = [n.multiplier[0] for n in nodelist if not n.value and n.multiplier and n.multiplier[1] == 'w']
     word_mult = 1
     for m in mults:
         word_mult *= m
     let_pts *= word_mult
+
+    if len([x for x in nodelist if x.value is None]) == 7:  # todo: or is it all letters?
+        let_pts += 35
+
     return let_pts
 
-
-full = Board()
-
-#full_nodes = [full.get(3,7)]
-full_nodes = full.nodes
 
 #nodelist needs main
 # [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
 word_info: List[Dict[str, Any]] = []
 
+
+full = Board()
+
+full_nodes = full.nodes
+#full_nodes = full.get_row(11) + full.get_row(12)
+
+#full_nodes = [
+#    full.get(12,14),
+#    full.get(6,0),
+#    full.get(8,9),
+#    full.get(2,3)
+#]
+
 for no in full_nodes:
-    nval = no.value
-    if nval:
-        n_r_word = no.get_word(typ='row')
-        n_c_word = no.get_word(typ='col')
+    print()
+    lo.s('**** Node (%s, %s) - #%s / %s\n', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
+    if no and not no.value and no.has_edge():
+        node_row_nodes = no.get_other_nodes('row')
+        node_col_nodes = no.get_other_nodes('col')
+        node_row_words = no.get_word_nodes(nodes=node_row_nodes)
+        node_col_words = no.get_word_nodes(nodes=node_col_nodes)
+
+        node_info = {
+            'row': {
+                'other_nodes_bef': node_row_nodes[0],
+                'other_nodes_bef_bwrds': node_row_nodes[0][::-1],
+                'other_nodes_aft': node_row_nodes[1],
+                'other_nodes_bef_len': len(node_row_nodes[0]),
+                'other_nodes_aft_len': len(node_row_nodes[1]),
+                #'word_nodes_bef': node_row_words[0],
+                #'word_nodes_aft': node_row_words[1],
+                'word_bef': get_word(node_row_words[0]),
+                'word_aft': get_word(node_row_words[1]),
+            },
+            'col': {
+                'other_nodes_bef': node_col_nodes[0],
+                'other_nodes_bef_bwrds': node_col_nodes[0][::-1],
+                'other_nodes_aft': node_col_nodes[1],
+                'other_nodes_bef_len': len(node_col_nodes[0]),
+                'other_nodes_aft_len': len(node_col_nodes[1]),
+                #'word_nodes_bef': node_col_words[0],
+                #'word_nodes_aft': node_col_words[1],
+                'word_bef': get_word(node_col_words[0]),
+                'word_aft': get_word(node_col_words[1]),
+            }
+        }
+
+        lo.d(node_info['row']['word_bef'])
+        lo.d(node_info['row']['word_aft'])
+        lo.d(node_info['col']['word_bef'])
+        lo.d(node_info['col']['word_aft'])
+
+        node_info['row']['reg'] = regex.compile(r'({}).({})'.format(node_info['row']['word_bef'], node_info['row']['word_aft']))
+        node_info['col']['reg'] = regex.compile(r'({}).({})'.format(node_info['col']['word_bef'], node_info['col']['word_aft']))
 
         for w in words:
-            #if w != 'DAZZLE': continue
-            spell_row = can_spell(n_r_word, w)
-            spell_col = can_spell(n_c_word, w)
+        #for w in (
+        #        'AM', 'AS', 'ADE', 'ZZZ',
+        #        #'XIJEY', 'EXIJEY', 'EXIJEYZ', 'XIJEYZ', 'XIJE', 'ETIJEYZ', 'TIJEY', 'TIJEYS'
+        #        #'AMAS', 'AMASMAS', 'AMADXZCEFE', 'AMASET', 'AMASETE', 'AMASETED', 'AMASETO',
+        #        #'KAFE', 'KAFEQ', 'KAFKAFEQKAF', 'KAFIQ', 'AKAFEQ', 'KAFEL', 'AKAF',
+        #        #'DEAL', 'DEALT', 'DEALTS'
+        #):
+            #if w not in ('OUTLAWS', 'AWOL'): continue
+            if w not in ('QUO',): continue #todo not in dictionary?
+            #todo: glouts, has uwa and lgo
 
-            if spell_row or spell_col:
-                idxs = [i for i, v in enumerate(w) if v == nval]
+            print('ok')
 
-                if spell_row:
-                    for idx in idxs:
-                        row_words = is_valid('row', no, idx, w)
-                        if row_words:
-                            print('row: ' + w)
+            for direction in ('row', 'col'):
+                spell_words = can_spell(node_info[direction], direction, w)
+
+                if spell_words:
+                    lo.w('-> canspell: {}: {} - {}'.format(direction, spell_words, w))
+
+                    made_words = is_valid(direction, no, spell_words, w)
+
+                    if made_words:
+                        lo.w('--> YES: %s: %s', direction, w)
+                        # combine words with idxs?
+                        for ro in made_words:
                             tot_pts = 0
-                            for r in row_words:
-                                pts = word_points(r)
+                            d_idx = ro[0]
+                            data = ro[1]
+                            for d in data:
+                                pts = word_points(d, direction, w, d_idx)
                                 tot_pts += pts
-                            print(tot_pts)
-                            word_info.append({
+
+                            this_info = {
                                 'word': w,
                                 'pts': tot_pts,
-                                'nodes': row_words
-                            })
+                                'direction': direction,
+                                'cell_letter': w[d_idx],
+                                'word_idx': d_idx,
+                                'cell_pos': (no.x, no.y),
+                                'cell': no,
+                                'words': [get_word(da, direction, w, d_idx) for da in data],
+                                'nodes': data
+                            }
 
-                        #if is_valid_row(n, before[::-1], after):
-                        #    print(w)
+                            lo.w(this_info)
 
-                if spell_col:
-                    for idx in idxs:
-                        col_words = is_valid('col', no, idx, w)
-                        if col_words:
-                            print('col: ' + w)
-                            tot_pts = 0
-                            for c in col_words:
-                                pts = word_points(c)
-                                tot_pts += pts
-                            print(tot_pts)
-                            word_info.append({
-                                'word': w,
-                                'pts': tot_pts,
-                                'nodes': col_words
-                            })
+                            word_info.append(this_info)
 
-                        #if is_valid_row(n.up, before[::-1], after):
-                        #    print(w)
 
-max_key = max(word_info, key=lambda k: k['pts'])
-print(max_key)
+newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
+print('=========')
+for s in newlist[:10]:
+    lo.s('\n{}'.format(pformat(s)))
+print('---')
+lo.s('\n{}'.format(pformat(newlist[:1])))

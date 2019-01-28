@@ -5,9 +5,9 @@ import os
 import numpy as np
 import pandas
 
-i = 'scr.png'
-o = 'gray.png'
-t = 'template.png'
+i = 'data/scr.png'
+o = 'data/gray.png'
+t = 'data/template.png'
 
 image = cv2.imread(i)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -230,19 +230,14 @@ full = np.insert(full, 7, middle_x, axis=0)
 full = np.insert(full, [7], middle_y, axis=1)
 
 
-
 df_default = pandas.DataFrame(full)
-
-
 
 table = np.array([[''] * 15] * 15)
 
 
-conf = '--psm 8 --oem 0 -c tessedit_char_whitelist="ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
-
 # for ix in range(43):
 for ix in range(225):
-    fold = 'boxes'
+    fold = 'data/boxes'
     fina = '{}.png'.format(ix)
     fint = '{}_nat.png'.format(ix)
     na = '{}/{}'.format(fold, fina)
@@ -310,6 +305,8 @@ for i in range(0, 7 * 107, 107):
 
     text = pytesseract.image_to_string(blet, config=conf)
     print(text)
+    if not text:
+        text = '?'
 
     letters.append(text)
 
@@ -330,5 +327,5 @@ print(df)
 print(df_default)
 
 
-df.to_pickle('board.pkl')
-df_default.to_pickle('default_board.pkl')
+df.to_pickle('data/board.pkl')
+df_default.to_pickle('data/default_board.pkl')
