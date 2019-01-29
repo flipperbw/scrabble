@@ -37,7 +37,6 @@ class LogWrapper:
         else:
             srcfile = __file__
         self._srcfile = os.path.normcase(srcfile)
-        print(self._srcfile)
 
         self.skip_main = skip_main
 
@@ -52,6 +51,7 @@ class LogWrapper:
     def i(self, *_args, **_kwargs): pass
     def n(self, *_args, **_kwargs): pass
     def w(self, *_args, **_kwargs): pass
+
     def s(self, *_args, **_kwargs): pass
     def e(self, *_args, **_kwargs): pass
     def c(self, *_args, **_kwargs): pass
@@ -110,6 +110,9 @@ class LogWrapper:
 
         self.logger.handle(record)
 
+        if not record.msg:
+            sys.stdout.write(ANSI_RESET)
+
     def find_caller(self):
         f = logging.currentframe()
         if f is not None:
@@ -149,13 +152,12 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
 
     field_styles = coloredlogs.DEFAULT_FIELD_STYLES
 
+    #pass maxlen as var forthese fields to set fixed width
     field_styles['levelname'] = {}
     field_styles['process'] = {'color': 'black', 'bright': True}
     field_styles['processName'] = {'color': 'black', 'bright': True}
     field_styles['funcName'] = {'color': 'white', 'faint': True}
     field_styles['lineno'] = {}
-
-    #reset_code = "\033[0m"
 
     form = (
         '{r}'
@@ -163,14 +165,17 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
         '{r}'
     ).format(r=ANSI_RESET, gray=ansi_style(color='black', bright=True))
 
+    #use a formatter to set levelname color = msg (setFormatter?)
+    #https://github.com/xolox/python-coloredlogs/blob/master/coloredlogs/__init__.py#L1113
+
     cl_config = {
+        'logger': logger,
         'level': level,
         'stream': sys.stdout,
         'level_styles': level_styles,
         'field_styles': field_styles,
         'fmt': form
     }
-    # logger=logger,
 
     if 'PYCHARM_HOSTED' in os.environ:
         cl_config['isatty'] = True
@@ -179,6 +184,7 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
 
     return _create_wrapper(logger, skip_main)
 
+def _empty(*_a, **_k): pass
 
 def _create_wrapper(logger, skip_main) -> LogWrapper:
     base = LogWrapper(logger, skip_main)
@@ -187,6 +193,7 @@ def _create_wrapper(logger, skip_main) -> LogWrapper:
         if base.is_enabled(ln):
             setattr(LogWrapper, la, partialmethod(LogWrapper.l, getattr(logging, ln)))
         else:
-            setattr(LogWrapper, la, lambda *_: None)
+            #setattr(LogWrapper, la, lambda *_: None)
+            setattr(LogWrapper, la, _empty)
 
     return base

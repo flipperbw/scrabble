@@ -22,6 +22,8 @@ log_level = 'WARNING'
 
 lo = log_init(log_level)
 
+use_pool = False
+
 words = open('data/wordlist.txt', 'r').read().splitlines()
 points = json.load(open('data/points.json', 'r'))
 
@@ -415,11 +417,12 @@ def can_spell(
         #new_letters_aft = new_word_list[match_en:]
         new_letters_aft = new_word_list[idx + 1:]
 
-        lo.d([v.value or '_' for v in extra_bef]) # lambda?
-        lo.d([v.value or '_' for v in extra_aft])
-        lo.d(new_letters_bef)
-        lo.d(new_letters_mid)
-        lo.d(new_letters_aft)
+        if lo.enabled_levels[10]:
+            lo.d([v.value or '_' for v in extra_bef]) # lambda?
+            lo.d([v.value or '_' for v in extra_aft])
+            lo.d(new_letters_bef)
+            lo.d(new_letters_mid)
+            lo.d(new_letters_aft)
 
         if extra_bef_len < len(new_letters_bef):
             lo.i('not enough space before')
@@ -725,15 +728,15 @@ def main():
 
     full = Board()
 
-    full_nodes = full.nodes
+    #full_nodes = full.nodes
     #full_nodes = full.get_row(6)
 
-    #full_nodes = [
-    #    full.get(6,7),
+    full_nodes = [
+        full.get(6,12),
     #    full.get(6,8),
     #    full.get(8,9),
     #    full.get(2,3)
-    #]
+    ]
 
     for no in full_nodes:
         lo.s('**** Node (%s, %s) - #%s / %s', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
@@ -792,12 +795,19 @@ def main():
             #        #'DEAL', 'DEALT', 'DEALTS'
             #)
 
-            n = max(mp.cpu_count() - 1, 1)
-            #n = 2
-            pool = mp.Pool(n)
-            res = pool.map(run_worker, ((w, no, node_info) for w in word_list))
+            if use_pool:  #todo: is this fixable for profiling?
+                n = max(mp.cpu_count() - 1, 1)
+                #n = 2
+                pool = mp.Pool(n)
+                res = pool.map(run_worker, ((w, no, node_info) for w in word_list))
 
-            [word_info.append(x) for x in res if x]
+                [word_info.append(x) for x in res if x]
+            else:
+                for w in word_list:
+                    res = check_words(w, no, node_info)
+                    if res:
+                        word_info.append(res)
+
 
     newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
     print('=========')
