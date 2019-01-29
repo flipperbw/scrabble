@@ -1,20 +1,24 @@
 import json
-from utils import log_init
+import multiprocessing as mp
 from pprint import pformat
+from timeit import default_timer as timer
 from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
 import regex
 
+from utils import log_init
+
 #todo: profiling
 #check for unused
 #combine stuffz
 #change return [] to yields?
+#if word was found in a different check, skip
 
 #log_level = 'DEBUG'
 #log_level = 'INFO'
-#log_level = 'WARNING'
-log_level = 'SUCCESS'
+log_level = 'WARNING'
+#log_level = 'SUCCESS'
 
 lo = log_init(log_level)
 
@@ -139,7 +143,7 @@ board = pd.DataFrame(board)
 lo.s('\n{}'.format(board))
 
 #letters = ['A', 'E', 'Z', 'L', 'D', '?', 'E'] # old1
-letters = list('LT QUO WSA') # old2
+letters = list('LTOUFOQ') # old2
 #letters = list('UOAFEYR') # old3
 lo.s('\n{}'.format(letters))
 print()
@@ -563,6 +567,7 @@ def _get_side_words(
             else:
                 pos_res = cell.set_poss_val(typ, word, n_idx, let_v) #todo
                 if not pos_res:
+                    lo.w('we already found this, skipping')
                     return []
 
                 cell_bef = getattr(cell, bef_chk)
@@ -654,28 +659,87 @@ def word_points(nodelist: List[Node], direc: str, word: str, idx: int) -> int:
 
     return let_pts
 
+
+def check_words(w: str, no: Node, node_info: Dict[str, Dict[str, Any]]) -> Optional[Dict]:
+    this_info = None
+
+    if '?' in letters or any([l in w for l in letters]):  # todo: faster if str? why gen slower?
+        for direction in ('row', 'col'):
+            spell_words = can_spell(node_info[direction], direction, w)
+
+            if spell_words:
+                lo.w('-> canspell: {}: {} - {}'.format(direction, spell_words, w))
+
+                made_words = is_valid(direction, no, spell_words, w)
+
+                if made_words:
+                    lo.w('--> YES: %s: %s', direction, w)
+                    # combine words with idxs?
+                    for ro in made_words:
+                        tot_pts = 0
+                        d_idx = ro[0]
+                        data = ro[1]
+                        for d in data:
+                            pts = word_points(d, direction, w, d_idx)
+                            tot_pts += pts
+
+                        this_info = {
+                            'word': w,
+                            'pts': tot_pts,
+                            'direction': direction,
+                            'cell_letter': w[d_idx],
+                            'word_idx': d_idx,
+                            'cell_pos': (no.x, no.y),
+                            'cell': no,
+                            'words': [get_word(da, direction, w, d_idx) for da in data],
+                            'nodes': data
+                        }
+
+                        lo.w(this_info)
+                        word_info.append(this_info)
+    return this_info
+
+def run_worker(data: Tuple[str, Node, Dict[str, Dict[str, Any]]]):
+    w = data[0]
+    no = data[1]
+    node_info = data[2]
+
+    if len(w) > 8:
+        word_name = w[:7] + '.'
+    else:
+        word_name = w
+
+    current = mp.current_process()
+    newname = 'w %s' % word_name
+    current.name = newname
+
+    return check_words(w, no, node_info)
+
+
 # todo: nodelist needs main
 # [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
 word_info: List[Dict[str, Any]] = []
 
 def main():
+    start = timer()
+
     full = Board()
 
     full_nodes = full.nodes
-    #full_nodes = full.get_row(7)
+    #full_nodes = full.get_row(6)
 
-    # full_nodes = [
-    #    full.get(4,8),
-    #    full.get(6,0),
+    #full_nodes = [
+    #    full.get(6,7),
+    #    full.get(6,8),
     #    full.get(8,9),
     #    full.get(2,3)
-    # ]
+    #]
 
     for no in full_nodes:
-        print()
-        lo.s('**** Node (%s, %s) - #%s / %s\n', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
+        lo.s('**** Node (%s, %s) - #%s / %s', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
         if no and not no.value and no.has_edge():
-            lo.s('checking...')
+            print()
+            lo.s('checking...\n')
 
             node_row_nodes = no.get_other_nodes('row')
             node_col_nodes = no.get_other_nodes('col')
@@ -719,54 +783,21 @@ def main():
                 node_info['col']['word_bef'], node_info['col']['word_aft'])
             )
 
-            for w in words:
-            #for w in (
+            word_list = words
+            #word_list = (
             #        'AM', 'AS', 'ADE', 'ZZZ',
             #        #'XIJEY', 'EXIJEY', 'EXIJEYZ', 'XIJEYZ', 'XIJE', 'ETIJEYZ', 'TIJEY', 'TIJEYS'
             #        #'AMAS', 'AMASMAS', 'AMADXZCEFE', 'AMASET', 'AMASETE', 'AMASETED', 'AMASETO',
             #        #'KAFE', 'KAFEQ', 'KAFKAFEQKAF', 'KAFIQ', 'AKAFEQ', 'KAFEL', 'AKAF',
             #        #'DEAL', 'DEALT', 'DEALTS'
-            #):
-                #if w not in ('OUTLAWS', 'AWOL'): continue
-                #if w not in ('QUO',): continue #todo not in dictionary?
-                #todo: glouts, has uwa and lgo
+            #)
 
-                if '?' in letters or any([l in w for l in letters]):  #todo: faster if str? why gen slower?
-                    for direction in ('row', 'col'):
-                        spell_words = can_spell(node_info[direction], direction, w)
+            n = max(mp.cpu_count() - 1, 1)
+            #n = 2
+            pool = mp.Pool(n)
+            res = pool.map(run_worker, ((w, no, node_info) for w in word_list))
 
-                        if spell_words:
-                            lo.w('-> canspell: {}: {} - {}'.format(direction, spell_words, w))
-
-                            made_words = is_valid(direction, no, spell_words, w)
-
-                            if made_words:
-                                lo.w('--> YES: %s: %s', direction, w)
-                                # combine words with idxs?
-                                for ro in made_words:
-                                    tot_pts = 0
-                                    d_idx = ro[0]
-                                    data = ro[1]
-                                    for d in data:
-                                        pts = word_points(d, direction, w, d_idx)
-                                        tot_pts += pts
-
-                                    this_info = {
-                                        'word': w,
-                                        'pts': tot_pts,
-                                        'direction': direction,
-                                        'cell_letter': w[d_idx],
-                                        'word_idx': d_idx,
-                                        'cell_pos': (no.x, no.y),
-                                        'cell': no,
-                                        'words': [get_word(da, direction, w, d_idx) for da in data],
-                                        'nodes': data
-                                    }
-
-                                    lo.w(this_info)
-
-                                    word_info.append(this_info)
-
+            [word_info.append(x) for x in res if x]
 
     newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
     print('=========')
@@ -774,6 +805,9 @@ def main():
         lo.s('\n{}'.format(pformat(s)))
     print('---')
     lo.s('\n{}'.format(pformat(newlist[:1])))
+
+    end = timer()
+    print('\nTime: {}'.format(round(end - start, 1)))
 
 if __name__ == '__main__':
     main()

@@ -4,6 +4,7 @@ import sys
 
 import coloredlogs
 from functools import partialmethod
+from humanfriendly.terminal import ANSI_RESET, ansi_style
 import logging
 import verboselogs
 
@@ -25,7 +26,6 @@ levels = {
     #'ALWAYS':   'a',  # 60 # todo
 }
 
-
 class LogWrapper:
     def __init__(self, logger, skip_main):
         self.logger = logger
@@ -37,6 +37,7 @@ class LogWrapper:
         else:
             srcfile = __file__
         self._srcfile = os.path.normcase(srcfile)
+        print(self._srcfile)
 
         self.skip_main = skip_main
 
@@ -99,9 +100,14 @@ class LogWrapper:
         if exc_info:
             if not isinstance(exc_info, tuple):
                 exc_info = sys.exc_info()
+
         record = self.logger.makeRecord(
             self.logger.name, level, fn, lno, msg, args, exc_info, func, extra
         )
+
+        if record.processName == 'MainProcess':
+            record.processName = 'Main'
+
         self.logger.handle(record)
 
     def find_caller(self):
@@ -143,16 +149,26 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
 
     field_styles = coloredlogs.DEFAULT_FIELD_STYLES
 
-    field_styles['lineno'] = {}
-    field_styles['funcName'] = {'color': 'white', 'faint': True}
     field_styles['levelname'] = {}
+    field_styles['process'] = {'color': 'black', 'bright': True}
+    field_styles['processName'] = {'color': 'black', 'bright': True}
+    field_styles['funcName'] = {'color': 'white', 'faint': True}
+    field_styles['lineno'] = {}
+
+    #reset_code = "\033[0m"
+
+    form = (
+        '{r}'
+        '(%(levelname).1s) %(processName)-10.10s {gray}|{r} %(funcName)16s [%(lineno)3d]:  %(message)s'
+        '{r}'
+    ).format(r=ANSI_RESET, gray=ansi_style(color='black', bright=True))
 
     cl_config = {
         'level': level,
         'stream': sys.stdout,
         'level_styles': level_styles,
         'field_styles': field_styles,
-        'fmt': '[%(lineno)3d] %(funcName)15s (%(levelname)s):  %(message)s',
+        'fmt': form
     }
     # logger=logger,
 
