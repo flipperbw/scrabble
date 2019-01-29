@@ -3,6 +3,7 @@ import os
 import sys
 
 import coloredlogs
+from functools import partialmethod
 import logging
 import verboselogs
 
@@ -24,100 +25,35 @@ levels = {
     #'ALWAYS':   'a',  # 60 # todo
 }
 
-if hasattr(sys, 'frozen'): #support for py2exe
-    _srcfile = "logging%s__init__%s" % (os.sep, __file__[-4:])
-elif __file__[-4:].lower() in ['.pyc', '.pyo']:
-    _srcfile = __file__[:-4] + '.py'
-else:
-    _srcfile = __file__
-_srcfile = os.path.normcase(_srcfile)
 
-def log_init(level, **_kwargs):
-    if isinstance(level, str):
-        level = level.upper()
-        #if level = 'DISABLED': # todo
-
-        if not hasattr(logging, level):
-            raise TypeError('Invalid level requested: {}'.format(level))
-
-    level_styles = {}
-
-    for ln, la in levels.items():
-        logging.addLevelName(LogWrapper.get_level(ln), la)
-        level_styles[la] = coloredlogs.DEFAULT_LEVEL_STYLES[ln.lower()]
-
-    #logger = logging.getLogger(__name__)
-    logger = verboselogs.VerboseLogger(__name__)
-
-    # 'black', 'blue', 'cyan', 'green', 'magenta', 'red', 'white' and 'yellow'
-    level_styles['i'] = {'color': 'cyan'}
-    level_styles['info'] = {'color': 'cyan'}
-
-    field_styles = coloredlogs.DEFAULT_FIELD_STYLES
-
-    field_styles['lineno'] = {}
-    field_styles['funcName'] = {'color': 'white', 'faint': True}
-    field_styles['levelname'] = {}
-
-    cl_config = {
-        'level': level,
-        'stream': sys.stdout,
-        'level_styles': level_styles,
-        'field_styles': field_styles,
-        'fmt': '[%(lineno)3d] %(funcName)15s (%(levelname)s):  %(message)s',
-    }
-    # logger=logger,
-
-    if 'PYCHARM_HOSTED' in os.environ:
-        cl_config['isatty'] = True
-
-    coloredlogs.install(**cl_config)
-
-    return LogWrapper(logger)
-
-def empty(*_args, **_kwargs):
-    return
-
-class LogWrapper(object):
-    def __init__(self, logger):
+class LogWrapper:
+    def __init__(self, logger, skip_main):
         self.logger = logger
+
+        if hasattr(sys, 'frozen'):  # support for py2exe
+            srcfile = "logging%s__init__%s" % (os.sep, __file__[-4:])
+        elif __file__[-4:].lower() in ['.pyc', '.pyo']:
+            srcfile = __file__[:-4] + '.py'
+        else:
+            srcfile = __file__
+        self._srcfile = os.path.normcase(srcfile)
+
+        self.skip_main = skip_main
 
         self.enabled_levels: Dict[int, bool] = {}
         for ln in levels:
             got_level = self.get_level(ln)
             self.enabled_levels[got_level] = self.logger.isEnabledFor(got_level)
 
-
-    def x(self, msg, *args, **kwargs):
-        self._log(verboselogs.SPAM, msg, args, **kwargs)
-
-    def d(self, msg, *args, **kwargs):
-        if not self._is_enabled(10):
-            self.d = empty
-            return
-        self._log(logging.DEBUG, msg, args, **kwargs)
-
-    def v(self, msg, *args, **kwargs):
-        self._log(verboselogs.VERBOSE, msg, args, **kwargs)
-
-    def i(self, msg, *args, **kwargs):
-        self._log(logging.INFO, msg, args, **kwargs)
-
-    def n(self, msg, *args, **kwargs):
-        self._log(verboselogs.NOTICE, msg, args, **kwargs)
-
-    def w(self, msg, *args, **kwargs):
-        self._log(logging.WARNING, msg, args, **kwargs)
-
-    def s(self, msg, *args, **kwargs):
-        self._log(verboselogs.SUCCESS, msg, args, **kwargs)
-
-    def e(self, msg, *args, **kwargs):
-        self._log(logging.ERROR, msg, args, **kwargs)
-
-    def c(self, msg, *args, **kwargs):
-        self._log(logging.CRITICAL, msg, args, **kwargs)
-
+    def x(self, *_args, **_kwargs): pass
+    def d(self, *_args, **_kwargs): pass
+    def v(self, *_args, **_kwargs): pass
+    def i(self, *_args, **_kwargs): pass
+    def n(self, *_args, **_kwargs): pass
+    def w(self, *_args, **_kwargs): pass
+    def s(self, *_args, **_kwargs): pass
+    def e(self, *_args, **_kwargs): pass
+    def c(self, *_args, **_kwargs): pass
 
     def l(self, level, msg, *args, **kwargs):
         self._log(level, msg, args, **kwargs)
@@ -147,10 +83,13 @@ class LogWrapper(object):
             self.enabled_levels[level] = new_level
             return new_level
 
+    def _empty(*_args, **_kwargs):
+        return
+
     def _log(self, level, msg, args, exc_info=None, extra=None):
         if not self._is_enabled(level):
             return
-        if _srcfile:
+        if self._srcfile:
             try:
                 fn, lno, func = self.find_caller()
             except ValueError:
@@ -165,8 +104,7 @@ class LogWrapper(object):
         )
         self.logger.handle(record)
 
-    @staticmethod
-    def find_caller():
+    def find_caller(self):
         f = logging.currentframe()
         if f is not None:
             f = f.f_back
@@ -174,9 +112,65 @@ class LogWrapper(object):
         while hasattr(f, "f_code"):
             co = f.f_code
             filename = os.path.normcase(co.co_filename)
-            if filename == _srcfile:
+            if filename == self._srcfile or (self.skip_main and co.co_name == 'main'):
                 f = f.f_back
                 continue
             rv = (co.co_filename, f.f_lineno, co.co_name)
             break
         return rv
+
+
+def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
+    if isinstance(level, str):
+        level = level.upper()
+        #if level = 'DISABLED': # todo
+
+        if not hasattr(logging, level):
+            raise TypeError('Invalid level requested: {}'.format(level))
+
+    level_styles = {}
+
+    for ln, la in levels.items():
+        logging.addLevelName(LogWrapper.get_level(ln), la)
+        level_styles[la] = coloredlogs.DEFAULT_LEVEL_STYLES[ln.lower()]
+
+    #logger = logging.getLogger(__name__)
+    logger = verboselogs.VerboseLogger(__name__)
+
+    # 'black', 'blue', 'cyan', 'green', 'magenta', 'red', 'white' and 'yellow'  # todo
+    level_styles['i'] = {'color': 'cyan'}
+    level_styles['info'] = {'color': 'cyan'}
+
+    field_styles = coloredlogs.DEFAULT_FIELD_STYLES
+
+    field_styles['lineno'] = {}
+    field_styles['funcName'] = {'color': 'white', 'faint': True}
+    field_styles['levelname'] = {}
+
+    cl_config = {
+        'level': level,
+        'stream': sys.stdout,
+        'level_styles': level_styles,
+        'field_styles': field_styles,
+        'fmt': '[%(lineno)3d] %(funcName)15s (%(levelname)s):  %(message)s',
+    }
+    # logger=logger,
+
+    if 'PYCHARM_HOSTED' in os.environ:
+        cl_config['isatty'] = True
+
+    coloredlogs.install(**cl_config)
+
+    return _create_wrapper(logger, skip_main)
+
+
+def _create_wrapper(logger, skip_main) -> LogWrapper:
+    base = LogWrapper(logger, skip_main)
+
+    for ln, la in levels.items():
+        if base.is_enabled(ln):
+            setattr(LogWrapper, la, partialmethod(LogWrapper.l, getattr(logging, ln)))
+        else:
+            setattr(LogWrapper, la, lambda *_: None)
+
+    return base

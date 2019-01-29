@@ -9,38 +9,39 @@ import regex
 #todo: profiling
 #check for unused
 #combine stuffz
+#change return [] to yields?
 
 #log_level = 'DEBUG'
-log_level = 'INFO'
+#log_level = 'INFO'
 #log_level = 'WARNING'
-#log_level = 'SUCCESS'
+log_level = 'SUCCESS'
 
 lo = log_init(log_level)
 
 words = open('data/wordlist.txt', 'r').read().splitlines()
 points = json.load(open('data/points.json', 'r'))
 
-default_board = pd.read_pickle('data/default_board.pkl')
 #board = pd.read_pickle('data/board.pkl')
 #letters = open('data/letters.txt', 'r').read().splitlines()
 
-'''
-default_board =pd.DataFrame([
-    ['3l','','3w'] + ['']*5 + ['3w','','3l'],
-    ['','2w','','','','2w','','','','2w',''],
-    ['3w','','2l','','2l','','2l','','2l','','3w'],
-    ['','','','3l','','','','3l','','',''],
-    ['','','2l','','','','','','2l','',''],
-
-    ['','2w','','','','x','','','','2w',''],
-
-    ['', '', '2l', '', '', '', '', '', '2l', '', ''],
-    ['', '', '', '3l', '', '', '', '3l', '', '', ''],
-    ['3w', '', '2l', '', '2l', '', '2l', '', '2l', '', '3w'],
-    ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
-    ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
-])
-'''
+#todo small vs big board
+default_board = pd.read_pickle('data/default_board.pkl')
+# small board
+# default_board =pd.DataFrame([
+#     ['3l','','3w'] + ['']*5 + ['3w','','3l'],
+#     ['','2w','','','','2w','','','','2w',''],
+#     ['3w','','2l','','2l','','2l','','2l','','3w'],
+#     ['','','','3l','','','','3l','','',''],
+#     ['','','2l','','','','','','2l','',''],
+#
+#     ['','2w','','','','x','','','','2w',''],
+#
+#     ['', '', '2l', '', '', '', '', '', '2l', '', ''],
+#     ['', '', '', '3l', '', '', '', '3l', '', '', ''],
+#     ['3w', '', '2l', '', '2l', '', '2l', '', '2l', '', '3w'],
+#     ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
+#     ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
+# ])
 
 lo.i('\n{}'.format(default_board))
 
@@ -60,8 +61,12 @@ board = pd.DataFrame([
     ['']*8 + ['X', 'I', 'S']
 ])
 '''
-board = [['' for _ in range(15)] for _ in range(15)]
 
+#todo small vs big board
+board = [['' for _ in range(15)] for _ in range(15)]
+#board = [['' for _ in range(11)] for _ in range(11)]
+
+#old2
 board[2][14] = 'C'
 
 board[3][14] = 'H'
@@ -86,23 +91,57 @@ board[10][7:11] = 'ECRU'
 board[10][13:15] = 'RE'
 
 board[11][5:8] = 'WAX'
-#board[11][14] = 'P' #old2
 board[11][11:15] = 'WASP'
 
-#new2
 board[12][11] = 'I'
 board[13][11] = 'M'
 board[14][11] = 'P'
-#-new2
+
+'''
+#old3
+board[3][7] = 'Z'
+board[4][7] = 'E'
+board[5][7] = 'S'
+board[6][7] = 'T'
+board[7][7] = 'S'
+
+board[9][7]  = 'T'
+board[10][7] = 'O'
+board[11][7] = 'U'
+board[12][7] = 'C'
+board[13][7] = 'H'
+
+board[5][5] = 'C'
+board[6][5] = 'O'
+board[7][5] = 'N'
+board[8][5] = 'E'
+board[9][5] = 'D'
+
+board[7][3:8] = 'BENDS'
+
+board[8][0:4] = 'JANE'
+
+board[9][0] = 'I'
+board[9][5:10] = 'DETOX'
+
+board[10][0] = 'V'
+board[11][0] = 'E'
+board[12][0:3] = 'SOL'
+
+board[12][7] = 'C'
+board[12][9] = 'U'
+
+board[13][3:10] = 'WRIGHTS'
+'''
 
 board = pd.DataFrame(board)
 
 lo.s('\n{}'.format(board))
 
 #letters = ['A', 'E', 'Z', 'L', 'D', '?', 'E'] # old1
-#letters = list('LTWSOAU') # old2
-letters = list('LTOUFOQ')
-lo.s(letters)
+letters = list('LT QUO WSA') # old2
+#letters = list('UOAFEYR') # old3
+lo.s('\n{}'.format(letters))
 print()
 
 class Node:
@@ -152,7 +191,7 @@ class Node:
     def get_poss_val(self, direc: str = None, word: str = None, idx: int = None) -> Optional[str]:
         return self.poss_values.get(direc, {}).get(word, {}).get(idx) # ''?
 
-    def set_poss_val(self, direc: str, word: str, idx: int, v: str):
+    def set_poss_val(self, direc: str, word: str, idx: int, v: str) -> bool:
         pv_info = self.poss_values[direc]
         if word not in pv_info:
             pv_info[word] = {idx: v}
@@ -161,8 +200,11 @@ class Node:
             if idx not in pv_info_word:
                 pv_info_word[idx] = v
             else:
-                #todo: Node (12, 7),
-                lo.e('COLLISION! {} to {} for {}:{}'.format(pv_info_word[idx], v, word, idx))
+                #todo: Node (12, 7) old2,
+                #lo.e('COLLISION! {} to {} for {}:{}'.format(pv_info_word[idx], v, word, idx))
+                #we already parsed this word
+                return False
+        return True
 
     def poss_points(self, direc: str, word: str, idx: int) -> int:
         val = self.get_poss_val(direc, word, idx)
@@ -322,8 +364,6 @@ def can_spell(
     lo.i(word)
     lo.i(direc)
 
-    word_l = list(word)
-
     #bef_nodes = info['word_nodes_bef']
     #aft_nodes = info['word_nodes_aft']
     word_bef: str = info['word_bef']
@@ -345,7 +385,7 @@ def can_spell(
 
     rr = reg.finditer(word, overlapped=True)
     for r in rr:
-        new_word_list = word_l
+        new_word_list = list(word)
 
         match_st, match_en = r.span()
         match_bef, match_aft = r.groups()
@@ -384,14 +424,14 @@ def can_spell(
             lo.i('not enough space after')
             continue
 
-        lo.i('extra bef')
+        lo.d('extra bef')
         extra_letters_bef = check_extra(new_letters_bef[::-1], extra_bef_bwrds)
         if extra_letters_bef is None:
             continue
         else:
             extra_letters_bef = extra_letters_bef[::-1]
 
-        lo.i('extra aft')
+        lo.d('extra aft')
         extra_letters_aft = check_extra(new_letters_aft, extra_aft)
         if extra_letters_aft is None:
             continue
@@ -407,6 +447,9 @@ def can_spell(
 
         has_blank = 0
 
+        if word == 'VOODOOS':
+            lo.i(cut_word_list)
+
         for letter in letters:
             if len(cut_word_list) == 0:
                 break
@@ -421,6 +464,8 @@ def can_spell(
 
         if len(cut_word_list) == 0:
             results.append(idx)
+        else:
+            lo.d('reject')
 
     return results
 
@@ -474,19 +519,19 @@ def _get_side_words(
 
     if cell_bef and cell_bef.value:
         bef_nodes = cell_word_nodes[0]
-        oldbefword = get_word(nodes=bef_nodes)
+        oldbefword = get_word(bef_nodes, typ, word, n_idx)
         lo.i(bef_nodes)
         lo.i(oldbefword)
 
     if cell_aft and cell_aft.value:
         aft_nodes = cell_word_nodes[1]
-        oldaftword = get_word(nodes=aft_nodes)
+        oldaftword = get_word(aft_nodes, typ, word, n_idx)
         lo.i(aft_nodes)
         lo.i(oldaftword)
 
     if bef_nodes or aft_nodes:
         new_nodes = bef_nodes + [this_cell] + aft_nodes
-        newword = get_word(nodes=new_nodes)
+        newword = get_word(new_nodes, typ, word, n_idx)
 
         if newword:
             if newword not in words:
@@ -516,7 +561,9 @@ def _get_side_words(
                     lo.w('Cell val does not match')
                     return []
             else:
-                cell.set_poss_val(typ, word, n_idx, let_v)
+                pos_res = cell.set_poss_val(typ, word, n_idx, let_v) #todo
+                if not pos_res:
+                    return []
 
                 cell_bef = getattr(cell, bef_chk)
                 cell_aft = getattr(cell, aft_chk)
@@ -528,19 +575,19 @@ def _get_side_words(
 
                 if cell_bef and cell_bef.value:
                     bef_nodes = cell_word_nodes[0]
-                    oldbefword = get_word(nodes=bef_nodes)
+                    oldbefword = get_word(bef_nodes, typ, word, n_idx)
                     lo.i(bef_nodes)
                     lo.i(oldbefword)
 
                 if cell_aft and cell_aft.value:
                     aft_nodes = cell_word_nodes[1]
-                    oldaftword = get_word(nodes=aft_nodes)
+                    oldaftword = get_word(aft_nodes, typ, word, n_idx)
                     lo.i(aft_nodes)
                     lo.i(oldaftword)
 
                 if bef_nodes or aft_nodes:
                     new_nodes = bef_nodes + [cell] + aft_nodes
-                    newword = get_word(nodes=new_nodes)
+                    newword = get_word(new_nodes, typ, word, n_idx)
 
                     if newword:
                         if newword not in words:
@@ -582,7 +629,9 @@ def is_valid(typ: str, this_cell: Node, n_idxs: List[int], word: str) -> List[Tu
         lo.d(cur_letter)
         lo.d(aft_letters)
 
-        this_cell.set_poss_val(typ, word, n_idx, cur_letter)
+        pos_res = this_cell.set_poss_val(typ, word, n_idx, cur_letter) # todo
+        if not pos_res:
+            continue
 
         side_words = _get_side_words(this_cell, bef_letters, aft_letters, typ, word, n_idx, chk_typs)
 
@@ -605,119 +654,126 @@ def word_points(nodelist: List[Node], direc: str, word: str, idx: int) -> int:
 
     return let_pts
 
-
-#nodelist needs main
+# todo: nodelist needs main
 # [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
 word_info: List[Dict[str, Any]] = []
 
+def main():
+    full = Board()
 
-full = Board()
+    full_nodes = full.nodes
+    #full_nodes = full.get_row(7)
 
-full_nodes = full.nodes
-#full_nodes = full.get_row(11) + full.get_row(12)
+    # full_nodes = [
+    #    full.get(4,8),
+    #    full.get(6,0),
+    #    full.get(8,9),
+    #    full.get(2,3)
+    # ]
 
-#full_nodes = [
-#    full.get(12,14),
-#    full.get(6,0),
-#    full.get(8,9),
-#    full.get(2,3)
-#]
+    for no in full_nodes:
+        print()
+        lo.s('**** Node (%s, %s) - #%s / %s\n', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
+        if no and not no.value and no.has_edge():
+            lo.s('checking...')
 
-for no in full_nodes:
-    print()
-    lo.s('**** Node (%s, %s) - #%s / %s\n', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
-    if no and not no.value and no.has_edge():
-        node_row_nodes = no.get_other_nodes('row')
-        node_col_nodes = no.get_other_nodes('col')
-        node_row_words = no.get_word_nodes(nodes=node_row_nodes)
-        node_col_words = no.get_word_nodes(nodes=node_col_nodes)
+            node_row_nodes = no.get_other_nodes('row')
+            node_col_nodes = no.get_other_nodes('col')
+            node_row_words = no.get_word_nodes(nodes=node_row_nodes)
+            node_col_words = no.get_word_nodes(nodes=node_col_nodes)
 
-        node_info = {
-            'row': {
-                'other_nodes_bef': node_row_nodes[0],
-                'other_nodes_bef_bwrds': node_row_nodes[0][::-1],
-                'other_nodes_aft': node_row_nodes[1],
-                'other_nodes_bef_len': len(node_row_nodes[0]),
-                'other_nodes_aft_len': len(node_row_nodes[1]),
-                #'word_nodes_bef': node_row_words[0],
-                #'word_nodes_aft': node_row_words[1],
-                'word_bef': get_word(node_row_words[0]),
-                'word_aft': get_word(node_row_words[1]),
-            },
-            'col': {
-                'other_nodes_bef': node_col_nodes[0],
-                'other_nodes_bef_bwrds': node_col_nodes[0][::-1],
-                'other_nodes_aft': node_col_nodes[1],
-                'other_nodes_bef_len': len(node_col_nodes[0]),
-                'other_nodes_aft_len': len(node_col_nodes[1]),
-                #'word_nodes_bef': node_col_words[0],
-                #'word_nodes_aft': node_col_words[1],
-                'word_bef': get_word(node_col_words[0]),
-                'word_aft': get_word(node_col_words[1]),
+            node_info = {
+                'row': {
+                    'other_nodes_bef': node_row_nodes[0],
+                    'other_nodes_bef_bwrds': node_row_nodes[0][::-1],
+                    'other_nodes_aft': node_row_nodes[1],
+                    'other_nodes_bef_len': len(node_row_nodes[0]),
+                    'other_nodes_aft_len': len(node_row_nodes[1]),
+                    #'word_nodes_bef': node_row_words[0],
+                    #'word_nodes_aft': node_row_words[1],
+                    'word_bef': get_word(node_row_words[0]),
+                    'word_aft': get_word(node_row_words[1]),
+                },
+                'col': {
+                    'other_nodes_bef': node_col_nodes[0],
+                    'other_nodes_bef_bwrds': node_col_nodes[0][::-1],
+                    'other_nodes_aft': node_col_nodes[1],
+                    'other_nodes_bef_len': len(node_col_nodes[0]),
+                    'other_nodes_aft_len': len(node_col_nodes[1]),
+                    #'word_nodes_bef': node_col_words[0],
+                    #'word_nodes_aft': node_col_words[1],
+                    'word_bef': get_word(node_col_words[0]),
+                    'word_aft': get_word(node_col_words[1]),
+                }
             }
-        }
 
-        lo.d(node_info['row']['word_bef'])
-        lo.d(node_info['row']['word_aft'])
-        lo.d(node_info['col']['word_bef'])
-        lo.d(node_info['col']['word_aft'])
+            lo.d(node_info['row']['word_bef'])
+            lo.d(node_info['row']['word_aft'])
+            lo.d(node_info['col']['word_bef'])
+            lo.d(node_info['col']['word_aft'])
 
-        node_info['row']['reg'] = regex.compile(r'({}).({})'.format(node_info['row']['word_bef'], node_info['row']['word_aft']))
-        node_info['col']['reg'] = regex.compile(r'({}).({})'.format(node_info['col']['word_bef'], node_info['col']['word_aft']))
+            node_info['row']['reg'] = regex.compile(r'({}).({})'.format(
+                node_info['row']['word_bef'], node_info['row']['word_aft'])
+            )
+            node_info['col']['reg'] = regex.compile(r'({}).({})'.format(
+                node_info['col']['word_bef'], node_info['col']['word_aft'])
+            )
 
-        for w in words:
-        #for w in (
-        #        'AM', 'AS', 'ADE', 'ZZZ',
-        #        #'XIJEY', 'EXIJEY', 'EXIJEYZ', 'XIJEYZ', 'XIJE', 'ETIJEYZ', 'TIJEY', 'TIJEYS'
-        #        #'AMAS', 'AMASMAS', 'AMADXZCEFE', 'AMASET', 'AMASETE', 'AMASETED', 'AMASETO',
-        #        #'KAFE', 'KAFEQ', 'KAFKAFEQKAF', 'KAFIQ', 'AKAFEQ', 'KAFEL', 'AKAF',
-        #        #'DEAL', 'DEALT', 'DEALTS'
-        #):
-            #if w not in ('OUTLAWS', 'AWOL'): continue
-            if w not in ('QUO',): continue #todo not in dictionary?
-            #todo: glouts, has uwa and lgo
+            for w in words:
+            #for w in (
+            #        'AM', 'AS', 'ADE', 'ZZZ',
+            #        #'XIJEY', 'EXIJEY', 'EXIJEYZ', 'XIJEYZ', 'XIJE', 'ETIJEYZ', 'TIJEY', 'TIJEYS'
+            #        #'AMAS', 'AMASMAS', 'AMADXZCEFE', 'AMASET', 'AMASETE', 'AMASETED', 'AMASETO',
+            #        #'KAFE', 'KAFEQ', 'KAFKAFEQKAF', 'KAFIQ', 'AKAFEQ', 'KAFEL', 'AKAF',
+            #        #'DEAL', 'DEALT', 'DEALTS'
+            #):
+                #if w not in ('OUTLAWS', 'AWOL'): continue
+                #if w not in ('QUO',): continue #todo not in dictionary?
+                #todo: glouts, has uwa and lgo
 
-            print('ok')
+                if '?' in letters or any([l in w for l in letters]):  #todo: faster if str? why gen slower?
+                    for direction in ('row', 'col'):
+                        spell_words = can_spell(node_info[direction], direction, w)
 
-            for direction in ('row', 'col'):
-                spell_words = can_spell(node_info[direction], direction, w)
+                        if spell_words:
+                            lo.w('-> canspell: {}: {} - {}'.format(direction, spell_words, w))
 
-                if spell_words:
-                    lo.w('-> canspell: {}: {} - {}'.format(direction, spell_words, w))
+                            made_words = is_valid(direction, no, spell_words, w)
 
-                    made_words = is_valid(direction, no, spell_words, w)
+                            if made_words:
+                                lo.w('--> YES: %s: %s', direction, w)
+                                # combine words with idxs?
+                                for ro in made_words:
+                                    tot_pts = 0
+                                    d_idx = ro[0]
+                                    data = ro[1]
+                                    for d in data:
+                                        pts = word_points(d, direction, w, d_idx)
+                                        tot_pts += pts
 
-                    if made_words:
-                        lo.w('--> YES: %s: %s', direction, w)
-                        # combine words with idxs?
-                        for ro in made_words:
-                            tot_pts = 0
-                            d_idx = ro[0]
-                            data = ro[1]
-                            for d in data:
-                                pts = word_points(d, direction, w, d_idx)
-                                tot_pts += pts
+                                    this_info = {
+                                        'word': w,
+                                        'pts': tot_pts,
+                                        'direction': direction,
+                                        'cell_letter': w[d_idx],
+                                        'word_idx': d_idx,
+                                        'cell_pos': (no.x, no.y),
+                                        'cell': no,
+                                        'words': [get_word(da, direction, w, d_idx) for da in data],
+                                        'nodes': data
+                                    }
 
-                            this_info = {
-                                'word': w,
-                                'pts': tot_pts,
-                                'direction': direction,
-                                'cell_letter': w[d_idx],
-                                'word_idx': d_idx,
-                                'cell_pos': (no.x, no.y),
-                                'cell': no,
-                                'words': [get_word(da, direction, w, d_idx) for da in data],
-                                'nodes': data
-                            }
+                                    lo.w(this_info)
 
-                            lo.w(this_info)
-
-                            word_info.append(this_info)
+                                    word_info.append(this_info)
 
 
-newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
-print('=========')
-for s in newlist[:10]:
-    lo.s('\n{}'.format(pformat(s)))
-print('---')
-lo.s('\n{}'.format(pformat(newlist[:1])))
+    newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
+    print('=========')
+    for s in newlist[:10]:
+        lo.s('\n{}'.format(pformat(s)))
+    print('---')
+    lo.s('\n{}'.format(pformat(newlist[:1])))
+
+if __name__ == '__main__':
+    main()
