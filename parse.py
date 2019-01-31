@@ -2,57 +2,64 @@ import json
 import multiprocessing as mp
 from pprint import pformat
 from timeit import default_timer as timer
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Iterator
 
 import pandas as pd
 import regex
 
 from utils import log_init
 
+# -- TODOS
+
 #todo: profiling
-#check for unused
 #combine stuffz
 #change return [] to yields?
 #if word was found in a different check, skip
 
-#log_level = 'DEBUG'
-#log_level = 'INFO'
-log_level = 'WARNING'
-#log_level = 'SUCCESS'
+# --
+# -- GLOBALS
 
-lo = log_init(log_level)
+# - logging
 
-use_pool = False
+#LOG_LEVEL = 'DEBUG'
+#LOG_LEVEL = 'INFO'
+#LOG_LEVEL = 'WARNING'
+LOG_LEVEL = 'SUCCESS'
 
-words = open('data/wordlist.txt', 'r').read().splitlines()
-points = json.load(open('data/points.json', 'r'))
+# - pool
 
-#board = pd.read_pickle('data/board.pkl')
-#letters = open('data/letters.txt', 'r').read().splitlines()
+USE_POOL = True
+
+# - default board
 
 #todo small vs big board
-default_board = pd.read_pickle('data/default_board.pkl')
-# small board
-# default_board =pd.DataFrame([
-#     ['3l','','3w'] + ['']*5 + ['3w','','3l'],
-#     ['','2w','','','','2w','','','','2w',''],
-#     ['3w','','2l','','2l','','2l','','2l','','3w'],
-#     ['','','','3l','','','','3l','','',''],
-#     ['','','2l','','','','','','2l','',''],
-#
-#     ['','2w','','','','x','','','','2w',''],
-#
-#     ['', '', '2l', '', '', '', '', '', '2l', '', ''],
-#     ['', '', '', '3l', '', '', '', '3l', '', '', ''],
-#     ['3w', '', '2l', '', '2l', '', '2l', '', '2l', '', '3w'],
-#     ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
-#     ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
-# ])
+DEFAULT_BOARD = pd.read_pickle('data/default_board.pkl')
 
-lo.i('\n{}'.format(default_board))
+#small board
+'''
+DEFAULT_BOARD =pd.DataFrame([
+    ['3l','','3w'] + ['']*5 + ['3w','','3l'],
+    ['','2w','','','','2w','','','','2w',''],
+    ['3w','','2l','','2l','','2l','','2l','','3w'],
+    ['','','','3l','','','','3l','','',''],
+    ['','','2l','','','','','','2l','',''],
+
+    ['','2w','','','','x','','','','2w',''],
+
+    ['', '', '2l', '', '', '', '', '', '2l', '', ''],
+    ['', '', '', '3l', '', '', '', '3l', '', '', ''],
+    ['3w', '', '2l', '', '2l', '', '2l', '', '2l', '', '3w'],
+    ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
+    ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
+])
+'''
+
+# - game board
+
+#BOARD = pd.read_pickle('data/board.pkl')
 
 ''' # old1
-board = pd.DataFrame([
+BOARD = pd.DataFrame([
     ['']*11,
     ['']*11,
     ['']*11,
@@ -69,89 +76,95 @@ board = pd.DataFrame([
 '''
 
 #todo small vs big board
-board = [['' for _ in range(15)] for _ in range(15)]
-#board = [['' for _ in range(11)] for _ in range(11)]
-
-#old2
-board[2][14] = 'C'
-
-board[3][14] = 'H'
-board[4][13:15] = 'GI'
-
-board[5][9] = 'J'
-board[5][13] = 'R'
-
-board[6][9] = 'O'
-board[6][13:15] = 'ID'
-
-board[7][5:12] = 'THISTLE'
-board[7][13:15] = 'NA'
-
-board[8][4:8] = 'GOAD'
-board[8][9:14] = 'SITED'
-
-board[9][5:7] = 'GO'
-board[9][10:15] = 'TAMER'
-
-board[10][7:11] = 'ECRU'
-board[10][13:15] = 'RE'
-
-board[11][5:8] = 'WAX'
-board[11][11:15] = 'WASP'
-
-board[12][11] = 'I'
-board[13][11] = 'M'
-board[14][11] = 'P'
+#BOARD = [['' for _ in range(15)] for _ in range(15)]
+#BOARD = [['' for _ in range(11)] for _ in range(11)]
 
 '''
-#old3
-board[3][7] = 'Z'
-board[4][7] = 'E'
-board[5][7] = 'S'
-board[6][7] = 'T'
-board[7][7] = 'S'
-
-board[9][7]  = 'T'
-board[10][7] = 'O'
-board[11][7] = 'U'
-board[12][7] = 'C'
-board[13][7] = 'H'
-
-board[5][5] = 'C'
-board[6][5] = 'O'
-board[7][5] = 'N'
-board[8][5] = 'E'
-board[9][5] = 'D'
-
-board[7][3:8] = 'BENDS'
-
-board[8][0:4] = 'JANE'
-
-board[9][0] = 'I'
-board[9][5:10] = 'DETOX'
-
-board[10][0] = 'V'
-board[11][0] = 'E'
-board[12][0:3] = 'SOL'
-
-board[12][7] = 'C'
-board[12][9] = 'U'
-
-board[13][3:10] = 'WRIGHTS'
+BOARD = [ #n1
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','C'],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','H'],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','g','I'],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ','j',' ',' ',' ','r',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ','o',' ',' ',' ','i','d'],
+    [' ',' ',' ',' ',' ','t','h','i','s','t','l','e',' ','n','a'],
+    [' ',' ',' ',' ','g','o','a','d',' ','s','i','t','e','d',' '],
+    [' ',' ',' ',' ',' ','g','o',' ',' ',' ','t','a','m','e','r'],
+    [' ',' ',' ',' ',' ',' ',' ','e','c','r','u',' ',' ','r','e'],
+    [' ',' ',' ','f',' ','w','a','x',' ',' ',' ','w','a','s','p'],
+    [' ','N','E','O','N','E','D',' ',' ',' ','q','i',' ',' ',' '],
+    [' ',' ',' ','i',' ',' ',' ',' ','d','r','u','m','s',' ',' '],
+    [' ',' ',' ','l',' ',' ',' ',' ',' ',' ','o','p',' ',' ',' ']
+]
 '''
 
-board = pd.DataFrame(board)
+#'''
+BOARD = [ #n2
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ',' ','R',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ','Z','A',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ',' ',' ','E','T',' ',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ','c',' ','S','I','R',' ',' ',' ',' ',' '],
+    [' ',' ',' ',' ',' ','o',' ','T','O','E',' ',' ',' ',' ',' '],
+    [' ',' ',' ','b','e','n','D','S',' ','L',' ',' ',' ',' ',' '],
+    ['j','a','n','e',' ','e',' ',' ',' ','A',' ',' ',' ',' ',' '],
+    ['i',' ',' ',' ',' ','d','e','t','o','x',' ',' ',' ',' ',' '],
+    ['v',' ',' ',' ',' ',' ',' ','o',' ',' ',' ',' ',' ',' ',' '],
+    ['e',' ',' ',' ',' ',' ',' ','u',' ',' ',' ',' ',' ',' ',' '],
+    ['s','o','l',' ',' ',' ',' ','c',' ','u',' ',' ',' ',' ',' '],
+    [' ',' ',' ','w','r','i','g','h','t','s',' ',' ',' ',' ',' '],
+    ['a','f','r','o',' ','T','I','E',' ',' ',' ',' ',' ',' ',' ']
+]
+#'''
 
-lo.s('\n{}'.format(board))
+'''
+BOARD = [ #s1
+    list('  C        '),
+    list(' fE  c     '),
+    list('laMp o     '),
+    list(' de  j     '),
+    list(' en  o     '),
+    list('  TAXIS    '),
+    list('     n     '),
+    list('glazes     '),
+    list('r b        '),
+    list('e u        '),
+    list('y townish  '),
+]
+'''
+#BOARD = [[' ' for _ in range(11)] for _ in range(11)]
 
-#letters = ['A', 'E', 'Z', 'L', 'D', '?', 'E'] # old1
-letters = list('LTOUFOQ') # old2
-#letters = list('UOAFEYR') # old3
-lo.s('\n{}'.format(letters))
+BOARD = pd.DataFrame(BOARD)
+
+# - letters
+
+#LETTERS = open('data/letters.txt', 'r').read().splitlines()
+#LETTERS = list('TOTHBYU')
+LETTERS = list('UEROYYK')
+
+# - words
+
+WORDS = open('data/wordlist.txt').read().splitlines()
+#WORDS = (
+#    'ABUT',
+#)
+
+# --
+
+POINTS = json.load(open('data/points.json'))
+
+lo = log_init(LOG_LEVEL, skip_main=False)
+
+lo.i('\n{}'.format(DEFAULT_BOARD))
+lo.s('\n{}'.format(BOARD))
+lo.s('\n{}'.format(LETTERS))
 print()
 
+
 class Node:
-    def __init__(self, x, y, multiplier=None, value=None):
+    def __init__(self, x: int, y: int, multiplier: Optional[str] = None, value: Optional[str] = None):
         self.x = x
         self.y = y
 
@@ -168,33 +181,29 @@ class Node:
         self.points = None
 
         if self.value:
-            self.points = points.get(self.value)[1]
+            self.points = POINTS.get(self.value)[1]
 
         # direc -> word -> idx = letter
-        self.poss_values: Dict[Optional[str], Dict[Optional[str], Dict[Optional[int], str]]] = None
-        self.clear_poss_val()
+        self.poss_values: Dict[str, Dict[str, Dict[int, str]]] = {
+            'row': {},
+            'col': {}
+        }
         self.poss_blank = False  # todo: fix
 
-        self.up = None
-        self.left = None
-        self.down = None
-        self.right = None
-        self.row: List['Node'] = None
-        self.col: List['Node'] = None
+        self.up: Optional[Node] = None
+        self.left: Optional[Node] = None
+        self.down: Optional[Node] = None
+        self.right: Optional[Node] = None
+        self.row: List['Node'] = []
+        self.col: List['Node'] = []
 
     def has_edge(self) -> bool:
-        return (self.right and self.right.value) or\
-               (self.left and self.left.value) or\
-               (self.up and self.up.value) or\
-               (self.down and self.down.value)
+        return (isinstance(self.left, Node) and self.left.value is not None) or \
+               (isinstance(self.right, Node) and self.right.value is not None) or \
+               (isinstance(self.up, Node) and self.up.value is not None) or \
+               (isinstance(self.down, Node) and self.down.value is not None)
 
-    def clear_poss_val(self):
-        self.poss_values = {
-            'row': {},
-            'col': {},
-        }
-
-    def get_poss_val(self, direc: str = None, word: str = None, idx: int = None) -> Optional[str]:
+    def get_poss_val(self, direc: str, word: str, idx: int) -> Optional[str]:
         return self.poss_values.get(direc, {}).get(word, {}).get(idx) # ''?
 
     def set_poss_val(self, direc: str, word: str, idx: int, v: str) -> bool:
@@ -206,9 +215,7 @@ class Node:
             if idx not in pv_info_word:
                 pv_info_word[idx] = v
             else:
-                #todo: Node (12, 7) old2,
-                #lo.e('COLLISION! {} to {} for {}:{}'.format(pv_info_word[idx], v, word, idx))
-                #we already parsed this word
+                lo.v('Already parsed {} at {}'.format(word, idx))
                 return False
         return True
 
@@ -217,14 +224,14 @@ class Node:
         if val:
             if self.poss_blank: # todo: fix
                 return 0
-            pp = points.get(val)[1]
+            pp = POINTS.get(val)[1]
             if self.multiplier:
                 mval = self.multiplier[0]
                 mtyp = self.multiplier[1]
                 if mtyp == 'l':
                     pp *= mval
         elif not self.points:
-            lo.e('ERROR: node has no points or poss points')
+            lo.e('Node has no points or poss points')
             lo.v('%s %s %s', direc, word, idx)
             lo.e(self)
             pp = 0
@@ -232,23 +239,18 @@ class Node:
             pp = self.points
         return pp
 
-    #def row_vals(self):
-    #    return [rr.value for rr in self.row]
-
-    #def col_vals(self):
-    #    return [cc.value for cc in self.col]
-
-    def get_other_nodes(self, check_typ) -> Tuple[List['Node'], List['Node']]:
+    def get_other_nodes(self, check_typ: str) -> Tuple[List['Node'], List['Node']]:
         if check_typ == 'row':
             nodes = self.row
-            bef = nodes[:self.y]
-            aft = nodes[self.y+1:]
+            slice_val = self.y
         elif check_typ == 'col':
             nodes = self.col
-            bef = nodes[:self.x]
-            aft = nodes[self.x+1:]
+            slice_val = self.x
         else:
             raise Exception('Incorrect check_typ: {}'.format(check_typ))
+
+        bef = nodes[:slice_val]
+        aft = nodes[slice_val+1:]
 
         return bef, aft
 
@@ -288,30 +290,41 @@ class Node:
 
 
 class Board:
-    def __init__(self):
-        self.default_board = default_board
-        self.board = board
+    def __init__(self, board_mults: pd.DataFrame = DEFAULT_BOARD, game_board: pd.DataFrame = BOARD):
+        self.default_board = board_mults
+        self.board = game_board
+
+        self.new_game = False
 
         self.nodes: List[Node] = []
 
-        self.setup()
+        bvals: List[List[Optional[str]]] = self.board.values
 
-    def setup(self):
-        bvals = board.values
-
-        for board_r in default_board.iterrows():
-            r_num = board_r[0]
-            r_data = board_r[1]
+        for board_r in self.default_board.iterrows():
+            r_num: int = board_r[0]
+            r_data: List[Optional[str]] = board_r[1]
             b_row = bvals[r_num]
-            for c_num, cell in enumerate(r_data):
+            for c_num, d_cell in enumerate(r_data):
+
                 board_val = b_row[c_num]
 
                 if not board_val:
                     board_val = None
-                if not cell:
-                    cell = None
+                else:
+                    board_val = board_val.strip()
+                    if not board_val:
+                        board_val = None
+                    else:
+                        board_val = board_val.upper()
 
-                node = Node(r_num, c_num, cell, board_val)
+                if not d_cell:
+                    d_cell = None
+                else:
+                    d_cell = d_cell.strip()
+                    if d_cell == 'x' and not board_val:
+                        self.new_game = True
+
+                node = Node(r_num, c_num, d_cell, board_val)
                 self.nodes.append(node)
 
         for n in self.nodes:
@@ -322,18 +335,21 @@ class Board:
             n.row = self.get_row(n.x)
             n.col = self.get_col(n.y)
 
-    def get(self, x, y) -> Optional[Node]:
+    def get(self, x: int, y: int) -> Optional[Node]:
         f = filter(lambda obj: obj.x == x and obj.y == y, self.nodes)
         return next(f, None)
 
-    def get_row(self, x) -> List[Node]:
-        return list(filter(lambda obj: obj.x == x, self.nodes))
+    def get_by_attr(self, attr: str, v: Any) -> Iterator:
+        return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
 
-    def get_col(self, y) -> List[Node]:
-        return list(filter(lambda obj: obj.y == y, self.nodes))
+    def get_row(self, x: int) -> List[Node]:
+        return list(self.get_by_attr('x', x))
+
+    def get_col(self, y: int) -> List[Node]:
+        return list(self.get_by_attr('y', y))
 
 
-def get_word(nodes: List[Node], direc: str = None, word: str = None, idx: int = None) -> str:
+def get_word(nodes: List[Node], direc: str, word: str, idx: int) -> str:
     return ''.join([nw.value or nw.get_poss_val(direc, word, idx) or '' for nw in nodes])
 
 
@@ -342,9 +358,12 @@ def check_extra(word_lets: List[str], board_lets: List[Node]) -> Optional[List[s
     lo.d(word_lets)
     lo.d(board_lets)
 
+    if not word_lets_len:
+        return word_lets
+
     for i, b in enumerate(board_lets):
         bval = b.value
-        if i >= word_lets_len:
+        if i == word_lets_len:
             if bval:
                 lo.i('failed on new word')
                 return None
@@ -361,17 +380,11 @@ def check_extra(word_lets: List[str], board_lets: List[Node]) -> Optional[List[s
 
     return word_lets
 
-def can_spell(
-        info: Dict[str, Any],
-        direc: str,
-        word: str
-) -> List[int]:
+def can_spell(info: Dict[str, Any], direc: str, word: str) -> List[int]:
     lo.i('---')
     lo.i(word)
     lo.i(direc)
 
-    #bef_nodes = info['word_nodes_bef']
-    #aft_nodes = info['word_nodes_aft']
     word_bef: str = info['word_bef']
     word_aft: str = info['word_aft']
 
@@ -454,10 +467,7 @@ def can_spell(
 
         has_blank = 0
 
-        if word == 'VOODOOS':
-            lo.i(cut_word_list)
-
-        for letter in letters:
+        for letter in LETTERS:
             if len(cut_word_list) == 0:
                 break
             elif letter == '?':
@@ -465,7 +475,7 @@ def can_spell(
             elif letter in cut_word_list:
                 cut_word_list.remove(letter)
 
-        for blank in range(has_blank):
+        for _ in range(has_blank):
             if len(cut_word_list):
                 cut_word_list.pop()
 
@@ -541,7 +551,7 @@ def _get_side_words(
         newword = get_word(new_nodes, typ, word, n_idx)
 
         if newword:
-            if newword not in words:
+            if newword not in WORDS:
                 lo.i('New word not valid: %s', newword)
                 return []
 
@@ -598,11 +608,11 @@ def _get_side_words(
                     newword = get_word(new_nodes, typ, word, n_idx)
 
                     if newword:
-                        if newword not in words:
+                        if newword not in WORDS:
                             lo.w('New word not valid: %s', newword)
                             return []
 
-                        lo.w(newword)
+                        lo.i(newword)
                         word_list.append(new_nodes)
 
             if side == bef_dir:
@@ -663,10 +673,10 @@ def word_points(nodelist: List[Node], direc: str, word: str, idx: int) -> int:
     return let_pts
 
 
-def check_words(w: str, no: Node, node_info: Dict[str, Dict[str, Any]]) -> Optional[Dict]:
+def check_words(w: str, no: Node, node_info: Dict[str, Dict[str, Any]]) -> Optional[dict]:
     this_info = None
 
-    if '?' in letters or any([l in w for l in letters]):  # todo: faster if str? why gen slower?
+    if '?' in LETTERS or any([l in w for l in LETTERS]):  # todo: faster if str? why gen slower?
         for direction in ('row', 'col'):
             spell_words = can_spell(node_info[direction], direction, w)
 
@@ -719,102 +729,99 @@ def run_worker(data: Tuple[str, Node, Dict[str, Dict[str, Any]]]):
     return check_words(w, no, node_info)
 
 
+def check_node(no: Optional[Node]):
+    if not no: return
+
+    print()
+    lo.s('checking...\n')
+
+    node_info = {}
+    for t in ('row', 'col'):
+        node_nodes = no.get_other_nodes(t)
+        node_words = no.get_word_nodes(nodes=node_nodes)
+
+        node_info[t] = {
+            'other_nodes_bef': node_nodes[0],
+            'other_nodes_bef_bwrds': node_nodes[0][::-1],
+            'other_nodes_aft': node_nodes[1],
+            'other_nodes_bef_len': len(node_nodes[0]),
+            'other_nodes_aft_len': len(node_nodes[1]),
+            #'word_nodes_bef': node_words[0],
+            #'word_nodes_aft': node_words[1],
+            'word_bef': get_word(node_words[0], '', '', -1),
+            'word_aft': get_word(node_words[1], '', '', -1),
+        }
+
+        lo.d(node_info[t]['word_bef'])
+        lo.d(node_info[t]['word_aft'])
+
+        node_info[t]['reg'] = regex.compile(r'({}).({})'.format(
+            node_info[t]['word_bef'], node_info[t]['word_aft'])
+        )
+
+    if USE_POOL:  #todo: is this fixable for profiling?
+        n = max(mp.cpu_count() - 1, 1)
+        #n = 2
+        pool = mp.Pool(n)
+        pool_res = pool.map(run_worker, ((w, no, node_info) for w in WORDS))
+
+        for x in pool_res:
+            if x:
+                word_info.append(x)
+    else:
+        for w in WORDS:
+            res = check_words(w, no, node_info)
+            if res:
+                word_info.append(res)
+
 # todo: nodelist needs main
 # [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
 word_info: List[Dict[str, Any]] = []
 
-def main():
+def main() -> None:
     start = timer()
 
     full = Board()
 
-    #full_nodes = full.nodes
-    #full_nodes = full.get_row(6)
-
-    full_nodes = [
-        full.get(6,12),
-    #    full.get(6,8),
-    #    full.get(8,9),
-    #    full.get(2,3)
-    ]
-
-    for no in full_nodes:
-        lo.s('**** Node (%s, %s) - #%s / %s', no.x, no.y, full_nodes.index(no) + 1, len(full_nodes))
-        if no and not no.value and no.has_edge():
-            print()
-            lo.s('checking...\n')
-
-            node_row_nodes = no.get_other_nodes('row')
-            node_col_nodes = no.get_other_nodes('col')
-            node_row_words = no.get_word_nodes(nodes=node_row_nodes)
-            node_col_words = no.get_word_nodes(nodes=node_col_nodes)
-
-            node_info = {
-                'row': {
-                    'other_nodes_bef': node_row_nodes[0],
-                    'other_nodes_bef_bwrds': node_row_nodes[0][::-1],
-                    'other_nodes_aft': node_row_nodes[1],
-                    'other_nodes_bef_len': len(node_row_nodes[0]),
-                    'other_nodes_aft_len': len(node_row_nodes[1]),
-                    #'word_nodes_bef': node_row_words[0],
-                    #'word_nodes_aft': node_row_words[1],
-                    'word_bef': get_word(node_row_words[0]),
-                    'word_aft': get_word(node_row_words[1]),
-                },
-                'col': {
-                    'other_nodes_bef': node_col_nodes[0],
-                    'other_nodes_bef_bwrds': node_col_nodes[0][::-1],
-                    'other_nodes_aft': node_col_nodes[1],
-                    'other_nodes_bef_len': len(node_col_nodes[0]),
-                    'other_nodes_aft_len': len(node_col_nodes[1]),
-                    #'word_nodes_bef': node_col_words[0],
-                    #'word_nodes_aft': node_col_words[1],
-                    'word_bef': get_word(node_col_words[0]),
-                    'word_aft': get_word(node_col_words[1]),
-                }
-            }
-
-            lo.d(node_info['row']['word_bef'])
-            lo.d(node_info['row']['word_aft'])
-            lo.d(node_info['col']['word_bef'])
-            lo.d(node_info['col']['word_aft'])
-
-            node_info['row']['reg'] = regex.compile(r'({}).({})'.format(
-                node_info['row']['word_bef'], node_info['row']['word_aft'])
+    if full.new_game:
+        lo.s(' = Fresh game = ')
+        no = next(full.get_by_attr('is_start', True), None)
+        if no:
+            lo.s('**** Node (%2s, %2s: %1s) - #1 / 1',
+                 no.x, no.y, no.value or '_'
             )
-            node_info['col']['reg'] = regex.compile(r'({}).({})'.format(
-                node_info['col']['word_bef'], node_info['col']['word_aft'])
-            )
+            check_node(no)
 
-            word_list = words
-            #word_list = (
-            #        'AM', 'AS', 'ADE', 'ZZZ',
-            #        #'XIJEY', 'EXIJEY', 'EXIJEYZ', 'XIJEYZ', 'XIJE', 'ETIJEYZ', 'TIJEY', 'TIJEYS'
-            #        #'AMAS', 'AMASMAS', 'AMADXZCEFE', 'AMASET', 'AMASETE', 'AMASETED', 'AMASETO',
-            #        #'KAFE', 'KAFEQ', 'KAFKAFEQKAF', 'KAFIQ', 'AKAFEQ', 'KAFEL', 'AKAF',
-            #        #'DEAL', 'DEALT', 'DEALTS'
-            #)
+    else:
+        # -- specify nodes
 
-            if use_pool:  #todo: is this fixable for profiling?
-                n = max(mp.cpu_count() - 1, 1)
-                #n = 2
-                pool = mp.Pool(n)
-                res = pool.map(run_worker, ((w, no, node_info) for w in word_list))
+        full_nodes = full.nodes
+        #full_nodes = full.get_row(6)
 
-                [word_info.append(x) for x in res if x]
-            else:
-                for w in word_list:
-                    res = check_words(w, no, node_info)
-                    if res:
-                        word_info.append(res)
+        #full_nodes = []
+        #full_nodes.append(full.get(8,2))
 
+        # --
 
-    newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
+        for no in full_nodes:
+            if no:
+                lo.s('**** Node (%2s, %2s: %1s) - #%s / %s',
+                     no.x, no.y, no.value or '_', full_nodes.index(no) + 1, len(full_nodes)
+                )
+                if not no.value and no.has_edge():
+                    check_node(no)
+
+    #todo print completed board with colors
     print('=========')
-    for s in newlist[:10]:
-        lo.s('\n{}'.format(pformat(s)))
-    print('---')
-    lo.s('\n{}'.format(pformat(newlist[:1])))
+    if word_info:
+        newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
+
+        for s in newlist[:10][::-1]:
+            lo.s('\n{}'.format(pformat(s)))
+
+        print('---')
+        best = newlist[:1]
+        lo.s('\n{}'.format(pformat(best)))
 
     end = timer()
     print('\nTime: {}'.format(round(end - start, 1)))

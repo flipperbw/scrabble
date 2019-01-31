@@ -1,12 +1,12 @@
-from typing import Dict
+import logging
 import os
 import sys
+from functools import partialmethod
+from typing import Dict
 
 import coloredlogs
-from functools import partialmethod
-from humanfriendly.terminal import ANSI_RESET, ansi_style
-import logging
 import verboselogs
+from humanfriendly.terminal import ANSI_RESET, ansi_style
 
 #logger.d("Houston, we have a %s", "thorny problem", exc_info=1)
 
@@ -26,8 +26,9 @@ levels = {
     #'ALWAYS':   'a',  # 60 # todo
 }
 
+
 class LogWrapper:
-    def __init__(self, logger, skip_main):
+    def __init__(self, logger: logging.Logger, skip_main: bool):
         self.logger = logger
 
         if hasattr(sys, 'frozen'):  # support for py2exe
@@ -51,12 +52,11 @@ class LogWrapper:
     def i(self, *_args, **_kwargs): pass
     def n(self, *_args, **_kwargs): pass
     def w(self, *_args, **_kwargs): pass
-
     def s(self, *_args, **_kwargs): pass
     def e(self, *_args, **_kwargs): pass
     def c(self, *_args, **_kwargs): pass
 
-    def l(self, level, msg, *args, **kwargs):
+    def l(self, level: int, msg, *args, **kwargs):
         self._log(level, msg, args, **kwargs)
 
     @staticmethod
@@ -87,7 +87,7 @@ class LogWrapper:
     def _empty(*_args, **_kwargs):
         return
 
-    def _log(self, level, msg, args, exc_info=None, extra=None):
+    def _log(self, level: int, msg, args, exc_info=None, extra=None):
         if not self._is_enabled(level):
             return
         if self._srcfile:
@@ -110,10 +110,10 @@ class LogWrapper:
 
         self.logger.handle(record)
 
-        if not record.msg:
-            sys.stdout.write(ANSI_RESET)
+        #if not record.msg: # TODO
+        #    sys.stdout.write(ANSI_RESET)
 
-    def find_caller(self):
+    def find_caller(self) -> tuple:
         f = logging.currentframe()
         if f is not None:
             f = f.f_back
@@ -121,7 +121,8 @@ class LogWrapper:
         while hasattr(f, "f_code"):
             co = f.f_code
             filename = os.path.normcase(co.co_filename)
-            if filename == self._srcfile or (self.skip_main and co.co_name == 'main'):
+            if filename == self._srcfile or \
+                    (self.skip_main and co.co_name == 'main'):
                 f = f.f_back
                 continue
             rv = (co.co_filename, f.f_lineno, co.co_name)
@@ -147,8 +148,10 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
     logger = verboselogs.VerboseLogger(__name__)
 
     # 'black', 'blue', 'cyan', 'green', 'magenta', 'red', 'white' and 'yellow'  # todo
-    level_styles['i'] = {'color': 'cyan'}
-    level_styles['info'] = {'color': 'cyan'}
+    level_styles['i'] = {'color': 'cyan', 'bright': True}
+    level_styles['info'] = {'color': 'cyan', 'bright': True}
+    level_styles['d'] = {'color': 'cyan'}
+    level_styles['debug'] = {'color': 'cyan'}
 
     field_styles = coloredlogs.DEFAULT_FIELD_STYLES
 
@@ -184,7 +187,10 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
 
     return _create_wrapper(logger, skip_main)
 
-def _empty(*_a, **_k): pass
+
+def _empty(*_a, **_k) -> None:
+    pass
+
 
 def _create_wrapper(logger, skip_main) -> LogWrapper:
     base = LogWrapper(logger, skip_main)
