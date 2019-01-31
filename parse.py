@@ -5,7 +5,6 @@ from timeit import default_timer as timer
 from typing import Any, Dict, List, Optional, Tuple, Iterator
 
 import pandas as pd
-import regex
 
 from utils import log_init
 
@@ -15,6 +14,7 @@ from utils import log_init
 #combine stuffz
 #change return [] to yields?
 #if word was found in a different check, skip
+#change to f'' formatting
 
 # --
 # -- GLOBALS
@@ -22,13 +22,14 @@ from utils import log_init
 # - logging
 
 #LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'VERBOSE'
 #LOG_LEVEL = 'INFO'
 #LOG_LEVEL = 'WARNING'
-LOG_LEVEL = 'SUCCESS'
+#LOG_LEVEL = 'SUCCESS'
 
 # - pool
 
-USE_POOL = True
+USE_POOL = False
 
 # - default board
 
@@ -179,16 +180,18 @@ class Node:
 
         self.value = value
         self.points = None
-
         if self.value:
             self.points = POINTS.get(self.value)[1]
 
-        # direc -> word -> idx = letter
-        self.poss_values: Dict[str, Dict[str, Dict[int, str]]] = {
+        # word -> idx = blank
+        #self.poss_words = {}
+
+        # direc -> word -> idx = is_blank
+        # letter is just word[idx]
+        self.poss_values: Dict[str, Dict[str, Dict[int, bool]]] = {
             'row': {},
             'col': {}
         }
-        self.poss_blank = False  # todo: fix
 
         self.up: Optional[Node] = None
         self.left: Optional[Node] = None
@@ -203,41 +206,90 @@ class Node:
                (isinstance(self.up, Node) and self.up.value is not None) or \
                (isinstance(self.down, Node) and self.down.value is not None)
 
-    def get_poss_val(self, direc: str, word: str, idx: int) -> Optional[str]:
-        return self.poss_values.get(direc, {}).get(word, {}).get(idx) # ''?
 
-    def set_poss_val(self, direc: str, word: str, idx: int, v: str) -> bool:
+    def _get_poss_word_dict(self, direc: str, word: str) -> Dict[int, bool]:
+        return self.poss_values.get(direc, {}).get(word, {})
+
+    def has_poss_val(self, direc: str, word: str, idx: int) -> bool:
+        return idx in self._get_poss_word_dict(direc, word)
+
+    def get_poss_val(self, direc: str, word: str, idx: int) -> Optional[bool]:
+        return self._get_poss_word_dict(direc, word).get(idx) # ''?
+
+    def set_poss_val(self, direc: str, word: str, idx: int, is_blank: bool = False) -> bool:
         pv_info = self.poss_values[direc]
         if word not in pv_info:
-            pv_info[word] = {idx: v}
+            pv_info[word] = {idx: is_blank}
         else:
             pv_info_word = pv_info[word]
             if idx not in pv_info_word:
-                pv_info_word[idx] = v
+                pv_info_word[idx] = is_blank
             else:
                 lo.v('Already parsed {} at {}'.format(word, idx))
                 return False
         return True
 
-    def poss_points(self, direc: str, word: str, idx: int) -> int:
-        val = self.get_poss_val(direc, word, idx)
-        if val:
-            if self.poss_blank: # todo: fix
+
+    def get_points(
+            self, nodes: List['Node'], direc: str, word: str, idx: int, new_words: Optional[List[Dict]] = None, **_kw
+    ) -> int:  # todo combine this optional thing into one type
+
+        if _kw:
+            lo.e(f'Extra kw args: {_kw}')
+
+        pts = self._points_from_nodes(nodes, direc, word, idx)
+
+        if new_words:
+            for nw_dict in new_words:
+                pts += self._points_from_nodes(**nw_dict)
+
+        if len([x for x in nodes if x.value is None]) == 7:  # todo: or is it all letters?
+            pts += 35
+
+        return pts
+
+    @staticmethod
+    def _points_from_nodes(nodes: List['Node'], direc: str, word: str, idx: int, **_kw) -> int:
+        if _kw:
+            lo.e(f'Extra kw args: {_kw}')
+        pts = 0
+        word_mult = 1
+        for n in nodes:
+            if n.value:
+                pts += (n.points or 0)
+            else:
+                pts += n._letter_points(direc, word, idx)
+                n_mult = n.multiplier
+                if n_mult and n_mult[1] == 'w':
+                    word_mult *= n_mult[0]
+
+        pts *= word_mult
+
+        return pts
+
+    def _letter_points(self, direc: str, word: str, idx: int) -> int:
+        if self.points: #unnec
+            return self.points
+
+        is_blank = self.get_poss_val(direc, word, idx) # i guess i could use has_poss here
+        if is_blank is not None:
+            if is_blank:
                 return 0
-            pp = POINTS.get(val)[1]
+
+            pp = POINTS.get(word[idx])[1]
             if self.multiplier:
                 mval = self.multiplier[0]
                 mtyp = self.multiplier[1]
                 if mtyp == 'l':
                     pp *= mval
-        elif not self.points:
-            lo.e('Node has no points or poss points')
-            lo.v('%s %s %s', direc, word, idx)
-            lo.e(self)
-            pp = 0
-        else:
-            pp = self.points
-        return pp
+            return pp
+
+        lo.e(f'Node has no points or poss points for ({direc}, {word}, {idx})')
+        lo.w(f'node -> {self}')
+        #should probably raise bigger error here
+
+        return 0
+
 
     def get_other_nodes(self, check_typ: str) -> Tuple[List['Node'], List['Node']]:
         if check_typ == 'row':
@@ -254,9 +306,10 @@ class Node:
 
         return bef, aft
 
-    def get_word_nodes(
+    def get_other_word_nodes(
             self, check_typ: str = None, nodes: Tuple[List['Node'], List['Node']] = None
     ) -> Tuple[List['Node'], List['Node']]:
+
         if nodes is None:
             if check_typ is None:
                 raise Exception('check_typ required with no nodes given')
@@ -267,17 +320,19 @@ class Node:
         nodes_bef: List[Node] = []
         nodes_aft: List[Node] = []
 
-        for l in bef[::-1]:
-            if not l.value:
+        for n in reversed(bef):
+            if not n.value:
                 break
             else:
-                nodes_bef.insert(0, l)
+                nodes_bef.append(n)
 
-        for l in aft:
-            if not l.value:
+        nodes_bef.reverse()
+
+        for n in aft:
+            if not n.value:
                 break
             else:
-                nodes_aft.append(l)
+                nodes_aft.append(n)
 
         return nodes_bef, nodes_aft
 
@@ -287,6 +342,10 @@ class Node:
 
     def __repr__(self):
         return self.__str__()
+
+
+class Word: #todo
+    pass
 
 
 class Board:
@@ -349,373 +408,148 @@ class Board:
         return list(self.get_by_attr('y', y))
 
 
-def get_word(nodes: List[Node], direc: str, word: str, idx: int) -> str:
-    return ''.join([nw.value or nw.get_poss_val(direc, word, idx) or '' for nw in nodes])
+def get_word(nodes: List[Node], direc: str = '', word: str = '', idx: int = 0) -> str:
+    return ''.join([
+        nw.value or
+        (word[idx] if nw.has_poss_val(direc, word, idx) else None) or
+        '+' for nw in nodes
+    ])
 
 
-def check_extra(word_lets: List[str], board_lets: List[Node]) -> Optional[List[str]]:
-    word_lets_len = len(word_lets)
-    lo.d(word_lets)
-    lo.d(board_lets)
+def check_and_get(node_list: List[Node], direc: str, chk_dir: str, word: str, start: int) -> Optional[List[Dict]]:
+    lo.v(start)
 
-    if not word_lets_len:
-        return word_lets
+    ls = LETTERS[:]
+    blanks = ls.count('?')
 
-    for i, b in enumerate(board_lets):
-        bval = b.value
-        if i == word_lets_len:
-            if bval:
-                lo.i('failed on new word')
+    new_word_list: List[Dict] = []
+
+    for i, l in enumerate(word):
+        pos = start + i
+
+        try:
+            no = node_list[pos]
+        except IndexError:
+            lo.v('no space')
+            return None
+
+        # check if something to the left, if so, invalidate
+
+        nval = no.value
+        if nval:
+            if nval != l:
+                lo.v(f'mismatch {nval} vs {l}')
                 return None
-            else:
-                return word_lets
-        elif bval:
-            nl_val = word_lets[i]
-            if nl_val != '_' and bval != nl_val: # todo: ?
-                lo.i('failed on mismatch')
-                return None
-            else:
-                word_lets[i] = '_'
-                lo.i('subbing letter {} for {}'.format(bval, nl_val))
 
-    return word_lets
+        else:
+            is_blank = False
 
-def can_spell(info: Dict[str, Any], direc: str, word: str) -> List[int]:
+            if l not in ls:
+                if blanks > 0:
+                    ls.remove('?')
+                    blanks -= 1
+                    is_blank = True
+                else:
+                    lo.v(f'missing letter {l}')
+                    return None
+            else:
+                ls.remove(l)
+
+            no.set_poss_val(direc, word, i, is_blank)
+
+            bef_nodes, aft_nodes = no.get_other_word_nodes(chk_dir)
+
+            if bef_nodes or aft_nodes:
+                bef_word = get_word(bef_nodes) # should not need other args
+                aft_word = get_word(aft_nodes)
+
+                new_word = bef_word + l + aft_word
+
+                if new_word not in WORDS:
+                    lo.v(f'invalid new word {new_word}')
+                    return None
+
+                new_idx = len(bef_word)
+                no.set_poss_val(chk_dir, new_word, new_idx, is_blank)
+
+                new_word_list.append({
+                    'nodes': bef_nodes + [no] + aft_nodes,
+                    'word': new_word,
+                    'direc': chk_dir,
+                    'idx': new_idx
+                })
+
+    return new_word_list
+
+
+def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
     lo.i('---')
     lo.i(word)
     lo.i(direc)
 
-    word_bef: str = info['word_bef']
-    word_aft: str = info['word_aft']
-
-    lo.d(word_bef)
-    lo.d(word_aft)
-
-    extra_bef: List[Node] = info['other_nodes_bef']
-    extra_bef_bwrds: List[Node] = info['other_nodes_bef_bwrds']
-    extra_aft: List[Node] = info['other_nodes_aft']
-
-    extra_bef_len = info['other_nodes_bef_len']
-    extra_aft_len = info['other_nodes_aft_len']
-
-    results = []
-
-    reg = info['reg']
-
-    rr = reg.finditer(word, overlapped=True)
-    for r in rr:
-        new_word_list = list(word)
-
-        match_st, match_en = r.span()
-        match_bef, match_aft = r.groups()
-
-        lo.d('%s,%s', match_st, match_en)
-        lo.d('%s,%s', match_bef, match_aft)
-
-        match_bef_len = len(match_bef)
-        match_aft_len = len(match_aft)
-
-        idx = match_st
-        if match_bef:
-            idx += match_bef_len
-        
-        new_word_list[match_st:idx] = '_' * match_bef_len
-        new_word_list[idx+1:match_en] = '_' * match_aft_len
-
-        lo.d(new_word_list)
-
-        new_letters_bef = new_word_list[:match_st]
-        #new_letters_mid = new_word_list[match_st:match_en]
-        new_letters_mid = [new_word_list[idx]]
-        #new_letters_aft = new_word_list[match_en:]
-        new_letters_aft = new_word_list[idx + 1:]
-
-        if lo.enabled_levels[10]:
-            lo.d([v.value or '_' for v in extra_bef]) # lambda?
-            lo.d([v.value or '_' for v in extra_aft])
-            lo.d(new_letters_bef)
-            lo.d(new_letters_mid)
-            lo.d(new_letters_aft)
-
-        if extra_bef_len < len(new_letters_bef):
-            lo.i('not enough space before')
-            continue
-        if extra_aft_len < len(new_letters_aft):
-            lo.i('not enough space after')
-            continue
-
-        lo.d('extra bef')
-        extra_letters_bef = check_extra(new_letters_bef[::-1], extra_bef_bwrds)
-        if extra_letters_bef is None:
-            continue
-        else:
-            extra_letters_bef = extra_letters_bef[::-1]
-
-        lo.d('extra aft')
-        extra_letters_aft = check_extra(new_letters_aft, extra_aft)
-        if extra_letters_aft is None:
-            continue
-
-        new_word_list = extra_letters_bef + new_letters_mid + extra_letters_aft
-        lo.d(new_word_list)
-
-        cut_word_list = [v for v in new_word_list if v != '_']
-
-        if len(cut_word_list) == 0:
-            lo.i('cant use any letters')
-            continue
-
-        has_blank = 0
-
-        for letter in LETTERS:
-            if len(cut_word_list) == 0:
-                break
-            elif letter == '?':
-                has_blank += 1
-            elif letter in cut_word_list:
-                cut_word_list.remove(letter)
-
-        for _ in range(has_blank):
-            if len(cut_word_list):
-                cut_word_list.pop()
-
-        if len(cut_word_list) == 0:
-            results.append(idx)
-        else:
-            lo.d('reject')
-
-    return results
-
-chk_dir_dict = {
-    'row': {
-        'bef_dir': 'left',
-        'aft_dir': 'right',
-        'bef_chk': 'up',
-        'aft_chk': 'down',
-        'chk_typ': 'col',
-    },
-    'col': {
-        'bef_dir': 'up',
-        'aft_dir': 'down',
-        'bef_chk': 'left',
-        'aft_chk': 'right',
-        'chk_typ': 'row'
-    }
-}
-
-def _get_side_words(
-        this_cell: Node,
-        bef_letters: List[str],
-        aft_letters: List[str],
-        typ: str,
-        word: str,
-        n_idx: int,
-        chk_typs: dict
-) -> List[List[Node]]:
-
-    word_list = []
-    w_bef_list: List[Node] = []
-    w_aft_list: List[Node] = []
-
-    bef_dir = chk_typs['bef_dir']
-    aft_dir = chk_typs['aft_dir']
-    bef_chk = chk_typs['bef_chk']
-    aft_chk = chk_typs['aft_chk']
-    chk_typ = chk_typs['chk_typ']
-
-    #todo: only if dirs are both blank i guess
-    #break this into new fnc
-
-    cell_bef: Node = getattr(this_cell, bef_chk)
-    cell_aft: Node = getattr(this_cell, aft_chk)
-
-    bef_nodes: List[Node] = []
-    aft_nodes: List[Node] = []
-
-    cell_word_nodes = this_cell.get_word_nodes(chk_typ)
-
-    if cell_bef and cell_bef.value:
-        bef_nodes = cell_word_nodes[0]
-        oldbefword = get_word(bef_nodes, typ, word, n_idx)
-        lo.i(bef_nodes)
-        lo.i(oldbefword)
-
-    if cell_aft and cell_aft.value:
-        aft_nodes = cell_word_nodes[1]
-        oldaftword = get_word(aft_nodes, typ, word, n_idx)
-        lo.i(aft_nodes)
-        lo.i(oldaftword)
-
-    if bef_nodes or aft_nodes:
-        new_nodes = bef_nodes + [this_cell] + aft_nodes
-        newword = get_word(new_nodes, typ, word, n_idx)
-
-        if newword:
-            if newword not in WORDS:
-                lo.i('New word not valid: %s', newword)
-                return []
-
-            lo.i(newword)
-            lo.i(new_nodes)
-            word_list.append(new_nodes)
-
-    for side in (bef_dir, aft_dir):
-        cell: Node = this_cell
-
-        if side == bef_dir:
-            chk_letters = bef_letters
-        else:
-            chk_letters = aft_letters
-
-        for let_v in chk_letters:
-            cell = getattr(cell, side)
-            if not cell:  # these should never happen
-                lo.w('No cell to check')
-                return []
-
-            if cell.value:
-                if cell.value != let_v:
-                    lo.w('Cell val does not match')
-                    return []
-            else:
-                pos_res = cell.set_poss_val(typ, word, n_idx, let_v) #todo
-                if not pos_res:
-                    lo.w('we already found this, skipping')
-                    return []
-
-                cell_bef = getattr(cell, bef_chk)
-                cell_aft = getattr(cell, aft_chk)
-
-                bef_nodes = []
-                aft_nodes = []
-
-                cell_word_nodes = cell.get_word_nodes(chk_typ)
-
-                if cell_bef and cell_bef.value:
-                    bef_nodes = cell_word_nodes[0]
-                    oldbefword = get_word(bef_nodes, typ, word, n_idx)
-                    lo.i(bef_nodes)
-                    lo.i(oldbefword)
-
-                if cell_aft and cell_aft.value:
-                    aft_nodes = cell_word_nodes[1]
-                    oldaftword = get_word(aft_nodes, typ, word, n_idx)
-                    lo.i(aft_nodes)
-                    lo.i(oldaftword)
-
-                if bef_nodes or aft_nodes:
-                    new_nodes = bef_nodes + [cell] + aft_nodes
-                    newword = get_word(new_nodes, typ, word, n_idx)
-
-                    if newword:
-                        if newword not in WORDS:
-                            lo.w('New word not valid: %s', newword)
-                            return []
-
-                        lo.i(newword)
-                        word_list.append(new_nodes)
-
-            if side == bef_dir:
-                w_bef_list.insert(0, cell)
-            else:
-                w_aft_list.append(cell)
-
-    combined_word = w_bef_list + [this_cell] + w_aft_list
-    word_list.append(combined_word)
-
-    return word_list
-
-
-def is_valid(typ: str, this_cell: Node, n_idxs: List[int], word: str) -> List[Tuple[int, List[List[Node]]]]:
-    lo.i(word)
-    word_l = list(word)
-
-    full_list = []
-
-    chk_typs = chk_dir_dict.get(typ)
-    if not chk_typs:
-        raise Exception('Incorrect type for valid check: {}'.format(typ))
-
-    for n_idx in n_idxs:
-        lo.i(n_idx)
-
-        bef_letters = word_l[:n_idx][::-1]
-        cur_letter  = word_l[n_idx]
-        aft_letters = word_l[n_idx + 1:]
-
-        lo.d(bef_letters[::-1])
-        lo.d(cur_letter)
-        lo.d(aft_letters)
-
-        pos_res = this_cell.set_poss_val(typ, word, n_idx, cur_letter) # todo
-        if not pos_res:
-            continue
-
-        side_words = _get_side_words(this_cell, bef_letters, aft_letters, typ, word, n_idx, chk_typs)
-
-        if side_words:
-            full_list.append((n_idx, side_words))
-
-    return full_list
-
-
-def word_points(nodelist: List[Node], direc: str, word: str, idx: int) -> int:
-    let_pts = sum([n.poss_points(direc, word, idx) for n in nodelist])
-    mults = [n.multiplier[0] for n in nodelist if not n.value and n.multiplier and n.multiplier[1] == 'w']
-    word_mult = 1
-    for m in mults:
-        word_mult *= m
-    let_pts *= word_mult
-
-    if len([x for x in nodelist if x.value is None]) == 7:  # todo: or is it all letters?
-        let_pts += 35
-
-    return let_pts
-
-
-def check_words(w: str, no: Node, node_info: Dict[str, Dict[str, Any]]) -> Optional[dict]:
-    this_info = None
+    spell_words: List[Dict] = []
+
+    if direc == 'row':
+        idx = no.y
+        node_list = no.row
+        chk_dir = 'col'
+    elif direc == 'col':
+        idx = no.x
+        node_list = no.col
+        chk_dir = 'row'
+    else:
+        raise TypeError('Direction needs to be "row" or "col"')
+
+    word_len = len(word)
+    start = max(0, idx - word_len + 1)
+    while start <= idx:
+        new_words = check_and_get(node_list, direc, chk_dir, word, start)
+        if new_words is not None:
+            new_d = {
+                'nodes': node_list[start:word_len],
+                'word': word,
+                'direc': direc,
+                'idx': idx - start,
+                'new_words': new_words
+            }
+            #todo: insert reverse too?
+            spell_words.append(new_d)
+        start += 1
+
+    return spell_words
+
+
+def check_words(w: str, no: Node) -> List[dict]:
+    data = []
 
     if '?' in LETTERS or any([l in w for l in LETTERS]):  # todo: faster if str? why gen slower?
         for direction in ('row', 'col'):
-            spell_words = can_spell(node_info[direction], direction, w)
+            spell_words = can_spell(no, w, direction)
 
             if spell_words:
-                lo.w('-> canspell: {}: {} - {}'.format(direction, spell_words, w))
+                lo.w('--> YES: %s: %s', direction, w)
+                # combine words with idxs?
 
-                made_words = is_valid(direction, no, spell_words, w)
+                for word_dict in spell_words:
+                    tot_pts = no.get_points(**word_dict)  # todo, could do this beforehand
 
-                if made_words:
-                    lo.w('--> YES: %s: %s', direction, w)
-                    # combine words with idxs?
-                    for ro in made_words:
-                        tot_pts = 0
-                        d_idx = ro[0]
-                        data = ro[1]
-                        for d in data:
-                            pts = word_points(d, direction, w, d_idx)
-                            tot_pts += pts
+                    new_info ={
+                        'pts': tot_pts,
+                        'cell_letter': w[word_dict['idx']],
+                        'cell_pos': (no.x, no.y),
+                        'cell': no
+                    }
 
-                        this_info = {
-                            'word': w,
-                            'pts': tot_pts,
-                            'direction': direction,
-                            'cell_letter': w[d_idx],
-                            'word_idx': d_idx,
-                            'cell_pos': (no.x, no.y),
-                            'cell': no,
-                            'words': [get_word(da, direction, w, d_idx) for da in data],
-                            'nodes': data
-                        }
+                    this_info = {**word_dict, **new_info}
 
-                        lo.w(this_info)
-                        word_info.append(this_info)
-    return this_info
+                    lo.w(this_info)
+                    data.append(this_info)
 
-def run_worker(data: Tuple[str, Node, Dict[str, Dict[str, Any]]]):
+    return data
+
+def run_worker(data: Tuple[str, Node]):
     w = data[0]
     no = data[1]
-    node_info = data[2]
 
     if len(w) > 8:
         word_name = w[:7] + '.'
@@ -726,7 +560,7 @@ def run_worker(data: Tuple[str, Node, Dict[str, Dict[str, Any]]]):
     newname = 'w %s' % word_name
     current.name = newname
 
-    return check_words(w, no, node_info)
+    return check_words(w, no)
 
 
 def check_node(no: Optional[Node]):
@@ -735,43 +569,20 @@ def check_node(no: Optional[Node]):
     print()
     lo.s('checking...\n')
 
-    node_info = {}
-    for t in ('row', 'col'):
-        node_nodes = no.get_other_nodes(t)
-        node_words = no.get_word_nodes(nodes=node_nodes)
-
-        node_info[t] = {
-            'other_nodes_bef': node_nodes[0],
-            'other_nodes_bef_bwrds': node_nodes[0][::-1],
-            'other_nodes_aft': node_nodes[1],
-            'other_nodes_bef_len': len(node_nodes[0]),
-            'other_nodes_aft_len': len(node_nodes[1]),
-            #'word_nodes_bef': node_words[0],
-            #'word_nodes_aft': node_words[1],
-            'word_bef': get_word(node_words[0], '', '', -1),
-            'word_aft': get_word(node_words[1], '', '', -1),
-        }
-
-        lo.d(node_info[t]['word_bef'])
-        lo.d(node_info[t]['word_aft'])
-
-        node_info[t]['reg'] = regex.compile(r'({}).({})'.format(
-            node_info[t]['word_bef'], node_info[t]['word_aft'])
-        )
-
     if USE_POOL:  #todo: is this fixable for profiling?
         n = max(mp.cpu_count() - 1, 1)
         #n = 2
         pool = mp.Pool(n)
-        pool_res = pool.map(run_worker, ((w, no, node_info) for w in WORDS))
+        pool_res = pool.map(run_worker, ((w, no) for w in WORDS))
 
         for x in pool_res:
-            if x:
-                word_info.append(x)
+            for y in x:
+                word_info.append(y)
+    
     else:
         for w in WORDS:
-            res = check_words(w, no, node_info)
-            if res:
+            reses = check_words(w, no)
+            for res in reses:
                 word_info.append(res)
 
 # todo: nodelist needs main
@@ -795,8 +606,8 @@ def main() -> None:
     else:
         # -- specify nodes
 
-        full_nodes = full.nodes
-        #full_nodes = full.get_row(6)
+        #full_nodes = full.nodes
+        full_nodes = full.get_row(14)
 
         #full_nodes = []
         #full_nodes.append(full.get(8,2))
