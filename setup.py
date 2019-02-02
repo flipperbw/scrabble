@@ -9,7 +9,8 @@ from typing import Set
 #LOG_LEVEL = 'VERBOSE'
 #LOG_LEVEL = 'INFO'
 #LOG_LEVEL = 'WARNING'
-LOG_LEVEL = 'SUCCESS'
+#LOG_LEVEL = 'SUCCESS'
+LOG_LEVEL = 'ERROR'
 
 
 # - pool
@@ -92,25 +93,42 @@ _board = [ #n2
 ]
 '''
 
+'''
+_board = [ #problem with blanks overwriting
+    list('           '),
+    list('         H '),
+    list('         A '),
+    list('         I '),
+    list('      DAWK '),
+    list('     PAXES '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
+]
+'''
+
 #'''
 _board = [ #s1
-    list('     b    E'),
-    list('     e    N'),
-    list('     z    o'),
-    list('     i    l'),
-    list('     l    a'),
-    list('     SLOJDs'),
-    list('          e'),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
     list('           '),
     list('           '),
     list('           '),
     list('           '),
 ]
 #'''
+
 #_board = [[' ' for _ in range(11)] for _ in range(11)]
 
-BOARD = pd.DataFrame(_board)
 #BOARD = pd.read_pickle('data/board.pkl')
+BOARD = pd.DataFrame(_board)
 
 
 # - letters
@@ -118,7 +136,8 @@ BOARD = pd.DataFrame(_board)
 
 #LETTERS = open('data/letters.txt', 'r').read().splitlines()
 #LETTERS = list('TOTHBYU')
-LETTERS = 'GMIEHTI'
+#LETTERS = 'EIIEB?A' #problem with blanks overwriting
+LETTERS = ' '
 
 
 # - search

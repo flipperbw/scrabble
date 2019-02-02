@@ -141,11 +141,15 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
     level_styles = {}
 
     for ln, la in levels.items():
-        logging.addLevelName(LogWrapper.get_level(ln), la)
+        conv_level = LogWrapper.get_level(ln)
+        logging.addLevelName(conv_level, la)
+        setattr(logging, la.upper(), conv_level)
         level_styles[la] = coloredlogs.DEFAULT_LEVEL_STYLES[ln.lower()]
 
     #logger = logging.getLogger(__name__)
     logger = verboselogs.VerboseLogger(__name__)
+
+    logger.setLevel(level)
 
     # 'black', 'blue', 'cyan', 'green', 'magenta', 'red', 'white' and 'yellow'  # todo
     level_styles['i'] = {'color': 'cyan', 'bright': True}

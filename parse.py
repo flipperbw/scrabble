@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 import json
-import multiprocessing as mp
+from multiprocessing import (cpu_count, current_process, Pool)
 from pprint import pformat
 from timeit import default_timer as timer
-from typing import Any, Dict, List, Optional, Tuple, Iterator
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
-from utils import log_init
 from setup import (
     BOARD,
     DEFAULT_BOARD,
@@ -15,6 +14,7 @@ from setup import (
     SEARCH_WORDS as _SW,
     USE_POOL,
 )
+from utils import log_init
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
@@ -27,6 +27,8 @@ from setup import (
 #if word was found in a different check, skip
 #change to f'' formatting
 # if someone elses word is a blank, dont count it
+# why is multiprocessing _C getting called?
+# if blank and already have another letter, will assume not blank
 
 # -- globals
 
@@ -48,10 +50,13 @@ lo = log_init(LOG_LEVEL, skip_main=False)
 
 # --
 
-lo.i('\n{}'.format(DEFAULT_BOARD))
-lo.s('\n{}'.format(BOARD))
-lo.s('\n{}'.format(LETTERS))
-print()
+if lo.is_enabled('s'):
+    lo.i('\nDefault Board:\n{}'.format(DEFAULT_BOARD))
+    lo.s('\nGame Board:\n{}'.format(BOARD))
+    lo.s('\nLetters: {}'.format(LETTERS))
+    print()
+else:
+    print('Running...')
 
 
 class Node:
@@ -231,7 +236,7 @@ class Node:
 
 
     def __str__(self):
-        return '<Node>: ({},{}) v: "{}" p: "{}"'.format(self.x, self.y, self.value, self.poss_values)
+        return '<Node>: ({},{}) v: "{}"'.format(self.x, self.y, self.value)
 
     def __repr__(self):
         return self.__str__()
@@ -487,7 +492,7 @@ def run_worker(data: Tuple[str, Node]):
     else:
         word_name = w
 
-    current = mp.current_process()
+    current = current_process()
     newname = 'w %s' % word_name
     current.name = newname
 
@@ -497,13 +502,14 @@ def run_worker(data: Tuple[str, Node]):
 def check_node(no: Optional[Node]):
     if not no: return
 
-    print()
-    lo.s('checking...\n')
+    if lo.is_enabled('s'):
+        print()
+        lo.s('checking...\n')
 
     if USE_POOL:  #todo: is this fixable for profiling?
-        n = max(mp.cpu_count() - 1, 1)
+        n = max(cpu_count() - 1, 1)
         #n = 2
-        pool = mp.Pool(n)
+        pool = Pool(n)
         pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in SEARCH_WORDS))
 
         for x in pool_res:
@@ -556,7 +562,8 @@ def main() -> None:
 
         full_nodes = full.nodes
 
-        #full_nodes = full.get_row(14)
+        #full_nodes = full.get_row(0)
+        #full_nodes = full.get_row(0) + full.get_row(1) + full.get_row(2)
 
         # full_nodes = [
         #     full.get(6, 1),
@@ -574,17 +581,38 @@ def main() -> None:
                 if not no.value and no.has_edge():
                     check_node(no)
 
-    #todo print completed board with colors
-    print('=========')
-    if word_info:
+    if not word_info:
+        print('No solution.')
+    else:
         newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
-
-        for s in newlist[:10][::-1]:
-            lo.s('\n{}'.format(pformat(s)))
-
-        print('---')
         best = newlist[:1]
-        lo.s('\n{}'.format(pformat(best)))
+
+        if lo.is_enabled('s'):
+            print('=========')
+
+            for s in newlist[:10][::-1]:
+                lo.s('\n{}'.format(pformat(s)))
+
+            print('---------')
+
+            lo.s('\n{}'.format(pformat(best)))
+
+        solved_board = BOARD.copy()
+        best_data = best[0]
+
+        for ni, node in enumerate(best_data.get('nodes', [])):
+            if not node.value:
+                solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
+
+        print('\n' + '-' * ((SHAPE['row']*2) -1 + 4))
+
+        for row in solved_board.iterrows():
+            row_data = row[1].to_list()
+            print('| ' + ' '.join(rl.upper() if len(rl) == 1 else rl for rl in row_data) + ' |')
+
+        print('-' * ((SHAPE['row']*2) -1 + 4))
+
+        print(f'\nPoints: {best_data["pts"]}')
 
     end = timer()
     print('\nTime: {}'.format(round(end - start, 1)))
