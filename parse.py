@@ -4,11 +4,17 @@ import json
 import multiprocessing as mp
 from pprint import pformat
 from timeit import default_timer as timer
-from typing import Any, Dict, List, Optional, Tuple, Iterator, Set
-
-import pandas as pd
+from typing import Any, Dict, List, Optional, Tuple, Iterator
 
 from utils import log_init
+from setup import (
+    BOARD,
+    DEFAULT_BOARD,
+    LETTERS,
+    LOG_LEVEL,
+    SEARCH_WORDS as _SW,
+    USE_POOL,
+)
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
@@ -22,129 +28,14 @@ from utils import log_init
 #change to f'' formatting
 # if someone elses word is a blank, dont count it
 
-# --
-# -- GLOBALS
-# --
-
-# - logging
-
-#LOG_LEVEL = 'DEBUG'
-#LOG_LEVEL = 'VERBOSE'
-#LOG_LEVEL = 'INFO'
-#LOG_LEVEL = 'WARNING'
-LOG_LEVEL = 'SUCCESS'
-
-# - pool
-
-USE_POOL = True
-#USE_POOL = False
-
-# - default board
-
-#todo small vs big board
-#DEFAULT_BOARD = pd.read_pickle('data/default_board.pkl')
-
-#small board
-#'''
-DEFAULT_BOARD =pd.DataFrame([
-    ['3l','','3w'] + ['']*5 + ['3w','','3l'],
-    ['','2w','','','','2w','','','','2w',''],
-    ['3w','','2l','','2l','','2l','','2l','','3w'],
-    ['','','','3l','','','','3l','','',''],
-    ['','','2l','','','','','','2l','',''],
-
-    ['','2w','','','','x','','','','2w',''],
-
-    ['', '', '2l', '', '', '', '', '', '2l', '', ''],
-    ['', '', '', '3l', '', '', '', '3l', '', '', ''],
-    ['3w', '', '2l', '', '2l', '', '2l', '', '2l', '', '3w'],
-    ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
-    ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
-])
-#'''
-
-# - game board
-
-
-#todo small vs big board
-#_board = [['' for _ in range(15)] for _ in range(15)]
-#_board = [['' for _ in range(11)] for _ in range(11)]
-
-'''
-_board = [ #n1
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','C'],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','H'],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','g','I'],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ','j',' ',' ',' ','r',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ','o',' ',' ',' ','i','d'],
-    [' ',' ',' ',' ',' ','t','h','i','s','t','l','e',' ','n','a'],
-    [' ',' ',' ',' ','g','o','a','d',' ','s','i','t','e','d',' '],
-    [' ',' ',' ',' ',' ','g','o',' ',' ',' ','t','a','m','e','r'],
-    [' ',' ',' ',' ',' ',' ',' ','e','c','r','u',' ',' ','r','e'],
-    [' ',' ',' ','f',' ','w','a','x',' ',' ',' ','w','a','s','p'],
-    [' ','N','E','O','N','E','D',' ',' ',' ','q','i',' ',' ',' '],
-    [' ',' ',' ','i',' ',' ',' ',' ','d','r','u','m','s',' ',' '],
-    [' ',' ',' ','l',' ',' ',' ',' ',' ',' ','o','p',' ',' ',' ']
-]
-'''
-
-'''
-_board = [ #n2
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ','R',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ','Z','A',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ','E','T',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ','c',' ','S','I','R',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ','o',' ','T','O','E',' ',' ',' ',' ',' '],
-    [' ',' ',' ','b','e','n','D','S',' ','L',' ',' ',' ',' ',' '],
-    ['j','a','n','e',' ','e',' ',' ',' ','A',' ',' ',' ',' ',' '],
-    ['i',' ',' ',' ',' ','d','e','t','o','x',' ',' ',' ',' ',' '],
-    ['v',' ',' ',' ',' ',' ',' ','o',' ',' ',' ',' ',' ',' ',' '],
-    ['e',' ',' ',' ',' ',' ',' ','u',' ',' ',' ',' ',' ',' ',' '],
-    ['s','o','l',' ',' ',' ',' ','c',' ','u',' ',' ',' ',' ',' '],
-    [' ',' ',' ','w','r','i','g','h','t','s',' ',' ',' ',' ',' '],
-    ['a','f','r','o',' ','T','I','E',' ','e','u','r','o',' ',' ']
-]
-'''
-
-#'''
-_board = [ #s1
-    list('     b    E'),
-    list('     e    N'),
-    list('     z    o'),
-    list('     i    l'),
-    list('     l    a'),
-    list('     SLOJDs'),
-    list('          e'),
-    list('           '),
-    list('           '),
-    list('           '),
-    list('           '),
-]
-#'''
-#_board = [[' ' for _ in range(11)] for _ in range(11)]
-
-BOARD = pd.DataFrame(_board)
-#BOARD = pd.read_pickle('data/board.pkl')
-
-# - letters
-
-#LETTERS = open('data/letters.txt', 'r').read().splitlines()
-#LETTERS = list('TOTHBYU')
-LETTERS = 'GMIEHTI'
+# -- globals
 
 BLANKS = LETTERS.count('?')
 
-# --
-# --
-# --
-
 WORD_LIST = open('data/wordlist.txt').read().splitlines()
 WORDS = set(WORD_LIST)
-SEARCH_WORDS: Set[str] = set()
+
+SEARCH_WORDS = _SW
 
 SHAPE = {
     'row': BOARD.shape[0],
@@ -154,6 +45,8 @@ SHAPE = {
 POINTS = json.load(open('data/points.json'))
 
 lo = log_init(LOG_LEVEL, skip_main=False)
+
+# --
 
 lo.i('\n{}'.format(DEFAULT_BOARD))
 lo.s('\n{}'.format(BOARD))
@@ -349,7 +242,7 @@ class Word: #todo
 
 
 class Board:
-    def __init__(self, board_mults: pd.DataFrame = DEFAULT_BOARD, game_board: pd.DataFrame = BOARD):
+    def __init__(self, board_mults = DEFAULT_BOARD, game_board = BOARD) -> None:
         self.default_board = board_mults
         self.board = game_board
 
@@ -626,8 +519,8 @@ def check_node(no: Optional[Node]):
 
 def set_search_words():
     global SEARCH_WORDS
-    #SEARCH_WORDS = WORD_LIST[50000:52000]
-    #SEARCH_WORDS = ['EUROKY', 'EURO']
+
+    if SEARCH_WORDS: return
 
     if BLANKS:
         SEARCH_WORDS = WORDS
@@ -659,9 +552,10 @@ def main() -> None:
             check_node(no)
 
     else:
-        # -- specify nodes
+        # -- set search nodes
 
         full_nodes = full.nodes
+
         #full_nodes = full.get_row(14)
 
         # full_nodes = [
@@ -671,10 +565,11 @@ def main() -> None:
 
         # --
 
+        full_nodes_len = len(full_nodes)
         for no in full_nodes:
             if no:
                 lo.s('**** Node (%2s, %2s: %1s) - #%s / %s',
-                     no.x, no.y, no.value or '_', full_nodes.index(no) + 1, len(full_nodes)
+                     no.x, no.y, no.value or '_', full_nodes.index(no) + 1, full_nodes_len
                 )
                 if not no.value and no.has_edge():
                     check_node(no)
