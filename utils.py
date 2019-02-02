@@ -46,15 +46,15 @@ class LogWrapper:
             got_level = self.get_level(ln)
             self.enabled_levels[got_level] = self.logger.isEnabledFor(got_level)
 
-    def x(self, *_args, **_kwargs): pass
-    def d(self, *_args, **_kwargs): pass
-    def v(self, *_args, **_kwargs): pass
-    def i(self, *_args, **_kwargs): pass
-    def n(self, *_args, **_kwargs): pass
-    def w(self, *_args, **_kwargs): pass
-    def s(self, *_args, **_kwargs): pass
-    def e(self, *_args, **_kwargs): pass
-    def c(self, *_args, **_kwargs): pass
+    def x(self, *_ar, **_kw): pass
+    def d(self, *_ar, **_kw): pass
+    def v(self, *_ar, **_kw): pass
+    def i(self, *_ar, **_kw): pass
+    def n(self, *_ar, **_kw): pass
+    def w(self, *_ar, **_kw): pass
+    def s(self, *_ar, **_kw): pass
+    def e(self, *_ar, **_kw): pass
+    def c(self, *_ar, **_kw): pass
 
     def l(self, level: int, msg, *args, **kwargs):
         self._log(level, msg, args, **kwargs)
@@ -188,18 +188,12 @@ def log_init(level, skip_main=True, **_kwargs) -> LogWrapper:
     return _create_wrapper(logger, skip_main)
 
 
-def _empty(*_a, **_k) -> None:
-    pass
-
-
 def _create_wrapper(logger, skip_main) -> LogWrapper:
-    base = LogWrapper(logger, skip_main)
-
     for ln, la in levels.items():
-        if base.is_enabled(ln):
-            setattr(LogWrapper, la, partialmethod(LogWrapper.l, getattr(logging, ln)))
-        else:
-            #setattr(LogWrapper, la, lambda *_: None)
-            setattr(LogWrapper, la, _empty)
+        l_i = getattr(logging, ln)
+        if logger.isEnabledFor(l_i):
+            setattr(LogWrapper, la, partialmethod(LogWrapper.l, l_i))
+
+    base = LogWrapper(logger, skip_main)
 
     return base

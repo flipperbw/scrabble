@@ -1,12 +1,17 @@
+#!/usr/bin/env python
+
 import json
 import multiprocessing as mp
 from pprint import pformat
 from timeit import default_timer as timer
-from typing import Any, Dict, List, Optional, Tuple, Iterator
+from typing import Any, Dict, List, Optional, Tuple, Iterator, Set
 
 import pandas as pd
 
 from utils import log_init
+
+#import builtins
+#profile = getattr(builtins, 'profile', lambda x: x)
 
 # -- TODOS
 
@@ -15,29 +20,32 @@ from utils import log_init
 #change return [] to yields?
 #if word was found in a different check, skip
 #change to f'' formatting
+# if someone elses word is a blank, dont count it
 
 # --
 # -- GLOBALS
+# --
 
 # - logging
 
 #LOG_LEVEL = 'DEBUG'
-LOG_LEVEL = 'VERBOSE'
+#LOG_LEVEL = 'VERBOSE'
 #LOG_LEVEL = 'INFO'
 #LOG_LEVEL = 'WARNING'
-#LOG_LEVEL = 'SUCCESS'
+LOG_LEVEL = 'SUCCESS'
 
 # - pool
 
-USE_POOL = False
+USE_POOL = True
+#USE_POOL = False
 
 # - default board
 
 #todo small vs big board
-DEFAULT_BOARD = pd.read_pickle('data/default_board.pkl')
+#DEFAULT_BOARD = pd.read_pickle('data/default_board.pkl')
 
 #small board
-'''
+#'''
 DEFAULT_BOARD =pd.DataFrame([
     ['3l','','3w'] + ['']*5 + ['3w','','3l'],
     ['','2w','','','','2w','','','','2w',''],
@@ -53,35 +61,17 @@ DEFAULT_BOARD =pd.DataFrame([
     ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
     ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
 ])
-'''
+#'''
 
 # - game board
 
-#BOARD = pd.read_pickle('data/board.pkl')
-
-''' # old1
-BOARD = pd.DataFrame([
-    ['']*11,
-    ['']*11,
-    ['']*11,
-    ['']*3 + ['J'] + ['']*7,
-    #[''] + ['X'] + [''] + ['J'] + [''] + ['Y'] + ['']*5,
-    ['']*3 + ['O'] + ['']*7,
-    ['']*2 + ['P', 'E', 'R', 'V', 'S'] + ['']*4,
-    [''] + ['M', 'A', 'S'] + ['', ''] + ['E'] + ['']*4,
-    ['']*6 + ['E', 'W'] + ['']*3,
-    ['']*6 + ['K', 'A', 'F'] + [''] + ['Q'],
-    ['']*7 + ['Y', 'A', 'G', 'I'],
-    ['']*8 + ['X', 'I', 'S']
-])
-'''
 
 #todo small vs big board
-#BOARD = [['' for _ in range(15)] for _ in range(15)]
-#BOARD = [['' for _ in range(11)] for _ in range(11)]
+#_board = [['' for _ in range(15)] for _ in range(15)]
+#_board = [['' for _ in range(11)] for _ in range(11)]
 
 '''
-BOARD = [ #n1
+_board = [ #n1
     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','C'],
@@ -100,8 +90,8 @@ BOARD = [ #n1
 ]
 '''
 
-#'''
-BOARD = [ #n2
+'''
+_board = [ #n2
     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ',' ',' ',' ','R',' ',' ',' ',' ',' ',' '],
@@ -116,43 +106,50 @@ BOARD = [ #n2
     ['e',' ',' ',' ',' ',' ',' ','u',' ',' ',' ',' ',' ',' ',' '],
     ['s','o','l',' ',' ',' ',' ','c',' ','u',' ',' ',' ',' ',' '],
     [' ',' ',' ','w','r','i','g','h','t','s',' ',' ',' ',' ',' '],
-    ['a','f','r','o',' ','T','I','E',' ',' ',' ',' ',' ',' ',' ']
+    ['a','f','r','o',' ','T','I','E',' ','e','u','r','o',' ',' ']
+]
+'''
+
+#'''
+_board = [ #s1
+    list('     b    E'),
+    list('     e    N'),
+    list('     z    o'),
+    list('     i    l'),
+    list('     l    a'),
+    list('     SLOJDs'),
+    list('          e'),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
 ]
 #'''
+#_board = [[' ' for _ in range(11)] for _ in range(11)]
 
-'''
-BOARD = [ #s1
-    list('  C        '),
-    list(' fE  c     '),
-    list('laMp o     '),
-    list(' de  j     '),
-    list(' en  o     '),
-    list('  TAXIS    '),
-    list('     n     '),
-    list('glazes     '),
-    list('r b        '),
-    list('e u        '),
-    list('y townish  '),
-]
-'''
-#BOARD = [[' ' for _ in range(11)] for _ in range(11)]
-
-BOARD = pd.DataFrame(BOARD)
+BOARD = pd.DataFrame(_board)
+#BOARD = pd.read_pickle('data/board.pkl')
 
 # - letters
 
 #LETTERS = open('data/letters.txt', 'r').read().splitlines()
 #LETTERS = list('TOTHBYU')
-LETTERS = list('UEROYYK')
+LETTERS = 'GMIEHTI'
 
-# - words
-
-WORDS = open('data/wordlist.txt').read().splitlines()
-#WORDS = (
-#    'ABUT',
-#)
+BLANKS = LETTERS.count('?')
 
 # --
+# --
+# --
+
+WORD_LIST = open('data/wordlist.txt').read().splitlines()
+WORDS = set(WORD_LIST)
+SEARCH_WORDS: Set[str] = set()
+
+SHAPE = {
+    'row': BOARD.shape[0],
+    'col': BOARD.shape[1]
+}
 
 POINTS = json.load(open('data/points.json'))
 
@@ -225,23 +222,24 @@ class Node:
             if idx not in pv_info_word:
                 pv_info_word[idx] = is_blank
             else:
-                lo.v('Already parsed {} at {}'.format(word, idx))
+                lo.v('Already parsed: {}, {} at {} ({} v {})'.format(direc, word, idx, is_blank, pv_info_word[idx]))
                 return False
         return True
 
 
     def get_points(
-            self, nodes: List['Node'], direc: str, word: str, idx: int, new_words: Optional[List[Dict]] = None, **_kw
+            self, nodes: List['Node'], direc: str, word: str, new_words: Optional[List[Dict]] = None, **_kw
     ) -> int:  # todo combine this optional thing into one type
 
         if _kw:
             lo.e(f'Extra kw args: {_kw}')
 
-        pts = self._points_from_nodes(nodes, direc, word, idx)
-
+        pts = self._points_from_nodes(nodes, direc, word)
         if new_words:
             for nw_dict in new_words:
-                pts += self._points_from_nodes(**nw_dict)
+                new_pts = self._points_from_nodes(**{k: v for k, v in nw_dict.items() if k != 'idx'})
+                pts += new_pts
+
 
         if len([x for x in nodes if x.value is None]) == 7:  # todo: or is it all letters?
             pts += 35
@@ -249,11 +247,12 @@ class Node:
         return pts
 
     @staticmethod
-    def _points_from_nodes(nodes: List['Node'], direc: str, word: str, idx: int, **_kw) -> int:
+    def _points_from_nodes(nodes: List['Node'], direc: str, word: str, **_kw) -> int:
         if _kw:
             lo.e(f'Extra kw args: {_kw}')
         pts = 0
         word_mult = 1
+        idx = 0
         for n in nodes:
             if n.value:
                 pts += (n.points or 0)
@@ -262,6 +261,7 @@ class Node:
                 n_mult = n.multiplier
                 if n_mult and n_mult[1] == 'w':
                     word_mult *= n_mult[0]
+            idx += 1
 
         pts *= word_mult
 
@@ -415,47 +415,72 @@ def get_word(nodes: List[Node], direc: str = '', word: str = '', idx: int = 0) -
         '+' for nw in nodes
     ])
 
+#@profile
+def check_and_get(
+        node_list: List[Node], direc: str, chk_dir: str, word: str, word_len: int, start: int
+) -> Optional[List[Dict]]:
+    #todo add before method
 
-def check_and_get(node_list: List[Node], direc: str, chk_dir: str, word: str, start: int) -> Optional[List[Dict]]:
-    lo.v(start)
+    lo.d(start)
 
-    ls = LETTERS[:]
-    blanks = ls.count('?')
+    bef_idx = start - 1
+    if bef_idx >= 0:
+        node_bef = node_list[bef_idx]
+        if node_bef and node_bef.value:
+            lo.d(f'Prior node exists for {direc} at {start}, skipping.')
+            return None
+
+    aft_idx = start + word_len
+    if aft_idx < SHAPE[direc]:
+        node_aft = node_list[aft_idx]
+        if node_aft and node_aft.value:
+            lo.d(f'Following node exists for {direc}, skipping.')
+            return None
+
+
+    ls = list(LETTERS)
+    blanks = BLANKS
 
     new_word_list: List[Dict] = []
 
-    for i, l in enumerate(word):
+    set_poss_list = []
+
+    for i in range(word_len):
         pos = start + i
 
         try:
             no = node_list[pos]
         except IndexError:
-            lo.v('no space')
+            lo.e(f'no space {direc} at {start}+{i} for {word}, {len(node_list)}')
+            # todo should never happen
             return None
 
-        # check if something to the left, if so, invalidate
-
+        le = word[i]
         nval = no.value
         if nval:
-            if nval != l:
-                lo.v(f'mismatch {nval} vs {l}')
+            if nval != le:
+                lo.d(f'mismatch {nval} vs {le}')
                 return None
 
         else:
             is_blank = False
 
-            if l not in ls:
+            if le not in ls:
                 if blanks > 0:
                     ls.remove('?')
                     blanks -= 1
                     is_blank = True
                 else:
-                    lo.v(f'missing letter {l}')
+                    lo.d(f'missing letter {le}')
                     return None
             else:
-                ls.remove(l)
+                ls.remove(le)
 
-            no.set_poss_val(direc, word, i, is_blank)
+            # set_success = no.set_poss_val(direc, word, i, is_blank)
+            # if not set_success:
+            #     #todo: i can probably skip stuff now
+            #     lo.d('oops')
+            set_poss_list.append((no, (direc, word, i, is_blank)))
 
             bef_nodes, aft_nodes = no.get_other_word_nodes(chk_dir)
 
@@ -463,14 +488,19 @@ def check_and_get(node_list: List[Node], direc: str, chk_dir: str, word: str, st
                 bef_word = get_word(bef_nodes) # should not need other args
                 aft_word = get_word(aft_nodes)
 
-                new_word = bef_word + l + aft_word
+                new_word = bef_word + le + aft_word
 
                 if new_word not in WORDS:
-                    lo.v(f'invalid new word {new_word}')
+                    lo.d(f'invalid new word {new_word}')
                     return None
 
                 new_idx = len(bef_word)
-                no.set_poss_val(chk_dir, new_word, new_idx, is_blank)
+
+                # set_success = no.set_poss_val(chk_dir, new_word, new_idx, is_blank)
+                # if not set_success:
+                #     #todo: i can probably skip stuff now
+                #     lo.d('oops')
+                set_poss_list.append((no, (chk_dir, new_word, new_idx, is_blank)))
 
                 new_word_list.append({
                     'nodes': bef_nodes + [no] + aft_nodes,
@@ -479,20 +509,24 @@ def check_and_get(node_list: List[Node], direc: str, chk_dir: str, word: str, st
                     'idx': new_idx
                 })
 
+    for p in set_poss_list:
+        pno, pda = p
+        set_success = pno.set_poss_val(*pda)
+        if not set_success:
+            #todo: i can probably skip stuff now
+            lo.d('oops')
+
     return new_word_list
 
-
+#@profile
 def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
-    lo.i('---')
-    lo.i(word)
-    lo.i(direc)
-
-    spell_words: List[Dict] = []
+    lo.v(f'{direc} - {word}')
 
     if direc == 'row':
         idx = no.y
         node_list = no.row
         chk_dir = 'col'
+
     elif direc == 'col':
         idx = no.x
         node_list = no.col
@@ -500,13 +534,17 @@ def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
     else:
         raise TypeError('Direction needs to be "row" or "col"')
 
+    spell_words: List[Dict] = []
+
+    dir_len = SHAPE[direc]
     word_len = len(word)
+
     start = max(0, idx - word_len + 1)
-    while start <= idx:
-        new_words = check_and_get(node_list, direc, chk_dir, word, start)
+    while (start + word_len) <= dir_len and start <= idx:
+        new_words = check_and_get(node_list, direc, chk_dir, word, word_len, start)
         if new_words is not None:
             new_d = {
-                'nodes': node_list[start:word_len],
+                'nodes': node_list[start:start+word_len],
                 'word': word,
                 'direc': direc,
                 'idx': idx - start,
@@ -522,28 +560,28 @@ def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
 def check_words(w: str, no: Node) -> List[dict]:
     data = []
 
-    if '?' in LETTERS or any([l in w for l in LETTERS]):  # todo: faster if str? why gen slower?
-        for direction in ('row', 'col'):
-            spell_words = can_spell(no, w, direction)
+    for direction in ('row', 'col'):
+        spell_words = can_spell(no, w, direction)
 
-            if spell_words:
-                lo.w('--> YES: %s: %s', direction, w)
-                # combine words with idxs?
+        if spell_words:
+            lo.w('--> YES: %s: %s', direction, w)
+            # combine words with idxs?
 
-                for word_dict in spell_words:
-                    tot_pts = no.get_points(**word_dict)  # todo, could do this beforehand
+            for word_dict in spell_words:
+                tot_pts = no.get_points(**{k: v for k, v in word_dict.items() if k != 'idx'})
+                # todo, could do this beforehand
 
-                    new_info ={
-                        'pts': tot_pts,
-                        'cell_letter': w[word_dict['idx']],
-                        'cell_pos': (no.x, no.y),
-                        'cell': no
-                    }
+                new_info ={
+                    'pts': tot_pts,
+                    'cell_letter': w[word_dict['idx']],
+                    'cell_pos': (no.x, no.y),
+                    'cell': no
+                }
 
-                    this_info = {**word_dict, **new_info}
+                this_info = {**word_dict, **new_info}
 
-                    lo.w(this_info)
-                    data.append(this_info)
+                lo.w(this_info)
+                data.append(this_info)
 
     return data
 
@@ -573,17 +611,32 @@ def check_node(no: Optional[Node]):
         n = max(mp.cpu_count() - 1, 1)
         #n = 2
         pool = mp.Pool(n)
-        pool_res = pool.map(run_worker, ((w, no) for w in WORDS))
+        pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in SEARCH_WORDS))
 
         for x in pool_res:
             for y in x:
                 word_info.append(y)
     
     else:
-        for w in WORDS:
+        for w in SEARCH_WORDS:
             reses = check_words(w, no)
             for res in reses:
                 word_info.append(res)
+
+
+def set_search_words():
+    global SEARCH_WORDS
+    #SEARCH_WORDS = WORD_LIST[50000:52000]
+    #SEARCH_WORDS = ['EUROKY', 'EURO']
+
+    if BLANKS:
+        SEARCH_WORDS = WORDS
+    else:
+        # todo: faster if str? why gen slower?
+        SEARCH_WORDS = {
+            w for w in WORDS if any([l in w for l in LETTERS])
+        }
+
 
 # todo: nodelist needs main
 # [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
@@ -593,6 +646,8 @@ def main() -> None:
     start = timer()
 
     full = Board()
+
+    set_search_words()
 
     if full.new_game:
         lo.s(' = Fresh game = ')
@@ -606,11 +661,13 @@ def main() -> None:
     else:
         # -- specify nodes
 
-        #full_nodes = full.nodes
-        full_nodes = full.get_row(14)
+        full_nodes = full.nodes
+        #full_nodes = full.get_row(14)
 
-        #full_nodes = []
-        #full_nodes.append(full.get(8,2))
+        # full_nodes = [
+        #     full.get(6, 1),
+        #     full.get(7, 1),
+        # ]
 
         # --
 

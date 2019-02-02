@@ -1,8 +1,9 @@
 *.sw[op]
 *.bak
-.idea
+/.idea/
 *.bu
 *.log
-__pycache__
-.directory
-/.mypy_cache
+/__pycache__/
+/.directory
+/.mypy_cache/
+*.*prof
