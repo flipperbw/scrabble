@@ -243,7 +243,9 @@ class Node:
 
 
 class Word: #todo
-    pass
+    def __init__(self, nodes: List[Node]):
+        self.nodes = nodes
+
 
 
 class Board:

@@ -9,8 +9,8 @@ from typing import Set
 #LOG_LEVEL = 'VERBOSE'
 #LOG_LEVEL = 'INFO'
 #LOG_LEVEL = 'WARNING'
-#LOG_LEVEL = 'SUCCESS'
-LOG_LEVEL = 'ERROR'
+LOG_LEVEL = 'SUCCESS'
+#LOG_LEVEL = 'ERROR'
 
 
 # - pool
@@ -116,7 +116,7 @@ _board = [ #s1
     list('           '),
     list('           '),
     list('           '),
-    list('           '),
+    list('           '), # mid
     list('           '),
     list('           '),
     list('           '),
@@ -137,7 +137,7 @@ BOARD = pd.DataFrame(_board)
 #LETTERS = open('data/letters.txt', 'r').read().splitlines()
 #LETTERS = list('TOTHBYU')
 #LETTERS = 'EIIEB?A' #problem with blanks overwriting
-LETTERS = ' '
+LETTERS = ''
 
 
 # - search
