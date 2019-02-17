@@ -7,6 +7,7 @@ from typing import Any, Dict, Iterator, List, Optional, Tuple
 import sys
 
 from setup import setup
+from utils import log_init
 
 
 #import builtins
@@ -23,7 +24,7 @@ from setup import setup
 # if someone elses word is a blank, dont count it
 # why is multiprocessing _C getting called?
 # if blank and already have another letter, will assume not blank
-
+# why is main not showing proper process?
 
 # --
 
@@ -37,8 +38,8 @@ sd = setup(fname)
 # -- GLOBALS
 
 LOG_LEVEL = sd['log_level']
-lo = sd['logger'] ##
-#lo = log_init(LOG_LEVEL, skip_main=False)
+#lo = sd['logger'] ##
+lo = log_init(LOG_LEVEL, skip_main=False)
 
 USE_POOL = sd['use_pool']
 
@@ -620,7 +621,19 @@ def main() -> None:
 
         for row in solved_board.iterrows():
             row_data = row[1].to_list()
-            print('| ' + ' '.join(rl.upper() if len(rl) == 1 else rl for rl in row_data) + ' |')
+            row_str = []
+            for rl in row_data:
+                rl_len = len(rl)
+                rl_val = rl
+
+                if rl_len == 0:
+                    rl_val = ' '
+                elif rl_len == 1:
+                    rl_val = rl.upper()
+
+                row_str.append(rl_val)
+
+            print('| ' + ' '.join(row_str) + ' |')
 
         print('-' * ((SHAPE['row']*2) -1 + 4))
 

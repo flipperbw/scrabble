@@ -95,7 +95,7 @@ def _get_search_words(wordlist: list = None):
         wordlist = []
 
     #SEARCH_WORDS = wordlist[50000:52000]
-    #SEARCH_WORDS = ['EUROKY', 'EURO']
+    #SEARCH_WORDS = ['TAXON']
     SEARCH_WORDS: Set[str] = set()
 
     return SEARCH_WORDS
@@ -107,25 +107,30 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
 
         try:
             board = pd.read_pickle(this_board_dir + 'board.pkl')
-
-            board_size = board.size
-            if board_size == 15*15:
-                default_board = pd.read_pickle(board_dir + big_board_name)
-            elif board_size == 11*11:
-                default_board = pd.read_pickle(board_dir + small_board_name)
-            else:
-                logger.c(f'Board size ({board_size}) has no match')
-                sys.exit(1)
-
             letters = pd.read_pickle(this_board_dir + 'letters.pkl')
-
-        except FileNotFoundError:
-            logger.c('Could not find file', exc_info=1)
+        except FileNotFoundError as exc:
+            logger.c(f'Could not find file: {exc.filename}')
             sys.exit(1)
+
+        board_size = board.size
+        if board_size == 15*15:
+            board_name = big_board_name
+        elif board_size == 11*11:
+            board_name = small_board_name
+        else:
+            logger.c(f'Board size ({board_size}) has no match')
+            sys.exit(1)
+
     else:
         board = pd.DataFrame(BOARD)
-        default_board = pd.DataFrame(DEFAULT_BOARD_NAME)
+        board_name = DEFAULT_BOARD_NAME
         letters = LETTERS
+
+    try:
+        default_board = pd.read_pickle(board_name)
+    except FileNotFoundError as exc:
+        logger.c(f'Could not find file: {exc.filename}')
+        sys.exit(1)
 
     wordlist = open(f'{words_dir}{word_typ}.txt').read().splitlines()
     search_words = _get_search_words(wordlist)
