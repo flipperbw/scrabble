@@ -1,9 +1,23 @@
+import json
 import pandas as pd
 from typing import Set
+import sys
+
+from utils import log_init
 
 
-# - logging
+# - DIRS
 
+data_dir = 'data/'
+board_dir = data_dir + 'boards/'
+words_dir = data_dir + 'wordlists/'
+points_dir = data_dir + 'points/'
+
+big_board_name = board_dir + 'default_board_big.pkl'
+small_board_name = board_dir + 'default_board_small.pkl'
+
+
+# - LOGGING
 
 #LOG_LEVEL = 'DEBUG'
 #LOG_LEVEL = 'VERBOSE'
@@ -12,137 +26,121 @@ from typing import Set
 LOG_LEVEL = 'SUCCESS'
 #LOG_LEVEL = 'ERROR'
 
+logger = log_init(LOG_LEVEL, skip_main=False)
 
-# - pool
 
+# - POOL
 
 USE_POOL = True
 #USE_POOL = False
 
 
-# - default board
+# - DEFAULT BOARD
+
+#DEFAULT_BOARD_NAME = big_board_name
+DEFAULT_BOARD_NAME = small_board_name
 
 
-#todo small vs big board
-#DEFAULT_BOARD = pd.read_pickle('data/default_board.pkl')
-
-#small board
-#'''
-DEFAULT_BOARD = pd.DataFrame([
-    ['3l','','3w'] + ['']*5 + ['3w','','3l'],
-    ['','2w','','','','2w','','','','2w',''],
-    ['3w','','2l','','2l','','2l','','2l','','3w'],
-    ['','','','3l','','','','3l','','',''],
-    ['','','2l','','','','','','2l','',''],
-
-    ['','2w','','','','x','','','','2w',''],
-
-    ['', '', '2l', '', '', '', '', '', '2l', '', ''],
-    ['', '', '', '3l', '', '', '', '3l', '', '', ''],
-    ['3w', '', '2l', '', '2l', '', '2l', '', '2l', '', '3w'],
-    ['', '2w', '', '', '', '2w', '', '', '', '2w', ''],
-    ['3l', '', '3w'] + [''] * 5 + ['3w', '', '3l']
-])
-#'''
-
-
-# - game board
-
-
-#todo small vs big board
-#_board = [['' for _ in range(15)] for _ in range(15)]
-#_board = [['' for _ in range(11)] for _ in range(11)]
+# - GAME BOARD
 
 '''
-_board = [ #n1
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','C'],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','H'],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','g','I'],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ','j',' ',' ',' ','r',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ','o',' ',' ',' ','i','d'],
-    [' ',' ',' ',' ',' ','t','h','i','s','t','l','e',' ','n','a'],
-    [' ',' ',' ',' ','g','o','a','d',' ','s','i','t','e','d',' '],
-    [' ',' ',' ',' ',' ','g','o',' ',' ',' ','t','a','m','e','r'],
-    [' ',' ',' ',' ',' ',' ',' ','e','c','r','u',' ',' ','r','e'],
-    [' ',' ',' ','f',' ','w','a','x',' ',' ',' ','w','a','s','p'],
-    [' ','N','E','O','N','E','D',' ',' ',' ','q','i',' ',' ',' '],
-    [' ',' ',' ','i',' ',' ',' ',' ','d','r','u','m','s',' ',' '],
-    [' ',' ',' ','l',' ',' ',' ',' ',' ',' ','o','p',' ',' ',' ']
+# big
+BOARD = [        #
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '), #
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
+    list('               '),
 ]
 '''
 
-'''
-_board = [ #n2
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ',' ','R',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ','Z','A',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ',' ',' ','E','T',' ',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ','c',' ','S','I','R',' ',' ',' ',' ',' '],
-    [' ',' ',' ',' ',' ','o',' ','T','O','E',' ',' ',' ',' ',' '],
-    [' ',' ',' ','b','e','n','D','S',' ','L',' ',' ',' ',' ',' '],
-    ['j','a','n','e',' ','e',' ',' ',' ','A',' ',' ',' ',' ',' '],
-    ['i',' ',' ',' ',' ','d','e','t','o','x',' ',' ',' ',' ',' '],
-    ['v',' ',' ',' ',' ',' ',' ','o',' ',' ',' ',' ',' ',' ',' '],
-    ['e',' ',' ',' ',' ',' ',' ','u',' ',' ',' ',' ',' ',' ',' '],
-    ['s','o','l',' ',' ',' ',' ','c',' ','u',' ',' ',' ',' ',' '],
-    [' ',' ',' ','w','r','i','g','h','t','s',' ',' ',' ',' ',' '],
-    ['a','f','r','o',' ','T','I','E',' ','e','u','r','o',' ',' ']
-]
-'''
-
-'''
-_board = [ #problem with blanks overwriting
+# small
+BOARD = [      #
     list('           '),
-    list('         H '),
-    list('         A '),
-    list('         I '),
-    list('      DAWK '),
-    list('     PAXES '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '),
+    list('           '), #
     list('           '),
     list('           '),
     list('           '),
     list('           '),
     list('           '),
 ]
-'''
-
-#'''
-_board = [ #s1
-    list('           '),
-    list('           '),
-    list('           '),
-    list('           '),
-    list('           '),
-    list('           '), # mid
-    list('           '),
-    list('           '),
-    list('           '),
-    list('           '),
-    list('           '),
-]
-#'''
-
-#_board = [[' ' for _ in range(11)] for _ in range(11)]
-
-#BOARD = pd.read_pickle('data/board.pkl')
-BOARD = pd.DataFrame(_board)
 
 
-# - letters
+# - LETTERS
 
-
-#LETTERS = open('data/letters.txt', 'r').read().splitlines()
 #LETTERS = list('TOTHBYU')
 #LETTERS = 'EIIEB?A' #problem with blanks overwriting
 LETTERS = ''
 
 
-# - search
+# - SEARCH
+
+# noinspection PyPep8Naming,PyUnusedLocal
+def _get_search_words(wordlist: list = None):
+    if wordlist is None:
+        wordlist = []
+
+    #SEARCH_WORDS = wordlist[50000:52000]
+    #SEARCH_WORDS = ['EUROKY', 'EURO']
+    SEARCH_WORDS: Set[str] = set()
+
+    return SEARCH_WORDS
 
 
-#SEARCH_WORDS = WORD_LIST[50000:52000]
-#SEARCH_WORDS = ['EUROKY', 'EURO']
-SEARCH_WORDS: Set[str] = set()
+def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
+    if filename is not None:
+        this_board_dir = f'{board_dir}{filename}/'
+
+        try:
+            board = pd.read_pickle(this_board_dir + 'board.pkl')
+
+            board_size = board.size
+            if board_size == 15*15:
+                default_board = pd.read_pickle(board_dir + big_board_name)
+            elif board_size == 11*11:
+                default_board = pd.read_pickle(board_dir + small_board_name)
+            else:
+                logger.c(f'Board size ({board_size}) has no match')
+                sys.exit(1)
+
+            letters = pd.read_pickle(this_board_dir + 'letters.pkl')
+
+        except FileNotFoundError:
+            logger.c('Could not find file', exc_info=1)
+            sys.exit(1)
+    else:
+        board = pd.DataFrame(BOARD)
+        default_board = pd.DataFrame(DEFAULT_BOARD_NAME)
+        letters = LETTERS
+
+    wordlist = open(f'{words_dir}{word_typ}.txt').read().splitlines()
+    search_words = _get_search_words(wordlist)
+    words = set(wordlist)
+
+    points = json.load(open(f'{points_dir}{pts_typ}.json'))
+
+    return {
+        'log_level': LOG_LEVEL,
+        'logger': logger,
+        'use_pool': USE_POOL,
+        'words': words,
+        'search_words': search_words,
+        'board': board,
+        'default_board': default_board,
+        'letters': letters,
+        'points': points
+    }

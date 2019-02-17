@@ -1,52 +1,62 @@
 #!/usr/bin/env python
 
-import json
 from multiprocessing import (cpu_count, current_process, Pool)
 from pprint import pformat
 from timeit import default_timer as timer
 from typing import Any, Dict, Iterator, List, Optional, Tuple
+import sys
 
-from setup import (
-    BOARD,
-    DEFAULT_BOARD,
-    LETTERS,
-    LOG_LEVEL,
-    SEARCH_WORDS as _SW,
-    USE_POOL,
-)
-from utils import log_init
+from setup import setup
+
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
 
+
 # -- TODOS
 
 #todo: profiling
-#combine stuffz
-#change return [] to yields?
-#if word was found in a different check, skip
-#change to f'' formatting
+# combine stuffz
+# change return [] to yields?
+# if word was found in a different check, skip
+# change to f'' formatting
 # if someone elses word is a blank, dont count it
 # why is multiprocessing _C getting called?
 # if blank and already have another letter, will assume not blank
 
-# -- globals
 
-BLANKS = LETTERS.count('?')
+# --
 
-WORD_LIST = open('data/wordlists/wwf.txt').read().splitlines()
-WORDS = set(WORD_LIST)
+fname = None
+if len(sys.argv) > 1:
+    fname = sys.argv[1]
 
-SEARCH_WORDS = _SW
+sd = setup(fname)
 
+
+# -- GLOBALS
+
+LOG_LEVEL = sd['log_level']
+lo = sd['logger'] ##
+#lo = log_init(LOG_LEVEL, skip_main=False)
+
+USE_POOL = sd['use_pool']
+
+BOARD = sd['board']
+DEFAULT_BOARD = sd['default_board']
 SHAPE = {
     'row': BOARD.shape[0],
     'col': BOARD.shape[1]
 }
 
-POINTS = json.load(open('data/points.json'))
+LETTERS = sd['letters']
+BLANKS = LETTERS.count('?')
 
-lo = log_init(LOG_LEVEL, skip_main=False)
+WORDS = sd['words']
+SEARCH_WORDS = sd['search_words']
+
+POINTS = sd['points']
+
 
 # --
 
@@ -525,7 +535,7 @@ def check_node(no: Optional[Node]):
                 word_info.append(res)
 
 
-def set_search_words():
+def set_search_words() -> None:
     global SEARCH_WORDS
 
     if SEARCH_WORDS: return

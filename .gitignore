@@ -1,9 +1,14 @@
 *.sw[op]
 *.bak
-/.idea/
 *.bu
 *.log
+*.*prof
+
 /__pycache__/
+/.idea/
 /.directory
 /.mypy_cache/
-*.*prof
+
+/images/
+/data/boards/*/
+/data/wordlists/extra/

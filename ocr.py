@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+
 import os
+import sys
 
 import cv2
 import numpy as np
 import pandas as pd
 import pytesseract
-from PIL import Image
+#from PIL import Image
 
-img_file = 'scr.png'
+img_file = sys.argv[1]
 
 img_dir = 'images/'
 data_dir = 'data/'
@@ -48,19 +51,15 @@ def get_img():
         return gray
 
 
-#%% show img
-
 cv2_image = get_img()
-Image.fromarray(cv2_image).show()
+#Image.fromarray(cv2_image).show()
 
-
-#%%
 
 white = 255
 empty = 236
 
 
-def is_blank(val, c=white):
+def is_blank(val, c=white) -> bool:
     if color:
         return all(va == c for va in val)
     else:
@@ -220,7 +219,7 @@ def get_boxes(box_rows):
 
 rows = get_rows()
 boxes, rows_copy = get_boxes(rows)
-Image.fromarray(rows_copy).show()
+#Image.fromarray(rows_copy).show()
 
 #%%
 
@@ -246,11 +245,6 @@ def write_boxes():
 
             if os.path.exists(fn):
                 continue
-
-            Image.fromarray(rows[
-                b[0][1]:b[1][1],
-                b[0][0]:b[1][0]
-            ]).show()
 
             crop_img = rows[
                b_s_y + text_y_t:b_e_y - text_y_b,
@@ -312,15 +306,15 @@ for ix in range(num_tiles):
     text = pytesseract.image_to_string(iu, config=tess_conf)
 
     if text in ('TW', 'DW', 'TL', 'DL', '+'):
-        if text == 'TW' and table[row][col] != '3w':
+        if text == 'TW' and default_board[row][col] != '3w':
             print('problem')
-        elif text == 'DW' and table[row][col] != '2w':
+        elif text == 'DW' and default_board[row][col] != '2w':
             print('problem')
-        elif text == 'TL' and table[row][col] != '3l':
+        elif text == 'TL' and default_board[row][col] != '3l':
             print('problem')
-        elif text == 'DL' and table[row][col] != '2l':
+        elif text == 'DL' and default_board[row][col] != '2l':
             print('problem')
-        elif text == '+' and table[row][col] != 'x':
+        elif text == '+' and default_board[row][col] != 'x':
             print('problem')
 
         os.remove(na)
@@ -356,8 +350,8 @@ for i in range(0, 7 * 107, 107):
     blet[np.where(blet >= 50)] = 255
 
     text = pytesseract.image_to_string(blet, config=tess_conf)
-    print(text)
     if not text:
+        #todo fix for no letters
         text = '?'
 
     letters.append(text)
