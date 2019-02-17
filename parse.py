@@ -34,7 +34,7 @@ from utils import log_init
 
 BLANKS = LETTERS.count('?')
 
-WORD_LIST = open('data/wordlist.txt').read().splitlines()
+WORD_LIST = open('data/wordlists/wwf.txt').read().splitlines()
 WORDS = set(WORD_LIST)
 
 SEARCH_WORDS = _SW

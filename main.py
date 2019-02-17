@@ -1,53 +1,97 @@
-from PIL import Image
-import pytesseract
-import cv2
 import os
+
+import cv2
 import numpy as np
-import pandas
+import pandas as pd
+import pytesseract
+from PIL import Image
 
-i = 'data/scr.png'
-o = 'data/gray.png'
-t = 'data/template.png'
+img_file = 'scr.png'
 
-image = cv2.imread(i)
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-gray = gray[305:-130, 2:-2]
+img_dir = 'images/'
+data_dir = 'data/'
 
-#cv2.imwrite(o, gray)
+box_dir = img_dir + 'boxes/'
+board_dir = data_dir + 'boards/'
 
-backtorgb = cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
+big_board_file = data_dir + 'default_board_big.pkl'
+small_board_file = data_dir + 'default_board_small.pkl'
 
-#templ = cv2.imread(t, 0)
-#trgb = cv2.cvtColor(templ, cv2.COLOR_GRAY2RGB)
+tess_conf = '--psm 8 --oem 0 -c tessedit_char_whitelist="ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
 
-#display(Image.fromarray(backtorgb))
+# color = True
+color = False
+
+big_board = pd.read_pickle(big_board_file)
+small_board = pd.read_pickle(small_board_file)
+
+img_file_root = os.path.splitext(img_file)[0] + '/'
+this_img_dir = box_dir + img_file_root
+this_board_dir = board_dir + img_file_root
+
+for this_dir in (this_img_dir, this_board_dir):
+    if not os.path.exists(this_dir):
+        os.makedirs(this_dir)
 
 
+def get_img():
+    img = img_dir + img_file
 
-def get_boxes():
-    # color = True
-    color = False
+    image = cv2.imread(img)
 
-    start_pxl_w = 3
-    end_pxl_w = -3
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = gray[305:-130, 2:-2]
 
     if color:
-        rows = backtorgb.copy()
+        return cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
     else:
-        rows = gray.copy()
+        return gray
+
+
+#%% show img
+
+cv2_image = get_img()
+Image.fromarray(cv2_image).show()
+
+
+#%%
+
+white = 255
+empty = 236
+
+
+def is_blank(val, c=white):
+    if color:
+        return all(va == c for va in val)
+    else:
+        return val == c
+
+
+def get_rows():
+    _rows = cv2_image.copy()
 
     rowspace = 49
     # wanted_row = 7
     wanted_row = 0
 
-    rows = rows[((wanted_row * rowspace) + 1):742]
-    # rows = rows[193:742]
+    _rows = _rows[((wanted_row * rowspace) + 1):742]
+    # _rows = _rows[193:742]
+
+    return _rows
+
+def get_boxes(box_rows):
+    _rows_copy = box_rows.copy()
+
+    start_pxl_w = 3
+    end_pxl_w = -3
 
     check_y = 37
     check_x = 22
 
-    white = 255
-    empty = 236
+    top_box_x = 0
+    top_box_y = 0
+    bottom_box_x = 0
+    bottom_box_y = 0
 
     new_check = True
 
@@ -65,26 +109,20 @@ def get_boxes():
     max_top = 0
     max_bottom = 0
 
-    def is_blank(val, c=white):
-        if color:
-            return all(va == c for va in val)
-        else:
-            return val == c
+    _boxes = []
 
-    boxes = []
-
-    for rn, row in enumerate(rows):
+    for rn, trow in enumerate(_rows_copy):
         if rn < skip_rows:
             continue
 
-        row_cut = row[start_pxl_w:end_pxl_w]
+        row_cut = trow[start_pxl_w:end_pxl_w]
 
         if new_check:
             if not found_top:
                 top_box_y = rn
 
-            for cn, col in enumerate(row_cut):
-                if not is_blank(col):
+            for cn, rcol in enumerate(row_cut):
+                if not is_blank(rcol):
                     top_box_y = max(rn, top_box_y)
                     found_top = True
 
@@ -104,7 +142,7 @@ def get_boxes():
             found_left = False
             found_right = False
 
-            for cn, col in enumerate(row_cut):
+            for cn, rcol in enumerate(row_cut):
                 if cn < skip_cols:
                     continue
 
@@ -112,7 +150,7 @@ def get_boxes():
                     if skipped_cols > 0:
                         top_box_x = skipped_cols + 1
                         found_left = True
-                    elif not is_blank(col):
+                    elif not is_blank(rcol):
                         top_box_x = cn + start_pxl_w
                         found_left = True
 
@@ -127,7 +165,7 @@ def get_boxes():
                         bottom_box_x = (top_box_x + 48)
                         found_right = True
                         skipped_cols = bottom_box_x
-                    elif is_blank(col):
+                    elif is_blank(rcol):
                         bottom_box_x = (cn + start_pxl_w - 1)
                         found_right = True
                         skipped_cols = 0
@@ -137,7 +175,7 @@ def get_boxes():
                     if found_right:
                         # print('end box X at {}'.format(bottom_box_x))
 
-                        check_vals = rows[rn:(rn + (49 - check_y)), (cn - check_x)]
+                        check_vals = _rows_copy[rn:(rn + (49 - check_y)), (cn - check_x)]
                         for r, v in enumerate(check_vals):
                             if is_blank(v):
                                 bottom_box_y = max(r, (45 - check_y)) + rn
@@ -157,7 +195,7 @@ def get_boxes():
                         # bottom_box_y - 7
 
                         this_box = ((top_box_x, top_box_y), (bottom_box_x, bottom_box_y),)
-                        boxes.append(this_box)
+                        _boxes.append(this_box)
 
                         # print(rows[this_box[1][1] -10][this_box[1][0] - 22])
                         # display(Image.fromarray(rows[this_box[0][1]:this_box[1][1], this_box[0][0]:this_box[1][0]]))
@@ -170,124 +208,138 @@ def get_boxes():
 
                 new_check = True
 
-                # if color:
-
-    # else:
-    # rows_copy = cv2.cvtColor(rows, cv2.COLOR_GRAY2RGB)
-
-    rows_copy = rows.copy()
-
-    for b in boxes:
+    for b in _boxes:
         if color:
-            cv2.rectangle(rows_copy, b[0], b[1], (255, 0, 0), 1)
+            cv2.rectangle(_rows_copy, b[0], b[1], (255, 0, 0), 1)
         else:
-            cv2.rectangle(rows_copy, b[0], b[1], 0, 1)
+            cv2.rectangle(_rows_copy, b[0], b[1], 0, 1)
+
+    return _boxes, _rows_copy
+
+#%% show boxes
+
+rows = get_rows()
+boxes, rows_copy = get_boxes(rows)
+Image.fromarray(rows_copy).show()
+
+#%%
+
+def write_boxes():
+    text_y_t = 13
+    text_y_b = 2
+    text_x_l = 5
+    text_x_r = 5
+
+    bi = 1
+
+    for ba, b in enumerate(boxes):
+        b_s_x = b[0][0]
+        b_s_y = b[0][1]
+        b_e_x = b[1][0]
+        b_e_y = b[1][1]
+
+        start = rows[b_s_y + 22][b_s_x + 7]
+
+        if not is_blank(start, c=empty):
+            fn = this_img_dir + '{}_nat.png'.format(ba)
+            fa = this_img_dir + '{}.png'.format(ba)
+
+            if os.path.exists(fn):
+                continue
+
+            Image.fromarray(rows[
+                b[0][1]:b[1][1],
+                b[0][0]:b[1][0]
+            ]).show()
+
+            crop_img = rows[
+               b_s_y + text_y_t:b_e_y - text_y_b,
+               b_s_x + text_x_l:b_e_x - text_x_r
+            ]
+
+            if color:
+                crop_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY).copy()
+            else:
+                crop_gray = crop_img.copy()
+
+            cv2.imwrite(fn, crop_gray)
+
+            has_white = crop_gray[np.where(crop_gray == 255)]
+            if len(has_white):
+                crop_gray[np.where(crop_gray >= 203)] = 0
+                crop_gray[np.where(crop_gray != 0)] = 255
+            else:
+                crop_gray[np.where(crop_gray >= 50)] = 255
+
+            cv2.imwrite(fa, crop_gray)
+
+            #crop_gray = cv2.threshold(crop_gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+            #crop_gray = cv2.medianBlur(crop_gray, 3)
+
+            #display(Image.fromarray(crop_gray))
+
+            #fn = 'i_{}.png'.format(bi)
+            #cv2.imwrite(fn, crop_gray)
+
+            bi += 1
 
 
+write_boxes()
 
-conf = '--psm 8 --oem 0 -c tessedit_char_whitelist="ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
+# todo get board.shape, set correct board
+default_board = big_board
 
+table = np.full_like(default_board, '', dtype='U2')
 
-#ignore plus on start
+num_rows, num_cols = table.shape
+num_tiles = num_rows * num_cols
 
-middle_x = [''] * 14
+# todo: ignore x on start
 
-middle_x[3] = '2w'
-middle_x[10] = '2w'
-
-middle_y = [['']] * 15
-
-middle_y[3] = ['2w']
-middle_y[7] = ['x']
-middle_y[11] = ['2w']
-
-quad_tl = np.array([[''] * 7] * 7, dtype='U2')
-
-quad_tl[0][3] = '3w'
-quad_tl[0][6] = '3l'
-quad_tl[1][2] = '2l'
-quad_tl[1][5] = '2w'
-quad_tl[2][1] = '2l'
-quad_tl[2][4] = '2l'
-quad_tl[3][0] = '3w'
-quad_tl[3][3] = '3l'
-quad_tl[4][2] = '2l'
-quad_tl[4][6] = '2l'
-quad_tl[5][1] = '2w'
-quad_tl[5][5] = '3l'
-quad_tl[6][0] = '3l'
-quad_tl[6][4] = '2l'
-
-quad_bl = np.flip(quad_tl, 0)
-quad_tr = np.flip(quad_tl, 1)
-quad_br = np.flip(quad_tl, (0,1))
-
-quad_left = np.concatenate((quad_tl, quad_bl))
-quad_right = np.concatenate((quad_tr, quad_br))
-
-full = np.concatenate((quad_left, quad_right), axis=1)
-full = np.insert(full, 7, middle_x, axis=0)
-full = np.insert(full, [7], middle_y, axis=1)
-
-
-df_default = pandas.DataFrame(full)
-
-table = np.array([[''] * 15] * 15)
-
-
-# for ix in range(43):
-for ix in range(225):
-    fold = 'data/boxes'
+for ix in range(num_tiles):
     fina = '{}.png'.format(ix)
     fint = '{}_nat.png'.format(ix)
-    na = '{}/{}'.format(fold, fina)
-    nat = '{}/{}'.format(fold, fint)
+    na = this_img_dir + fina
+    nat = this_img_dir + fint
 
     iu = cv2.imread(na, cv2.IMREAD_GRAYSCALE)
     if not np.any(iu):
         continue
 
-    text = pytesseract.image_to_string(iu, config=conf)
+    row = (ix // num_rows)
+    col = ix % num_cols
 
-    if text in ('TW', 'DW', 'TL', 'DL'):
-        row = (ix // 15)
-        col = ix % 15
+    text = pytesseract.image_to_string(iu, config=tess_conf)
 
-        if text == 'TW' and full[row][col] != '3w':
+    if text in ('TW', 'DW', 'TL', 'DL', '+'):
+        if text == 'TW' and table[row][col] != '3w':
             print('problem')
-        elif text == 'DW' and full[row][col] != '2w':
+        elif text == 'DW' and table[row][col] != '2w':
             print('problem')
-        elif text == 'TL' and full[row][col] != '3l':
+        elif text == 'TL' and table[row][col] != '3l':
             print('problem')
-        elif text == 'DL' and full[row][col] != '2l':
+        elif text == 'DL' and table[row][col] != '2l':
+            print('problem')
+        elif text == '+' and table[row][col] != 'x':
             print('problem')
 
-        os.rename(na, '{}/old/{}'.format(fold, fina))
-        os.rename(nat, '{}/old/{}'.format(fold, fint))
+        os.remove(na)
+        os.remove(nat)
 
     elif len(text) == 1:
-        row = (ix // 15)
-        col = ix % 15
-
         table[row][col] = text
 
-df = pandas.DataFrame(table)
+df = pd.DataFrame(table)
 print(df)
+df.to_pickle(this_board_dir + 'board.pkl')
 
 
-
-#bottomgray = gray[794:, 2:-2]
-bottomgray = gray[823:-8, 16:-16]
+#bottomgray = cv2_image[794:, 2:-2]
+bottomgray = cv2_image[823:-8, 16:-16]
 
 #cv2.imwrite(o, gray)
 
-#backtorgb = cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
-
-#templ = cv2.imread(t, 0)
-#trgb = cv2.cvtColor(templ, cv2.COLOR_GRAY2RGB)
-
-
-print(pytesseract.image_to_string(bottomgray, config=conf))
+print(pytesseract.image_to_string(bottomgray, config=tess_conf))
 
 bg_cop = bottomgray.copy()
 
@@ -303,7 +355,7 @@ for i in range(0, 7 * 107, 107):
 
     blet[np.where(blet >= 50)] = 255
 
-    text = pytesseract.image_to_string(blet, config=conf)
+    text = pytesseract.image_to_string(blet, config=tess_conf)
     print(text)
     if not text:
         text = '?'
@@ -312,20 +364,4 @@ for i in range(0, 7 * 107, 107):
 
 print(letters)
 
-
-
-#letter_vals
-
-
-
-
-wordlist = open('wordlist.txt', 'r')
-words = wordlist.read().splitlines()
-
-
-print(df)
-print(df_default)
-
-
-df.to_pickle('data/board.pkl')
-df_default.to_pickle('data/default_board.pkl')
+pd.to_pickle(letters, this_board_dir + 'letters.pkl')
