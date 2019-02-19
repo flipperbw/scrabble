@@ -1,6 +1,7 @@
 import json
-import pandas as pd
 from typing import Set
+
+import pandas as pd
 
 
 # - DIRS
@@ -107,9 +108,9 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
             raise Exception(f'Could not find file: {exc.filename}')
 
         board_size = board.size
-        if board_size == 15*15:
+        if board_size == 15 * 15:
             board_name = big_board_name
-        elif board_size == 11*11:
+        elif board_size == 11 * 11:
             board_name = small_board_name
         else:
             raise Exception(f'Board size ({board_size}) has no match')

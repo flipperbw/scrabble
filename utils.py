@@ -101,9 +101,6 @@ class LogWrapper:
             self.enabled_levels[level] = new_level
             return new_level
 
-    def _empty(*_args, **_kwargs):
-        return
-
     def _log(self, level: int, msg, args, exc_info=None, extra=None):
         if not self._is_enabled(level):
             return

@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
+import sys
 from multiprocessing import (cpu_count, current_process, Pool)
 from pprint import pformat
 from timeit import default_timer as timer
 from typing import Any, Dict, Iterator, List, Optional, Tuple
-import sys
 
 from setup import setup
 from utils import log_init
-
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
@@ -111,7 +110,6 @@ class Node:
                (isinstance(self.up, Node) and self.up.value is not None) or \
                (isinstance(self.down, Node) and self.down.value is not None)
 
-
     def _get_poss_word_dict(self, direc: str, word: str) -> Dict[int, bool]:
         return self.poss_values.get(direc, {}).get(word, {})
 
@@ -119,7 +117,7 @@ class Node:
         return idx in self._get_poss_word_dict(direc, word)
 
     def get_poss_val(self, direc: str, word: str, idx: int) -> Optional[bool]:
-        return self._get_poss_word_dict(direc, word).get(idx) # ''?
+        return self._get_poss_word_dict(direc, word).get(idx)  # ''?
 
     def set_poss_val(self, direc: str, word: str, idx: int, is_blank: bool = False) -> bool:
         pv_info = self.poss_values[direc]
@@ -134,7 +132,6 @@ class Node:
                 return False
         return True
 
-
     def get_points(
             self, nodes: List['Node'], direc: str, word: str, new_words: Optional[List[Dict]] = None, **_kw
     ) -> int:  # todo combine this optional thing into one type
@@ -147,7 +144,6 @@ class Node:
             for nw_dict in new_words:
                 new_pts = self._points_from_nodes(**{k: v for k, v in nw_dict.items() if k != 'idx'})
                 pts += new_pts
-
 
         if len([x for x in nodes if x.value is None]) == 7:  # todo: or is it all letters?
             pts += 35
@@ -176,10 +172,10 @@ class Node:
         return pts
 
     def _letter_points(self, direc: str, word: str, idx: int) -> int:
-        if self.points: #unnec
+        if self.points:  #unnec
             return self.points
 
-        is_blank = self.get_poss_val(direc, word, idx) # i guess i could use has_poss here
+        is_blank = self.get_poss_val(direc, word, idx)  # i guess i could use has_poss here
         if is_blank is not None:
             if is_blank:
                 return 0
@@ -198,7 +194,6 @@ class Node:
 
         return 0
 
-
     def get_other_nodes(self, check_typ: str) -> Tuple[List['Node'], List['Node']]:
         if check_typ == 'row':
             nodes = self.row
@@ -210,7 +205,7 @@ class Node:
             raise Exception('Incorrect check_typ: {}'.format(check_typ))
 
         bef = nodes[:slice_val]
-        aft = nodes[slice_val+1:]
+        aft = nodes[slice_val + 1:]
 
         return bef, aft
 
@@ -244,7 +239,6 @@ class Node:
 
         return nodes_bef, nodes_aft
 
-
     def __str__(self):
         return '<Node>: ({},{}) v: "{}"'.format(self.x, self.y, self.value)
 
@@ -252,14 +246,13 @@ class Node:
         return self.__str__()
 
 
-class Word: #todo
+class Word:  #todo
     def __init__(self, nodes: List[Node]):
         self.nodes = nodes
 
 
-
 class Board:
-    def __init__(self, board_mults = DEFAULT_BOARD, game_board = BOARD) -> None:
+    def __init__(self, board_mults=DEFAULT_BOARD, game_board=BOARD) -> None:
         self.default_board = board_mults
         self.board = game_board
 
@@ -325,6 +318,7 @@ def get_word(nodes: List[Node], direc: str = '', word: str = '', idx: int = 0) -
         '+' for nw in nodes
     ])
 
+
 #@profile
 def check_and_get(
         node_list: List[Node], direc: str, chk_dir: str, word: str, word_len: int, start: int
@@ -346,7 +340,6 @@ def check_and_get(
         if node_aft and node_aft.value:
             lo.d(f'Following node exists for {direc}, skipping.')
             return None
-
 
     ls = list(LETTERS)
     blanks = BLANKS
@@ -395,7 +388,7 @@ def check_and_get(
             bef_nodes, aft_nodes = no.get_other_word_nodes(chk_dir)
 
             if bef_nodes or aft_nodes:
-                bef_word = get_word(bef_nodes) # should not need other args
+                bef_word = get_word(bef_nodes)  # should not need other args
                 aft_word = get_word(aft_nodes)
 
                 new_word = bef_word + le + aft_word
@@ -428,6 +421,7 @@ def check_and_get(
 
     return new_word_list
 
+
 #@profile
 def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
     lo.v(f'{direc} - {word}')
@@ -454,7 +448,7 @@ def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
         new_words = check_and_get(node_list, direc, chk_dir, word, word_len, start)
         if new_words is not None:
             new_d = {
-                'nodes': node_list[start:start+word_len],
+                'nodes': node_list[start:start + word_len],
                 'word': word,
                 'direc': direc,
                 'idx': idx - start,
@@ -481,7 +475,7 @@ def check_words(w: str, no: Node) -> List[dict]:
                 tot_pts = no.get_points(**{k: v for k, v in word_dict.items() if k != 'idx'})
                 # todo, could do this beforehand
 
-                new_info ={
+                new_info = {
                     'pts': tot_pts,
                     'cell_letter': w[word_dict['idx']],
                     'cell_pos': (no.x, no.y),
@@ -494,6 +488,7 @@ def check_words(w: str, no: Node) -> List[dict]:
                 data.append(this_info)
 
     return data
+
 
 def run_worker(data: Tuple[str, Node]):
     w = data[0]
@@ -527,7 +522,7 @@ def check_node(no: Optional[Node]):
         for x in pool_res:
             for y in x:
                 word_info.append(y)
-    
+
     else:
         for w in SEARCH_WORDS:
             reses = check_words(w, no)
@@ -552,6 +547,7 @@ def set_search_words() -> None:
 # todo: nodelist needs main
 # [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
 word_info: List[Dict[str, Any]] = []
+
 
 def main() -> None:
     start = timer()
@@ -616,7 +612,7 @@ def main() -> None:
             if not node.value:
                 solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
 
-        print('\n' + '-' * ((SHAPE['row']*2) -1 + 4))
+        print('\n' + '-' * ((SHAPE['row'] * 2) - 1 + 4))
 
         for row in solved_board.iterrows():
             row_data = row[1].to_list()
@@ -634,12 +630,13 @@ def main() -> None:
 
             print('| ' + ' '.join(row_str) + ' |')
 
-        print('-' * ((SHAPE['row']*2) -1 + 4))
+        print('-' * ((SHAPE['row'] * 2) - 1 + 4))
 
         print(f'\nPoints: {best_data["pts"]}')
 
     end = timer()
     print('\nTime: {}'.format(round(end - start, 1)))
+
 
 if __name__ == '__main__':
     main()

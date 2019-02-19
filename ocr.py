@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
-import os
-from typing import Tuple, Dict
-
 import argparse
+import os
+import string
+from typing import Dict, Tuple
+
 import cv2
 import numpy as np
 import pandas as pd
-from pytesseract import image_to_string  # todo: image_to_boxes?
 from PIL import Image
-import string
+from pytesseract import image_to_string  # todo: image_to_boxes?
 
 from utils import log_init
-
 
 # -- GLOBALS
 
@@ -32,12 +31,6 @@ default_board_files = {
 
 tess_conf = '--psm 8 --oem 0 -c tessedit_char_whitelist="ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
 
-color = True
-#color = False
-
-#white = 255
-#empty = 236
-
 min_thresh = 0.6
 
 lower_black = np.array([64, 22, 0], dtype="uint16")
@@ -45,7 +38,7 @@ upper_black = np.array([78, 36, 24], dtype="uint16")
 lower_white = np.array([230, 230, 230], dtype="uint16")
 upper_white = np.array([255, 255, 255], dtype="uint16")
 
-# autodetect big vs small by looking at left col and seeing if all same color
+# todo: autodetect big vs small by looking at left col and seeing if all same color
 img_cut_range = {
     'big': {
         'board': {
@@ -98,16 +91,10 @@ def get_img(img: str) -> np.ndarray:
     image = cv2.imread(img)
 
     if not np.any(image):
-        raise Exception(f'Could not find image, or is empty: {img}')
+        raise Exception(f'Could not find image, or it\'s empty: {img}')
 
     #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    if color:
-        #return cv2.cvtColor(gray, cv2.COLOR_GRAY2RGB)
-        return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    else:
-        #return gray
-        return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 
 def create_board(board: np.ndarray, def_board: np.ndarray):
@@ -135,9 +122,10 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
     for l in string.ascii_lowercase:
         template = cv2.imread(templ_dir + l + '.png', 0)
         if small:
-            template = cv2.resize(template, (0,0), fx=1.12, fy=1.13)
+            template = cv2.resize(template, (0, 0), fx=1.12, fy=1.13)
+
         h, w = template.shape[:2]
-        
+
         res = cv2.matchTemplate(gimg, template, cv2.TM_CCOEFF_NORMED)
         match_locations = np.where(res >= min_thresh)
 
@@ -145,7 +133,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
 
         for x, y in zip(match_locations[1], match_locations[0]):
             start = (x, y)
-            end = (x + w, y + w)
+            end = (x + w, y + h)
 
             colx = (start[0] + end[0]) / 2
             rowx = (start[1] + end[1]) / 2
