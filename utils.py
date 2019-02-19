@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from functools import partialmethod
+from functools import partialmethod, partial
 from typing import Dict
 
 import coloredlogs
@@ -42,9 +42,26 @@ class LogWrapper:
         self.skip_main = skip_main
 
         self.enabled_levels: Dict[int, bool] = {}
-        for ln in levels:
+
+        self._set_enabled()
+
+    def _set_enabled(self, wrappers=False):
+        for ln, la in levels.items():
             got_level = self.get_level(ln)
-            self.enabled_levels[got_level] = self.logger.isEnabledFor(got_level)
+            enabled_lv = self.logger.isEnabledFor(got_level)
+            self.enabled_levels[got_level] = enabled_lv
+
+            if wrappers:
+                if enabled_lv:
+                    setattr(self, la, partial(self.l, got_level))
+                else:
+                    setattr(self, la, lambda *_a, **_k: None)
+
+                #setattr(self, la, lambda gl=got_level, msg=None, *args, **kwargs: fnc(gl, msg, *args, **kwargs))
+
+    def set_level(self, lv):
+        self.logger.setLevel(lv)
+        self._set_enabled(True)
 
     def x(self, *_ar, **_kw): pass
     def d(self, *_ar, **_kw): pass
