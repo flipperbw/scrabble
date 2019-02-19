@@ -11,7 +11,7 @@ import pandas as pd
 from PIL import Image
 from pytesseract import image_to_string  # todo: image_to_boxes?
 
-from utils import log_init
+from utils.logs import log_init
 
 # -- GLOBALS
 

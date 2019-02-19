@@ -7,7 +7,7 @@ from timeit import default_timer as timer
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from setup import setup
-from utils import log_init
+from utils.logs import log_init
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
