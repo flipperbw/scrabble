@@ -4,6 +4,8 @@
 *.log
 *.*prof
 
+.ipynb_checkpoints/
+
 /__pycache__/
 /.idea/
 /.directory
