@@ -58,7 +58,6 @@ SEARCH_WORDS = sd['search_words']
 
 POINTS = sd['points']
 
-
 # --
 
 if lo.is_enabled('s'):

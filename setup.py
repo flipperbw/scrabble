@@ -1,9 +1,6 @@
 import json
 import pandas as pd
 from typing import Set
-import sys
-
-from utils import log_init
 
 
 # - DIRS
@@ -25,8 +22,6 @@ small_board_name = board_dir + 'default_board_small.pkl'
 #LOG_LEVEL = 'WARNING'
 LOG_LEVEL = 'SUCCESS'
 #LOG_LEVEL = 'ERROR'
-
-logger = log_init(LOG_LEVEL, skip_main=False)
 
 
 # - POOL
@@ -109,8 +104,7 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
             board = pd.read_pickle(this_board_dir + 'board.pkl')
             letters = pd.read_pickle(this_board_dir + 'letters.pkl')
         except FileNotFoundError as exc:
-            logger.c(f'Could not find file: {exc.filename}')
-            sys.exit(1)
+            raise Exception(f'Could not find file: {exc.filename}')
 
         board_size = board.size
         if board_size == 15*15:
@@ -118,8 +112,7 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
         elif board_size == 11*11:
             board_name = small_board_name
         else:
-            logger.c(f'Board size ({board_size}) has no match')
-            sys.exit(1)
+            raise Exception(f'Board size ({board_size}) has no match')
 
     else:
         board = pd.DataFrame(BOARD)
@@ -129,8 +122,7 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
     try:
         default_board = pd.read_pickle(board_name)
     except FileNotFoundError as exc:
-        logger.c(f'Could not find file: {exc.filename}')
-        sys.exit(1)
+        raise Exception(f'Could not find file: {exc.filename}')
 
     wordlist = open(f'{words_dir}{word_typ}.txt').read().splitlines()
     search_words = _get_search_words(wordlist)
@@ -140,7 +132,6 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
 
     return {
         'log_level': LOG_LEVEL,
-        'logger': logger,
         'use_pool': USE_POOL,
         'words': words,
         'search_words': search_words,
