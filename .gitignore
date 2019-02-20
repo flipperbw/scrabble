@@ -1,15 +1,7 @@
-*.sw[op]
-*.bak
-*.bu
-*.log
 *.*prof
 
 .ipynb_checkpoints/
 
-/__pycache__/
-/.idea/
-/.directory
-/.mypy_cache/
 
 /images/
 /data/boards/*/
