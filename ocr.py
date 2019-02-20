@@ -31,7 +31,7 @@ default_board_files = {
 
 tess_conf = '--psm 8 --oem 0 -c tessedit_char_whitelist="ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
 
-min_thresh = 0.6
+min_thresh = 0.7
 
 lower_black = np.array([64, 22, 0], dtype="uint16")
 upper_black = np.array([78, 36, 24], dtype="uint16")
