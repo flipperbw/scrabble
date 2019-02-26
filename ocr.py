@@ -46,8 +46,8 @@ img_cut_range = {
             'width': (5, -5)
         },
         'letters': {
-            'height': (1126, 1198),
-            'width': (18, -18)
+            'height': (1128, 1196),
+            'width': (16, -16)
         }
     },
     'small': {
@@ -114,7 +114,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
 
     gimg = cv2.bitwise_not(comb)
 
-    if lo.is_enabled('v'):
+    if lo.is_enabled('d'):
         show_img(gimg)
 
     seen: Dict[str, Tuple[str, float]] = {}
@@ -206,7 +206,7 @@ def parse_args() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(description='Extract text from a scrabble board')
 
-    parser.add_argument('-f', '--file', type=str, required=True,
+    parser.add_argument('-f', '--file', type=str, required=True, dest='filename',
                         help='File path for the image')
     parser.add_argument('-t', '--type', type=str, choices=('big', 'small'), default='big', dest='img_type',
                         help='Type of board to parse (default: big)')
@@ -219,11 +219,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main(file: str, img_type: str, overwrite: bool = False, verbose: bool = False, **_kwargs):
+def main(filename: str, img_type: str, overwrite: bool = False, verbose: bool = False, **_kwargs):
     if verbose and lo.logger.getEffectiveLevel() > lo.get_level('VERBOSE'):
         lo.set_level('VERBOSE')
 
-    direcs = Dirs(file, img_type)
+    direcs = Dirs(filename, img_type)
 
     this_board = direcs.this_board_dir + 'board.pkl'
     this_letters = direcs.this_board_dir + 'letters.pkl'
@@ -249,7 +249,7 @@ def main(file: str, img_type: str, overwrite: bool = False, verbose: bool = Fals
 
         return
 
-    cv2_image = get_img(file)
+    cv2_image = get_img(filename)
 
     if not has_board:
         lo.i('Parsing image...')
@@ -266,7 +266,7 @@ def main(file: str, img_type: str, overwrite: bool = False, verbose: bool = Fals
         lo.i('Parsing letters...')
 
         cv2_letters = cut_img(cv2_image, img_type, 'letters')
-        if lo.is_enabled('d'):
+        if lo.is_enabled('v'):
             show_img(cv2_letters)
 
         rack = get_letters(cv2_letters)
