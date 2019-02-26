@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 from multiprocessing import (cpu_count, current_process, Pool)
