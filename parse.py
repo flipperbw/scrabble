@@ -38,7 +38,7 @@ sd = setup(fname)
 
 LOG_LEVEL = sd['log_level']
 #lo = sd['logger'] ##
-lo = log_init(LOG_LEVEL, skip_main=False)
+lo = log_init(LOG_LEVEL)
 
 USE_POOL = sd['use_pool']
 

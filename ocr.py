@@ -9,7 +9,6 @@ import cv2
 import numpy as np
 import pandas as pd
 from PIL import Image
-from pytesseract import image_to_string  # todo: image_to_boxes?
 
 from utils.logs import log_init
 
@@ -38,7 +37,8 @@ upper_black = np.array([78, 36, 24], dtype="uint16")
 lower_white = np.array([230, 230, 230], dtype="uint16")
 upper_white = np.array([255, 255, 255], dtype="uint16")
 
-# todo: autodetect big vs small by looking at left col and seeing if all same color
+rack_space = 106
+
 img_cut_range = {
     'big': {
         'board': {
@@ -46,8 +46,8 @@ img_cut_range = {
             'width': (5, -5)
         },
         'letters': {
-            'height': (1128, 1196),
-            'width': (16, -16)
+            'height': (1120, 1204),
+            'width': (10, -10)
         }
     },
     'small': {
@@ -56,15 +56,15 @@ img_cut_range = {
             'width': (71, -71)
         },
         'letters': {
-            'height': (1157, 1229),
-            'width': (16, -16)
+            'height': (1150, 1234),
+            'width': (1, -1)
         }
     },
 }
 
 # --
 
-lo = log_init(log_level, skip_main=False)
+lo = log_init(log_level)
 
 
 class Dirs:
@@ -97,32 +97,27 @@ def get_img(img: str) -> np.ndarray:
     return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 
-def create_board(board: np.ndarray, def_board: np.ndarray):
-    # noinspection PyTypeChecker
-    table = np.full_like(def_board, '', dtype='U2')
+# todo: pickle this
+letter_templates: Dict[str, Dict[str, np.ndarray]] = {}
+def create_letter_templates():
+    for l in string.ascii_lowercase:
 
-    if def_board.shape[0] == 11:
-        small = True
-        spacing = 55.3
-    else:
-        small = False
-        spacing = 49.6
+        templ_big = cv2.imread(templ_dir + l + '.png', 0)
+        templ_small = cv2.resize(templ_big, (0, 0), fx=1.12, fy=1.13)
+        templ_rack = cv2.resize(templ_big, (0, 0), fx=2.1, fy=2.1)
 
-    black_mask = cv2.inRange(board, lower_black, upper_black)
-    white_mask = cv2.inRange(board, lower_white, upper_white)
-    comb = black_mask + white_mask
+        letter_templates[l] = {
+            'big': templ_big,
+            'small': templ_small,
+            'rack': templ_rack
+        }
 
-    gimg = cv2.bitwise_not(comb)
 
-    if lo.is_enabled('d'):
-        show_img(gimg)
-
+def find_letter_match(gimg: np.ndarray, typ: str, spacing: float, dest: np.ndarray):
     seen: Dict[str, Tuple[str, float]] = {}
 
-    for l in string.ascii_lowercase:
-        template = cv2.imread(templ_dir + l + '.png', 0)
-        if small:
-            template = cv2.resize(template, (0, 0), fx=1.12, fy=1.13)
+    for l, ld in letter_templates.items():
+        template = ld[typ]
 
         h, w = template.shape[:2]
 
@@ -158,7 +153,31 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
                     lo.d(f'overriding {exist_l, exist_conf} with new {l, confidence}')
 
             seen[pos] = (l, confidence)
-            table[row_num][col_num] = l
+            dest[row_num][col_num] = l
+
+    return dest
+
+
+def create_board(board: np.ndarray, def_board: np.ndarray):
+    if def_board.shape[0] == 11:
+        typ = 'small'
+        spacing = 55.3
+    else:
+        typ = 'big'
+        spacing = 49.6
+
+    black_mask = cv2.inRange(board, lower_black, upper_black)
+    white_mask = cv2.inRange(board, lower_white, upper_white)
+    comb = black_mask + white_mask
+
+    gimg = cv2.bitwise_not(comb)
+
+    if lo.is_enabled('d'):
+        show_img(gimg)
+
+    # noinspection PyTypeChecker
+    table = np.full_like(def_board, '', dtype='U2')
+    table = find_letter_match(gimg, typ, spacing, table)
 
     df = pd.DataFrame(table)
     lo.s(f'Board:\n{df}')
@@ -166,30 +185,37 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
     return df
 
 
-def get_letters(img: np.ndarray):
-    #all_letters = image_to_string(img, config=tess_conf)
-    #lo.i(all_letters)
+def get_rack(img: np.ndarray):
+    black_mask = cv2.inRange(img, lower_black, upper_black)
+    gimg = cv2.bitwise_not(black_mask)
 
-    bg_cop = img.copy()
+    rack = np.array([[''] * 7], dtype='U1')
+    rack = find_letter_match(gimg, 'rack', rack_space, rack)[0]
+
+    lo.d(f'Letters:\n{rack}')
+
+    buffer = 20
+
+    mid_y = img.shape[0] // 2
+    mid_x = rack_space // 2
+
+    start_y = mid_y - buffer
+    end_y = start_y + (buffer * 2)
 
     letters = []
 
-    for i in range(0, 7 * 107, 107):
-        bg_tl_x = i
-        bg_tl_y = 0
-        bg_br_x = i + 69
-        bg_br_y = 66
+    for i, l in enumerate(rack):
+        start_x = (i * rack_space) + mid_x - buffer
+        end_x = start_x + (buffer * 2)
 
-        blet = bg_cop[bg_tl_y:bg_br_y, bg_tl_x:bg_br_x]
+        imgflat = img[start_y:end_y, start_x:end_x].flatten()
 
-        blet[np.where(blet >= 50)] = 255
-
-        text = image_to_string(blet, config=tess_conf)
-        if not text:
-            #todo fix for no letters
-            text = '?'
-
-        letters.append(text)
+        if all(pixel == 255 for pixel in imgflat):
+            continue
+        elif not l:
+            letters.append('?')
+        else:
+            letters.append(l)
 
     lo.s(f'Letters:\n{letters}')
 
@@ -208,8 +234,6 @@ def parse_args() -> argparse.Namespace:
 
     parser.add_argument('-f', '--file', type=str, required=True, dest='filename',
                         help='File path for the image')
-    parser.add_argument('-t', '--type', type=str, choices=('big', 'small'), default='big', dest='img_type',
-                        help='Type of board to parse (default: big)')
     parser.add_argument('-o', '--overwrite', action='store_true',
                         help='Overwrite existing files')
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -219,9 +243,20 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main(filename: str, img_type: str, overwrite: bool = False, verbose: bool = False, **_kwargs):
+def main(filename: str, overwrite: bool = False, verbose: bool = False, **_kwargs):
     if verbose and lo.logger.getEffectiveLevel() > lo.get_level('VERBOSE'):
         lo.set_level('VERBOSE')
+
+    cv2_image = get_img(filename)
+
+    img_type = 'small'
+
+    check_typ_pixels = cv2_image[650:850, 10:30]
+    check_first = check_typ_pixels[0].tolist()
+    for row_val in check_typ_pixels:
+        if not row_val.tolist() == check_first:
+            img_type = 'big'
+            break
 
     direcs = Dirs(filename, img_type)
 
@@ -249,7 +284,7 @@ def main(filename: str, img_type: str, overwrite: bool = False, verbose: bool = 
 
         return
 
-    cv2_image = get_img(filename)
+    create_letter_templates()
 
     if not has_board:
         lo.i('Parsing image...')
@@ -269,7 +304,7 @@ def main(filename: str, img_type: str, overwrite: bool = False, verbose: bool = 
         if lo.is_enabled('v'):
             show_img(cv2_letters)
 
-        rack = get_letters(cv2_letters)
+        rack = get_rack(cv2_letters)
         pd.to_pickle(rack, this_letters)
 
     lo.s('Done')
