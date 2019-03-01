@@ -27,8 +27,8 @@ LOG_LEVEL = 'SUCCESS'
 
 # - POOL
 
-USE_POOL = True
-#USE_POOL = False
+#USE_POOL = True
+USE_POOL = False
 
 
 # - DEFAULT BOARD

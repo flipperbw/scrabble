@@ -540,7 +540,7 @@ def set_search_words() -> None:
     else:
         # todo: faster if str? why gen slower?
         SEARCH_WORDS = {
-            w for w in WORDS if any([l in w for l in LETTERS])
+            w for w in WORDS if any(l in w for l in LETTERS)
         }
 
 
@@ -593,20 +593,31 @@ def main() -> None:
         print('No solution.')
     else:
         newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
-        best = newlist[:1]
+        best_data = newlist[:1][0]
 
         if lo.is_enabled('s'):
+            #todo fix this
+            top10 = []
+            seen = [(best_data['pts'], best_data['word'])]
+            for n in newlist[::-1]:
+                if len(newlist) == 10:
+                    break
+                seen_tup = (n['pts'], n['word'])
+                if seen_tup in seen:
+                    continue
+                seen.append(seen_tup)
+                top10.append(n)
+
             print('=========')
 
-            for s in newlist[:10][::-1]:
+            for s in top10:
                 lo.s('\n{}'.format(pformat(s)))
 
             print('---------')
 
-            lo.s('\n{}'.format(pformat(best)))
+            lo.s('\n{}'.format(pformat(best_data)))
 
         solved_board = BOARD.copy()
-        best_data = best[0]
 
         for ni, node in enumerate(best_data.get('nodes', [])):
             if not node.value:
@@ -635,7 +646,7 @@ def main() -> None:
         print(f'\nPoints: {best_data["pts"]}')
 
     end = timer()
-    print('\nTime: {}'.format(round(end - start, 1)))
+    lo.i('\nTime: {}'.format(round(end - start, 1)))
 
 
 if __name__ == '__main__':
