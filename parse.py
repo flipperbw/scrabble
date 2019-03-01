@@ -325,8 +325,6 @@ def check_and_get(
 ) -> Optional[List[Dict]]:
     #todo add before method
 
-    lo.d(start)
-
     bef_idx = start - 1
     if bef_idx >= 0:
         node_bef = node_list[bef_idx]
@@ -597,16 +595,18 @@ def main() -> None:
 
         if lo.is_enabled('s'):
             #todo fix this
-            top10 = []
+            top10: List[dict] = []
             seen = [(best_data['pts'], best_data['word'])]
-            for n in newlist[::-1]:
-                if len(newlist) == 10:
+            for n in newlist:
+                if len(top10) == 10:
                     break
                 seen_tup = (n['pts'], n['word'])
                 if seen_tup in seen:
                     continue
                 seen.append(seen_tup)
                 top10.append(n)
+            
+            top10.reverse()
 
             print('=========')
 
