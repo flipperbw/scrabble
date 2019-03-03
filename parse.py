@@ -24,6 +24,7 @@ from utils.logs import log_init
 # why is multiprocessing _C getting called?
 # if blank and already have another letter, will assume not blank
 # why is main not showing proper process?
+# fix empty boards in both files
 
 # --
 
@@ -605,7 +606,7 @@ def main() -> None:
                     continue
                 seen.append(seen_tup)
                 top10.append(n)
-            
+
             top10.reverse()
 
             print('=========')
