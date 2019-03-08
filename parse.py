@@ -2,12 +2,12 @@
 
 import sys
 from multiprocessing import (cpu_count, current_process, Pool)
-from pprint import pformat
 from timeit import default_timer as timer
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
-from setup import setup
 from utils.logs import log_init
+
+from setup import setup
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
@@ -61,9 +61,9 @@ POINTS = sd['points']
 # --
 
 if lo.is_enabled('s'):
-    lo.i('\nDefault Board:\n{}'.format(DEFAULT_BOARD))
-    lo.s('\nGame Board:\n{}'.format(BOARD))
-    lo.s('\nLetters: {}'.format(LETTERS))
+    lo.i('Default Board:\n{}'.format(DEFAULT_BOARD))
+    lo.s('Game Board:\n{}'.format(BOARD))
+    lo.s('Letters:\n{}'.format(LETTERS))
     print()
 else:
     print('Running...')
@@ -240,8 +240,11 @@ class Node:
 
         return nodes_bef, nodes_aft
 
+    def str_pos(self):
+        return f'[{self.x:2d},{self.y:2d}]'
+
     def __str__(self):
-        return '<Node>: ({},{}) v: "{}"'.format(self.x, self.y, self.value)
+        return '<Node>: {} v: {:1s}'.format(self.str_pos(), self.value or '_')
 
     def __repr__(self):
         return self.__str__()
@@ -467,7 +470,7 @@ def check_words(w: str, no: Node) -> List[dict]:
         spell_words = can_spell(no, w, direction)
 
         if spell_words:
-            lo.w('--> YES: %s: %s', direction, w)
+            lo.i('--> YES: %s: %s', direction, w)
             # combine words with idxs?
 
             for word_dict in spell_words:
@@ -483,7 +486,7 @@ def check_words(w: str, no: Node) -> List[dict]:
 
                 this_info = {**word_dict, **new_info}
 
-                lo.w(this_info)
+                lo.i(this_info)
                 data.append(this_info)
 
     return data
@@ -505,12 +508,32 @@ def run_worker(data: Tuple[str, Node]):
     return check_words(w, no)
 
 
+def _print_node_range(n: List[Node]):
+    return f'{n[0].str_pos()} : {n[-1].str_pos()}'
+
+
+def _print_result(o: dict):
+    s = '\n'.join([
+        f'pts  : {o["pts"]}',
+        f'word : {o["word"]}',
+        f'nodes: {_print_node_range(o["nodes"])}',
+    ])
+
+    # todo why are these tabs like 6 or 8?
+    s += '\nnew_words:'
+    for n in o['new_words']:
+        s += f'\n\t{_print_node_range(n["nodes"])}  {n["word"]}'
+
+    return s
+
+
+def _add_results(res_list: List[dict]):
+    for res in res_list:
+        word_info.append(res)
+
+
 def check_node(no: Optional[Node]):
     if not no: return
-
-    if lo.is_enabled('s'):
-        print()
-        lo.s('checking...\n')
 
     if USE_POOL:  #todo: is this fixable for profiling?
         n = max(cpu_count() - 1, 1)
@@ -519,14 +542,12 @@ def check_node(no: Optional[Node]):
         pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in SEARCH_WORDS))
 
         for x in pool_res:
-            for y in x:
-                word_info.append(y)
+            _add_results(x)
 
     else:
         for w in SEARCH_WORDS:
             reses = check_words(w, no)
-            for res in reses:
-                word_info.append(res)
+            _add_results(reses)
 
 
 def set_search_words() -> None:
@@ -548,46 +569,7 @@ def set_search_words() -> None:
 word_info: List[Dict[str, Any]] = []
 
 
-def main() -> None:
-    start = timer()
-
-    full = Board()
-
-    set_search_words()
-
-    if full.new_game:
-        lo.s(' = Fresh game = ')
-        no = next(full.get_by_attr('is_start', True), None)
-        if no:
-            lo.s('**** Node (%2s, %2s: %1s) - #1 / 1',
-                 no.x, no.y, no.value or '_'
-            )
-            check_node(no)
-
-    else:
-        # -- set search nodes
-
-        full_nodes = full.nodes
-
-        #full_nodes = full.get_row(0)
-        #full_nodes = full.get_row(0) + full.get_row(1) + full.get_row(2)
-
-        # full_nodes = [
-        #     full.get(6, 1),
-        #     full.get(7, 1),
-        # ]
-
-        # --
-
-        full_nodes_len = len(full_nodes)
-        for no in full_nodes:
-            if no:
-                lo.s('**** Node (%2s, %2s: %1s) - #%s / %s',
-                     no.x, no.y, no.value or '_', full_nodes.index(no) + 1, full_nodes_len
-                )
-                if not no.value and no.has_edge():
-                    check_node(no)
-
+def show_solution():
     if not word_info:
         print('No solution.')
     else:
@@ -609,14 +591,12 @@ def main() -> None:
 
             top10.reverse()
 
-            print('=========')
+            print()
+            lo.s('-- Top 10 --\n')
+            for sidx, s in enumerate(top10):
+                lo.s(f'Choice #{sidx + 1}\n{_print_result(s)}\n')
 
-            for s in top10:
-                lo.s('\n{}'.format(pformat(s)))
-
-            print('---------')
-
-            lo.s('\n{}'.format(pformat(best_data)))
+            lo.s(f'-- Best --\n{_print_result(best_data)}')
 
         solved_board = BOARD.copy()
 
@@ -645,6 +625,46 @@ def main() -> None:
         print('-' * ((SHAPE['row'] * 2) - 1 + 4))
 
         print(f'\nPoints: {best_data["pts"]}')
+
+
+def main() -> None:
+    start = timer()
+
+    full = Board()
+
+    set_search_words()
+
+    if full.new_game:
+        lo.s(' = Fresh game = ')
+        no = next(full.get_by_attr('is_start', True), None)
+        if no:
+            check_node(no)
+
+    else:
+        # -- set search nodes
+
+        full_nodes = full.nodes
+
+        #full_nodes = full.get_row(10)
+        #full_nodes = full.get_row(0) + full.get_row(1) + full.get_row(2)
+
+        # full_nodes = [
+        #     full.get(6, 1),
+        #     full.get(7, 1),
+        # ]
+
+        # --
+
+        full_nodes_len = len(full_nodes)
+        for no in full_nodes:
+            if no and not no.value and no.has_edge():
+                if lo.is_enabled('s'):
+                    lo.s('Checking Node (%2s, %2s: %1s) - #%s / %s',
+                         no.x, no.y, no.value or '_', full_nodes.index(no) + 1, full_nodes_len
+                    )
+                check_node(no)
+
+    show_solution()
 
     end = timer()
     lo.i('\nTime: {}'.format(round(end - start, 1)))

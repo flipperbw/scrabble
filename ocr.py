@@ -3,7 +3,8 @@
 import argparse
 import os
 import string
-from typing import Dict, Tuple
+import sys
+from typing import Dict, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -14,8 +15,8 @@ from utils.logs import log_init
 
 # -- GLOBALS
 
-#log_level = 'VERBOSE'
-log_level = 'INFO'
+#DEFAULT_LOGLEVEL = 'VERBOSE'
+DEFAULT_LOGLEVEL = 'INFO'
 
 img_dir = 'images/'
 data_dir = 'data/'
@@ -27,8 +28,6 @@ default_board_files = {
     'big': board_dir + 'default_board_big.pkl',
     'small': board_dir + 'default_board_small.pkl'
 }
-
-tess_conf = '--psm 8 --oem 0 -c tessedit_char_whitelist="ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
 
 min_thresh = 0.7
 
@@ -64,7 +63,7 @@ img_cut_range = {
 
 # --
 
-lo = log_init(log_level)
+lo = log_init(DEFAULT_LOGLEVEL)
 
 
 class Dirs:
@@ -87,11 +86,12 @@ def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
     return img.copy()[height[0]:height[1], width[0]:width[1]]
 
 
-def get_img(img: str) -> np.ndarray:
+def get_img(img: str) -> Optional[np.ndarray]:
     image = cv2.imread(img)
 
     if not np.any(image):
-        raise Exception(f'Could not find image, or it\'s empty: {img}')
+        lo.c(f'Could not find image, or it\'s empty: {img}')
+        return None
 
     #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -99,9 +99,10 @@ def get_img(img: str) -> np.ndarray:
 
 # todo: pickle this
 letter_templates: Dict[str, Dict[str, np.ndarray]] = {}
+
+
 def create_letter_templates():
     for l in string.ascii_lowercase:
-
         templ_big = cv2.imread(templ_dir + l + '.png', 0)
         templ_small = cv2.resize(templ_big, (0, 0), fx=1.12, fy=1.13)
         templ_rack = cv2.resize(templ_big, (0, 0), fx=2.1, fy=2.1)
@@ -180,7 +181,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
     table = find_letter_match(gimg, typ, spacing, table)
 
     df = pd.DataFrame(table)
-    lo.s(f'Board:\n{df}')
+    lo.n(f'Board:\n{df}')
 
     return df
 
@@ -217,7 +218,7 @@ def get_rack(img: np.ndarray):
         else:
             letters.append(l)
 
-    lo.s(f'Letters:\n{letters}')
+    lo.n(f'Letters:\n{letters}')
 
     return letters
 
@@ -236,18 +237,20 @@ def parse_args() -> argparse.Namespace:
                         help='File path for the image')
     parser.add_argument('-o', '--overwrite', action='store_true',
                         help='Overwrite existing files')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='Verbose output')
-    #todo allow any log level to be passed
+    parser.add_argument('-l', '--log-level', type=str, default=DEFAULT_LOGLEVEL.lower(), choices=[l.lower() for l in lo.levels], metavar='<lvl>',
+                        help='Log level for output (default: %(default)s)\nChoices: {%(choices)s}')
 
     return parser.parse_args()
 
 
-def main(filename: str, overwrite: bool = False, verbose: bool = False, **_kwargs):
-    if verbose and lo.logger.getEffectiveLevel() > lo.get_level('VERBOSE'):
-        lo.set_level('VERBOSE')
+def main(filename: str, overwrite: bool = False, log_level: str = DEFAULT_LOGLEVEL, **_kwargs):
+    log_level = log_level.upper()
+    if log_level != DEFAULT_LOGLEVEL:
+        lo.set_level(log_level)
 
     cv2_image = get_img(filename)
+    if cv2_image is None:
+        sys.exit(1)
 
     img_type = 'small'
 
@@ -267,7 +270,7 @@ def main(filename: str, overwrite: bool = False, verbose: bool = False, **_kwarg
     has_letters = not overwrite and os.path.exists(this_board)
 
     if has_board and has_letters:
-        lo.s('Info exists, skipping (override with overwrite = True)')
+        lo.n('Info exists, skipping (override with overwrite = True)')
 
         if lo.is_enabled('i'):
             df_board = pd.read_pickle(this_board)
@@ -307,7 +310,7 @@ def main(filename: str, overwrite: bool = False, verbose: bool = False, **_kwarg
         rack = get_rack(cv2_letters)
         pd.to_pickle(rack, this_letters)
 
-    lo.s('Done')
+    lo.s('Done parsing image.')
 
 
 if __name__ == '__main__':
