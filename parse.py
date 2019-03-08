@@ -7,7 +7,7 @@ from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from utils.logs import log_init
 
-from setup import setup
+from _setup import setup
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
@@ -32,7 +32,7 @@ fname = None
 if len(sys.argv) > 1:
     fname = sys.argv[1]
 
-sd = setup(fname)
+sd = setup(folder_name=fname)
 
 
 # -- GLOBALS

@@ -1,18 +1,26 @@
 import json
 from typing import Set
+from pathlib import Path
 
 import pandas as pd
 
 
 # - DIRS
 
-data_dir = 'data/'
-board_dir = data_dir + 'boards/'
-words_dir = data_dir + 'wordlists/'
-points_dir = data_dir + 'points/'
+CURR_DIR = Path(__file__).parent
 
-big_board_name = board_dir + 'default_board_big.pkl'
-small_board_name = board_dir + 'default_board_small.pkl'
+img_dir = Path(CURR_DIR, 'images')
+templ_dir = Path(img_dir, 'templ')
+
+data_dir = Path(CURR_DIR, 'data')
+board_dir = Path(data_dir, 'boards')
+def_board_big = Path(board_dir, 'default_board_big.pkl')
+def_board_small = Path(board_dir, 'default_board_small.pkl')
+words_dir = Path(data_dir, 'wordlists')
+points_dir = Path(data_dir, 'points')
+
+board_filename = 'board'
+letters_filename = 'letters.pkl'
 
 
 # - LOGGING
@@ -33,8 +41,8 @@ USE_POOL = True
 
 # - DEFAULT BOARD
 
-#DEFAULT_BOARD_NAME = big_board_name
-DEFAULT_BOARD_NAME = small_board_name
+#DEFAULT_BOARD_NAME = def_board_big
+DEFAULT_BOARD_NAME = def_board_small
 
 
 # - GAME BOARD
@@ -97,21 +105,22 @@ def _get_search_words(wordlist: list = None):
     return SEARCH_WORDS
 
 
-def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
-    if filename is not None:
-        this_board_dir = f'{board_dir}{filename}/'
+def setup(folder_name: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
+    if folder_name is not None:
+        this_board_dir = Path(board_dir, folder_name)
 
         try:
-            board = pd.read_pickle(this_board_dir + 'board.pkl')
-            letters = pd.read_pickle(this_board_dir + 'letters.pkl')
+            # todo: move this up
+            board = pd.read_pickle(Path(this_board_dir, board_filename))
+            letters = pd.read_pickle(Path(this_board_dir, letters_filename))
         except FileNotFoundError as exc:
             raise Exception(f'Could not find file: {exc.filename}')
 
         board_size = board.size
         if board_size == 15 * 15:
-            board_name = big_board_name
+            board_name = def_board_big
         elif board_size == 11 * 11:
-            board_name = small_board_name
+            board_name = def_board_small
         else:
             raise Exception(f'Board size ({board_size}) has no match')
 
@@ -125,11 +134,11 @@ def setup(filename: str = None, word_typ: str = 'wwf', pts_typ: str = 'wwf'):
     except FileNotFoundError as exc:
         raise Exception(f'Could not find file: {exc.filename}')
 
-    wordlist = open(f'{words_dir}{word_typ}.txt').read().splitlines()
+    wordlist = open(Path(words_dir, word_typ + '.txt')).read().splitlines()
     search_words = _get_search_words(wordlist)
     words = set(wordlist)
 
-    points = json.load(open(f'{points_dir}{pts_typ}.json'))
+    points = json.load(open(Path(points_dir, pts_typ + '.json')))
 
     return {
         'log_level': LOG_LEVEL,

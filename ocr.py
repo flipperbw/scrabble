@@ -1,33 +1,32 @@
 #!/usr/bin/env python3
 
 import argparse
-import os
 import string
 import sys
+from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import cv2
 import numpy as np
 import pandas as pd
 from PIL import Image
-
 from utils.logs import log_init
+
+from _setup import board_dir, def_board_big, def_board_small, templ_dir
 
 # -- GLOBALS
 
 #DEFAULT_LOGLEVEL = 'VERBOSE'
 DEFAULT_LOGLEVEL = 'INFO'
 
-img_dir = 'images/'
-data_dir = 'data/'
+# dirs
 
-templ_dir = img_dir + 'templ/'
-board_dir = data_dir + 'boards/'
+# todo import
+board_filename = 'board'
+letters_filename = 'letters.pkl'
 
-default_board_files = {
-    'big': board_dir + 'default_board_big.pkl',
-    'small': board_dir + 'default_board_small.pkl'
-}
+
+# img parsing
 
 min_thresh = 0.7
 
@@ -65,17 +64,24 @@ img_cut_range = {
 
 lo = log_init(DEFAULT_LOGLEVEL)
 
+default_board_files = {
+    'big': def_board_big,
+    'small': def_board_small
+}
+
 
 class Dirs:
     def __init__(self, img_file: str, img_typ: str):
         self.default_board = pd.read_pickle(default_board_files[img_typ])
 
-        img_file_root = os.path.splitext(img_file.split('/')[-1])[0] + '/'
+        img_file_root = Path(img_file).stem
+        self.this_board_dir = Path(board_dir, img_file_root)
 
-        self.this_board_dir = board_dir + img_file_root
+        if not self.this_board_dir.exists():
+            self.this_board_dir.mkdir()
 
-        if not os.path.exists(self.this_board_dir):
-            os.makedirs(self.this_board_dir)
+        self.this_board = Path(self.this_board_dir, board_filename)
+        self.this_letters = Path(self.this_board_dir, letters_filename)
 
 
 def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
@@ -87,7 +93,7 @@ def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
 
 
 def get_img(img: str) -> Optional[np.ndarray]:
-    image = cv2.imread(img)
+    image = cv2.imread(Path(img).expanduser().as_posix())
 
     if not np.any(image):
         lo.c(f'Could not find image, or it\'s empty: {img}')
@@ -103,7 +109,8 @@ letter_templates: Dict[str, Dict[str, np.ndarray]] = {}
 
 def create_letter_templates():
     for l in string.ascii_lowercase:
-        templ_big = cv2.imread(templ_dir + l + '.png', 0)
+        templ_big = cv2.imread(Path(templ_dir, l + '.png').as_posix(), 0)
+
         templ_small = cv2.resize(templ_big, (0, 0), fx=1.12, fy=1.13)
         templ_rack = cv2.resize(templ_big, (0, 0), fx=2.1, fy=2.1)
 
@@ -263,11 +270,11 @@ def main(filename: str, overwrite: bool = False, log_level: str = DEFAULT_LOGLEV
 
     direcs = Dirs(filename, img_type)
 
-    this_board = direcs.this_board_dir + 'board.pkl'
-    this_letters = direcs.this_board_dir + 'letters.pkl'
+    this_board = direcs.this_board
+    this_letters = direcs.this_letters
 
-    has_board = not overwrite and os.path.exists(this_board)
-    has_letters = not overwrite and os.path.exists(this_board)
+    has_board = not overwrite and this_board.exists()
+    has_letters = not overwrite and this_letters.exists()
 
     if has_board and has_letters:
         lo.n('Info exists, skipping (override with overwrite = True)')
