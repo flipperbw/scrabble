@@ -1,7 +1,36 @@
 #!/usr/bin/env python3
 
-import argparse
+"""Parse and solve a scrabble board."""
+
+
+__version__ = 1.0
+
+DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
+
+
+from utils.parsing import parser_init
+
+def parse_args():
+    #TODO: set customnamespace for completion here
+    #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
+
+    parser = parser_init(
+        description=__doc__,
+        usage='%(prog)s [options] filename',
+        log_level=DEFAULT_LOGLEVEL,
+        version=__version__
+    )
+
+    parser.add_argument('filename', type=str, default=None,
+                        help='File path for the image')
+
+    return parser.parse_args()
+
+ARGS = parse_args()
+
 import json
+import signal
+import sys
 from multiprocessing import cpu_count, current_process, Pool
 from pathlib import Path
 from timeit import default_timer as timer
@@ -12,16 +41,11 @@ from utils.logs import log_init
 
 import settings as _
 
+
 #import pyximport; pyximport.install(pyimport=True)
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
-
-
-# -- GLOBALS
-
-DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
-lo = log_init(DEFAULT_LOGLEVEL)
 
 
 # -- TODOS
@@ -38,6 +62,9 @@ lo = log_init(DEFAULT_LOGLEVEL)
 # fix empty boards in both files
 # recommend choices based on letters left, opened tiles, end game, blanks, etc
 # allow letters to use option, and num
+
+
+lo = log_init(DEFAULT_LOGLEVEL)
 
 
 class Settings:
@@ -197,7 +224,8 @@ class Node:
             nodes = self.col
             slice_val = self.x
         else:
-            raise Exception('Incorrect check_typ: {}'.format(check_typ))
+            lo.c('Incorrect check_typ: {}'.format(check_typ))
+            sys.exit(1)
 
         bef = nodes[:slice_val]
         aft = nodes[slice_val + 1:]
@@ -210,7 +238,8 @@ class Node:
 
         if nodes is None:
             if check_typ is None:
-                raise Exception('check_typ required with no nodes given')
+                lo.c('check_typ required with no nodes given')
+                sys.exit(1)
             bef, aft = self.get_other_nodes(check_typ)
         else:
             bef, aft = nodes
@@ -310,11 +339,11 @@ class Board:
 
 
 def get_word(nodes: List[Node], direc: str = '', word: str = '', idx: int = 0) -> str:
-    return ''.join([
+    return ''.join(
         nw.value or
         (word[idx] if nw.has_poss_val(direc, word, idx) else None) or
         '+' for nw in nodes
-    ])
+    )
 
 
 #@profile
@@ -447,7 +476,7 @@ def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
                 'nodes': node_list[start:start + word_len],
                 'word': word,
                 'direc': direc,
-                'idx': idx - start,
+                #'idx': idx - start,
                 'new_words': new_words
             }
             #todo: insert reverse too?
@@ -468,14 +497,14 @@ def check_words(w: str, no: Node) -> List[dict]:
             # combine words with idxs?
 
             for word_dict in spell_words:
-                tot_pts = no.get_points(**{k: v for k, v in word_dict.items() if k != 'idx'})
+                tot_pts = no.get_points(**{k: v for k, v in word_dict.items()})
                 # todo, could do this beforehand
 
                 new_info = {
                     'pts': tot_pts,
-                    'cell_letter': w[word_dict['idx']],
-                    'cell_pos': (no.x, no.y),
-                    'cell': no
+                    #'cell_letter': w[word_dict['idx']],
+                    #'cell_pos': (no.x, no.y),
+                    #'cell': no
                 }
 
                 this_info = {**word_dict, **new_info}
@@ -526,6 +555,8 @@ def _add_results(res_list: Optional[List[dict]]):
     for res in res_list:
         word_info.append(res)
 
+def _pool_handler():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 def check_node(no: Optional[Node]):
     if not no: return
@@ -533,10 +564,16 @@ def check_node(no: Optional[Node]):
     if Settings.use_pool:  #todo: is this fixable for profiling?
         n = max(cpu_count() - 1, 1)
         #n = 2
-        pool = Pool(n)
-        #pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in Settings.search_words))
-        pool_res: List[List[dict]] = pool.map(run_worker, [(w, no) for w in Settings.search_words])
-        #pool_res = pool.map_async(run_worker, ((w, no) for w in Settings.search_words), callback=_add_results)
+        pool = Pool(n, initializer=_pool_handler)
+        try:
+            pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in Settings.search_words))
+            pool.close()
+            pool.join()
+        except KeyboardInterrupt:
+            pool.close()
+            pool.join()
+            lo.e('User interrupt, terminating.')
+            sys.exit(1)
 
         for x in pool_res:
             _add_results(x)
@@ -610,20 +647,6 @@ def show_solution():
         print(f'\nPoints: {best_data["pts"]}')
 
 
-def parse_args() -> argparse.Namespace:
-    #TODO: set customnamespace for completion here
-    #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
-
-    parser = argparse.ArgumentParser(description='Extract text from a scrabble board')
-
-    parser.add_argument('filename', type=str, default=None,
-                        help='File path for the image')
-    parser.add_argument('-l', '--log-level', type=str, default=DEFAULT_LOGLEVEL.lower(), choices=[l.lower() for l in lo.levels], metavar='<lvl>',
-                        help='Log level for output (default: %(default)s)\nChoices: {%(choices)s}')
-
-    return parser.parse_args()
-
-
 def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str = 'wwf', **_kwargs):
     start = timer()
 
@@ -638,7 +661,8 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
             board: pd.DataFrame = pd.read_pickle(Path(this_board_dir, _.BOARD_FILENAME))
             letters: List[str] = pd.read_pickle(Path(this_board_dir, _.LETTERS_FILENAME))
         except FileNotFoundError as exc:
-            raise Exception(f'Could not find file: {exc.filename}')
+            lo.c(f'Could not find file: {exc.filename}')
+            sys.exit(1)
 
     else:
         board = pd.DataFrame(_.BOARD)
@@ -650,7 +674,8 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
     elif board_size == 11 * 11:
         board_name = _.DEF_BOARD_SMALL
     else:
-        raise Exception(f'Board size ({board_size}) has no match')
+        lo.c(f'Board size ({board_size}) has no match')
+        sys.exit(1)
 
     shape = {
         'row': board.shape[0],
@@ -660,18 +685,21 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
     try:
         default_board: pd.DataFrame = pd.read_pickle(board_name)
     except FileNotFoundError as exc:
-        raise Exception(f'Could not find file: {exc.filename}')
+        lo.c(f'Could not find file: {exc.filename}')
+        sys.exit(1)
 
     #todo make fnc exception
     try:
         wordlist = open(Path(_.WORDS_DIR, word_typ + '.txt')).read().splitlines()
     except FileNotFoundError as exc:
-        raise Exception(f'Could not find file: {exc.filename}')
+        lo.c(f'Could not find file: {exc.filename}')
+        sys.exit(1)
 
     try:
         points: Dict[str, List[int]] = json.load(open(Path(_.POINTS_DIR, word_typ + '.json')))
     except FileNotFoundError as exc:
-        raise Exception(f'Could not find file: {exc.filename}')
+        lo.c(f'Could not find file: {exc.filename}')
+        sys.exit(1)
 
     words = set(wordlist)
     blanks = letters.count('?')
@@ -682,13 +710,13 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
         else:
             # todo: faster if str? why gen slower?
             search_words = {w for w in words if any(l in w for l in letters)}
-            #search_words = {w for w in words if any([l in w for l in letters])}
     elif isinstance(_.SEARCH_WORDS, tuple):
         search_words = set(wordlist[_.SEARCH_WORDS[0]: _.SEARCH_WORDS[1]])
     elif isinstance(_.SEARCH_WORDS, set):
         search_words = _.SEARCH_WORDS
     else:
-        raise Exception(f'Incompatible search words type: {type(_.SEARCH_WORDS)}')
+        lo.c(f'Incompatible search words type: {type(_.SEARCH_WORDS)}')
+        sys.exit(1)
 
     # --
 
@@ -737,12 +765,15 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
                 for nl in _.SEARCH_NODES:
                     fr = full.get(nl[0], nl[1])
                     if not fr:
-                        raise Exception(f'Could not locate node: {nl}')
+                        lo.c(f'Could not locate node: {nl}')
+                        sys.exit(1)
                     full_nodes.append(fr)
             else:
-                raise Exception(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+                lo.c(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+                sys.exit(1)
         else:
-            raise Exception(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+            lo.c(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+            sys.exit(1)
 
         full_nodes_len = len(full_nodes)
         for no in full_nodes:
@@ -760,7 +791,5 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
 
 
 if __name__ == '__main__':
-    args = parse_args()
-    dargs = vars(args)
+    dargs = vars(ARGS)
     main(**dargs)
-    #main()

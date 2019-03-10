@@ -1,24 +1,52 @@
 #!/usr/bin/env python3
 
-import argparse
+"""Extract text from a scrabble board."""
+
+
+__version__ = 1.0
+
+#DEFAULT_LOGLEVEL = 'VERBOSE'
+DEFAULT_LOGLEVEL = 'INFO'
+
+
+from utils.parsing import parser_init
+
+def parse_args():
+    #TODO: set customnamespace for completion here
+    #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
+
+    parser = parser_init(
+        description=__doc__,
+        usage='%(prog)s [options] filename',
+        log_level=DEFAULT_LOGLEVEL,
+        version=__version__
+    )
+
+    parser.add_argument('filename', type=str, default=None,
+                        help='File path for the image')
+
+    parser.add_argument('-o', '--overwrite', action='store_true',
+                        help='Overwrite existing files')
+
+    return parser.parse_args()
+
+ARGS = parse_args()
+
 import string
 import sys
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-import cv2
-import numpy as np
-import pandas as pd
-from PIL import Image
 from utils.logs import log_init
 
 #from settings import *
-from settings import BOARD_DIR, DEF_BOARD_BIG, DEF_BOARD_SMALL, TEMPL_DIR, BOARD_FILENAME, LETTERS_FILENAME
+from settings import BOARD_DIR, BOARD_FILENAME, DEF_BOARD_BIG, DEF_BOARD_SMALL, LETTERS_FILENAME, TEMPL_DIR
 
-# -- GLOBALS
+import cv2 as cv2
+import numpy as np
+import pandas as pd
+from PIL import Image as Image
 
-#DEFAULT_LOGLEVEL = 'VERBOSE'
-DEFAULT_LOGLEVEL = 'INFO'
 
 # img parsing
 
@@ -228,22 +256,6 @@ def show_img(img_array: np.ndarray):
     Image.fromarray(img_array).show()
 
 
-def parse_args() -> argparse.Namespace:
-    #TODO: set customnamespace for completion here
-    #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
-
-    parser = argparse.ArgumentParser(description='Extract text from a scrabble board')
-
-    parser.add_argument('-f', '--file', type=str, required=True, dest='filename',
-                        help='File path for the image')
-    parser.add_argument('-o', '--overwrite', action='store_true',
-                        help='Overwrite existing files')
-    parser.add_argument('-l', '--log-level', type=str, default=DEFAULT_LOGLEVEL.lower(), choices=[l.lower() for l in lo.levels], metavar='<lvl>',
-                        help='Log level for output (default: %(default)s)\nChoices: {%(choices)s}')
-
-    return parser.parse_args()
-
-
 def main(filename: str, overwrite: bool = False, log_level: str = DEFAULT_LOGLEVEL, **_kwargs):
     log_level = log_level.upper()
     if log_level != DEFAULT_LOGLEVEL:
@@ -315,6 +327,5 @@ def main(filename: str, overwrite: bool = False, log_level: str = DEFAULT_LOGLEV
 
 
 if __name__ == '__main__':
-    args = parse_args()
-    dargs = vars(args)
+    dargs = vars(ARGS)
     main(**dargs)
