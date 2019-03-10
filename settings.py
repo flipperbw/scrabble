@@ -1,20 +1,18 @@
-from typing import Set
 from pathlib import Path
-
+from typing import List, Set, Tuple, Union
 
 # - DIRS
 
 curr_dir = Path(__file__).parent
-
 img_dir = Path(curr_dir, 'images')
-TEMPL_DIR = Path(img_dir, 'templ')
-
 data_dir = Path(curr_dir, 'data')
+
+TEMPL_DIR = Path(img_dir, 'templ')
 BOARD_DIR = Path(data_dir, 'boards')
-DEF_BOARD_BIG = Path(BOARD_DIR, 'default_board_big.pkl')
-DEF_BOARD_SMALL = Path(BOARD_DIR, 'default_board_small.pkl')
 WORDS_DIR = Path(data_dir, 'wordlists')
 POINTS_DIR = Path(data_dir, 'points')
+DEF_BOARD_BIG = Path(BOARD_DIR, 'default_board_big.pkl')
+DEF_BOARD_SMALL = Path(BOARD_DIR, 'default_board_small.pkl')
 
 BOARD_FILENAME = 'board'
 LETTERS_FILENAME = 'letters.pkl'
@@ -74,23 +72,29 @@ BOARD = [      #
 # - LETTERS
 
 #LETTERS = list('TOTHBYU')
-LETTERS = ''
+LETTERS = ['']
 
 
-# - SEARCH
+# todo wordlist?
 
 
-def _get_search_words(wordlist: list = None):
-    if wordlist is None:
-        wordlist = []
+# - WORDS
 
-    #SEARCH_WORDS = wordlist[50000:52000]
-    #SEARCH_WORDS = ['TAXON']
-    SEARCH_WORDS: Set[str] = set()
-
-    return SEARCH_WORDS
+SEARCH_WORDS: Union[None, Tuple[int, int], Set[str]]
+#SEARCH_WORDS = (50000, 52000)
+#SEARCH_WORDS = {'TAXON'}
+SEARCH_WORDS = None
 
 
+# - NODES
 
-#__all__ = [a for a in globals() if a == a.upper()]
-__all__ = ['DEF_BOARD_BIG', 'DEF_BOARD_SMALL']
+SEARCH_NODES: Union[None, List[int], List[Tuple[int, int]]]
+#SEARCH_NODES = [0,1,2] # rows
+#SEARCH_NODES = [(6,1), (7,1)] # nodes
+SEARCH_NODES = None
+
+
+# - EXPORT
+
+__all__ = [a for a in globals() if a == a.upper()]
+#__all__ = ['DEF_BOARD_BIG', 'DEF_BOARD_SMALL']

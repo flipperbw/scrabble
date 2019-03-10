@@ -12,8 +12,8 @@ import pandas as pd
 from PIL import Image
 from utils.logs import log_init
 
-#from .settings import *
-from .settings import BOARD_DIR, DEF_BOARD_BIG, DEF_BOARD_SMALL, TEMPL_DIR, BOARD_FILENAME, LETTERS_FILENAME
+#from settings import *
+from settings import BOARD_DIR, DEF_BOARD_BIG, DEF_BOARD_SMALL, TEMPL_DIR, BOARD_FILENAME, LETTERS_FILENAME
 
 # -- GLOBALS
 

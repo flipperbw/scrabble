@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 from multiprocessing import cpu_count, current_process, Pool
-from timeit import default_timer as timer
-from typing import Any, Dict, Iterator, List, Optional, Tuple
 from pathlib import Path
+from timeit import default_timer as timer
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
+
 import pandas as pd
 from utils.logs import log_init
-#import pyximport; pyximport.install(pyimport=True)
 
 import settings as _
+
+#import pyximport; pyximport.install(pyimport=True)
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
@@ -33,27 +36,22 @@ lo = log_init(DEFAULT_LOGLEVEL)
 # if blank and already have another letter, will assume not blank
 # why is main not showing proper process?
 # fix empty boards in both files
+# recommend choices based on letters left, opened tiles, end game, blanks, etc
+# allow letters to use option, and num
 
 
 class Settings:
     use_pool: bool = _.USE_POOL
 
-    board: setup.pd.DataFrame = None
-    default_board = sd['default_board']
-    shape = {
-        'row': board.shape[0],
-        'col': board.shape[1]
-    }
+    board = pd.DataFrame()
+    default_board = pd.DataFrame()
+    shape: Dict[str, int] = {}
+    letters: List[str] = []
+    blanks: int = 0
+    points: Dict[str, List[int]] = {}
+    words: Set[str] = set()
+    search_words: Set[str] = set()
 
-    letters = sd['letters']
-    blanks = letters.count('?')
-
-    words = sd['words']
-    search_words = sd['search_words']
-
-    points = sd['points']
-
-    default_loglevel = 'INFO'
 
 class Node:
     def __init__(self, x: int, y: int, multiplier: Optional[str] = None, value: Optional[str] = None):
@@ -72,7 +70,11 @@ class Node:
         self.value = value
         self.points = None
         if self.value:
-            self.points = POINTS.get(self.value)[1]
+            try:
+                self.points = Settings.points[self.value][1]
+            except (KeyError, IndexError):
+                lo.e(f'Could not get point value of "{self.value}". Using 0.')
+                self.points = 0
 
         # word -> idx = blank
         #self.poss_words = {}
@@ -167,7 +169,13 @@ class Node:
             if is_blank:
                 return 0
 
-            pp = POINTS.get(word[idx])[1]
+            try:
+                pp = Settings.points[word[idx]][1]
+            except (KeyError, IndexError):
+                lo.e(f'Could not get point value of "{word[idx]}". Using 0.')
+                pp = 0
+
+            self.points = 0
             if self.multiplier:
                 mval = self.multiplier[0]
                 mtyp = self.multiplier[1]
@@ -242,9 +250,9 @@ class Word:  #todo
 
 
 class Board:
-    def __init__(self, board_mults=DEFAULT_BOARD, game_board=BOARD) -> None:
-        self.default_board = board_mults
-        self.board = game_board
+    def __init__(self, default_board=Settings.default_board, board=Settings.board) -> None:
+        self.default_board = default_board
+        self.board = board
 
         self.new_game = False
 
@@ -323,14 +331,14 @@ def check_and_get(
             return None
 
     aft_idx = start + word_len
-    if aft_idx < SHAPE[direc]:
+    if aft_idx < Settings.shape[direc]:
         node_aft = node_list[aft_idx]
         if node_aft and node_aft.value:
             lo.d(f'Following node exists for {direc}, skipping.')
             return None
 
-    ls = list(LETTERS)
-    blanks = BLANKS
+    ls = list(Settings.letters)
+    blanks = Settings.blanks
 
     new_word_list: List[Dict] = []
 
@@ -381,7 +389,7 @@ def check_and_get(
 
                 new_word = bef_word + le + aft_word
 
-                if new_word not in WORDS:
+                if new_word not in Settings.words:
                     lo.d(f'invalid new word {new_word}')
                     return None
 
@@ -428,7 +436,7 @@ def can_spell(no: Node, word: str, direc: str) -> List[Dict]:
 
     spell_words: List[Dict] = []
 
-    dir_len = SHAPE[direc]
+    dir_len = Settings.shape[direc]
     word_len = len(word)
 
     start = max(0, idx - word_len + 1)
@@ -522,35 +530,21 @@ def _add_results(res_list: Optional[List[dict]]):
 def check_node(no: Optional[Node]):
     if not no: return
 
-    if USE_POOL:  #todo: is this fixable for profiling?
+    if Settings.use_pool:  #todo: is this fixable for profiling?
         n = max(cpu_count() - 1, 1)
         #n = 2
         pool = Pool(n)
-        #pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in SEARCH_WORDS))
-        pool_res: List[List[dict]] = pool.map(run_worker, [(w, no) for w in SEARCH_WORDS])
-        #pool_res = pool.map_async(run_worker, ((w, no) for w in SEARCH_WORDS), callback=_add_results)
+        #pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in Settings.search_words))
+        pool_res: List[List[dict]] = pool.map(run_worker, [(w, no) for w in Settings.search_words])
+        #pool_res = pool.map_async(run_worker, ((w, no) for w in Settings.search_words), callback=_add_results)
 
         for x in pool_res:
             _add_results(x)
 
     else:
-        for w in SEARCH_WORDS:
+        for w in Settings.search_words:
             reses = check_words(w, no)
             _add_results(reses)
-
-
-def set_search_words() -> None:
-    global SEARCH_WORDS
-
-    if SEARCH_WORDS: return
-
-    if BLANKS:
-        SEARCH_WORDS = WORDS
-    else:
-        # todo: faster if str? why gen slower?
-        SEARCH_WORDS = {
-            w for w in WORDS if any([l in w for l in LETTERS])
-        }
 
 
 # todo: nodelist needs main
@@ -587,13 +581,13 @@ def show_solution():
 
             lo.s(f'-- Best --\n{_print_result(best_data)}')
 
-        solved_board = BOARD.copy()
+        solved_board = Settings.board.copy()
 
         for ni, node in enumerate(best_data.get('nodes', [])):
             if not node.value:
                 solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
 
-        print('\n' + '-' * ((SHAPE['row'] * 2) - 1 + 4))
+        print('\n' + '-' * ((Settings.shape['row'] * 2) - 1 + 4))
 
         for row in solved_board.iterrows():
             row_data = row[1].to_list()
@@ -611,7 +605,7 @@ def show_solution():
 
             print('| ' + ' '.join(row_str) + ' |')
 
-        print('-' * ((SHAPE['row'] * 2) - 1 + 4))
+        print('-' * ((Settings.shape['row'] * 2) - 1 + 4))
 
         print(f'\nPoints: {best_data["pts"]}')
 
@@ -622,7 +616,7 @@ def parse_args() -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(description='Extract text from a scrabble board')
 
-    parser.add_argument('-f', '--file', type=str, required=True, dest='filename',
+    parser.add_argument('filename', type=str, default=None,
                         help='File path for the image')
     parser.add_argument('-l', '--log-level', type=str, default=DEFAULT_LOGLEVEL.lower(), choices=[l.lower() for l in lo.levels], metavar='<lvl>',
                         help='Log level for output (default: %(default)s)\nChoices: {%(choices)s}')
@@ -641,8 +635,8 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
         this_board_dir = Path(_.BOARD_DIR, filename)
 
         try:
-            board = pd.read_pickle(Path(this_board_dir, _.BOARD_FILENAME))
-            letters = pd.read_pickle(Path(this_board_dir, _.LETTERS_FILENAME))
+            board: pd.DataFrame = pd.read_pickle(Path(this_board_dir, _.BOARD_FILENAME))
+            letters: List[str] = pd.read_pickle(Path(this_board_dir, _.LETTERS_FILENAME))
         except FileNotFoundError as exc:
             raise Exception(f'Could not find file: {exc.filename}')
 
@@ -658,51 +652,73 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
     else:
         raise Exception(f'Board size ({board_size}) has no match')
 
+    shape = {
+        'row': board.shape[0],
+        'col': board.shape[1]
+    }
+
     try:
-        default_board = pd.read_pickle(board_name)
+        default_board: pd.DataFrame = pd.read_pickle(board_name)
     except FileNotFoundError as exc:
         raise Exception(f'Could not find file: {exc.filename}')
 
-    #todo exception
-    wordlist = open(Path(_.WORDS_DIR, word_typ + '.txt')).read().splitlines()
+    #todo make fnc exception
+    try:
+        wordlist = open(Path(_.WORDS_DIR, word_typ + '.txt')).read().splitlines()
+    except FileNotFoundError as exc:
+        raise Exception(f'Could not find file: {exc.filename}')
 
-    search_words = _get_search_words(wordlist)
+    try:
+        points: Dict[str, List[int]] = json.load(open(Path(_.POINTS_DIR, word_typ + '.json')))
+    except FileNotFoundError as exc:
+        raise Exception(f'Could not find file: {exc.filename}')
+
     words = set(wordlist)
+    blanks = letters.count('?')
 
-    points = json.load(open(Path(points_dir, pts_typ + '.json')))
+    if _.SEARCH_WORDS is None:
+        if blanks:
+            search_words = words
+        else:
+            # todo: faster if str? why gen slower?
+            search_words = {w for w in words if any(l in w for l in letters)}
+            #search_words = {w for w in words if any([l in w for l in letters])}
+    elif isinstance(_.SEARCH_WORDS, tuple):
+        search_words = set(wordlist[_.SEARCH_WORDS[0]: _.SEARCH_WORDS[1]])
+    elif isinstance(_.SEARCH_WORDS, set):
+        search_words = _.SEARCH_WORDS
+    else:
+        raise Exception(f'Incompatible search words type: {type(_.SEARCH_WORDS)}')
 
+    # --
 
+    # todo allow extra mods
+    # print(board)
+    # print(board[10])
+    # board[6][10] = 'R'
+    # board[8][10] = 'Y'
+    # letters = ['F', 'G']
 
-    BOARD = sd['board']
-    DEFAULT_BOARD = sd['default_board']
-    SHAPE = {
-        'row': BOARD.shape[0],
-        'col': BOARD.shape[1]
-    }
-
-    LETTERS = sd['letters']
-    BLANKS = LETTERS.count('?')
-
-    WORDS = sd['words']
-    SEARCH_WORDS = sd['search_words']
-
-    POINTS = sd['points']
-
-    DEFAULT_LOGLEVEL = 'INFO'
+    Settings.board = board
+    Settings.default_board = default_board
+    Settings.shape = shape
+    Settings.letters = letters
+    Settings.blanks = blanks
+    Settings.points = points
+    Settings.words = words
+    Settings.search_words = search_words
 
     # --
 
     if lo.is_enabled('s'):
-        lo.i('Default Board:\n{}'.format(DEFAULT_BOARD))
-        lo.s('Game Board:\n{}'.format(BOARD))
-        lo.s('Letters:\n{}'.format(LETTERS))
+        lo.i('Default Board:\n{}'.format(default_board))
+        lo.s('Game Board:\n{}'.format(board))
+        lo.s('Letters:\n{}'.format(letters))
         print()
     else:
         print('Running...')
 
-    full = Board()
-
-    set_search_words()
+    full = Board(default_board=default_board, board=board)
 
     if full.new_game:
         lo.s(' = Fresh game = ')
@@ -711,19 +727,22 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
             check_node(no)
 
     else:
-        # -- set search nodes
-
-        #full_nodes = full.nodes
-
-        full_nodes = full.get_row(0)
-        #full_nodes = full.get_row(0) + full.get_row(1) + full.get_row(1)
-
-        # full_nodes = [
-        #     full.get(6, 1),
-        #     full.get(7, 1),
-        # ]
-
-        # --
+        if _.SEARCH_NODES is None:
+            full_nodes = full.nodes
+        elif isinstance(_.SEARCH_NODES, list):
+            if all(isinstance(t, int) for t in _.SEARCH_NODES):
+                full_nodes = [nl for r in _.SEARCH_NODES for nl in full.get_row(r)]
+            elif all(isinstance(t, tuple) and len(t) == 2 for t in _.SEARCH_NODES):
+                full_nodes = []
+                for nl in _.SEARCH_NODES:
+                    fr = full.get(nl[0], nl[1])
+                    if not fr:
+                        raise Exception(f'Could not locate node: {nl}')
+                    full_nodes.append(fr)
+            else:
+                raise Exception(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+        else:
+            raise Exception(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
 
         full_nodes_len = len(full_nodes)
         for no in full_nodes:
@@ -731,7 +750,7 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
                 if lo.is_enabled('s'):
                     lo.s('Checking Node (%2s, %2s: %1s) - #%s / %s',
                          no.x, no.y, no.value or '_', full_nodes.index(no) + 1, full_nodes_len
-                    )
+                         )
                 check_node(no)
 
     show_solution()
