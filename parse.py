@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 
-import sys
-from multiprocessing import (cpu_count, current_process, Pool)
+import argparse
+from multiprocessing import cpu_count, current_process, Pool
 from timeit import default_timer as timer
 from typing import Any, Dict, Iterator, List, Optional, Tuple
-
+from pathlib import Path
+import pandas as pd
 from utils.logs import log_init
+#import pyximport; pyximport.install(pyimport=True)
 
-from _setup import setup
+import settings as _
 
 #import builtins
 #profile = getattr(builtins, 'profile', lambda x: x)
+
+
+# -- GLOBALS
+
+DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
+lo = log_init(DEFAULT_LOGLEVEL)
 
 
 # -- TODOS
@@ -26,48 +34,26 @@ from _setup import setup
 # why is main not showing proper process?
 # fix empty boards in both files
 
-# --
 
-fname = None
-if len(sys.argv) > 1:
-    fname = sys.argv[1]
+class Settings:
+    use_pool: bool = _.USE_POOL
 
-sd = setup(folder_name=fname)
+    board: setup.pd.DataFrame = None
+    default_board = sd['default_board']
+    shape = {
+        'row': board.shape[0],
+        'col': board.shape[1]
+    }
 
+    letters = sd['letters']
+    blanks = letters.count('?')
 
-# -- GLOBALS
+    words = sd['words']
+    search_words = sd['search_words']
 
-LOG_LEVEL = sd['log_level']
-#lo = sd['logger'] ##
-lo = log_init(LOG_LEVEL)
+    points = sd['points']
 
-USE_POOL = sd['use_pool']
-
-BOARD = sd['board']
-DEFAULT_BOARD = sd['default_board']
-SHAPE = {
-    'row': BOARD.shape[0],
-    'col': BOARD.shape[1]
-}
-
-LETTERS = sd['letters']
-BLANKS = LETTERS.count('?')
-
-WORDS = sd['words']
-SEARCH_WORDS = sd['search_words']
-
-POINTS = sd['points']
-
-# --
-
-if lo.is_enabled('s'):
-    lo.i('Default Board:\n{}'.format(DEFAULT_BOARD))
-    lo.s('Game Board:\n{}'.format(BOARD))
-    lo.s('Letters:\n{}'.format(LETTERS))
-    print()
-else:
-    print('Running...')
-
+    default_loglevel = 'INFO'
 
 class Node:
     def __init__(self, x: int, y: int, multiplier: Optional[str] = None, value: Optional[str] = None):
@@ -246,8 +232,8 @@ class Node:
     def __str__(self):
         return '<Node>: {} v: {:1s}'.format(self.str_pos(), self.value or '_')
 
-    def __repr__(self):
-        return self.__str__()
+    #def __repr__(self):
+    #    return self.__str__()
 
 
 class Word:  #todo
@@ -491,7 +477,7 @@ def check_words(w: str, no: Node) -> List[dict]:
 
     return data
 
-
+# todo check logger processname
 def run_worker(data: Tuple[str, Node]):
     w = data[0]
     no = data[1]
@@ -527,7 +513,8 @@ def _print_result(o: dict):
     return s
 
 
-def _add_results(res_list: List[dict]):
+def _add_results(res_list: Optional[List[dict]]):
+    if not res_list: return
     for res in res_list:
         word_info.append(res)
 
@@ -539,7 +526,9 @@ def check_node(no: Optional[Node]):
         n = max(cpu_count() - 1, 1)
         #n = 2
         pool = Pool(n)
-        pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in SEARCH_WORDS))
+        #pool_res: List[List[dict]] = pool.map(run_worker, ((w, no) for w in SEARCH_WORDS))
+        pool_res: List[List[dict]] = pool.map(run_worker, [(w, no) for w in SEARCH_WORDS])
+        #pool_res = pool.map_async(run_worker, ((w, no) for w in SEARCH_WORDS), callback=_add_results)
 
         for x in pool_res:
             _add_results(x)
@@ -560,7 +549,7 @@ def set_search_words() -> None:
     else:
         # todo: faster if str? why gen slower?
         SEARCH_WORDS = {
-            w for w in WORDS if any(l in w for l in LETTERS)
+            w for w in WORDS if any([l in w for l in LETTERS])
         }
 
 
@@ -627,8 +616,89 @@ def show_solution():
         print(f'\nPoints: {best_data["pts"]}')
 
 
-def main() -> None:
+def parse_args() -> argparse.Namespace:
+    #TODO: set customnamespace for completion here
+    #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
+
+    parser = argparse.ArgumentParser(description='Extract text from a scrabble board')
+
+    parser.add_argument('-f', '--file', type=str, required=True, dest='filename',
+                        help='File path for the image')
+    parser.add_argument('-l', '--log-level', type=str, default=DEFAULT_LOGLEVEL.lower(), choices=[l.lower() for l in lo.levels], metavar='<lvl>',
+                        help='Log level for output (default: %(default)s)\nChoices: {%(choices)s}')
+
+    return parser.parse_args()
+
+
+def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str = 'wwf', **_kwargs):
     start = timer()
+
+    log_level = log_level.upper()
+    if log_level != DEFAULT_LOGLEVEL:
+        lo.set_level(log_level)
+
+    if filename is not None:
+        this_board_dir = Path(_.BOARD_DIR, filename)
+
+        try:
+            board = pd.read_pickle(Path(this_board_dir, _.BOARD_FILENAME))
+            letters = pd.read_pickle(Path(this_board_dir, _.LETTERS_FILENAME))
+        except FileNotFoundError as exc:
+            raise Exception(f'Could not find file: {exc.filename}')
+
+    else:
+        board = pd.DataFrame(_.BOARD)
+        letters = _.LETTERS
+
+    board_size = board.size
+    if board_size == 15 * 15:
+        board_name = _.DEF_BOARD_BIG
+    elif board_size == 11 * 11:
+        board_name = _.DEF_BOARD_SMALL
+    else:
+        raise Exception(f'Board size ({board_size}) has no match')
+
+    try:
+        default_board = pd.read_pickle(board_name)
+    except FileNotFoundError as exc:
+        raise Exception(f'Could not find file: {exc.filename}')
+
+    #todo exception
+    wordlist = open(Path(_.WORDS_DIR, word_typ + '.txt')).read().splitlines()
+
+    search_words = _get_search_words(wordlist)
+    words = set(wordlist)
+
+    points = json.load(open(Path(points_dir, pts_typ + '.json')))
+
+
+
+    BOARD = sd['board']
+    DEFAULT_BOARD = sd['default_board']
+    SHAPE = {
+        'row': BOARD.shape[0],
+        'col': BOARD.shape[1]
+    }
+
+    LETTERS = sd['letters']
+    BLANKS = LETTERS.count('?')
+
+    WORDS = sd['words']
+    SEARCH_WORDS = sd['search_words']
+
+    POINTS = sd['points']
+
+    DEFAULT_LOGLEVEL = 'INFO'
+
+    # --
+
+    if lo.is_enabled('s'):
+        lo.i('Default Board:\n{}'.format(DEFAULT_BOARD))
+        lo.s('Game Board:\n{}'.format(BOARD))
+        lo.s('Letters:\n{}'.format(LETTERS))
+        print()
+    else:
+        print('Running...')
 
     full = Board()
 
@@ -643,10 +713,10 @@ def main() -> None:
     else:
         # -- set search nodes
 
-        full_nodes = full.nodes
+        #full_nodes = full.nodes
 
-        #full_nodes = full.get_row(10)
-        #full_nodes = full.get_row(0) + full.get_row(1) + full.get_row(2)
+        full_nodes = full.get_row(0)
+        #full_nodes = full.get_row(0) + full.get_row(1) + full.get_row(1)
 
         # full_nodes = [
         #     full.get(6, 1),
@@ -671,4 +741,7 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    dargs = vars(args)
+    main(**dargs)
+    #main()

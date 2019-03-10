@@ -12,19 +12,13 @@ import pandas as pd
 from PIL import Image
 from utils.logs import log_init
 
-from _setup import board_dir, def_board_big, def_board_small, templ_dir
+#from .settings import *
+from .settings import BOARD_DIR, DEF_BOARD_BIG, DEF_BOARD_SMALL, TEMPL_DIR, BOARD_FILENAME, LETTERS_FILENAME
 
 # -- GLOBALS
 
 #DEFAULT_LOGLEVEL = 'VERBOSE'
 DEFAULT_LOGLEVEL = 'INFO'
-
-# dirs
-
-# todo import
-board_filename = 'board'
-letters_filename = 'letters.pkl'
-
 
 # img parsing
 
@@ -65,8 +59,8 @@ img_cut_range = {
 lo = log_init(DEFAULT_LOGLEVEL)
 
 default_board_files = {
-    'big': def_board_big,
-    'small': def_board_small
+    'big': DEF_BOARD_BIG,
+    'small': DEF_BOARD_SMALL
 }
 
 
@@ -75,13 +69,13 @@ class Dirs:
         self.default_board = pd.read_pickle(default_board_files[img_typ])
 
         img_file_root = Path(img_file).stem
-        self.this_board_dir = Path(board_dir, img_file_root)
+        self.this_board_dir = Path(BOARD_DIR, img_file_root)
 
         if not self.this_board_dir.exists():
             self.this_board_dir.mkdir()
 
-        self.this_board = Path(self.this_board_dir, board_filename)
-        self.this_letters = Path(self.this_board_dir, letters_filename)
+        self.this_board = Path(self.this_board_dir, BOARD_FILENAME)
+        self.this_letters = Path(self.this_board_dir, LETTERS_FILENAME)
 
 
 def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
@@ -109,7 +103,7 @@ letter_templates: Dict[str, Dict[str, np.ndarray]] = {}
 
 def create_letter_templates():
     for l in string.ascii_lowercase:
-        templ_big = cv2.imread(Path(templ_dir, l + '.png').as_posix(), 0)
+        templ_big = cv2.imread(Path(TEMPL_DIR, l + '.png').as_posix(), 0)
 
         templ_small = cv2.resize(templ_big, (0, 0), fx=1.12, fy=1.13)
         templ_rack = cv2.resize(templ_big, (0, 0), fx=2.1, fy=2.1)
