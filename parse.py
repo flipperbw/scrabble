@@ -26,7 +26,9 @@ def parse_args():
 
     return parser.parse_args()
 
-ARGS = parse_args()
+ARGS = None
+if __name__ == '__main__':
+    ARGS = parse_args()
 
 import json
 import signal
