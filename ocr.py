@@ -59,6 +59,10 @@ upper_black = np.array([78, 36, 24], dtype="uint16")
 lower_white = np.array([230, 230, 230], dtype="uint16")
 upper_white = np.array([255, 255, 255], dtype="uint16")
 
+# todo all colors
+lower_black_gr = np.array([16, 54, 0], dtype="uint16")
+upper_black_gr = np.array([30, 68, 24], dtype="uint16")
+
 rack_space = 106
 
 img_cut_range = {
@@ -198,7 +202,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
         typ = 'big'
         spacing = 49.6
 
-    black_mask = cv2.inRange(board, lower_black, upper_black)
+    black_mask = cv2.inRange(board, lower_black, upper_black) + cv2.inRange(board, lower_black_gr, upper_black_gr)
     white_mask = cv2.inRange(board, lower_white, upper_white)
     comb = black_mask + white_mask
 
@@ -218,7 +222,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
 
 
 def get_rack(img: np.ndarray):
-    black_mask = cv2.inRange(img, lower_black, upper_black)
+    black_mask = cv2.inRange(img, lower_black, upper_black) + cv2.inRange(img, lower_black_gr, upper_black_gr)
     gimg = cv2.bitwise_not(black_mask)
 
     rack = np.array([[''] * 7], dtype='U1')
