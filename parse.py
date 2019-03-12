@@ -8,7 +8,7 @@ __version__ = 1.0
 DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
 
 
-from utils.parsing import parser_init
+from my_utils.parsing import parser_init
 
 def parse_args():
     #TODO: set customnamespace for completion here
@@ -37,7 +37,7 @@ from timeit import default_timer as timer
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 
 import pandas as pd
-from utils.logs import log_init
+from my_utils.logs import log_init
 
 import settings as _
 

@@ -9,7 +9,7 @@ __version__ = 1.0
 DEFAULT_LOGLEVEL = 'INFO'
 
 
-from utils.parsing import parser_init
+from my_utils.parsing import parser_init
 
 def parse_args():
     #TODO: set customnamespace for completion here
@@ -37,7 +37,7 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-from utils.logs import log_init
+from my_utils.logs import log_init
 
 #from settings import *
 from settings import BOARD_DIR, BOARD_FILENAME, DEF_BOARD_BIG, DEF_BOARD_SMALL, LETTERS_FILENAME, TEMPL_DIR
