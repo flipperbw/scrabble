@@ -2,4 +2,4 @@
 .ipynb_checkpoints/
 /data/boards/*/
 /data/wordlists/extra/
-/data/solutions/*.pkl
+/data/solutions/*.pkl.gz
