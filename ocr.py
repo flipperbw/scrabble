@@ -22,7 +22,7 @@ def parse_args():
         version=__version__
     )
 
-    parser.add_argument('filename', type=str, default=None,
+    parser.add_argument('filename', type=str, default=None,  # todo type=argparse.FileType('r')
                         help='File path for the image')
 
     parser.add_argument('-o', '--overwrite', action='store_true',
@@ -30,7 +30,9 @@ def parse_args():
 
     return parser.parse_args()
 
-ARGS = parse_args()
+ARGS = None
+if __name__ == '__main__':
+    ARGS = parse_args()
 
 import string
 import sys
@@ -56,6 +58,10 @@ lower_black = np.array([64, 22, 0], dtype="uint16")
 upper_black = np.array([78, 36, 24], dtype="uint16")
 lower_white = np.array([230, 230, 230], dtype="uint16")
 upper_white = np.array([255, 255, 255], dtype="uint16")
+
+# todo all colors
+lower_black_gr = np.array([16, 54, 0], dtype="uint16")
+upper_black_gr = np.array([30, 68, 24], dtype="uint16")
 
 rack_space = 106
 
@@ -196,7 +202,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
         typ = 'big'
         spacing = 49.6
 
-    black_mask = cv2.inRange(board, lower_black, upper_black)
+    black_mask = cv2.inRange(board, lower_black, upper_black) + cv2.inRange(board, lower_black_gr, upper_black_gr)
     white_mask = cv2.inRange(board, lower_white, upper_white)
     comb = black_mask + white_mask
 
@@ -216,7 +222,7 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
 
 
 def get_rack(img: np.ndarray):
-    black_mask = cv2.inRange(img, lower_black, upper_black)
+    black_mask = cv2.inRange(img, lower_black, upper_black) + cv2.inRange(img, lower_black_gr, upper_black_gr)
     gimg = cv2.bitwise_not(black_mask)
 
     rack = np.array([[''] * 7], dtype='U1')
