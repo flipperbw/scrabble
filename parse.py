@@ -2,10 +2,28 @@
 
 """Parse and solve a scrabble board."""
 
+# -- TODOS
+
+#todo: profiling
+# combine stuffz
+# change return [] to yields?
+# if word was found in a different check, skip
+# change to f'' formatting
+# if someone elses word is a blank, dont count it
+# why is multiprocessing _C getting called?
+# if blank and already have another letter, will assume not blank
+# why is main not showing proper process?
+# fix empty boards in both files
+# recommend choices based on letters left, opened tiles, end game, blanks, etc
+# allow letters to use option, and num
+# cache responses
+# why does this take long to close?
 
 __version__ = 1.0
 
 DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
+
+DICTIONARY = 'wwf'
 
 
 from my_utils.parsing import parser_init
@@ -24,6 +42,12 @@ def parse_args():
     parser.add_argument('filename', type=str, default=None,
                         help='File path for the image')
 
+    parser.add_argument('-n', '--no-words', action='store_true',
+                        help='Hide actual words')
+
+    parser.add_argument('-d', '--dictionary', type=str, default=DICTIONARY,
+                        help=f'Dictionary/wordlist name to use for solving (default: %(default)s)')
+
     return parser.parse_args()
 
 ARGS = None
@@ -31,8 +55,10 @@ if __name__ == '__main__':
     ARGS = parse_args()
 
 import json
+import pickle
 import signal
 import sys
+from hashlib import md5
 from multiprocessing import cpu_count, current_process, Pool
 from pathlib import Path
 from timeit import default_timer as timer
@@ -50,26 +76,12 @@ import settings as _
 #profile = getattr(builtins, 'profile', lambda x: x)
 
 
-# -- TODOS
-
-#todo: profiling
-# combine stuffz
-# change return [] to yields?
-# if word was found in a different check, skip
-# change to f'' formatting
-# if someone elses word is a blank, dont count it
-# why is multiprocessing _C getting called?
-# if blank and already have another letter, will assume not blank
-# why is main not showing proper process?
-# fix empty boards in both files
-# recommend choices based on letters left, opened tiles, end game, blanks, etc
-# allow letters to use option, and num
-
-
 lo = log_init(DEFAULT_LOGLEVEL)
 
 
 class Settings:
+    word_info: List[Dict[str, Any]] = []
+
     use_pool: bool = _.USE_POOL
 
     board = pd.DataFrame()
@@ -537,17 +549,20 @@ def _print_node_range(n: List[Node]):
     return f'{n[0].str_pos()} : {n[-1].str_pos()}'
 
 
-def _print_result(o: dict):
+def _print_result(o: dict, no_words: bool = False):
     s = '\n'.join([
         f'pts  : {o["pts"]}',
-        f'word : {o["word"]}',
+        f'word : {o["word"] if not no_words else "<hidden> (" + str(len(o["word"])) + ")"}',  # todo: hide nodes? show length?
         f'nodes: {_print_node_range(o["nodes"])}',
     ])
 
     # todo why are these tabs like 6 or 8?
     s += '\nnew_words:'
-    for n in o['new_words']:
-        s += f'\n\t{_print_node_range(n["nodes"])}  {n["word"]}'
+    if not no_words:
+        for n in o['new_words']:
+            s += f'\n\t{_print_node_range(n["nodes"])}  {n["word"]}'
+    else:
+        s += ' <hidden>'
 
     return s
 
@@ -555,7 +570,7 @@ def _print_result(o: dict):
 def _add_results(res_list: Optional[List[dict]]):
     if not res_list: return
     for res in res_list:
-        word_info.append(res)
+        Settings.word_info.append(res)
 
 def _pool_handler():
     signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -586,16 +601,13 @@ def check_node(no: Optional[Node]):
             _add_results(reses)
 
 
-# todo: nodelist needs main
-# [{'word': 'xyz', 'nodes': [nodelist], 'pts': 0}]
-word_info: List[Dict[str, Any]] = []
+def show_solution(no_words: bool = False):
+    # todo mark blanks
 
-
-def show_solution():
-    if not word_info:
+    if not Settings.word_info:
         print('No solution.')
     else:
-        newlist = sorted(word_info, key=lambda k: k['pts'], reverse=True)
+        newlist = sorted(Settings.word_info, key=lambda k: k['pts'], reverse=True)
         best_data = newlist[:1][0]
 
         if lo.is_enabled('s'):
@@ -616,60 +628,45 @@ def show_solution():
             print()
             lo.s('-- Top 10 --\n')
             for sidx, s in enumerate(top10):
-                lo.s(f'Choice #{sidx + 1}\n{_print_result(s)}\n')
+                lo.s(f'Choice #{sidx + 1}\n{_print_result(s, no_words)}\n')
 
-            lo.s(f'-- Best --\n{_print_result(best_data)}')
+            lo.s(f'-- Best --\n{_print_result(best_data, no_words)}')
 
-        solved_board = Settings.board.copy()
+        if not no_words:  # todo: print xs instead?
+            solved_board = Settings.board.copy()
 
-        for ni, node in enumerate(best_data.get('nodes', [])):
-            if not node.value:
-                solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
+            for ni, node in enumerate(best_data.get('nodes', [])):
+                if not node.value:
+                    solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
 
-        print('\n' + '-' * ((Settings.shape['row'] * 2) - 1 + 4))
+            print('\n' + '-' * ((Settings.shape['row'] * 2) - 1 + 4))
 
-        for row in solved_board.iterrows():
-            row_data = row[1].to_list()
-            row_str = []
-            for rl in row_data:
-                rl_len = len(rl)
-                rl_val = rl
+            for row in solved_board.iterrows():
+                row_data = row[1].to_list()
+                row_str = []
+                for rl in row_data:
+                    rl_len = len(rl)
+                    rl_val = rl
 
-                if rl_len == 0:
-                    rl_val = ' '
-                elif rl_len == 1:
-                    rl_val = rl.upper()
+                    if rl_len == 0:
+                        rl_val = ' '
+                    elif rl_len == 1:
+                        rl_val = rl.upper()
 
-                row_str.append(rl_val)
+                    row_str.append(rl_val)
 
-            print('| ' + ' '.join(row_str) + ' |')
+                print('| ' + ' '.join(row_str) + ' |')
 
-        print('-' * ((Settings.shape['row'] * 2) - 1 + 4))
+            print('-' * ((Settings.shape['row'] * 2) - 1 + 4))
+
+        else:
+            print(f'\n<solution hidden> ({len(best_data["word"])})')
 
         print(f'\nPoints: {best_data["pts"]}')
 
 
-def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str = 'wwf', **_kwargs):
-    start = timer()
-
-    log_level = log_level.upper()
-    if log_level != DEFAULT_LOGLEVEL:
-        lo.set_level(log_level)
-
-    if filename is not None:
-        this_board_dir = Path(_.BOARD_DIR, filename)
-
-        try:
-            board: pd.DataFrame = pd.read_pickle(Path(this_board_dir, _.BOARD_FILENAME))
-            letters: List[str] = pd.read_pickle(Path(this_board_dir, _.LETTERS_FILENAME))
-        except FileNotFoundError as exc:
-            lo.c(f'Could not find file: {exc.filename}')
-            sys.exit(1)
-
-    else:
-        board = pd.DataFrame(_.BOARD)
-        letters = _.LETTERS
-
+# todo: set default for dict? put in settings? move all settings out to options?
+def solve(board: pd.DataFrame, letters: List[str], dictionary: str):
     board_size = board.size
     if board_size == 15 * 15:
         board_name = _.DEF_BOARD_BIG
@@ -679,11 +676,6 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
         lo.c(f'Board size ({board_size}) has no match')
         sys.exit(1)
 
-    shape = {
-        'row': board.shape[0],
-        'col': board.shape[1]
-    }
-
     try:
         default_board: pd.DataFrame = pd.read_pickle(board_name)
     except FileNotFoundError as exc:
@@ -692,13 +684,13 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
 
     #todo make fnc exception
     try:
-        wordlist = open(Path(_.WORDS_DIR, word_typ + '.txt')).read().splitlines()
+        wordlist = open(Path(_.WORDS_DIR, dictionary + '.txt')).read().splitlines()
     except FileNotFoundError as exc:
         lo.c(f'Could not find file: {exc.filename}')
         sys.exit(1)
 
     try:
-        points: Dict[str, List[int]] = json.load(open(Path(_.POINTS_DIR, word_typ + '.json')))
+        points: Dict[str, List[int]] = json.load(open(Path(_.POINTS_DIR, dictionary + '.json')))
     except FileNotFoundError as exc:
         lo.c(f'Could not find file: {exc.filename}')
         sys.exit(1)
@@ -729,10 +721,7 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
     # board[8][10] = 'Y'
     # letters = ['F', 'G']
 
-    Settings.board = board
     Settings.default_board = default_board
-    Settings.shape = shape
-    Settings.letters = letters
     Settings.blanks = blanks
     Settings.points = points
     Settings.words = words
@@ -786,7 +775,56 @@ def main(filename: str = None, log_level: str = DEFAULT_LOGLEVEL, word_typ: str 
                          )
                 check_node(no)
 
-    show_solution()
+
+def main(filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, log_level: str = DEFAULT_LOGLEVEL, **_kwargs):
+    start = timer()
+
+    log_level = log_level.upper()
+    if log_level != DEFAULT_LOGLEVEL:
+        lo.set_level(log_level)
+
+    if filename is not None:
+        this_board_dir = Path(_.BOARD_DIR, filename)
+
+        try:
+            board: pd.DataFrame = pd.read_pickle(Path(this_board_dir, _.BOARD_FILENAME))
+            letters: List[str] = pd.read_pickle(Path(this_board_dir, _.LETTERS_FILENAME))
+        except FileNotFoundError as exc:
+            lo.c(f'Could not find file: {exc.filename}')
+            sys.exit(1)
+
+    else:
+        board = pd.DataFrame(_.BOARD)
+        letters = _.LETTERS
+
+    shape = {
+        'row': board.shape[0],
+        'col': board.shape[1]
+    }
+
+    Settings.board = board
+    Settings.letters = letters
+    Settings.shape = shape
+
+    md5_board = md5(board.to_json().encode()).hexdigest()[:9]
+    md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]
+
+    solution_filename = Path(_.SOLUTIONS_DIR, f'{md5_board}_{md5_letters}.pkl')
+    try:
+        solution: List[Dict[str, Any]] = pickle.load(open(solution_filename, 'rb'))
+    except FileNotFoundError:
+        lo.v(f'No existing solution found')
+        solve(board, letters, dictionary)
+        pickle.dump(Settings.word_info, open(solution_filename, 'wb'))
+    else:
+        if lo.is_enabled('s'):
+            lo.s('Found existing solution')
+            lo.s('Game Board:\n{}'.format(board))
+            lo.s('Letters:\n{}'.format(letters))
+
+        Settings.word_info = solution
+
+    show_solution(no_words)
 
     end = timer()
     lo.i('\nTime: {}'.format(round(end - start, 1)))

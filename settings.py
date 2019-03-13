@@ -8,9 +8,12 @@ img_dir = Path(curr_dir, 'images')
 data_dir = Path(curr_dir, 'data')
 
 TEMPL_DIR = Path(img_dir, 'templ')
+
 BOARD_DIR = Path(data_dir, 'boards')
 WORDS_DIR = Path(data_dir, 'wordlists')
 POINTS_DIR = Path(data_dir, 'points')
+SOLUTIONS_DIR = Path(data_dir, 'solutions')
+
 DEF_BOARD_BIG = Path(BOARD_DIR, 'default_board_big.pkl')
 DEF_BOARD_SMALL = Path(BOARD_DIR, 'default_board_small.pkl')
 
