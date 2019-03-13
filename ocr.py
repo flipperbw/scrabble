@@ -22,7 +22,7 @@ def parse_args():
         version=__version__
     )
 
-    parser.add_argument('filename', type=str, default=None,
+    parser.add_argument('filename', type=str, default=None,  # todo type=argparse.FileType('r')
                         help='File path for the image')
 
     parser.add_argument('-o', '--overwrite', action='store_true',

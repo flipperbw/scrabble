@@ -48,12 +48,16 @@ def parse_args():
     parser.add_argument('-d', '--dictionary', type=str, default=DICTIONARY,
                         help=f'Dictionary/wordlist name to use for solving (default: %(default)s)')
 
+    parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L',
+                        help='Letters to exclude from rack for solution')
+
     return parser.parse_args()
 
 ARGS = None
 if __name__ == '__main__':
     ARGS = parse_args()
 
+import gzip
 import json
 import pickle
 import signal
@@ -776,7 +780,10 @@ def solve(board: pd.DataFrame, letters: List[str], dictionary: str):
                 check_node(no)
 
 
-def main(filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, log_level: str = DEFAULT_LOGLEVEL, **_kwargs):
+def main(
+    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: List[str] = None,
+    log_level: str = DEFAULT_LOGLEVEL, **_kwargs
+):
     start = timer()
 
     log_level = log_level.upper()
@@ -797,6 +804,10 @@ def main(filename: str = None, dictionary: str = DICTIONARY, no_words: bool = Fa
         board = pd.DataFrame(_.BOARD)
         letters = _.LETTERS
 
+    if exclude_letters:
+        for el in exclude_letters:
+            letters.remove(el.upper())
+
     shape = {
         'row': board.shape[0],
         'col': board.shape[1]
@@ -809,13 +820,13 @@ def main(filename: str = None, dictionary: str = DICTIONARY, no_words: bool = Fa
     md5_board = md5(board.to_json().encode()).hexdigest()[:9]
     md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]
 
-    solution_filename = Path(_.SOLUTIONS_DIR, f'{md5_board}_{md5_letters}.pkl')
+    solution_filename = Path(_.SOLUTIONS_DIR, f'{md5_board}_{md5_letters}.pkl.gz')
     try:
-        solution: List[Dict[str, Any]] = pickle.load(open(solution_filename, 'rb'))
+        solution: List[Dict[str, Any]] = pickle.load(gzip.open(solution_filename))
     except FileNotFoundError:
         lo.v(f'No existing solution found')
         solve(board, letters, dictionary)
-        pickle.dump(Settings.word_info, open(solution_filename, 'wb'))
+        pickle.dump(Settings.word_info, gzip.open(solution_filename, 'wb'))  # todo remove nodes?
     else:
         if lo.is_enabled('s'):
             lo.s('Found existing solution')
@@ -826,8 +837,9 @@ def main(filename: str = None, dictionary: str = DICTIONARY, no_words: bool = Fa
 
     show_solution(no_words)
 
-    end = timer()
-    lo.i('\nTime: {}'.format(round(end - start, 1)))
+    if lo.is_enabled('i'):
+        end = timer()
+        lo.i('\nTime: {}'.format(round(end - start, 1)))
 
 
 if __name__ == '__main__':
