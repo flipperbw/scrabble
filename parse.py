@@ -18,6 +18,7 @@
 # allow letters to use option, and num
 # cache responses
 # why does this take long to close?
+# add must include
 
 __version__ = 1.0
 
@@ -45,10 +46,13 @@ def parse_args():
     parser.add_argument('-n', '--no-words', action='store_true',
                         help='Hide actual words')
 
+    parser.add_argument('-o', '--overwrite', action='store_true',
+                        help='Overwrite existing cache')
+
     parser.add_argument('-d', '--dictionary', type=str, default=DICTIONARY,
                         help=f'Dictionary/wordlist name to use for solving (default: %(default)s)')
 
-    parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L',
+    parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L [,L...]',
                         help='Letters to exclude from rack for solution')
 
     return parser.parse_args()
@@ -781,7 +785,7 @@ def solve(board: pd.DataFrame, letters: List[str], dictionary: str):
 
 
 def main(
-    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: List[str] = None,
+    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: List[str] = None, overwrite: bool = False,
     log_level: str = DEFAULT_LOGLEVEL, **_kwargs
 ):
     start = timer()
@@ -821,10 +825,15 @@ def main(
     md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]
 
     solution_filename = Path(_.SOLUTIONS_DIR, f'{md5_board}_{md5_letters}.pkl.gz')
-    try:
-        solution: List[Dict[str, Any]] = pickle.load(gzip.open(solution_filename))
-    except FileNotFoundError:
-        lo.v(f'No existing solution found')
+
+    if overwrite:
+        has_cache = False
+    else:
+        has_cache = solution_filename.exists()
+        if not has_cache:
+            lo.v(f'No existing solution found')
+
+    if not has_cache:
         solve(board, letters, dictionary)
         pickle.dump(Settings.word_info, gzip.open(solution_filename, 'wb'))  # todo remove nodes?
     else:
@@ -833,6 +842,7 @@ def main(
             lo.s('Game Board:\n{}'.format(board))
             lo.s('Letters:\n{}'.format(letters))
 
+        solution: List[Dict[str, Any]] = pickle.load(gzip.open(solution_filename))
         Settings.word_info = solution
 
     show_solution(no_words)

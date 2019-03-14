@@ -84,6 +84,7 @@ LETTERS = ['']
 # - WORDS
 
 SEARCH_WORDS: Union[None, Tuple[int, int], Set[str]]
+
 #SEARCH_WORDS = (50000, 52000)
 #SEARCH_WORDS = {'TAXON'}
 SEARCH_WORDS = None
@@ -92,9 +93,10 @@ SEARCH_WORDS = None
 # - NODES
 
 SEARCH_NODES: Union[None, List[int], List[Tuple[int, int]]]
-#SEARCH_NODES = [0,1,2] # rows
-#SEARCH_NODES = [(6,1), (7,1)] # nodes
-SEARCH_NODES = None
+
+#SEARCH_NODES = [6] # rows
+SEARCH_NODES = [(6,7), (6,8), (6,9)] # nodes
+#SEARCH_NODES = None
 
 
 # - EXPORT
