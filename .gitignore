@@ -3,3 +3,7 @@
 /data/boards/*/
 /data/wordlists/extra/
 /data/solutions/*.pkl.gz
+*.html
+*.so
+*.c
+build/
