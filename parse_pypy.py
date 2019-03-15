@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """Parse and solve a scrabble board."""
 
 # -- TODOS
@@ -84,8 +86,8 @@ import settings as _
 
 #import pyximport; pyximport.install(pyimport=True)
 
-#import builtins
-#profile = getattr(builtins, 'profile', lambda x: x)
+import builtins
+profile = getattr(builtins, 'profile', lambda x: x)
 
 
 lo = log_init(DEFAULT_LOGLEVEL)
@@ -137,7 +139,7 @@ class Node:
             try:
                 self.points = Settings.points[self.value][1]
             except (KeyError, IndexError):
-                #lo.e(f'Could not get point value of "{self.value}". Using 0.')
+                lo.e('Could not get point value of "{}". Using 0.'.format(self.value))
                 self.points = 0
 
         # word -> idx = blank
@@ -156,8 +158,6 @@ class Node:
         self.left = (self.x, self.y - 1) if self.y >= 0 else None  # type: Optional[Tuple[int, int]]
         self.right = (self.x, self.y + 1) if self.y < Settings.shape['col'] else None  # type: Optional[Tuple[int, int]]
 
-        #self.row = {'bef': [], 'aft': []}  # type: Dict[str, List[Tuple[int, int]]]
-        #self.col = {'bef': [], 'aft': []}  # type: Dict[str, List[Tuple[int, int]]]
         self.row_vals = {'bef': [], 'aft': []}  # type: Dict[str, List[Tuple[int, int]]]
         self.col_vals = {'bef': [], 'aft': []}  # type: Dict[str, List[Tuple[int, int]]]
 
@@ -222,19 +222,12 @@ class Node:
                (isinstance(left, Node) and left.value is not None) or \
                (isinstance(right, Node) and right.value is not None)
 
-
+    @lru_cache(2047)
     def _get_poss_word_dict(self,
             direc,  # type: str
             word  # type: str
     ):
         return self.poss_values.get(direc, {}).get(word, {})
-
-    def has_poss_val(self,
-            direc,  # type: str
-            word,  # type: str
-            idx  # type: int
-    ):
-        return idx in self._get_poss_word_dict(direc, word)
 
     def get_poss_val(self,
             direc,  # type: str
@@ -261,22 +254,22 @@ class Node:
                 return False
         return True
 
+    @lru_cache(2047)
     def get_points(self,
             word,  # type: str
-            nodes,  # type: List['Node']
+            nodes,  # type: Tuple['Node', ...]
             direc,  # type: str
-            new_words=None,  # type: Optional[List[Dict]]
+            new_words=None,  # type: Optional[Tuple[Tuple[str, Tuple['Node', ...], str], ...]]
             **_kw
     ):
         # todo combine this optional thing into one type
 
-        if _kw:
-            lo.e('Extra kw args: {}'.format(_kw))
+        if _kw: lo.e('Extra kw args: {}'.format(_kw))
 
         pts = self._points_from_nodes(word, nodes, direc)
         if new_words:
-            for nw_dict in new_words:
-                new_pts = self._points_from_nodes(**{k: v for k, v in nw_dict.items()})
+            for nw_tup in new_words:
+                new_pts = self._points_from_nodes(*nw_tup)
                 pts += new_pts
 
         if len([x for x in nodes if x.value is None]) == 7:  # todo: or is it all letters?
@@ -287,12 +280,12 @@ class Node:
     @staticmethod
     def _points_from_nodes(
             word,  # type: str
-            nodes,  # type: List['Node']
+            nodes,  # type: Tuple['Node', ...]
             direc,  # type: str
             **_kw
     ):
-        if _kw:
-            lo.e('Extra kw args: {}'.format(_kw))
+        if _kw: lo.e('Extra kw args: {}'.format(_kw))
+
         pts = 0
         word_mult = 1
         idx = 0
@@ -310,6 +303,7 @@ class Node:
 
         return pts
 
+    @lru_cache(2047)
     def _letter_points(self,
             direc,  # type: str
             word,  # type: str
@@ -326,7 +320,7 @@ class Node:
             try:
                 pp = Settings.points[word[idx]][1]
             except (KeyError, IndexError):
-                #lo.e(f'Could not get point value of "{word[idx]}". Using 0.')
+                lo.e('Could not get point value of "{}". Using 0.'.format(word[idx]))
                 pp = 0
 
             self.points = 0
@@ -337,54 +331,11 @@ class Node:
                     pp *= mval
             return pp
 
-        #lo.e(f'Node has no points or poss points for ({direc}, {word}, {idx})')
-        #lo.w(f'node -> {self}')
+        lo.e('Node has no points or poss points for ({}, {}, {})'.format(direc, word, idx))
+        lo.w('node -> {}'.format(self))
         #should probably raise bigger error here
 
         return 0
-
-    # def _get_other_nodes(self,
-    #         check_typ  # type: str
-    # ):
-    #     if check_typ == 'row':
-    #         nodes = self.row
-    #         slice_val = self.y
-    #     else: # col
-    #         nodes = self.col
-    #         slice_val = self.x
-    #
-    #     bef = nodes[:slice_val]
-    #     aft = nodes[slice_val + 1:]
-    #
-    #     return bef, aft
-    #
-    # def get_other_word_nodes(self,
-    #         check_typ=None  # type: str
-    # ):
-    #     if check_typ not in ('row', 'col'):
-    #         lo.c('check_typ required with no nodes given')
-    #         sys.exit(1)
-    #
-    #     bef, aft = self._get_other_nodes(check_typ)
-    #
-    #     nodes_bef = []  # type: List[Node]
-    #     nodes_aft = []  # type: List[Node]
-    #
-    #     for n in reversed(bef):
-    #         if not n.value:
-    #             break
-    #         else:
-    #             nodes_bef.append(n)
-    #
-    #     nodes_bef.reverse()
-    #
-    #     for n in aft:
-    #         if not n.value:
-    #             break
-    #         else:
-    #             nodes_aft.append(n)
-    #
-    #     return nodes_bef, nodes_aft
 
     def str_pos(self):
         return '[{:2d},{:2d}]'.format(*self.pos)
@@ -443,7 +394,7 @@ class Board:
 
         self.set_nodes()
 
-    @lru_cache(2047)
+    @lru_cache(1023)
     def get(self,
             x,  # type: int
             y   # type: int
@@ -525,7 +476,7 @@ def get_word(
     return ''.join(nw.value or '+' for nw in nodes)
 
 
-#@profile
+@profile
 def check_and_get(
         node_list,  # type: List[Node]
         direc,  # type: str
@@ -541,6 +492,7 @@ def check_and_get(
         node_bef = node_list[bef_idx]
         if node_bef and node_bef.value:
             lo.d('Prior node exists for {} at {} ({}), skipping.'.format(direc, bef_idx, node_bef.value))
+            lo.d('Prior node exists for %s at %s (%s), skipping.' % (direc, bef_idx, node_bef.value))
             return None
 
     aft_idx = start + word_len
@@ -595,7 +547,8 @@ def check_and_get(
             set_poss_list.append((no, (direc, word, i, is_blank)))  # todo do i need this now?
 
             other_nodes = no.get_adj_vals(chk_dir)
-            #lo.e(no.get_adj_vals.cache_info())
+            #lo.d(no.get_adj_vals.cache_info())
+
             bef_nodes = other_nodes['bef']
             aft_nodes = other_nodes['aft']
 
@@ -608,10 +561,10 @@ def check_and_get(
                 new_word = bef_word + le + aft_word
 
                 if new_word not in Settings.words:
-                    lo.d('invalid new word: {}'.format(new_word))
+                    #lo.d('invalid new word: {}'.format(new_word))
                     return None
-                else:
-                    lo.d('good new word: {}'.format(new_word))
+                #else:
+                #   lo.d('good new word: {}'.format(new_word))
 
                 new_idx = len(bef_word)
 
@@ -638,15 +591,13 @@ def check_and_get(
     return new_word_list
 
 
-#@profile
+@profile
 def can_spell(
-        no,  # type: Optional[Node]
+        no,  # type: Node
         word,  # type: str
         direc,  # type: str
         word_len=None  # type: Optional[int]
 ):
-    if not no: return
-
     lo.v('{} - {}'.format(direc, word))
 
     if direc == 'row':
@@ -670,13 +621,13 @@ def can_spell(
 
     start = max(0, idx - word_len + 1)
     while (start + word_len) <= dir_len and start <= idx:
-        lo.d('%s, %s, %s, %s', start, idx, word_len, dir_len)
-
+        #lo.d('%s, %s, %s, %s', start, idx, word_len, dir_len)
         new_words = check_and_get(node_list, direc, chk_dir, word, word_len, start)
 
         if new_words is not None:
-            d_nodes = node_list[start:start + word_len]
-            d_pts = no.get_points(word=word, nodes=d_nodes, direc=direc, new_words=new_words)
+            d_nodes = tuple(node_list[start:start + word_len])
+            d_new_words = tuple([(nn['word'], tuple(nn['nodes']), nn['direc']) for nn in new_words])
+            d_pts = no.get_points(word=word, nodes=d_nodes, direc=direc, new_words=d_new_words)
 
             tup_nodes = [n.pos for n in d_nodes]
             tup_new_words = [{'word': n['word'], 'nodes': [nn.pos for nn in n['nodes']]} for n in new_words]
@@ -696,17 +647,15 @@ def can_spell(
 
 
 def check_words(
-        #no,  # type: Optional[Node]
+        no,  # type: Node
         word  # type: str
 ):
-    #if not no: return
-
     data = []
 
     word_len = len(word)  # todo add word length to dict
 
     for direction in ('row', 'col'):
-        spell_words = can_spell(pool_node, word, direction, word_len)
+        spell_words = can_spell(no, word, direction, word_len)
 
         if spell_words:
             lo.i('--> YES: %s: %s', direction, word)
@@ -722,7 +671,7 @@ def check_words(
 def _print_node_range(
         n  # type: List[Tuple[int, int]]
 ):
-    return '[{:2d},{:2d}] : [{:2d},{:2d}]'.format(n[0][0], n[0][1], n[1][0], n[1][1])
+    return '[{:2d},{:2d}] : [{:2d},{:2d}]'.format(n[0][0], n[0][1], n[-1][0], n[-1][1])
 
 
 def _print_result(
@@ -755,10 +704,10 @@ def _add_results(
 
 
 def run_worker(
-        data  # type: str
+        data  # type: Tuple[Node, str]
 ):
-    # no = data[0]
-    # w = data[1]
+    no = data[0]
+    w = data[1]
 
     # w = data
     #
@@ -771,13 +720,11 @@ def run_worker(
     # #print(current.name)
     # #newname = 'w %s' % word_name
     # current.name = 'w %s' % word_name
-    #
-    # # return check_words(no, w)
 
-    return check_words(data)
+    return check_words(no, w)
 
 
-pool_node = None  # type: Optional[Node]
+#pool_node = None  # type: Optional[Node]
 #lock = mp.Lock()
 def _pool_handler():
     #global pool_node
@@ -793,13 +740,6 @@ def _pool_handler():
 def check_node(
         no  # type: Node
 ):
-    global pool_node
-    pool_node = no
-
-    #pre-empt cache
-    no.get_adj_vals('row')
-    no.get_adj_vals('col')
-
     if Settings.use_pool:  #todo: is this fixable for profiling?
         n = Settings.cpus
         #n = 2
@@ -808,7 +748,7 @@ def check_node(
         #pool = Pool(n, initializer=_pool_handler)
         try:
             #pool_res = pool.map(run_worker, (w for w in Settings.search_words))  # type: List[List[dict]]
-            pool_res = pool.map(check_words, (w for w in Settings.search_words))  # type: List[List[dict]]
+            pool_res = pool.map(run_worker, ((no, w) for w in Settings.search_words))  # type: List[List[dict]]
             pool.close()
             pool.join()
         except KeyboardInterrupt:
@@ -822,7 +762,7 @@ def check_node(
 
     else:
         for w in Settings.search_words:
-            reses = check_words(w)
+            reses = check_words(no, w)
             _add_results(reses)
 
 
@@ -904,12 +844,6 @@ def solve(
         lo.c('Could not find file: {}'.format(exc.filename))
         sys.exit(1)
 
-    try:
-        points = json.load(open(str(Path(_.POINTS_DIR, dictionary + '.json'))))  # type: Dict[str, List[int]]
-    except FileNotFoundError as exc:
-        lo.c('Could not find file: {}'.format(exc.filename))
-        sys.exit(1)
-
     words = set(wordlist)
     blanks = letters.count('?')
 
@@ -937,7 +871,6 @@ def solve(
     # letters = ['F', 'G']
 
     Settings.blanks = blanks
-    Settings.points = points
     Settings.words = words
     Settings.search_words = search_words
 
@@ -1043,10 +976,17 @@ def main(
         lo.c('Could not find file: {}'.format(exc.filename))
         sys.exit(1)
 
+    try:
+        points = json.load(open(str(Path(_.POINTS_DIR, dictionary + '.json'))))  # type: Dict[str, List[int]]
+    except FileNotFoundError as exc:
+        lo.c('Could not find file: {}'.format(exc.filename))
+        sys.exit(1)
+
     Settings.default_board = default_board
     Settings.board = board
     Settings.letters = letters
     Settings.shape = shape
+    Settings.points = points
 
     if lo.is_enabled('s'):
         lo.v('Default Board:\n{}'.format(Settings.default_board))
@@ -1087,11 +1027,13 @@ def main(
 
     show_solution(no_words)
 
-    # if not has_cache:
-    #     lo.e('board.get: %s', Board.get.cache_info())
-    #     lo.e('node.row: %s', Node.get_row.cache_info())
-    #     lo.e('node.col: %s', Node.get_col.cache_info())
-    #     lo.e('node.adj_vals: %s', Node.get_adj_vals.cache_info())
+    if not has_cache:
+        lo.e('board.get: %s', Board.get.cache_info())
+        lo.e('node.row: %s', Node.get_row.cache_info())
+        lo.e('node.col: %s', Node.get_col.cache_info())
+        lo.e('node.adj_vals: %s', Node.get_adj_vals.cache_info())
+        lo.e('node.gpts: %s', Node.get_points.cache_info())
+        lo.e('node.lpts: %s', Node._letter_points.cache_info())
 
     if lo.is_enabled('i'):
         end = timer()
