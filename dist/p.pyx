@@ -41,30 +41,41 @@ lo = log_init(DEFAULT_LOGLEVEL)
 #sys.setrecursionlimit(20000)
 
 
-class Settings:
-    word_info = []  # type: List[Dict[str, Any]]
+cdef class CSettings:
+    cdef:
+        public list word_info, letters
+        public bint use_pool
+        public short cpus, blanks
+        public object board, default_board, node_board
+        public dict shape, points
+        public set words, search_words
 
-    use_pool = True  # type: bool
-    cpus = 1  # type: int
+    def __cinit__(self):
+        self.word_info = []  # type: List[Dict[str, Any]]
 
-    board = pd.DataFrame()
-    default_board = pd.DataFrame()
-    shape = {'row': 0, 'col': 0}  # type: Dict[str, int]
-    letters = []  # type: List[str]
-    blanks = 0  # type: int
-    points = {}  # type: Dict[str, List[int]]
-    words = set()  # type: Set[str]
-    search_words = set()  # type: Set[str]
+        self.use_pool = True  # type: bool
+        self.cpus = 1  # type: int
 
-    node_board = None  # type: Board
+        self.board = pd.DataFrame()
+        self.default_board = pd.DataFrame()
+        self.shape = {'row': 0, 'col': 0}  # type: Dict[str, int]
+        self.letters = []  # type: List[str]
+        self.blanks = 0  # type: int
+        self.points = {}  # type: Dict[str, List[int]]
+        self.words = set()  # type: Set[str]
+        self.search_words = set()  # type: Set[str]
+
+        self.node_board = None  # type: Board
+
+Settings = CSettings()
 
 
 class Node:
     def __init__(self,
-            x,  # type: int
-            y,  # type: int
-            multiplier=None,  # type: Optional[str]
-            value=None  # type: Optional[str]
+        x,  # type: int
+        y,  # type: int
+        multiplier=None,  # type: Optional[str]
+        value=None  # type: Optional[str]
     ):
         self.x = x
         self.y = y
@@ -390,18 +401,20 @@ class Board:
                 node_vals['bef'] = bef_tups
                 node_vals['aft'] = aft_tups
 
-                # for c in nodes:
-                #     n.row.append(c.pos)
-                #     if c.value is not None:
-                #         n.row_vals.append(tup)
-                #     else:
-                #         n.row_vals.append(None)
 
+#cdef class NW:
+#    cdef str value
 
 cdef str get_word(
     list nodes  # type: List[Node]
 ):
-    return ''.join(nw.value or '+' for nw in nodes)
+    cdef str res = ''
+    #cdef NW nw
+    for nw in nodes:
+        res += nw.value
+
+    return res
+    #return ''.join(nw.value or '+' for nw in nodes)
 
 #@cython.profile(True)
 cdef list check_and_get(
