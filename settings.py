@@ -24,12 +24,6 @@ LETTERS_FILENAME = 'letters.pkl'
 # todo: setup logger?
 
 
-# - POOL
-
-USE_POOL = True
-#USE_POOL = False
-
-
 # - GAME BOARD
 
 BOARD = [[' '] * 11] * 11
@@ -83,19 +77,19 @@ LETTERS = ['']
 
 # - WORDS
 
-SEARCH_WORDS: Union[None, Tuple[int, int], Set[str]]
+SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
-#SEARCH_WORDS = (50000, 52000)
+#SEARCH_WORDS = (86400, 86550)
 #SEARCH_WORDS = {'TAXON'}
-SEARCH_WORDS = None
+#SEARCH_WORDS = None
 
 
 # - NODES
 
-SEARCH_NODES: Union[None, List[int], List[Tuple[int, int]]]
+SEARCH_NODES = None # type: Union[None, List[int], List[Tuple[int, int]]]
 
 #SEARCH_NODES = [6] # rows
-SEARCH_NODES = [(6,7), (6,8), (6,9)] # nodes
+SEARCH_NODES = [(6,8), (6,9), (7,6), (7,8), (8,8)] # nodes
 #SEARCH_NODES = None
 
 

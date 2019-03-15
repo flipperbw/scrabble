@@ -50,10 +50,13 @@ def parse_args():
                         help='Overwrite existing cache')
 
     parser.add_argument('-d', '--dictionary', type=str, default=DICTIONARY,
-                        help=f'Dictionary/wordlist name to use for solving (default: %(default)s)')
+                        help='Dictionary/wordlist name to use for solving (default: %(default)s)')
 
     parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L [,L...]',
                         help='Letters to exclude from rack for solution')
+
+    parser.add_argument('-m', '--no-multiprocess', action='store_true',
+        help='Do not use multiprocessing')
 
     return parser.parse_args()
 
@@ -90,7 +93,7 @@ lo = log_init(DEFAULT_LOGLEVEL)
 class Settings:
     word_info: List[Dict[str, Any]] = []
 
-    use_pool: bool = _.USE_POOL
+    use_pool: bool = True
 
     board = pd.DataFrame()
     default_board = pd.DataFrame()
@@ -785,7 +788,8 @@ def solve(board: pd.DataFrame, letters: List[str], dictionary: str):
 
 
 def main(
-    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: List[str] = None, overwrite: bool = False,
+    filename: str = None, dictionary: str = DICTIONARY, exclude_letters: List[str] = None,
+    overwrite: bool = False, no_words: bool = False, no_multiprocess: bool = False,
     log_level: str = DEFAULT_LOGLEVEL, **_kwargs
 ):
     start = timer()
@@ -820,6 +824,9 @@ def main(
     Settings.board = board
     Settings.letters = letters
     Settings.shape = shape
+
+    if no_multiprocess:
+        Settings.use_pool = False
 
     md5_board = md5(board.to_json().encode()).hexdigest()[:9]
     md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]
