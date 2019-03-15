@@ -66,8 +66,8 @@ import signal
 import sys
 from hashlib import md5
 
-#import dill
-import pickle
+#import pickle
+import dill
 #dill.detect.trace(True)
 import multiprocessing as mp
 #from pathos.multiprocessing import ProcessPool as Pool
@@ -404,7 +404,7 @@ class Node:
 
 
 class Board:
-    def __init__(self, default_board=Settings.default_board, board=Settings.board):
+    def __init__(self, board=Settings.board, default_board=Settings.default_board):
         self.default_board = default_board
         self.board = board
 
@@ -640,11 +640,13 @@ def check_and_get(
 
 #@profile
 def can_spell(
-        no,  # type: Node
+        no,  # type: Optional[Node]
         word,  # type: str
         direc,  # type: str
         word_len=None  # type: Optional[int]
 ):
+    if not no: return
+
     lo.v('{} - {}'.format(direc, word))
 
     if direc == 'row':
@@ -676,11 +678,14 @@ def can_spell(
             d_nodes = node_list[start:start + word_len]
             d_pts = no.get_points(word=word, nodes=d_nodes, direc=direc, new_words=new_words)
 
+            tup_nodes = [n.pos for n in d_nodes]
+            tup_new_words = [{'word': n['word'], 'nodes': [nn.pos for nn in n['nodes']]} for n in new_words]
+
             new_d = {
                 'pts': d_pts,
                 'word': word,
-                'nodes': d_nodes,
-                'new_words': new_words
+                'nodes': tup_nodes,
+                'new_words': tup_new_words
             }
             #todo: insert reverse too?
             spell_words.append(new_d)
@@ -691,17 +696,17 @@ def can_spell(
 
 
 def check_words(
-        no,  # type: Optional[Node]
+        #no,  # type: Optional[Node]
         word  # type: str
 ):
-    if not no: return
+    #if not no: return
 
     data = []
 
-    word_len = len(word)
+    word_len = len(word)  # todo add word length to dict
 
     for direction in ('row', 'col'):
-        spell_words = can_spell(no, word, direction, word_len)
+        spell_words = can_spell(pool_node, word, direction, word_len)
 
         if spell_words:
             lo.i('--> YES: %s: %s', direction, word)
@@ -715,9 +720,9 @@ def check_words(
 
 
 def _print_node_range(
-        n  # type: List[Node]
+        n  # type: List[Tuple[int, int]]
 ):
-    return '{} : {}'.format(n[0].str_pos(), n[-1].str_pos())
+    return '[{:2d},{:2d}] : [{:2d},{:2d}]'.format(n[0][0], n[0][1], n[1][0], n[1][1])
 
 
 def _print_result(
@@ -769,7 +774,7 @@ def run_worker(
     #
     # # return check_words(no, w)
 
-    return check_words(pool_node, data)
+    return check_words(data)
 
 
 pool_node = None  # type: Optional[Node]
@@ -800,8 +805,10 @@ def check_node(
         #n = 2
         #pool = mp.Pool(n, initializer=_pool_handler, initargs=[pool_node])
         pool = mp.Pool(n, initializer=_pool_handler)
+        #pool = Pool(n, initializer=_pool_handler)
         try:
-            pool_res = pool.map(run_worker, (w for w in Settings.search_words))  # type: List[List[dict]]
+            #pool_res = pool.map(run_worker, (w for w in Settings.search_words))  # type: List[List[dict]]
+            pool_res = pool.map(check_words, (w for w in Settings.search_words))  # type: List[List[dict]]
             pool.close()
             pool.join()
         except KeyboardInterrupt:
@@ -815,7 +822,7 @@ def check_node(
 
     else:
         for w in Settings.search_words:
-            reses = check_words(no, w)
+            reses = check_words(w)
             _add_results(reses)
 
 
@@ -854,7 +861,8 @@ def show_solution(no_words=False  # type: bool
         if not no_words:  # todo: print xs instead?
             solved_board = Settings.board.copy()
 
-            for ni, node in enumerate(best_data.get('nodes', [])):
+            for ni, node_tup in enumerate(best_data.get('nodes', [])):
+                node = Settings.node_board.get(*node_tup)
                 if not node.value:
                     solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
 
@@ -885,25 +893,10 @@ def show_solution(no_words=False  # type: bool
 
 
 # todo: set default for dict? put in settings? move all settings out to options?
-def solve(board,  # type: pd.DataFrame
+def solve(
         letters,  # type: List[str]
         dictionary  # type: str
 ):
-    board_size = board.size
-    if board_size == 15 * 15:
-        board_name = _.DEF_BOARD_BIG
-    elif board_size == 11 * 11:
-        board_name = _.DEF_BOARD_SMALL
-    else:
-        #lo.c(f'Board size ({board_size}) has no match')
-        sys.exit(1)
-
-    try:
-        default_board = pd.read_pickle(board_name)  # type: pd.DataFrame
-    except FileNotFoundError as exc:
-        lo.c('Could not find file: {}'.format(exc.filename))
-        sys.exit(1)
-
     #todo make fnc exception
     try:
         wordlist = open(str(Path(_.WORDS_DIR, dictionary + '.txt'))).read().splitlines()
@@ -931,7 +924,7 @@ def solve(board,  # type: pd.DataFrame
     elif isinstance(_.SEARCH_WORDS, set):
         search_words = _.SEARCH_WORDS
     else:
-        #lo.c(f'Incompatible search words type: {type(_.SEARCH_WORDS)}')
+        lo.c('Incompatible search words type: {}'.format(type(_.SEARCH_WORDS)))
         sys.exit(1)
 
     # --
@@ -943,7 +936,6 @@ def solve(board,  # type: pd.DataFrame
     # board[8][10] = 'Y'
     # letters = ['F', 'G']
 
-    Settings.default_board = default_board
     Settings.blanks = blanks
     Settings.points = points
     Settings.words = words
@@ -951,19 +943,11 @@ def solve(board,  # type: pd.DataFrame
 
     # --
 
-    if lo.is_enabled('s'):
-        lo.v('Default Board:\n{}'.format(default_board))
-        lo.s('Game Board:\n{}'.format(board))
-        lo.s('Letters:\n{}'.format(letters))
-        print()
-    else:
-        print('Running...')
-
-    full = Board(default_board=default_board, board=board)
-    Settings.node_board = full
-
     if Settings.use_pool:  #todo: is this fixable for profiling?
+        lo.i('Using multiprocessing...')
         Settings.cpus = max(min(mp.cpu_count() - 1, len(Settings.search_words)), 1)
+
+    full = Settings.node_board
 
     if full.new_game:
         lo.s(' = Fresh game = ')
@@ -982,14 +966,14 @@ def solve(board,  # type: pd.DataFrame
                 for nl in _.SEARCH_NODES:
                     fr = full.get(nl[0], nl[1])
                     if not fr:
-                        #lo.c(f'Could not locate node: {nl}')
+                        lo.c('Could not locate node: {}'.format(nl))
                         sys.exit(1)
                     full_nodes.append(fr)
             else:
-                #lo.c(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+                lo.c('Incompatible search node type: {}'.format(type(_.SEARCH_NODES)))
                 sys.exit(1)
         else:
-            #lo.c(f'Incompatible search node type: {type(_.SEARCH_NODES)}')
+            lo.c('Incompatible search node type: {}'.format(type(_.SEARCH_NODES)))
             sys.exit(1)
 
         full_nodes_len = len(full_nodes)
@@ -1044,9 +1028,36 @@ def main(
         'col': board.shape[1]
     }
 
+    board_size = board.size
+    if board_size == 15 * 15:
+        board_name = _.DEF_BOARD_BIG
+    elif board_size == 11 * 11:
+        board_name = _.DEF_BOARD_SMALL
+    else:
+        lo.c('Board size ({}) has no match'.format(board_size))
+        sys.exit(1)
+
+    try:
+        default_board = pd.read_pickle(board_name)  # type: pd.DataFrame
+    except FileNotFoundError as exc:
+        lo.c('Could not find file: {}'.format(exc.filename))
+        sys.exit(1)
+
+    Settings.default_board = default_board
     Settings.board = board
     Settings.letters = letters
     Settings.shape = shape
+
+    if lo.is_enabled('s'):
+        lo.v('Default Board:\n{}'.format(Settings.default_board))
+        lo.s('Game Board:\n{}'.format(board))
+        lo.s('Letters:\n{}'.format(letters))
+        print()
+    else:
+        print('Running...')
+
+    full = Board(board=board, default_board=default_board)
+    Settings.node_board = full
 
     if no_multiprocess:
         Settings.use_pool = False
@@ -1060,30 +1071,27 @@ def main(
         has_cache = False
     else:
         has_cache = solution_filename.exists()
-        #if not has_cache:
-        #    lo.v(f'No existing solution found')
+        if not has_cache:
+            lo.v('No existing solution found')
 
     if not has_cache:
-        solve(board, letters, dictionary)
-        #dill.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'), byref=True)  # todo remove nodes?
-        pickle.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
+        solve(letters, dictionary)
+        dill.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
+        #pickle.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
     else:
-        if lo.is_enabled('s'):
-            lo.s('Found existing solution')
-            lo.s('Game Board:\n{}'.format(board))
-            lo.s('Letters:\n{}'.format(letters))
+        lo.s('Found existing solution')
 
-        #solution = dill.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
-        solution = pickle.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
+        solution = dill.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
+        #solution = pickle.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
         Settings.word_info = solution
 
     show_solution(no_words)
 
-    if not has_cache:
-        lo.e('board.get: %s', Board.get.cache_info())
-        lo.e('node.row: %s', Node.get_row.cache_info())
-        lo.e('node.col: %s', Node.get_col.cache_info())
-        lo.e('node.adj_vals: %s', Node.get_adj_vals.cache_info())
+    # if not has_cache:
+    #     lo.e('board.get: %s', Board.get.cache_info())
+    #     lo.e('node.row: %s', Node.get_row.cache_info())
+    #     lo.e('node.col: %s', Node.get_col.cache_info())
+    #     lo.e('node.adj_vals: %s', Node.get_adj_vals.cache_info())
 
     if lo.is_enabled('i'):
         end = timer()
