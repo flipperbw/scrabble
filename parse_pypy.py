@@ -12,7 +12,6 @@
 # if someone elses word is a blank, dont count it
 # why is multiprocessing _C getting called?
 # if blank and already have another letter, will assume not blank
-# why is main not showing proper process?
 # fix empty boards in both files
 # recommend choices based on letters left, opened tiles, end game, blanks, etc
 # allow letters to use option, and num
@@ -68,8 +67,8 @@ import signal
 import sys
 from hashlib import md5
 
-#import pickle
-import dill
+import pickle
+#import dill
 #dill.detect.trace(True)
 import multiprocessing as mp
 #from pathos.multiprocessing import ProcessPool as Pool
@@ -86,8 +85,8 @@ import settings as _
 
 #import pyximport; pyximport.install(pyimport=True)
 
-import builtins
-profile = getattr(builtins, 'profile', lambda x: x)
+#import builtins
+#profile = getattr(builtins, 'profile', lambda x: x)
 
 
 lo = log_init(DEFAULT_LOGLEVEL)
@@ -99,7 +98,7 @@ class Settings:
     word_info = []  # type: List[Dict[str, Any]]
 
     use_pool = True  # type: bool
-    cpus = 1
+    cpus = 1  # type: int
 
     board = pd.DataFrame()
     default_board = pd.DataFrame()
@@ -254,12 +253,11 @@ class Node:
                 return False
         return True
 
-    @lru_cache(2047)
     def get_points(self,
             word,  # type: str
-            nodes,  # type: Tuple['Node', ...]
+            nodes,  # type: List['Node']
             direc,  # type: str
-            new_words=None,  # type: Optional[Tuple[Tuple[str, Tuple['Node', ...], str], ...]]
+            new_words=None,  # type: Optional[List[Dict]]
             **_kw
     ):
         # todo combine this optional thing into one type
@@ -268,8 +266,8 @@ class Node:
 
         pts = self._points_from_nodes(word, nodes, direc)
         if new_words:
-            for nw_tup in new_words:
-                new_pts = self._points_from_nodes(*nw_tup)
+            for nw_dict in new_words:
+                new_pts = self._points_from_nodes(**nw_dict)
                 pts += new_pts
 
         if len([x for x in nodes if x.value is None]) == 7:  # todo: or is it all letters?
@@ -280,7 +278,7 @@ class Node:
     @staticmethod
     def _points_from_nodes(
             word,  # type: str
-            nodes,  # type: Tuple['Node', ...]
+            nodes,  # type: List['Node']
             direc,  # type: str
             **_kw
     ):
@@ -476,7 +474,7 @@ def get_word(
     return ''.join(nw.value or '+' for nw in nodes)
 
 
-@profile
+#@profile
 def check_and_get(
         node_list,  # type: List[Node]
         direc,  # type: str
@@ -491,7 +489,6 @@ def check_and_get(
     if bef_idx >= 0:
         node_bef = node_list[bef_idx]
         if node_bef and node_bef.value:
-            lo.d('Prior node exists for {} at {} ({}), skipping.'.format(direc, bef_idx, node_bef.value))
             lo.d('Prior node exists for %s at %s (%s), skipping.' % (direc, bef_idx, node_bef.value))
             return None
 
@@ -499,7 +496,7 @@ def check_and_get(
     if aft_idx < Settings.shape[direc]:
         node_aft = node_list[aft_idx]
         if node_aft and node_aft.value:
-            lo.d('Following node exists for {} at {} ({}), skipping.'.format(direc, aft_idx, node_aft.value))
+            lo.d('Following node exists for %s at %s (%s), skipping.', direc, aft_idx, node_aft.value)
             return None
 
     ls = list(Settings.letters)
@@ -591,7 +588,7 @@ def check_and_get(
     return new_word_list
 
 
-@profile
+#@profile
 def can_spell(
         no,  # type: Node
         word,  # type: str
@@ -625,9 +622,8 @@ def can_spell(
         new_words = check_and_get(node_list, direc, chk_dir, word, word_len, start)
 
         if new_words is not None:
-            d_nodes = tuple(node_list[start:start + word_len])
-            d_new_words = tuple([(nn['word'], tuple(nn['nodes']), nn['direc']) for nn in new_words])
-            d_pts = no.get_points(word=word, nodes=d_nodes, direc=direc, new_words=d_new_words)
+            d_nodes = node_list[start:start + word_len]
+            d_pts = no.get_points(word=word, nodes=d_nodes, direc=direc, new_words=new_words)
 
             tup_nodes = [n.pos for n in d_nodes]
             tup_new_words = [{'word': n['word'], 'nodes': [nn.pos for nn in n['nodes']]} for n in new_words]
@@ -913,8 +909,8 @@ def solve(
         for no in full_nodes:
             if no and not no.value and no.has_edge():
                 if lo.is_enabled('s'):
-                    lo.s('Checking Node (%2s, %2s: %1s) - #%s / %s',
-                          no.x, no.y, no.value or '_', full_nodes.index(no) + 1, full_nodes_len
+                    lo.s('Checking Node (%2s, %2s) - #%s / %s',
+                          no.x, no.y, full_nodes.index(no) + 1, full_nodes_len
                     )
                 check_node(no)
 
@@ -1016,24 +1012,24 @@ def main(
 
     if not has_cache:
         solve(letters, dictionary)
-        dill.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
-        #pickle.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
+        #dill.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
+        pickle.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
     else:
         lo.s('Found existing solution')
 
-        solution = dill.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
-        #solution = pickle.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
+        #solution = dill.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
+        solution = pickle.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
         Settings.word_info = solution
 
     show_solution(no_words)
 
-    if not has_cache:
-        lo.e('board.get: %s', Board.get.cache_info())
-        lo.e('node.row: %s', Node.get_row.cache_info())
-        lo.e('node.col: %s', Node.get_col.cache_info())
-        lo.e('node.adj_vals: %s', Node.get_adj_vals.cache_info())
-        lo.e('node.gpts: %s', Node.get_points.cache_info())
-        lo.e('node.lpts: %s', Node._letter_points.cache_info())
+    if not has_cache and lo.is_enabled('v'):
+        print()
+        lo.v('board.get: %s', Board.get.cache_info())
+        lo.v('node.row: %s', Node.get_row.cache_info())
+        lo.v('node.col: %s', Node.get_col.cache_info())
+        lo.v('node.adj_vals: %s', Node.get_adj_vals.cache_info())
+        lo.v('node.lpts: %s', Node._letter_points.cache_info())
 
     if lo.is_enabled('i'):
         end = timer()
