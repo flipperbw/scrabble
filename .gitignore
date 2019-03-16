@@ -6,4 +6,5 @@
 *.html
 *.so
 *.c
+*.cpp
 build/

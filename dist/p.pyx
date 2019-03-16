@@ -1,9 +1,18 @@
+# distutils: language = c++
+# cython: infer_types=True
+
 """Parse and solve a scrabble board."""
 
 """# cython: profile=True
 # cython: linetrace=True
 # cython: binding=True
 # distutils: define_macros=CYTHON_TRACE=1"""
+
+cimport cython
+
+from libcpp.vector cimport vector
+from libcpp.utility cimport pair
+#from libcpp.string cimport string
 
 import gzip
 import json
@@ -22,13 +31,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 from functools import lru_cache
 
+#cimport numpy as np
+#import numpy as np
 import pandas as pd
 from logs import log_init
 
 import settings as _
 
-#from cpython.array cimport array
-#cimport cython
+#from cpython cimport array
+#import array
+
 
 ctypedef unsigned short us
 
@@ -67,7 +79,8 @@ cdef class CSettings:
 
         self.node_board = None  # type: Board
 
-Settings = CSettings()
+
+cdef CSettings Settings = CSettings()
 
 
 class Node:
@@ -406,7 +419,7 @@ class Board:
 #    cdef str value
 
 cdef str get_word(
-    list nodes  # type: List[Node]
+    list nodes  # List[Node]
 ):
     cdef str res = ''
     #cdef NW nw
@@ -417,36 +430,40 @@ cdef str get_word(
     #return ''.join(nw.value or '+' for nw in nodes)
 
 #@cython.profile(True)
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cdef list check_and_get(
-    node_list,  # type: List[Node]
+    node_list,  # List[Node]
     str direc,
     str chk_dir,
-    word,  # type: str
+    str word,
+    #string word,
     us word_len,
     us start
 ):
-
     cdef:
-        us blanks, pos, i, new_idx
+        us blanks, pos, i = 0
+        int bef_idx, aft_idx
+        Py_ssize_t new_idx = 0
         str bef_word, aft_word, le, new_word
+        object node_bef, node_aft, no
 
-
-    cdef short bef_idx = start - 1
+    bef_idx = start - 1
     if bef_idx >= 0:
         node_bef = node_list[bef_idx]
-        if node_bef and node_bef.value:
-            return None
+        if node_bef.value:
+            return
 
-    cdef us aft_idx = start + word_len
+    aft_idx = start + word_len
     if aft_idx < Settings.shape[direc]:
         node_aft = node_list[aft_idx]
-        if node_aft and node_aft.value:
-            return None
+        if node_aft.value:
+            return
 
     ls = list(Settings.letters)
     blanks = Settings.blanks
 
-    new_word_list = []  # type: List[Dict]
+    new_word_list = []  # List[Dict]
     set_poss_list = []  # type: List[Tuple[Node, Tuple[str, str, int, bool]]]
 
     #cdef (str, str, us) pos_tup
@@ -454,13 +471,9 @@ cdef list check_and_get(
     for i in range(word_len):
         pos = start + i
 
-        try:
-            no = node_list[pos]
-        except IndexError:
-            # todo should never happen
-            lo.e('no space {} at {}+{} for {}, {}'.format(direc, start, i, word, len(node_list)))
-            return None
+        no = node_list[pos]
 
+        #le = word.at(i)
         le = word[i]
         nval = no.value
         if nval:
@@ -522,10 +535,10 @@ cdef list check_and_get(
 
 #@cython.profile(True)
 cdef list can_spell(
-        no,  # type: Node
-        str word,
-        str direc,
-        us word_len
+    object no,  # type: Node
+    str word,
+    str direc,
+    us word_len
 ):
 
     cdef:
@@ -576,12 +589,12 @@ cdef list can_spell(
 
 #@cython.profile(True)
 cdef list check_words(
-        no,  # type: Node
-        word  # type: str
+    object no,  # type: Node
+    str word
 ):
-    data = []
-
-    word_len = len(word)  # todo add word length to dict
+    cdef:
+        list data = []
+        Py_ssize_t word_len = len(word)  # todo add word length to dict
 
     for direction in ('row', 'col'):
         spell_words = can_spell(no, word, direction, word_len)
@@ -595,27 +608,59 @@ cdef list check_words(
     return data
 
 
+@cython.boundscheck(False)
+#@cython.wraparound(False)
 cdef str _print_node_range(
-    list n  # type: List[Tuple[int, int]]
+    vector[pair[int, int]] n  # list[tuple[int,int]]
+    #list n  # list[tuple[int,int]]
+    #np.ndarray[np.int, ndim=2] n  # list[tuple[int,int]]
 ):
-    return '[{:2d},{:2d}] : [{:2d},{:2d}]'.format(n[0][0], n[0][1], n[-1][0], n[-1][1])
+    cdef:
+        pair[int, int] s = n.front()
+        pair[int, int] e = n.back()
+        (int, int, int, int) x = (s.first, s.second, e.first, e.second)
 
+    return '[%2i,%2i] : [%2i,%2i]' % x
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cdef str _print_result(
-    o,  # type: dict
-    bint no_words=False
+    dict o,
+    bint no_words = False
 ):
-    s = '\n'.join([
-        'pts  : {}'.format(o["pts"]),
-        'word : {}'.format(o["word"] if not no_words else "<hidden> (" + str(len(o["word"])) + ")"),  # todo: hide nodes? show length?
-        'nodes: {}'.format(_print_node_range(o["nodes"])),
+    cdef:
+        str ow
+        str pts = str(o['pts'])
+        #Py_ssize_t owl
+
+    if not no_words:
+        ow = o['word']
+    else:
+        ow = '<hidden> (' + str(len(o['word'])) + ')'
+
+    cdef str s = '\n'.join([
+        'pts  : ' + pts,
+        'word : ' + ow,  # todo: hide nodes? show length?
+        'nodes: ' + _print_node_range(o["nodes"])
     ])
 
     # todo why are these tabs like 6 or 8?
     s += '\nnew_words:'
+
+    cdef:
+        list nw = o['new_words']  # list[dict]
+        Py_ssize_t n, nw_l = len(nw)
+        dict nw_d
+        list nw_nodes
+        str nw_nodes_str, nw_word
+
     if not no_words:
-        for n in o['new_words']:
-            s += '\n\t{}  {}'.format(_print_node_range(n["nodes"]), n["word"])
+        for n in range(nw_l):
+            nw_d = nw[n]
+            nw_nodes = nw_d["nodes"]
+            nw_word = nw_d["word"]
+            nw_nodes_str = _print_node_range(nw_nodes)
+            s += f'\n\t{nw_nodes_str}  {nw_word}'
     else:
         s += ' <hidden>'
 
@@ -665,7 +710,7 @@ def _pool_handler():
 #pool = mp.Pool(7, initializer=_pool_handler)
 
 #@cython.profile(True)
-cdef check_node(
+cdef void check_node(
     no  # type: Node
 ):
     if Settings.use_pool:  #todo: is this fixable for profiling?
@@ -696,7 +741,7 @@ cdef check_node(
             _add_results(reses)
 
 
-cdef show_solution(
+cdef void show_solution(
     bint no_words=False
 ):
     # todo mark blanks
@@ -763,7 +808,7 @@ cdef show_solution(
 
 
 # todo: set default for dict? put in settings? move all settings out to options?
-cdef solve(
+cdef void solve(
     list letters,  # type: List[str]
     str dictionary  # type: str
 ):

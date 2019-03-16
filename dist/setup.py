@@ -17,7 +17,8 @@ ext_modules = [
     # ),
     Extension(
         "*",
-        ["*.pyx"]
+        ["*.pyx"],
+        extra_compile_args=["-Wall"]
     )
 ]
 
