@@ -1,12 +1,11 @@
 # distutils: language = c++
 # cython: infer_types=True
+# cython: profile=True
+## cython: linetrace=True
+## cython: binding=True
+## distutils: define_macros=CYTHON_TRACE=1
 
 """Parse and solve a scrabble board."""
-
-"""# cython: profile=True
-# cython: linetrace=True
-# cython: binding=True
-# distutils: define_macros=CYTHON_TRACE=1"""
 
 cimport cython
 
@@ -56,7 +55,7 @@ lo = log_init(DEFAULT_LOGLEVEL)
 cdef class CSettings:
     cdef:
         public list word_info, letters
-        public bint use_pool
+        bint use_pool
         public short cpus, blanks
         public object board, default_board, node_board
         public dict shape, points
@@ -83,13 +82,18 @@ cdef class CSettings:
 cdef CSettings Settings = CSettings()
 
 
-class Node:
-    def __init__(self,
-        x,  # type: int
-        y,  # type: int
-        multiplier=None,  # type: Optional[str]
-        value=None  # type: Optional[str]
-    ):
+cdef class Node:
+    cdef:
+        int x, y, points
+        int pos[2]
+        str multiplier, value
+        bint is_start
+
+        struct words:
+            str word
+
+
+    def __cinit__(self, int x, int y, str multiplier=None, str value=None):
         self.x = x
         self.y = y
         self.pos = (x, y)
@@ -128,8 +132,11 @@ class Node:
         self.left = (self.x, self.y - 1) if self.y >= 0 else None  # type: Optional[Tuple[int, int]]
         self.right = (self.x, self.y + 1) if self.y < Settings.shape['col'] else None  # type: Optional[Tuple[int, int]]
 
-        self.row_vals = {'bef': [], 'aft': []}  # type: Dict[str, List[Tuple[int, int]]]
-        self.col_vals = {'bef': [], 'aft': []}  # type: Dict[str, List[Tuple[int, int]]]
+        self.row_vals = ([], [])  # type: Tuple[List[Tuple[int, int]], List[Tuple[int, int]]]
+        self.col_vals = ([], [])  # type: Tuple[List[Tuple[int, int]], List[Tuple[int, int]]]
+
+        self.row_words = ('', '')  # type: Tuple[str, str]
+        self.col_words = ('', '')  # type: Tuple[str, str]
 
 
     def get_up(self): return self.get_cell(self.up)
@@ -146,13 +153,17 @@ class Node:
     def get_col(self):
         return Settings.node_board.get_col(self.y)
 
-    def get_row_vals(self):
-        return {
-            'bef': [Settings.node_board.get(*n) for n in self.row_vals['bef']],
-            'aft': [Settings.node_board.get(*n) for n in self.row_vals['aft']]
-        }
+    def _get_row_vals(self):
+        cdef int rv
 
-    def get_col_vals(self):
+        bef, aft = self.row_vals
+        bef = rv[0]
+        return (
+            [Settings.node_board.get(*n) for n in self.row_vals[0]],
+            [Settings.node_board.get(*n) for n in self.row_vals[1]]
+        )
+
+    def _get_col_vals(self):
         return {
             'bef': [Settings.node_board.get(*n) for n in self.col_vals['bef']],
             'aft': [Settings.node_board.get(*n) for n in self.col_vals['aft']]
@@ -160,18 +171,24 @@ class Node:
 
     @lru_cache(1023)
     def get_adj_vals(self,
-            direc: str,
+        str direc
     ):
         if direc == 'row':
-            return self.get_row_vals()
-        elif direc == 'col':
-            return self.get_col_vals()
+            return self._get_row_vals()
         else:
-            lo.c('Direction needs to be "row" or "col"')
+            return self._get_col_vals()
+
+    def get_adj_words(self,
+        str direc
+    ):
+        if direc == 'row':
+            return self.row_words
+        else:
+            return self.col_words
 
 
     def get_cell(self,
-            typ  # type: Optional[Union[str, Tuple[int, int]]]
+        typ  # type: Optional[Union[str, Tuple[int, int]]]
     ):
         if isinstance(typ, str):
             cell_tup = getattr(self, typ)
@@ -271,6 +288,9 @@ class Node:
 
         return pts
 
+
+    #TODO: add a words attribute that contains (word, direc, idx, is_blank, pts)
+
     @lru_cache(2047)
     def _letter_points(self,
             direc,  # type: str
@@ -357,41 +377,44 @@ class Board:
 
     @lru_cache(1023)
     def get(self,
-            x,  # type: int
-            y   # type: int
+        x,  # type: int
+        y   # type: int
     ):
         f = filter(lambda obj: obj.x == x and obj.y == y, self.nodes)
         return next(f, None)
 
     def get_by_attr(self,
-            attr,  # type: str
-            v  # type: Any
+        attr,  # type: str
+        v  # type: Any
     ):
         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
 
     @lru_cache()
     def get_row(self,
-            x  # type: int
+        int x
     ):
         return list(self.get_by_attr('x', x))
 
     @lru_cache()
     def get_col(self,
-            y  # type: int
+        int y
     ):
         return list(self.get_by_attr('y', y))
 
     def set_nodes(self):
+        cdef:
+            int slice_val
+            list bef_tups, aft_tups
+            str bef_word, aft_word
+
         for n in self.nodes:
             for direc in ('row', 'col'):
                 if direc == 'row':
                     nodes = self.get_row(n.x)
                     slice_val = n.y
-                    node_vals = n.row_vals
                 else:  # col
                     nodes = self.get_col(n.y)
                     slice_val = n.x
-                    node_vals = n.col_vals
 
                 bef = nodes[:slice_val]
                 aft = nodes[slice_val + 1:]
@@ -399,32 +422,45 @@ class Board:
                 bef_tups = []  # type: List[Tuple[int, int]]
                 aft_tups = []  # type: List[Tuple[int, int]]
 
+                bef_word = ''
+                aft_word = ''
+
                 for p in reversed(bef):
                     if not p.value: break
                     else:
                         bef_tups.append(p.pos)
+                        bef_word += p.value
 
                 bef_tups.reverse()
+                bef_word = bef_word[::-1]
 
                 for p in aft:
                     if not p.value: break
                     else:
                         aft_tups.append(p.pos)
+                        aft_word += p.value
 
-                node_vals['bef'] = bef_tups
-                node_vals['aft'] = aft_tups
+                setattr(n, f'{direc}_vals', (bef_tups, aft_tups))
+                setattr(n, f'{direc}_words', (bef_word, aft_word))
 
 
-#cdef class NW:
-#    cdef str value
+# cdef class NW:
+#     cdef str value
 
-cdef str get_word(
-    list nodes  # List[Node]
-):
-    cdef str res = ''
-    #cdef NW nw
-    for nw in nodes:
-        res += nw.value
+def get_word(
+    list nodes  # type: List[Node]
+) -> str:
+    cdef:
+        str nwv, res = ''
+        # NW nw
+        object nw
+        Py_ssize_t new_idx = len(nodes)
+        int i
+
+    for i in range(new_idx):
+        nw = nodes[i]
+        nwv = nw.value
+        res += nwv
 
     return res
     #return ''.join(nw.value or '+' for nw in nodes)
@@ -447,6 +483,8 @@ cdef list check_and_get(
         Py_ssize_t new_idx = 0
         str bef_word, aft_word, le, new_word
         object node_bef, node_aft, no
+        dict other_nodes, other_words
+        tuple bef_nodes, aft_nodes
 
     bef_idx = start - 1
     if bef_idx >= 0:
@@ -475,10 +513,11 @@ cdef list check_and_get(
 
         #le = word.at(i)
         le = word[i]
+
         nval = no.value
         if nval:
             if nval != le:
-                return None
+                return
 
         else:
             is_blank = False
@@ -490,7 +529,7 @@ cdef list check_and_get(
                     is_blank = True
                 else:
                     # todo skip forward if the next letter doesnt exist?
-                    return None
+                    return
             else:
                 ls.remove(le)
 
@@ -505,8 +544,9 @@ cdef list check_and_get(
             aft_nodes = other_nodes['aft']
 
             if bef_nodes or aft_nodes:
-                bef_word = get_word(bef_nodes)
-                aft_word = get_word(aft_nodes)
+                other_words = no.get_adj_words(chk_dir)
+                bef_word = other_words['bef']
+                aft_word = other_words['aft']
 
                 new_word = bef_word + le + aft_word
 
@@ -522,7 +562,7 @@ cdef list check_and_get(
 
                 new_word_list.append({
                     'word': new_word,
-                    'nodes': bef_nodes + [no] + aft_nodes,
+                    'nodes': list(bef_nodes) + [no] + list(aft_nodes),
                     'direc': chk_dir
                 })
 
@@ -534,6 +574,8 @@ cdef list check_and_get(
 
 
 #@cython.profile(True)
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cdef list can_spell(
     object no,  # type: Node
     str word,
@@ -993,3 +1035,7 @@ def main(
         Settings.word_info = solution
 
     show_solution(no_words)
+
+    if not has_cache and lo.is_enabled('e'):
+        print()
+        #lo.e('board.get: %s', get_word.cache_info())
