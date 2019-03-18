@@ -15,23 +15,24 @@ from libcpp.utility cimport pair
 
 import gzip
 import json
-import signal
+#import signal
 import sys
 from hashlib import md5
 
 import pickle
 #import dill
 #dill.detect.trace(True)
-import multiprocessing as mp
-from multiprocessing import Pool
+#import multiprocessing as mp
+#from multiprocessing import Pool
 #from pathos.multiprocessing import ProcessPool as Pool
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple #, Union
 from functools import lru_cache
 
-#cimport numpy as np
-#import numpy as np
+import numpy as np
+cimport numpy as np
+
 import pandas as pd
 from logs import log_init
 
@@ -41,7 +42,13 @@ import settings as _
 #import array
 
 
+# cdef class Node
+# cdef class Board
+
 ctypedef unsigned short us
+ctypedef np.ndarray[str[2], ndim=2] board_t  # str 32?
+ctypedef np.ndarray[object, ndim=2] nb_t
+ctypedef np.ndarray[object, ndim=1] nodelist_t
 
 
 DICTIONARY = 'wwf'
@@ -57,18 +64,19 @@ cdef class CSettings:
         public list word_info, letters
         bint use_pool
         public short cpus, blanks
-        public object board, default_board, node_board
+        public np.ndarray[np.str, ndim=2] board, default_board
+        public Board node_board
         public dict shape, points
         public set words, search_words
 
     def __cinit__(self):
         self.word_info = []  # type: List[Dict[str, Any]]
 
-        self.use_pool = True  # type: bool
-        self.cpus = 1  # type: int
+        self.use_pool = False
+        #self.cpus = 1  # type: int
 
-        self.board = pd.DataFrame()
-        self.default_board = pd.DataFrame()
+        self.board = np.array([[]])
+        self.default_board = np.array([[]])
         self.shape = {'row': 0, 'col': 0}  # type: Dict[str, int]
         self.letters = []  # type: List[str]
         self.blanks = 0  # type: int
@@ -83,17 +91,39 @@ cdef CSettings Settings = CSettings()
 
 
 cdef class Node:
+    ctypedef int dual[2]
+
     cdef:
         int x, y, points
-        int pos[2]
+        dual pos
         str multiplier, value
         bint is_start
 
-        struct words:
-            str word
+        # not packed?
+        packed struct word_dict:
+            str word, direc
+            int idx, pts
+            bint is_blank
+            #todo nodes?
+
+        list words  # todo of word_dicts
+        #np.ndarray[word_dict] words
+        #np.ndarray words
+
+        # struct cnode:
+        #     int x, v
+        #     str value
+        #
+        # cnode up,down,left,right  #todo pointer to node instead?
+
+        #list up_vals, down_vals, left_vals, right_vals  # of duals
+        Node *up, *down, *left, *right
+        str up_word, down_word, left_word, right_word
+
+        bint has_edge
 
 
-    def __cinit__(self, int x, int y, str multiplier=None, str value=None):
+    def __cinit__(self, int x, int y, str value=None, str multiplier=None):
         self.x = x
         self.y = y
         self.pos = (x, y)
@@ -108,144 +138,144 @@ cdef class Node:
                 self.multiplier = (int(multiplier[0]), multiplier[1])
 
         self.value = value
-        self.points = None
+        self.points = 0
         if self.value:
             try:
                 self.points = Settings.points[self.value][1]
             except (KeyError, IndexError):
                 lo.e('Could not get point value of "{}". Using 0.'.format(self.value))
-                self.points = 0
 
-        # word -> idx = blank
-        #self.poss_words = {}
+        #self.words = np.ndarray([], dtype=word_dict)
+        self.words = []
 
-        # direc -> word -> idx = is_blank
-        # letter is just word[idx]
-        self.poss_values = {}  # type: Dict[str, Dict[str, Dict[int, bool]]]
-        self.poss_values = {
-            'row': {},
-            'col': {}
-        }
+        # self.up = {self.x - 1, self.y} if self.x >= 0 else None
+        # self.down = (self.x + 1, self.y) if self.x < Settings.shape['row'] else None
+        # self.left = (self.x, self.y - 1) if self.y >= 0 else None
+        # self.right = (self.x, self.y + 1) if self.y < Settings.shape['col'] else None
 
-        self.up = (self.x - 1, self.y) if self.x >= 0 else None  # type: Optional[Tuple[int, int]]
-        self.down = (self.x + 1, self.y) if self.x < Settings.shape['row'] else None  # type: Optional[Tuple[int, int]]
-        self.left = (self.x, self.y - 1) if self.y >= 0 else None  # type: Optional[Tuple[int, int]]
-        self.right = (self.x, self.y + 1) if self.y < Settings.shape['col'] else None  # type: Optional[Tuple[int, int]]
+        # self.up_vals = []
+        # self.down_vals = []
+        # self.left_vals = []
+        # self.right_vals = []
+        self.up = None
+        self.down = None
+        self.left = None
+        self.right = None
 
-        self.row_vals = ([], [])  # type: Tuple[List[Tuple[int, int]], List[Tuple[int, int]]]
-        self.col_vals = ([], [])  # type: Tuple[List[Tuple[int, int]], List[Tuple[int, int]]]
+        self.up_word = ''
+        self.down_word = ''
+        self.left_word = ''
+        self.right_word = ''
 
-        self.row_words = ('', '')  # type: Tuple[str, str]
-        self.col_words = ('', '')  # type: Tuple[str, str]
-
-
-    def get_up(self): return self.get_cell(self.up)
-    def get_down(self): return self.get_cell(self.down)
-    def get_left(self): return self.get_cell(self.left)
-    def get_right(self): return self.get_cell(self.right)
+        self.has_edge = False
 
 
-    @lru_cache(255)
-    def get_row(self):
-        return Settings.node_board.get_row(self.x)
+    # cdef Node get_up(self): return self.get_cell(self.up)
+    # cdef get_down(self): return self.get_cell(self.down)
+    # cdef get_left(self): return self.get_cell(self.left)
+    # cdef get_right(self): return self.get_cell(self.right)
 
-    @lru_cache(255)
-    def get_col(self):
-        return Settings.node_board.get_col(self.y)
+    # @lru_cache(255)
+    # cdef get_row(self):
+    #     return Settings.node_board.get_row(self.x)
+    #
+    # @lru_cache(255)
+    # def get_col(self):
+    #     return Settings.node_board.get_col(self.y)
 
-    def _get_row_vals(self):
-        cdef int rv
+    # cdef _get_row_val_nodes(self):
+    #     cdef int rv
+    #
+    #     bef, aft = self.row_vals
+    #     bef = rv[0]
+    #     return (
+    #         [Settings.node_board.get(*n) for n in self.row_vals[0]],
+    #         [Settings.node_board.get(*n) for n in self.row_vals[1]]
+    #     )
+    #
+    # cdef _get_col_val_nodes(self):
+    #     return {
+    #         'bef': [Settings.node_board.get(*n) for n in self.col_vals['bef']],
+    #         'aft': [Settings.node_board.get(*n) for n in self.col_vals['aft']]
+    #     }
+    #
+    # @lru_cache(1023)
+    # def get_side_val_nodes(self,
+    #     str direc
+    # ):
+    #     if direc == 'row':
+    #         return self._get_row_val_nodes()
+    #     else:
+    #         return self._get_col_val_nodes()
 
-        bef, aft = self.row_vals
-        bef = rv[0]
-        return (
-            [Settings.node_board.get(*n) for n in self.row_vals[0]],
-            [Settings.node_board.get(*n) for n in self.row_vals[1]]
-        )
-
-    def _get_col_vals(self):
-        return {
-            'bef': [Settings.node_board.get(*n) for n in self.col_vals['bef']],
-            'aft': [Settings.node_board.get(*n) for n in self.col_vals['aft']]
-        }
-
-    @lru_cache(1023)
-    def get_adj_vals(self,
-        str direc
-    ):
-        if direc == 'row':
-            return self._get_row_vals()
-        else:
-            return self._get_col_vals()
-
-    def get_adj_words(self,
-        str direc
-    ):
-        if direc == 'row':
-            return self.row_words
-        else:
-            return self.col_words
+    # def get_adj_words(self,
+    #     str direc
+    # ):
+    #     if direc == 'row':
+    #         return self.row_words
+    #     else:
+    #         return self.col_words
+    #
+    #
+    # def get_cell(self,
+    #     typ  # type: Optional[Union[str, Tuple[int, int]]]
+    # ):
+    #     if isinstance(typ, str):
+    #         cell_tup = getattr(self, typ)
+    #     else:
+    #         cell_tup = typ
+    #     if cell_tup:
+    #         return Settings.node_board.get(x=cell_tup[0], y=cell_tup[1])
 
 
-    def get_cell(self,
-        typ  # type: Optional[Union[str, Tuple[int, int]]]
-    ):
-        if isinstance(typ, str):
-            cell_tup = getattr(self, typ)
-        else:
-            cell_tup = typ
-        if cell_tup:
-            return Settings.node_board.get(x=cell_tup[0], y=cell_tup[1])
+    # def has_edge(self):
+    #     up = self.get_up()
+    #     down = self.get_down()
+    #     left = self.get_left()
+    #     right = self.get_right()
+    #
+    #     return (isinstance(up, Node) and up.value is not None) or \
+    #            (isinstance(down, Node) and down.value is not None) or \
+    #            (isinstance(left, Node) and left.value is not None) or \
+    #            (isinstance(right, Node) and right.value is not None)
 
-
-    def has_edge(self):
-        up = self.get_up()
-        down = self.get_down()
-        left = self.get_left()
-        right = self.get_right()
-
-        return (isinstance(up, Node) and up.value is not None) or \
-               (isinstance(down, Node) and down.value is not None) or \
-               (isinstance(left, Node) and left.value is not None) or \
-               (isinstance(right, Node) and right.value is not None)
-
-    @lru_cache(2047)
-    def _get_poss_word_dict(self,
-            direc,  # type: str
-            word  # type: str
-    ):
-        return self.poss_values.get(direc, {}).get(word, {})
-
-    def get_poss_val(self,
-            direc,  # type: str
-            word,  # type: str
-            idx  # type: int
-    ):
-        return self._get_poss_word_dict(direc, word).get(idx)  # ''?
-
-    def set_poss_val(self,
-            direc,  # type: str
-            word,  # type: str
-            idx,  # type: int
-            is_blank=False  # type: bool
-    ):
-        pv_info = self.poss_values[direc]
-        if word not in pv_info:
-            pv_info[word] = {idx: is_blank}
-        else:
-            pv_info_word = pv_info[word]
-            if idx not in pv_info_word:
-                pv_info_word[idx] = is_blank
-            else:
-                return False
-        return True
+    # @lru_cache(2047)
+    # def _get_poss_word_dict(self,
+    #         direc,  # type: str
+    #         word  # type: str
+    # ):
+    #     return self.poss_values.get(direc, {}).get(word, {})
+    #
+    # def get_poss_val(self,
+    #         direc,  # type: str
+    #         word,  # type: str
+    #         idx  # type: int
+    # ):
+    #     return self._get_poss_word_dict(direc, word).get(idx)  # ''?
+    #
+    # def set_poss_val(self,
+    #         direc,  # type: str
+    #         word,  # type: str
+    #         idx,  # type: int
+    #         is_blank=False  # type: bool
+    # ):
+    #     pv_info = self.poss_values[direc]
+    #     if word not in pv_info:
+    #         pv_info[word] = {idx: is_blank}
+    #     else:
+    #         pv_info_word = pv_info[word]
+    #         if idx not in pv_info_word:
+    #             pv_info_word[idx] = is_blank
+    #         else:
+    #             return False
+    #     return True
 
     def get_points(self,
-            word,  # type: str
-            nodes,  # type: List['Node']
-            direc,  # type: str
-            new_words=None,  # type: Optional[List[Dict]]
-            **_kw
+        word,  # type: str
+        nodes,  # type: List['Node']
+        direc,  # type: str
+        new_words=None,  # type: Optional[List[Dict]]
+        **_kw
     ):
         # todo combine this optional thing into one type
 
@@ -288,8 +318,6 @@ cdef class Node:
 
         return pts
 
-
-    #TODO: add a words attribute that contains (word, direc, idx, is_blank, pts)
 
     @lru_cache(2047)
     def _letter_points(self,
@@ -335,135 +363,182 @@ cdef class Node:
         return self.__str__()
 
 
-class Board:
-    def __init__(self, board=Settings.board, default_board=Settings.default_board):
+cdef class Board:
+    cdef:
+        board_t default_board
+        bint new_game
+        #nodelist_t nodes
+        nb_t nodes
+        Py_ssize_t nodes_rl, nodes_cl
+
+    #def __cinit__(self, board=Settings.board, default_board=Settings.default_board):
+    def __cinit__(self, board_t board, board_t default_board):
+        cdef:
+            int r, c
+            #int db_mid_r = default_board.shape[0] // 2
+            #int db_mid_c = default_board.shape[1] // 2
+            #str db_mid, b_mid
+            str dbval, bval
+            Node node
+
         self.default_board = default_board
-        self.board = board
+
+        self.nodes = np.empty_like(default_board, dtype=Node)
+        self.nodes_rl = board.shape[0]
+        self.nodes_cl = board.shape[1]
 
         self.new_game = False
 
-        self.nodes = []  # type: List[Node]
+        # db_mid = default_board[db_mid_r, db_mid_c]
+        # b_mid = board[db_mid_r, db_mid_c]
+        #
+        # if db_mid == 'x' and not b_mid:
+        #     self.new_game = True
+        # else:
+        #     self.new_game = False
 
-        bvals = self.board.values  # type: List[List[Optional[str]]]
+        for r in range(self.nodes_rl):
+            for c in range(self.nodes_cl):
+                bval = board[r, c]
 
-        for board_r in self.default_board.iterrows():
-            r_num = board_r[0]  # type: int
-            r_data = board_r[1]  # type: List[Optional[str]]
-            b_row = bvals[r_num]
-            for c_num, d_cell in enumerate(r_data):
-
-                board_val = b_row[c_num]
-
-                if not board_val:
-                    board_val = None
+                if not bval:
+                    bval = None
                 else:
-                    board_val = board_val.strip()
-                    if not board_val:
-                        board_val = None
+                    bval = bval.strip()
+                    if not bval:
+                        bval = None
                     else:
-                        board_val = board_val.upper()
+                        bval = bval.upper()
 
-                if not d_cell:
-                    d_cell = None
+                dbval = default_board[r, c]
+                if not dbval:
+                    dbval = None
                 else:
-                    d_cell = d_cell.strip()
-                    if d_cell == 'x' and not board_val:
+                    dbval = dbval.strip()
+                    if dbval == 'x' and not bval:
                         self.new_game = True
 
-                node = Node(r_num, c_num, d_cell, board_val)
-                self.nodes.append(node)
+                node = Node(r, c, bval, dbval)
+                self.nodes[r, c] = node
 
-        self.set_nodes()
+        # todo i should be using pointers here
+        for r in range(self.nodes_rl):
+            for c in range(self.nodes_cl):
+                self._set_node(r, c)
 
-    @lru_cache(1023)
-    def get(self,
-        x,  # type: int
-        y   # type: int
-    ):
-        f = filter(lambda obj: obj.x == x and obj.y == y, self.nodes)
-        return next(f, None)
 
-    def get_by_attr(self,
-        attr,  # type: str
-        v  # type: Any
-    ):
+    #@lru_cache(1023)  # todo reenable?
+    cdef Node get(self, int x, int y):
+        #f = filter(lambda obj: obj.x == x and obj.y == y, self.nodes)
+        #return next(f, None)
+        return self.nodes[x, y]
+
+    cdef Node get_by_attr(self, str attr, v):
         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
 
-    @lru_cache()
-    def get_row(self,
-        int x
-    ):
-        return list(self.get_by_attr('x', x))
+    #@lru_cache()
+    cdef nodelist_t get_row(self, int x):
+        return self.nodes[x]
 
-    @lru_cache()
-    def get_col(self,
-        int y
-    ):
-        return list(self.get_by_attr('y', y))
+    #@lru_cache()
+    cdef nodelist_t get_col(self, int y):
+        return self.nodes[:,y]
 
-    def set_nodes(self):
+    #@cython.boundscheck(False)
+    cdef void _set_node(self, int r, int c):
         cdef:
-            int slice_val
-            list bef_tups, aft_tups
-            str bef_word, aft_word
+            Node node, p
+            nodelist_t nodes_up, nodes_down, nodes_left #, nodes_right
+            #list up_tups = [], down_tups = [], left_tups = [], right_tups = []  # List[Tuple[int, int]]
+            str up_word = '', down_word = '', left_word = '', right_word = ''
+            bint has_edge = False
 
-        for n in self.nodes:
-            for direc in ('row', 'col'):
-                if direc == 'row':
-                    nodes = self.get_row(n.x)
-                    slice_val = n.y
-                else:  # col
-                    nodes = self.get_col(n.y)
-                    slice_val = n.x
+        node = self.nodes[r, c]
 
-                bef = nodes[:slice_val]
-                aft = nodes[slice_val + 1:]
+        if r > 0:
+            node.up = self.nodes[r-1, c]
+            if node.up.value is not None:
+                node.has_edge = True
+        elif r < self.nodes_rl - 1:
+            node.down = self.nodes[r+1, c]
+            if node.down.value is not None:
+                node.has_edge = True
+        elif c > 0:
+            node.left = self.nodes[r, c-1]
+            if node.left.value is not None:
+                node.has_edge = True
+        elif c < self.nodes_cl - 1:
+            node.right = self.nodes[r, c+1]
+            if node.right.value is not None:
+                node.has_edge = True
 
-                bef_tups = []  # type: List[Tuple[int, int]]
-                aft_tups = []  # type: List[Tuple[int, int]]
+        nodes_up = self.nodes[:r, c]
+        nodes_down = self.nodes[r+1:, c]
+        nodes_left = self.nodes[r, :c]
+        nodes_right = self.nodes[r, c+1:]
 
-                bef_word = ''
-                aft_word = ''
+        for p in reversed(nodes_up):
+            if not p.value: break
+            else:
+                #up_tups.append(p.pos)
+                up_word += p.value
 
-                for p in reversed(bef):
-                    if not p.value: break
-                    else:
-                        bef_tups.append(p.pos)
-                        bef_word += p.value
+        #up_tups.reverse()
+        up_word = up_word[::-1]
 
-                bef_tups.reverse()
-                bef_word = bef_word[::-1]
+        for p in reversed(nodes_left):
+            if not p.value: break
+            else:
+                #left_tups.append(p.pos)
+                left_word += p.value
 
-                for p in aft:
-                    if not p.value: break
-                    else:
-                        aft_tups.append(p.pos)
-                        aft_word += p.value
+        #left_tups.reverse()
+        left_word = left_word[::-1]
 
-                setattr(n, f'{direc}_vals', (bef_tups, aft_tups))
-                setattr(n, f'{direc}_words', (bef_word, aft_word))
+        for p in nodes_down:
+            if not p.value: break
+            else:
+                #down_tups.append(p.pos)
+                down_word += p.value
+
+        for p in nodes_right:
+            if not p.value: break
+            else:
+                #right_tups.append(p.pos)
+                right_word += p.value
+
+        # node.up_vals = up_tups
+        # node.down_vals = down_tups
+        # node.left_vals = left_tups
+        # node.right_vals = right_tups
+
+        node.up_word = up_word
+        node.down_word = down_word
+        node.left_word = left_word
+        node.right_word = right_word
 
 
-# cdef class NW:
-#     cdef str value
+# # cdef class NW:
+# #     cdef str value
+#
+# def get_word(
+#     list nodes  # type: List[Node]
+# ) -> str:
+#     cdef:
+#         str nwv, res = ''
+#         # NW nw
+#         object nw
+#         Py_ssize_t new_idx = len(nodes)
+#         int i
+#
+#     for i in range(new_idx):
+#         nw = nodes[i]
+#         nwv = nw.value
+#         res += nwv
+#
+#     return res
+#     #return ''.join(nw.value or '+' for nw in nodes)
 
-def get_word(
-    list nodes  # type: List[Node]
-) -> str:
-    cdef:
-        str nwv, res = ''
-        # NW nw
-        object nw
-        Py_ssize_t new_idx = len(nodes)
-        int i
-
-    for i in range(new_idx):
-        nw = nodes[i]
-        nwv = nw.value
-        res += nwv
-
-    return res
-    #return ''.join(nw.value or '+' for nw in nodes)
 
 #@cython.profile(True)
 @cython.boundscheck(False)
@@ -576,13 +651,7 @@ cdef list check_and_get(
 #@cython.profile(True)
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef list can_spell(
-    object no,  # type: Node
-    str word,
-    str direc,
-    us word_len
-):
-
+cdef list can_spell(Node no, str word, str direc, us word_len):
     cdef:
         us start, idx, dir_len
         #array node_list, d_nodes, spell_words, tup_nodes
@@ -630,24 +699,13 @@ cdef list can_spell(
     return spell_words
 
 #@cython.profile(True)
-cdef list check_words(
-    object no,  # type: Node
-    str word
-):
+cdef void check_words(Node no, str word):
     cdef:
-        list data = []
+        str direction # enum?
         Py_ssize_t word_len = len(word)  # todo add word length to dict
 
     for direction in ('row', 'col'):
-        spell_words = can_spell(no, word, direction, word_len)
-
-        if spell_words:
-            # combine words with idxs?
-
-            for word_dict in spell_words:
-                data.append(word_dict)
-
-    return data
+        can_spell(no, word, direction, word_len)
 
 
 @cython.boundscheck(False)
@@ -717,70 +775,71 @@ cdef _add_results(
         Settings.word_info.append(res)
 
 
-def run_worker(
-    tuple data  # type: Tuple[Node, str]
-):
-    no = data[0]
-    w = data[1]
+# def run_worker(
+#     tuple data  # type: Tuple[Node, str]
+# ):
+#     no = data[0]
+#     w = data[1]
+#
+#     # w = data
+#     #
+#     # if len(w) > 8:
+#     #     word_name = w[:7] + '.'
+#     # else:
+#     #     word_name = w
+#     #
+#     # current = mp.current_process()
+#     # #print(current.name)
+#     # #newname = 'w %s' % word_name
+#     # current.name = 'w %s' % word_name
+#
+#     return check_words(no, w)
 
-    # w = data
-    #
-    # if len(w) > 8:
-    #     word_name = w[:7] + '.'
-    # else:
-    #     word_name = w
-    #
-    # current = mp.current_process()
-    # #print(current.name)
-    # #newname = 'w %s' % word_name
-    # current.name = 'w %s' % word_name
-
-    return check_words(no, w)
-
-
-#pool_node = None  # type: Optional[Node]
-#lock = mp.Lock()
-def _pool_handler():
-    #global pool_node
-    #pool_node = n
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-    current = mp.current_process()
-    current.name = 'proc_%s' % current.name.split('-')[-1]
-
-
-#pool = mp.Pool(7, initializer=_pool_handler)
+#
+# #pool_node = None  # type: Optional[Node]
+# #lock = mp.Lock()
+# def _pool_handler():
+#     #global pool_node
+#     #pool_node = n
+#     signal.signal(signal.SIGINT, signal.SIG_IGN)
+#
+#     current = mp.current_process()
+#     current.name = 'proc_%s' % current.name.split('-')[-1]
+#
+#
+# #pool = mp.Pool(7, initializer=_pool_handler)
 
 #@cython.profile(True)
-cdef void check_node(
-    no  # type: Node
-):
-    if Settings.use_pool:  #todo: is this fixable for profiling?
-        n = Settings.cpus
-        #n = 2
-        #pool = mp.Pool(n, initializer=_pool_handler, initargs=[pool_node])
-        #pool = mp.Pool(n, initializer=_pool_handler)
-        pool = Pool(n, initializer=_pool_handler)
-        try:
-            #pool_res = pool.map(run_worker, (w for w in Settings.search_words))  # type: List[List[dict]]
-            pool_res = pool.map(run_worker, ((no, w) for w in Settings.search_words))  # type: List[List[dict]]
-            pool.close()
-            pool.join()
-            #pool.terminate()
-            #pool.restart()
-        except KeyboardInterrupt:
-            lo.e('User interrupt, terminating.')
-            pool.terminate()
-            #pool.join()
-            sys.exit(1)
+cdef void check_node(Node no):
+    cdef str w
 
-        for x in pool_res:
-            _add_results(x)
+    # if Settings.use_pool:  #todo: is this fixable for profiling?
+    #     n = Settings.cpus
+    #     #n = 2
+    #     #pool = mp.Pool(n, initializer=_pool_handler, initargs=[pool_node])
+    #     #pool = mp.Pool(n, initializer=_pool_handler)
+    #     pool = Pool(n, initializer=_pool_handler)
+    #     try:
+    #         #pool_res = pool.map(run_worker, (w for w in Settings.search_words))  # type: List[List[dict]]
+    #         pool_res = pool.map(run_worker, ((no, w) for w in Settings.search_words))  # type: List[List[dict]]
+    #         pool.close()
+    #         pool.join()
+    #         #pool.terminate()
+    #         #pool.restart()
+    #     except KeyboardInterrupt:
+    #         lo.e('User interrupt, terminating.')
+    #         pool.terminate()
+    #         #pool.join()
+    #         sys.exit(1)
+    #
+    #     for x in pool_res:
+    #         _add_results(x)
+    #
+    # else:
 
-    else:
-        for w in Settings.search_words:
-            reses = check_words(no, w)
-            _add_results(reses)
+    for w in Settings.search_words:
+        reses = check_words(no, w)
+        _add_results(reses)
 
 
 cdef void show_solution(
@@ -852,7 +911,7 @@ cdef void show_solution(
 # todo: set default for dict? put in settings? move all settings out to options?
 cdef void solve(
     list letters,  # type: List[str]
-    str dictionary  # type: str
+    str dictionary
 ):
     #todo make fnc exception
     try:
@@ -893,11 +952,13 @@ cdef void solve(
 
     # --
 
-    if Settings.use_pool:  #todo: is this fixable for profiling?
-        lo.s('Using multiprocessing...')
-        Settings.cpus = max(min(mp.cpu_count() - 1, len(Settings.search_words)), 1)
+    # if Settings.use_pool:  #todo: is this fixable for profiling?
+    #     lo.s('Using multiprocessing...')
+    #     Settings.cpus = max(min(mp.cpu_count() - 1, len(Settings.search_words)), 1)
 
-    full = Settings.node_board
+    cdef Board full = Settings.node_board
+    cdef Node no
+    cdef int r, c
 
     if full.new_game:
         lo.s(' = Fresh game = ')
@@ -906,44 +967,61 @@ cdef void solve(
             check_node(no)
 
     else:
+        search_nodes = np.zeros_like(full.nodes, dtype=bool)
+
         if _.SEARCH_NODES is None:
-            full_nodes = full.nodes
+            search_nodes[:] = True
+
         elif isinstance(_.SEARCH_NODES, list):
             if all(isinstance(t, int) for t in _.SEARCH_NODES):
-                full_nodes = [nl for r in _.SEARCH_NODES for nl in full.get_row(r)]
-            elif all(isinstance(t, tuple) and len(t) == 2 for t in _.SEARCH_NODES):
-                full_nodes = []
-                for nl in _.SEARCH_NODES:
-                    fr = full.get(nl[0], nl[1])
-                    if not fr:
-                        lo.c('Could not locate node: {}'.format(nl))
-                        sys.exit(1)
-                    full_nodes.append(fr)
+                search_nodes[_.SEARCH_NODES, :] = True
+
+            elif all(isinstance(t, list) and len(t) == 2 for t in _.SEARCH_NODES):
+                xs = [v[0] for v in _.SEARCH_NODES]
+                ys = [v[1] for v in _.SEARCH_NODES]
+
+                try:
+                    search_nodes[xs, ys] = True
+                except IndexError:
+                    lo.c('Could not locate nodes for board {}: {}'.format(full.nodes.shape, _.SEARCH_NODES))
+                    sys.exit(1)
+
             else:
                 lo.c('Incompatible search node type: {}'.format(type(_.SEARCH_NODES)))
                 sys.exit(1)
+
         else:
             lo.c('Incompatible search node type: {}'.format(type(_.SEARCH_NODES)))
             sys.exit(1)
 
-        full_nodes_len = len(full_nodes)
-        for no in full_nodes:
-            if no and not no.value and no.has_edge():
-                if lo.is_enabled('s'):
-                    lo.s('Checking Node (%2s, %2s) - #%s / %s',
-                          no.x, no.y, full_nodes.index(no) + 1, full_nodes_len
-                    )
-                check_node(no)
+        for r in range(full.nodes_rl):
+            for c in range(full.nodes_cl):
+                if search_nodes[r, c]:
+                    no = full.nodes[r, c]
+                    if no.value or not no.has_edge:
+                        search_nodes[r, c] = False
+
+        cdef int num_valid = np.count_nonzero(search_nodes)
+        cdef int si = 0
+
+        for r in range(full.nodes_rl):
+            for c in range(full.nodes_cl):
+                if search_nodes[r, c] is True:
+                    no = full.nodes[r, c]
+                    if lo.is_enabled('s'):
+                        si += 1
+                        lo.s('Checking Node (%2s, %2s) - #%3i / %3i', r, c, si, num_valid)
+                        check_node(no)
 
 
-def main(
-    filename=None,  # type: str
-    dictionary=DICTIONARY,  # type: str
-    no_words=False,  # type: bool
-    exclude_letters=None,  # type: List[str]
-    overwrite=False,  # type: bool
-    no_multiprocess=False,  # type: bool
-    log_level=DEFAULT_LOGLEVEL,  # type: str
+cpdef main(
+    str filename=None,
+    str dictionary=DICTIONARY,
+    bint no_words=False,
+    list exclude_letters=None,  # type: List[str]
+    bint overwrite=False,
+    bint no_multiprocess=False,
+    str log_level=DEFAULT_LOGLEVEL,
     **_kwargs
 ):
     log_level = log_level.upper()
@@ -964,10 +1042,13 @@ def main(
         board = pd.DataFrame(_.BOARD)
         letters = _.LETTERS
 
+    board = board.to_numpy(dtype=str)
+
     if exclude_letters:
         for el in exclude_letters:
             letters.remove(el.upper())
 
+    # need?
     shape = {
         'row': board.shape[0],
         'col': board.shape[1]
@@ -983,7 +1064,7 @@ def main(
         sys.exit(1)
 
     try:
-        default_board = pd.read_pickle(board_name)  # type: pd.DataFrame
+        default_board = pd.read_pickle(board_name).to_numpy(dtype=str)
     except FileNotFoundError as exc:
         lo.c('Could not find file: {}'.format(exc.filename))
         sys.exit(1)
@@ -1010,8 +1091,8 @@ def main(
     full = Board(board=board, default_board=default_board)
     Settings.node_board = full
 
-    if no_multiprocess:
-        Settings.use_pool = False
+    # if no_multiprocess:
+    #     Settings.use_pool = False
 
     md5_board = md5(board.to_json().encode()).hexdigest()[:9]
     md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]

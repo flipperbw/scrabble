@@ -17,7 +17,7 @@ SOLUTIONS_DIR = Path(data_dir, 'solutions')
 DEF_BOARD_BIG = Path(BOARD_DIR, 'default_board_big.pkl')
 DEF_BOARD_SMALL = Path(BOARD_DIR, 'default_board_small.pkl')
 
-BOARD_FILENAME = 'board'
+BOARD_FILENAME = 'board.pkl'
 LETTERS_FILENAME = 'letters.pkl'
 
 

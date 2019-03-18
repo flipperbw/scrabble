@@ -17,7 +17,7 @@ SOLUTIONS_DIR = Path(data_dir, 'solutions')
 DEF_BOARD_BIG = Path(BOARD_DIR, 'default_board_big.pkl')
 DEF_BOARD_SMALL = Path(BOARD_DIR, 'default_board_small.pkl')
 
-BOARD_FILENAME = 'board'
+BOARD_FILENAME = 'board.pkl'
 LETTERS_FILENAME = 'letters.pkl'
 
 
@@ -89,7 +89,7 @@ SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 SEARCH_NODES = None # type: Union[None, List[int], List[Tuple[int, int]]]
 
 #SEARCH_NODES = [6,7] # rows
-#SEARCH_NODES = [(6,8), (6,9), (7,6), (7,8), (8,8)] # nodes
+#SEARCH_NODES = [[6,8], [6,9]] # nodes
 #SEARCH_NODES = None
 
 

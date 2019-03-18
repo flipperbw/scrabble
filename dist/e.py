@@ -34,8 +34,8 @@ def parse_args():
     parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L [,L...]',
         help='Letters to exclude from rack for solution')
 
-    parser.add_argument('-m', '--no-multiprocess', action='store_true',
-        help='Do not use multiprocessing')
+    # parser.add_argument('-m', '--no-multiprocess', action='store_true',
+    #     help='Do not use multiprocessing')
 
     return parser.parse_args()
 
