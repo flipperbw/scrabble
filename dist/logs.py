@@ -38,9 +38,7 @@ DEFAULT_LOGLEVEL = 20
 
 
 class LogWrapper:
-    def __init__(self, logger,  # type: verboselogs.VerboseLogger
- skip_main  # type: bool
-):
+    def __init__(self, logger: verboselogs.VerboseLogger, skip_main: bool):
         self.logger = logger
 
         if hasattr(sys, 'frozen'):  # support for py2exe
@@ -58,8 +56,7 @@ class LogWrapper:
 
         self._set_enabled()
 
-    def _set_enabled(self, wrappers= False  # type: bool
-):
+    def _set_enabled(self, wrappers: bool = False):
         for ln, la in LEVELS.items():
             got_level = self.get_level(ln)
             enabled_lv = self.logger.isEnabledFor(got_level)
@@ -125,9 +122,10 @@ class LogWrapper:
             try:
                 fn, lno, func = self.find_caller()
             except ValueError:
-                fn, lno, func = "(unknown file)", 0, "(unknown function)"
+                print('oops _srcfile')
+                fn, lno, func = "(unk file)", 0, "(unk function)"
         else:
-            fn, lno, func = "(unknown file)", 0, "(unknown function)"
+            fn, lno, func = "(unk file)", 0, "(unk function)"
         if exc_info:
             if not isinstance(exc_info, tuple):
                 exc_info = sys.exc_info()
@@ -149,10 +147,11 @@ class LogWrapper:
         f = logging.currentframe()
         if f is not None:
             f = f.f_back
-        rv = "(unknown file)", 0, "(unknown function)"
+        rv = "(unk file)", 0, "(unk function)"
         while hasattr(f, "f_code"):
             co = f.f_code
             filename = os.path.normcase(co.co_filename)
+            #print(co.co_name)
             if filename == self._srcfile or \
                     (self.skip_main and co.co_name == 'main'):
                 f = f.f_back

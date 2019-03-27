@@ -79,17 +79,15 @@ LETTERS = ['']
 
 SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
-#SEARCH_WORDS = (60000, 90000)
-#SEARCH_WORDS = {'PHON', 'PHONO'}
-#SEARCH_WORDS = None
+#SEARCH_WORDS = (89900, 90000)
+#SEARCH_WORDS = {'AA', 'TA', 'TAP', 'TAXSX', 'TAB'}
 
 
 # - NODES
 
-SEARCH_NODES = None # type: Union[None, List[int], List[Tuple[int, int]]]
+SEARCH_NODES = None  # type: Union[None, List[List[int]]]
 
-#SEARCH_NODES = [6,7] # rows
-#SEARCH_NODES = [[6,8], [6,9]] # nodes
+SEARCH_NODES = [[6,7], [6,7]] # nodes
 #SEARCH_NODES = None
 
 
