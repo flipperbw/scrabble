@@ -26,7 +26,7 @@ ext_modules = [
 ext_options = {
     "compiler_directives": {
         'language_level': '3',
-        #"profile": True,
+        "profile": True,
         #'linetrace': True
     },
     "annotate": True,
