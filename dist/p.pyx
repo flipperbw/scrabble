@@ -28,30 +28,28 @@ from logs import log_init
 import settings as _
 
 
-# cdef class Node
-# cdef class Board
-
-ctypedef unsigned short us
-#ctypedef np.ndarray[str, ndim=2] board_t  # str 32?
-#ctypedef np.ndarray[object, ndim=2] nb_t
-#ctypedef np.ndarray[object, ndim=1] nodelist_t
-
-
 cdef str DICTIONARY = 'wwf'
 cdef str DEFAULT_LOGLEVEL = 'SUCCESS'
 
 lo = log_init(DEFAULT_LOGLEVEL, skip_main=True)
 
 
+ctypedef unsigned short us
+#ctypedef np.ndarray[str, ndim=2] board_t  # str 32?
+#ctypedef np.ndarray[object, ndim=2] nb_t
+#ctypedef np.ndarray[object, ndim=1] nodelist_t
+
 cdef bytes NUL = b'\0'
 
 ctypedef (int, int) dual
 
-ctypedef struct multiplier_t:
-    int amt
-    char* typ
+ctypedef unsigned char* uchr
 
-ctypedef struct lpts_t:
+cdef packed struct multiplier_t:
+    int amt
+    uchr typ
+
+cdef packed struct lpts_t:
     int amt
     int pts
 
@@ -88,7 +86,7 @@ cdef packed struct Letter_t:
     int pts
     multiplier_t mult
     dual pos
-    char* value
+    uchr value
     #char value
 
 ctypedef Letter_t Letter
@@ -99,19 +97,24 @@ cdef class WordDict:
     cdef:
         str word
         str direc
-        int pts
-        cnp.ndarray letters
+        public int pts
+        cnp.ndarray[:] letters
 
-    def __cinit__(self, bytes word, str direc, int pts, cnp.ndarray letters):
+    def __cinit__(self, uchr word, str direc, int pts, cnp.ndarray[:] letters):
         self.word = word.decode('utf8')
         self.direc = direc
         self.pts = pts
         self.letters = letters
 
-    def __str__(self):
+    def sol(self) -> str:
+        p_s = self.letters[0]["pos"]
+        p_e = self.letters[-1]["pos"]
+        return f'pts: {self.pts:3d} | dir: "{self.direc}""  | pos: [{p_s[0]:2d},{p_s[1]:2d}] - [{p_e[0]:2d},{p_e[1]:2d}] | w: {self.word}'
+
+    def __str__(self) -> str:
         return '<w: {} | pts: {} | dir: {} | letts: [\n  {}\n]>'.format(self.word, self.pts, self.direc, '\n  '.join(str(l) for l in self.letters))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 # # not packed?
@@ -136,7 +139,9 @@ cdef class CSettings:
         #np.ndarray[str, ndim=1] letters
         short blanks
         dict shape, points
-        set words, search_words
+        set words
+        list search_words
+        Py_ssize_t search_words_l
         Board node_board
 
     def __cinit__(self):
@@ -148,7 +153,8 @@ cdef class CSettings:
         self.shape = {'row': 0, 'col': 0}  # type: Dict[str, int]
         self.points = {}  # type: Dict[str, List[int]]
         self.words = set()  # type: Set[str]
-        self.search_words = set()  # Set[str]
+        self.search_words = []
+        self.search_words_l = 0
         self.node_board = None
 
 
@@ -164,7 +170,7 @@ cdef class Node:
         Node up, down, left, right
         cnp.ndarray up_word, down_word, left_word, right_word
         bint has_edge
-        char* value
+        uchr value
 
     def __cinit__(self, int x, int y, str val, multiplier_t multiplier):
         self.x = x
@@ -431,8 +437,7 @@ cdef class Board:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef void check_and_get(Node[:] node_list, str direc, bytes _word, Py_ssize_t word_len) except *:
-    cdef unsigned char* word = _word
+cdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t word_len) except *:
     cdef Node chk_first, chk_last
     cdef Node first = node_list[0]
     cdef Node last = node_list[word_len - 1]
@@ -471,14 +476,16 @@ cdef void check_and_get(Node[:] node_list, str direc, bytes _word, Py_ssize_t wo
         cnp.ndarray bef_lets, aft_lets, new_lets, np_lets
 
         list word_lets = []
-        WordDict w, nw
-        bytes nww, new_direc, ww
+        WordDict w #, nw
+        bytes nww, new_direc #, ww
         bytes nv
         #char* nv
         lpts_t lpt
         list new_let_list = []
 
         dict spts = Settings.points
+
+        #uchr word = _word
 
     for i in range(word_len):
     #for nv in word[:word_len]:
@@ -600,8 +607,9 @@ cdef void check_and_get(Node[:] node_list, str direc, bytes _word, Py_ssize_t wo
     np_lets = np.array(word_lets, dtype=object)
     #pts = Settings.node_board.get_points(np_lets) + extra_pts
     pts = Settings.node_board.get_points(word_lets) + extra_pts
-    ww = word
-    w = WordDict(word=ww, direc=direc, pts=pts, letters=np_lets)
+    #ww = word
+    w = WordDict(word=word, direc=direc, pts=pts, letters=np_lets)
+
     # ww = word.encode('utf8')
     # w.word=ww
     # cdef bytes dd
@@ -616,6 +624,7 @@ cdef void check_and_get(Node[:] node_list, str direc, bytes _word, Py_ssize_t wo
     #     Settings.node_board.words.append(w)
     # else:
     #     lo.e('already saw %s', w)
+
     Settings.node_board.words.append(w)
 
 
@@ -625,14 +634,14 @@ cdef void check_and_get(Node[:] node_list, str direc, bytes _word, Py_ssize_t wo
 cdef void check_nodes(Node[:] nodes, str direc):
     cdef:
         #str w #, chk_dir
-        (char*, Py_ssize_t) w
+        (uchr, Py_ssize_t) w
         Node x
-        #int i, j
-        Py_ssize_t word_len, nlen, i, j
+        Py_ssize_t swl = Settings.search_words_l
+        Py_ssize_t word_len, nlen, i, j, s
         #bytes wc
         Node[:] subnodes
         bint has_edge
-        bytes ww
+        uchr ww
 
     nlen = len(nodes)
     # if direc == 'r':
@@ -640,7 +649,9 @@ cdef void check_nodes(Node[:] nodes, str direc):
     # else:
     #     chk_dir = 'r'
 
-    for w in Settings.search_words:
+    for s in range(swl):
+        w = Settings.search_words[s]
+
         word_len = w[1]
         if word_len > nlen:
             continue
@@ -724,6 +735,8 @@ cdef void check_nodes(Node[:] nodes, str direc):
 cdef void show_solution(bint no_words=False):
     # todo mark blanks
 
+    cdef WordDict w
+
     if not Settings.node_board.words:
         print('\nNo solution.')
     else:
@@ -787,11 +800,12 @@ cdef void show_solution(bint no_words=False):
         # print(Settings.node_board.words[0])
         # print(dir(Settings.node_board.words[0]))
         # print(vars(Settings.node_board.words[0]))
-        # newlist = sorted(Settings.node_board.words, key=lambda k: k.pts, reverse=True)
-        # for i in newlist[:15]:
-        #     lo.s(i)
-        for i in Settings.node_board.words:
-            print(i)
+
+        newlist = sorted(Settings.node_board.words, key=lambda k: k.pts, reverse=True)
+        for w in reversed(newlist[:15]):
+            lo.s(w.sol())
+        #for i in Settings.node_board.words:
+        #    lo.s(i)
 
 # todo: set default for dict? put in settings? move all settings out to options?
 cdef void solve(
@@ -832,11 +846,12 @@ cdef void solve(
     # board[8][10] = 'Y'
     # letters = [b'F', b'G']
 
-    search_words = {(s.encode('utf8'), len(s)) for s in search_words}
+    search_words = [(s.encode('utf8'), len(s)) for s in search_words]
 
     Settings.blanks = blanks
     Settings.words = words
     Settings.search_words = search_words
+    Settings.search_words_l = len(search_words)
 
     cdef Board full = Settings.node_board
     cdef cnp.ndarray[object, ndim=2] nodes = full.nodes
