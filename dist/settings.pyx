@@ -87,7 +87,7 @@ SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
 SEARCH_NODES = None  # type: Union[None, List[List[int]]]
 
-SEARCH_NODES = [[5], [5]] # nodes
+#SEARCH_NODES = [[5], [5]] # nodes
 #SEARCH_NODES = None
 
 

@@ -34,8 +34,8 @@ def parse_args():
     parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L [,L...]',
         help='Letters to exclude from rack for solution')
 
-    # parser.add_argument('-m', '--no-multiprocess', action='store_true',
-    #     help='Do not use multiprocessing')
+    parser.add_argument('-p', '--profile', action='store_true',
+        help='Profile the app')
 
     return parser.parse_args()
 
@@ -44,24 +44,15 @@ ARGS = None
 if __name__ == '__main__':
     ARGS = parse_args()
 
-
-#import pstats
-#import cProfile
-
-#import pyximport
-#pyximport.install()
-
-import p
-
-
-#from p import main
-
 if __name__ == '__main__':
     dargs = vars(ARGS)
 
-    p.main(**dargs)
+    import p
 
-    #cProfile.runctx("p.main(**dargs)", globals(), locals(), "Profile.prof")
-
-    #s = pstats.Stats("Profile.prof")
-    #s.strip_dirs().sort_stats("time").print_stats()
+    if dargs['profile'] is True:
+        import line_profiler
+        profile = line_profiler.LineProfiler(p.check_and_get)
+        profile.runcall(p.main, **dargs)
+        profile.print_stats()
+    else:
+        p.main(**dargs)
