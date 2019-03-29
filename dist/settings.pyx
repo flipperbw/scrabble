@@ -3,7 +3,7 @@ from typing import List, Set, Tuple, Union
 
 # - DIRS
 
-curr_dir = Path('/home/brett/dev/scrabble/')
+curr_dir = Path('/home/brett/dev/scrabble/')  # todo fix
 img_dir = Path(curr_dir, 'images')
 data_dir = Path(curr_dir, 'data')
 
@@ -80,15 +80,14 @@ LETTERS = ['']
 SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
 #SEARCH_WORDS = (89900, 90000)
-#SEARCH_WORDS = {'AA', 'TA', 'TAP', 'TAXSX', 'TAB'}
+#SEARCH_WORDS = {'EISWEIN', 'RECHEAT', 'PAJAMAS', 'CHEAT'}
 
 
 # - NODES
 
 SEARCH_NODES = None  # type: Union[None, List[List[int]]]
 
-#SEARCH_NODES = [[5], [5]] # nodes
-#SEARCH_NODES = None
+#SEARCH_NODES = [[3,4,5,6], [8]] # nodes
 
 
 # - EXPORT

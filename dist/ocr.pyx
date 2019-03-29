@@ -30,6 +30,8 @@ lower_black_gr = np.array([16, 54, 0], dtype="uint16")
 upper_black_gr = np.array([30, 68, 24], dtype="uint16")
 lower_black_pu = np.array([52, 0, 66], dtype="uint16")
 upper_black_pu = np.array([66, 12, 80], dtype="uint16")
+lower_black_te = np.array([0, 15, 66], dtype="uint16")
+upper_black_te = np.array([12, 29, 80], dtype="uint16")
 
 rack_space = 106
 
@@ -173,7 +175,10 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
         typ = 'big'
         spacing = 49.6
 
-    black_mask = cv2.inRange(board, lower_black, upper_black) + cv2.inRange(board, lower_black_gr, upper_black_gr) + cv2.inRange(board, lower_black_pu, upper_black_pu)
+    black_mask = cv2.inRange(board, lower_black, upper_black) + \
+                 cv2.inRange(board, lower_black_gr, upper_black_gr) + \
+                 cv2.inRange(board, lower_black_pu, upper_black_pu) + \
+                 cv2.inRange(board, lower_black_te, upper_black_te)
     white_mask = cv2.inRange(board, lower_white, upper_white)
     comb = black_mask + white_mask
 
