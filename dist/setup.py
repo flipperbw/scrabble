@@ -29,9 +29,11 @@ define_macros: list = []
 
 if '--prof' in sys.argv:
     get_directive_defaults['linetrace'] = True
+    #get_directive_defaults['profile'] = True
     get_directive_defaults['binding'] = True
 
     comp_directives['linetrace'] = True
+    #comp_directives['profile'] = True
     comp_directives['binding'] = True
 
     define_macros.append(('CYTHON_TRACE', '1'))

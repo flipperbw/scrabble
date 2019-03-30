@@ -54,7 +54,6 @@ ctypedef unsigned char uchrn
 #ctypedef np.ndarray[object, ndim=2] nb_t
 #ctypedef np.ndarray[object, ndim=1] nodelist_t
 
-
 #cdef bytes NUL = b'\0'
 DEF NUL = b'\0'
 #more of these
@@ -74,18 +73,22 @@ cdef class Letter:
         bint from_rack
         uchrn pts
         multiplier_t mult
-        public dual pos
-        uchr value
+        #public dual pos
+        dual pos
+        const unsigned char* value
 
-    #def __cinit__(self, bint is_blank, uchrn pts, multiplier_t mult, dual pos, uchr value):
-    def __cinit__(self, multiplier_t mult, dual pos, uchr value):
-        self.mult = mult
-        self.pos = pos
-        self.value = value
-
+    def __cinit__(self) -> None:
         self.is_blank = False
         self.from_rack = False
         self.pts = 0
+
+        self.mult.amt = 1
+        self.mult.typ = NUL
+        self.pos = (0, 0)
+        self.value = NUL
+
+    def get_pos(self) -> str:
+        return f'{self.pos[0]:2d},{self.pos[1]:2d}'
 
     def __str__(self) -> str:
         return '<'\
@@ -131,9 +134,9 @@ cdef class WordDict:
         self.letters = letters
 
     cdef str sol(self):
-        cdef dual p_s = self.letters[0].pos
-        cdef dual p_e = self.letters[-1].pos
-        return f'pts: {self.pts:3d} | dir: "{self.direc}" | pos: [{p_s[0]:2d},{p_s[1]:2d}] - [{p_e[0]:2d},{p_e[1]:2d}] | w: {self.word}'
+        cdef Letter lf = self.letters[0]
+        cdef Letter ll = self.letters[-1]
+        return f'pts: {self.pts:3d} | dir: "{self.direc}" | pos: [{lf.get_pos()}] - [{ll.get_pos()}] | w: {self.word}'
 
     def __str__(self) -> str:
         cdef Letter l
@@ -179,7 +182,6 @@ cdef class CSettings:
         #self.letters = np.empty(0) # dtype=bytes?
         self.blanks = 0
         #self.shape = {'row': 0, 'col': 0}  # type: Dict[str, int]
-        #todo do types do anything for cython? infer?
         self.points = {}  ## type: Dict[str, List[int]]
         self.words = set()  ## type: Set[bytes]
         self.search_words = []
@@ -385,17 +387,11 @@ cdef class Board:
             if not p.value[0]:
                 break
             else:
-                let = Letter(
-                    p.multiplier,
-                    p.pos,
-                    p.value
-                )
+                let = Letter()
                 let.pts = p.points
-                # let.value=p.value
-                # let.pos=p.pos
-                # let.is_blank=False
-                # let.mult=p.multiplier
-                # let.pts=p.points
+                let.value=p.value
+                let.pos=p.pos
+                let.mult=p.multiplier
 
                 ret.append(let)
         if ret:
@@ -474,6 +470,11 @@ cdef class Board:
 
         return pts
 
+# @lru_cache(None)
+# def gg(nv):
+#     return Settings.points[nv]['pts']
+
+
 #@cython.profile(True)
 #@cython.nonecheck(False)
 
@@ -503,6 +504,7 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
 
     cdef Node no
 
+
     cdef:
         us pts
         us extra_pts = 0 #new_pts
@@ -518,12 +520,12 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
         cnp.ndarray[:] bef_lets, aft_lets, np_lets #, new_lets
 
         list word_lets = []
-        list new_let_list = []
+        list new_let_list
 
         WordDict w #, nw
         bytes nww, new_direc
         bytes nv
-        #uchrn nv
+        #uchr nv
         lpts_t lpt
 
         dict spts = Settings.points
@@ -535,11 +537,11 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
         no = node_list[i]
         nv = word[i]
 
-        le = Letter(
-            no.multiplier,
-            no.pos,
-            nv
-        )
+        le = Letter()
+        le.mult = no.multiplier
+        le.pos = no.pos
+        le.value = nv
+        #le.value = word[i]
 
         nov = no.value
         if nov[0]:
@@ -570,7 +572,10 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
 
             if is_blank is False:
                 lpt = spts[nv]
+                #le.pts = spts[nv]['pts']
                 le.pts = lpt.pts
+                #le.pts = (<uchrn>gg(nv))
+                #le.pts = gg(nv)
             else:
                 le.is_blank = True
 
@@ -640,7 +645,6 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
         word_lets.append(le)
 
     lsl = len(ls)
-
     if lsl == len(Settings.letters):
         return
 
@@ -720,6 +724,8 @@ cpdef void check_nodes(Node[:] nodes, str direc):
             if has_edge is True:
                 subnodes = nodes[i:word_len + i]
                 check_and_get(subnodes, direc, ww, word_len)
+
+    return
 
 """
 # cdef str _print_node_range(
@@ -909,7 +915,6 @@ cdef void solve(
     Settings.search_words = sw
     Settings.search_words_l = len(sw)
 
-
     cdef cnp.ndarray[object, ndim=2] nodes = full.nodes
     #cdef cnp.ndarray[:, :] nodes = full.nodes
     cdef int i, ic, tot
@@ -943,6 +948,8 @@ cdef void solve(
                 ic += 1
                 lo.s('Checking col %2i  (%2i / %i)', i, ic, tot)
             check_nodes(nodes[:,i], 'c')
+
+        #lo.e(gg.cache_info())
 
 
 cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, str log_level):
