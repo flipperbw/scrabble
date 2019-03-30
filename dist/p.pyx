@@ -2,14 +2,12 @@
 
 cimport cython
 
-cdef object gzip, json, sys, pickle, Path, np, pd, _s, log_init
+cdef object json, sys, md5, Path, np, pd, log_init, _s
 
-#import gzip
 import json
 import sys
-#from hashlib import md5
+from hashlib import md5
 
-#import pickle
 #import dill
 #dill.detect.trace(True)
 
@@ -22,7 +20,7 @@ from pathlib import Path
 import numpy as np
 cimport numpy as cnp
 
-import pandas as pd
+import pandas as pd  # remove
 
 from logs import log_init
 
@@ -31,8 +29,9 @@ import settings as _s
 #from typing import Any, Dict, List
 
 
-cdef str DICTIONARY = 'wwf'
 cdef str DEFAULT_LOGLEVEL = 'SUCCESS'
+cdef str DICTIONARY = 'wwf'
+cdef int NUM_RESULTS = 15
 
 cdef object lo = log_init(DEFAULT_LOGLEVEL, skip_main=True)
 
@@ -89,13 +88,22 @@ cdef class Letter:
         self.pos = (0, 0)
         self.value = NUL
 
-    def get_pos(self) -> str:
+    def get_pos(self) -> tuple:
+        return self.pos[0], self.pos[1]
+
+    def get_pos_str(self) -> str:
         return f'{self.pos[0]:2d},{self.pos[1]:2d}'
+
+    def get_val(self) -> str:
+        if self.value[0]:
+            return self.value.decode('utf8')
+        else:
+            return ''
 
     def __str__(self) -> str:
         return '<'\
             f'v: {self.value.decode("utf8")}, '\
-            f'pos: [{self.pos[0]:2d},{self.pos[1]:2d}], '\
+            f'pos: [{self.get_pos_str()}], '\
             f'bl: {"T" if self.is_blank is True else "f"}, '\
             f'rk: {"T" if self.from_rack is True else "f"}, '\
             f'pts: {"_" if self.pts == 0 and self.is_blank is False else self.pts}, '\
@@ -104,6 +112,20 @@ cdef class Letter:
 
     def __repr__(self) -> str:
         return self.__str__()
+
+    def __reduce__(self):
+        return rebuild_letter, (self.is_blank, self.from_rack, self.pts, self.mult, self.pos, self.value)
+
+
+def rebuild_letter(is_blank, from_rack, pts, mult, pos, value):
+    l = Letter()
+    l.is_blank = is_blank
+    l.from_rack = from_rack
+    l.pts = pts
+    l.mult = mult
+    l.pos = pos
+    l.value = value
+    return l
 
 # cdef packed struct Letter_t:
 #     bint is_blank
@@ -119,6 +141,8 @@ cdef class Letter:
 
 # just need to set max size on these lists of structs?
 
+
+#@cython.auto_pickle(True)
 cdef class WordDict:
     cdef:
         str word
@@ -138,7 +162,7 @@ cdef class WordDict:
     cdef str sol(self):
         cdef Letter lf = self.letters[0]
         cdef Letter ll = self.letters[-1]
-        return f'pts: {self.pts:3d} | dir: "{self.direc}" | pos: [{lf.get_pos()}] - [{ll.get_pos()}] | w: {self.word}'
+        return f'pts: {self.pts:3d} | dir: "{self.direc}" | pos: [{lf.get_pos_str()}] - [{ll.get_pos_str()}] | w: {self.word}'
 
     def __str__(self) -> str:
         # cdef Letter l
@@ -152,6 +176,14 @@ cdef class WordDict:
 
     def __repr__(self) -> str:
         return self.__str__()
+
+    def __reduce__(self):
+        return rebuild_worddict, (self.word, self.direc, self.pts, self.letters)
+
+
+def rebuild_worddict(word, direc, pts, letters):
+    return WordDict(word.encode('utf8'), direc, pts, letters)
+
 
 # # not packed?
 # cdef struct WordDict_t:
@@ -168,7 +200,7 @@ cdef class WordDict:
 
 cdef class CSettings:
     cdef:
-        #cnp.ndarray board, default_board
+        cnp.ndarray board, default_board
         #np.ndarray[str, ndim=2] board, default_board
 
         list letters
@@ -182,10 +214,12 @@ cdef class CSettings:
         list search_words
         Py_ssize_t search_words_l
         Board node_board
+        int num_results
 
     def __cinit__(self):
-        #self.board = np.empty((0,0), dtype=np.str_)
-        #self.default_board = np.empty((0,0), dtype=np.str_)
+        self.board = None
+        self.default_board = None #np.empty((0,0), dtype=np.str_)
+
         self.letters = []
         #self.letters = np.empty(0) # dtype=bytes?
         self.blanks = 0
@@ -195,6 +229,7 @@ cdef class CSettings:
         self.search_words = []
         self.search_words_l = 0
         self.node_board = None
+        self.num_results = NUM_RESULTS
 
 
 cdef CSettings Settings = CSettings()
@@ -212,6 +247,7 @@ cdef class Node:
         cnp.ndarray[:] up_word, down_word, left_word, right_word
         bint has_edge
         uchr value
+        public str display
 
     def __cinit__(self, us x, us y, str val, multiplier_t multiplier):  # todo test no types in cinit
         self.x = x
@@ -233,10 +269,13 @@ cdef class Node:
 
         if not val:
             self.value = NUL
+            self.display = ' '
             self.points = 0
         else:
             _str = val.encode('utf8')  # todo, assign directly?
             self.value = _str
+
+            self.display = val.upper()
 
             try:
                 lpt = Settings.points[_str]
@@ -260,18 +299,19 @@ cdef class Node:
     cpdef str str_pos(self):
         return '[{:2d},{:2d}]'.format(*self.pos)
 
-    def __str__(self):
+    def __str__(self) -> str:
         cdef str s = '_'
         if self.value[0]:
             s = self.value.decode('utf8')
         return '<Node: {} v: {}>'.format(self.str_pos(), s)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 
 cdef class Board:
     cdef:
+        cnp.ndarray[:, :] board
         cnp.ndarray[:, :] default_board
         #cnp.ndarray default_board
         #np.ndarray[str, ndim=2] default_board
@@ -288,7 +328,7 @@ cdef class Board:
 
 
     #def __cinit__(self, board=Settings.board, default_board=Settings.default_board):
-    def __cinit__(self, cnp.ndarray[:, :] board, cnp.ndarray[:, :] default_board):
+    def __cinit__(self, cnp.ndarray board, cnp.ndarray default_board):
         cdef:
             Py_ssize_t r, c
             uchrn mamt
@@ -299,6 +339,7 @@ cdef class Board:
             #uchr mtyp
             bytes mtyp
 
+        self.board = board
         self.default_board = default_board
         self.nodes = np.empty_like(default_board, dtype=Node)
 
@@ -477,6 +518,13 @@ cdef class Board:
         pts *= word_mult
 
         return pts
+
+    def __str__(self) -> str:
+        return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, len(self.words))
+
+    # def __reduce__(self):
+    #     return rebuild, (Settings.board, Settings.default_board)
+
 
 # @lru_cache(None)
 # def gg(nv):
@@ -768,82 +816,70 @@ cpdef void check_nodes(Node[:] nodes, str direc):
 """
 
 
-cdef void show_solution(bint no_words=False):
+#convert to python?
+cdef void show_solution(
+        #WordDict[:]
+        cnp.ndarray nodes, list words, bint no_words
+) except *:
     # todo mark blanks
 
-    cdef WordDict w
-    cdef list newlist
+    cdef:
+        WordDict w, best
+        list newlist, cutlist, js
+        Py_ssize_t rown, i, r, c
+        int x, y
+        str horiz
+        Letter letter
+        cnp.ndarray nodes_copy
 
-    if not Settings.node_board.words:
+    if not words:
         print('\nNo solution.')
-    else:
-        # newlist = sorted(Settings.word_info, key=lambda k: k['pts'], reverse=True)
-        # best_data = newlist[:1][0]
-        # if lo.is_enabled('s'):
-        #     #todo fix this
-        #     top10 = []  # type: List[dict]
-        #     seen = [(best_data['pts'], best_data['word'])]
-        #     for n in newlist:
-        #         if len(top10) == 10:
-        #             break
-        #         seen_tup = (n['pts'], n['word'])
-        #         if seen_tup in seen:
-        #             continue
-        #         seen.append(seen_tup)
-        #         top10.append(n)
-        #
-        #     top10.reverse()
-        #
-        #     print()
-        #     lo.s('-- Top 10 --\n')
-        #     for sidx, s in enumerate(top10):
-        #         lo.s('Choice #{}\n{}\n'.format(sidx + 1, _print_result(s, no_words)))
-        #
-        #     lo.s('-- Best --\n{}'.format(_print_result(best_data, no_words)))
-        #
-        # if not no_words:  # todo: print xs instead?
-        #     solved_board = Settings.board.copy()
-        #
-        #     for ni, node_tup in enumerate(best_data.get('nodes', [])):
-        #         node = Settings.node_board.get(*node_tup)
-        #         if not node.value:
-        #             solved_board[node.y][node.x] = '\x1b[33m' + best_data['word'][ni] + '\x1b[0m'
-        #
-        #     print('\n' + '-' * ((Settings.shape['row'] * 2) - 1 + 4))
-        #
-        #     for row in solved_board.iterrows():
-        #         row_data = row[1].to_list()
-        #         row_str = []
-        #         for rl in row_data:
-        #             rl_len = len(rl)
-        #             rl_val = rl
-        #
-        #             if rl_len == 0:
-        #                 rl_val = ' '
-        #             elif rl_len == 1:
-        #                 rl_val = rl.upper()
-        #
-        #             row_str.append(rl_val)
-        #
-        #         print('| ' + ' '.join(row_str) + ' |')
-        #
-        #     print('-' * ((Settings.shape['row'] * 2) - 1 + 4))
-        #
-        # else:
-        #     print('\n<solution hidden> ({})'.format(len(best_data["word"])))
-        #
-        # print('\nPoints: {}'.format(best_data["pts"]))
+        return
 
-        # print(Settings.node_board.words[0])
-        # print(dir(Settings.node_board.words[0]))
-        # print(vars(Settings.node_board.words[0]))
+    newlist = sorted(words, key=lambda k: k.pts, reverse=True)
+    if lo.is_enabled('s'):
+        if Settings.num_results == 0:
+            cutlist = newlist
+        else:
+            cutlist = newlist[:Settings.num_results]
 
-        newlist = sorted(Settings.node_board.words, key=lambda k: k.pts, reverse=True)
-        for w in reversed(newlist[:15]):
+        print()
+        lo.s(f'-- Results ({len(cutlist)} / {len(newlist)}) --\n')
+        for w in reversed(cutlist):
             lo.s(w.sol())
 
-        #for i in Settings.node_board.words:
-        #    lo.s(i)
+    best = newlist[0]
+
+    if no_words:  # todo: print xs instead?
+        print(f'\n<solution hidden> (len: {len(best.word)})')
+
+    else:
+        nodes_copy = nodes.copy()
+
+        for letter in best.letters:
+            x, y = letter.get_pos()
+            if not nodes_copy[x, y] or nodes_copy[x, y] == ' ':
+                nodes_copy[x, y] = f'\x1b[33m{letter.get_val()}\x1b[0m'
+
+        js = []
+        for i in range(nodes_copy.shape[0]):
+            if i < 10 or i > 20:
+                js.append(str(i))
+            else:
+                js.append(chr(9361 + (i - 10)))
+
+        horiz = '\u2500+' * nodes_copy.shape[1]
+
+        print(f'\n     {" ".join(js)}')
+        print('   \u250c\u2500' + horiz + '\u2500\u2510')
+
+        for rown in range(nodes_copy.shape[0]):
+            print('{:2d} |\u0332\u0305 {}  |\u0332\u0305'.format(rown, ' '.join([n for n in nodes_copy[rown]])))
+
+        print('   \u2514\u2500' + horiz + '\u2500\u2518')
+
+    print('\nPoints: {}'.format(best.pts))
+
 
 # todo: set default for dict? put in settings? move all settings out to options?
 cdef void solve(
@@ -936,7 +972,7 @@ cdef void solve(
         #lo.e(gg.cache_info())
 
 
-cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, str log_level):
+cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level) except *:
     cdef:
         dict points = {}
         object pdboard
@@ -966,7 +1002,8 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
             sys.exit(1)
 
     else:
-        pdboard = pd.DataFrame(_s.BOARD).to_numpy()
+        filename = '_manual'
+        pdboard = pd.DataFrame(_s.BOARD)
         #letters = np.asarray(_s.LETTERS, dtype=np.bytes_)
         letters = _s.LETTERS
 
@@ -1004,8 +1041,8 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
         lo.c('Could not find file: {}'.format(exc.filename))
         sys.exit(1)
 
-    #Settings.default_board = default_board
-    #Settings.board = board
+    Settings.default_board = default_board
+    Settings.board = board
     #Settings.shape = shapez
 
     cdef dict cpoints = {}  # type: dict
@@ -1025,41 +1062,52 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     else:
         print('Running...')
 
-    cdef Board full = Board(board, default_board)
-    Settings.node_board = full
-    #sys.exit(1)
+    # cdef Board full = Board(board, default_board)
+    # Settings.node_board = full
 
-    #cdef str md5_board, md5_letters
-    cdef object solution_filename
+    Settings.num_results = num_results
 
-    #todo fix
-    #md5_board = md5(board.tolist().encode()).hexdigest()[:9]
-    #md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]
+    lo.e(filename)
 
-    #solution_filename = Path(_s.SOLUTIONS_DIR, '{}_{}.pkl.gz'.format(md5_board, md5_letters))
-    solution_filename = Path('xxxxxxx')
+    # todo add search words and nodes
+    cdef str md5_letters = md5(''.join(sorted(letters)).encode()).hexdigest()[:9]
+    cdef object solution_filename = Path(_s.SOLUTIONS_DIR, '{}_{}.npz'.format(filename, md5_letters))
 
-    if overwrite:
+    if overwrite is True:
         has_cache = False
     else:
         has_cache = solution_filename.exists()
 
+    cdef Board full, solution
+
     if has_cache is False:
+        full = Board(board, default_board)
+        Settings.node_board = full
+
+        lo.s('Solving...\n')
         solve(dictionary)
         #solve(letters, dictionary)
-        #dill.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
-        #pickle.dump(Settings.word_info, gzip.open(str(solution_filename), 'wb'))  # todo remove nodes?
+
+        solved_board = np.empty((Settings.node_board.nodes_rl, Settings.node_board.nodes_cl), dtype='<U32')
+        for r in range(solved_board.shape[0]):
+            for c in range(solved_board.shape[1]):
+                solved_board[r, c] = Settings.node_board.nodes[r, c].display
+
+        show_solution(nodes=solved_board, words=Settings.node_board.words, no_words=no_words)
+
+        np.savez(solution_filename, nodes=solved_board, words=Settings.node_board.words)
     else:
         lo.s('Found existing solution')
+        solution_data = np.load(solution_filename)
 
-        #solution = dill.load(gzip.open(str(solution_filename)))  ## type: List[Dict[str, Any]]
-        #solution = pickle.load(gzip.open(str(solution_filename)))  ## type: List[Dict[str, Any]]
-        #Settings.word_info = solution # fix
+        s_nodes = solution_data['nodes']
+        s_words = solution_data['words'].tolist()
 
-    show_solution(no_words)
+        show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
 
 
 cpdef void main(
-    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, log_level: str = DEFAULT_LOGLEVEL, profile: bool = False
+    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = NUM_RESULTS,
+    log_level: str = DEFAULT_LOGLEVEL, profile: bool = False
 ):
-    cmain(filename, dictionary, no_words, exclude_letters, overwrite, log_level)
+    cmain(filename, dictionary, no_words, exclude_letters, overwrite, num_results, log_level)

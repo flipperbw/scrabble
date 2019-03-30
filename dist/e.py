@@ -5,8 +5,8 @@
 __version__ = 1.0
 
 DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
-
 DICTIONARY = 'wwf'
+NUM_RESULTS = 15
 
 
 def parse_args():
@@ -33,6 +33,9 @@ def parse_args():
 
     parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L [,L...]',
         help='Letters to exclude from rack for solution')
+
+    parser.add_argument('-r', '--num-results', type=int, default=NUM_RESULTS,
+        help='Number of solutions to show [0 for all] (default: %(default)d')
 
     parser.add_argument('-p', '--profile', action='store_true',
         help='Profile the app')
