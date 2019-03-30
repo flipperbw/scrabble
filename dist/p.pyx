@@ -4,12 +4,12 @@ cimport cython
 
 cdef object gzip, json, sys, pickle, Path, np, pd, _s, log_init
 
-import gzip
+#import gzip
 import json
 import sys
 #from hashlib import md5
 
-import pickle
+#import pickle
 #import dill
 #dill.detect.trace(True)
 
@@ -28,13 +28,15 @@ from logs import log_init
 
 import settings as _s
 
-from typing import Any, Dict, List
+#from typing import Any, Dict, List
 
 
 cdef str DICTIONARY = 'wwf'
 cdef str DEFAULT_LOGLEVEL = 'SUCCESS'
 
 cdef object lo = log_init(DEFAULT_LOGLEVEL, skip_main=True)
+
+#cdef object exc
 
 # no numpy array .flags to see contiguous
 #DTYPE = np.uint16
@@ -139,7 +141,13 @@ cdef class WordDict:
         return f'pts: {self.pts:3d} | dir: "{self.direc}" | pos: [{lf.get_pos()}] - [{ll.get_pos()}] | w: {self.word}'
 
     def __str__(self) -> str:
-        cdef Letter l
+        # cdef Letter l
+        # cdef list ll = []
+        # cdef str li
+        # for l in self.letters:
+        #     li = str(l)
+        #     ll.append(li)
+        # cdef str ls = '\n  '.join(ll)
         return '<w: {} | pts: {} | dir: {} | letts: [\n  {}\n]>'.format(self.word, self.pts, self.direc, '\n  '.join(str(l) for l in self.letters))
 
     def __repr__(self) -> str:
@@ -495,35 +503,34 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
     if chk_first is not None and chk_first.value[0]: return
     if chk_last is not None and chk_last.value[0]: return
 
-    cdef uchrn blanks = Settings.blanks
     #todo what is the difference in not setting here? infer types?
-
-    #ls = list(Settings.letters) #.tolist()  # todo fix. string?
-    #cnp.ndarray ls
-    cdef list ls = Settings.letters[:]
-
-    cdef Node no
-
-
     cdef:
+        uchrn blanks = Settings.blanks
+
+        #ls = list(Settings.letters) #.tolist()  # todo fix. string?
+        #cnp.ndarray ls
+        list ls = Settings.letters[:]
+        set aw = Settings.words
+
+        Node no
+
         us pts
         us extra_pts = 0 #new_pts
         Py_ssize_t i, bi, lsl
         #int nli = 0
         Letter le
         Letter b
-        bint is_blank = False
+        bint is_blank
         #str new_word #, new_direc
         bytes new_word
 
         #letter_list new_lets
-        cnp.ndarray[:] bef_lets, aft_lets, np_lets #, new_lets
+        cnp.ndarray[:] bef_lets, aft_lets #, np_lets #, new_lets
 
         list word_lets = []
         list new_let_list
 
         WordDict w #, nw
-        bytes nww, new_direc
         bytes nv
         #uchr nv
         lpts_t lpt
@@ -545,7 +552,7 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
 
         nov = no.value
         if nov[0]:
-            if nov != (<uchr>nv):
+            if nov != (<const unsigned char*>nv):
                 #lo.d(f'mismatch {no.value} v {le.value}')
                 return
             else:
@@ -609,38 +616,15 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
                         new_word += b.value
                         new_let_list.append(b)
 
-                if new_word not in Settings.words:
+                if new_word not in aw:
                     return
 
                 #lo.x(new_word)
                 extra_pts += (<us>Settings.node_board.get_points(new_let_list))
 
                 #new_lets = np.array(new_let_list, dtype=object)
-                #new_pts = Settings.node_board.get_points(new_lets)
-                #
-                # if direc == 'r':
-                #     new_direc = b'c'
-                # else:
-                #     new_direc = b'r'
-                # #nw = WordDict(word=new_word, direc=new_direc, pts=new_pts, letters=new_lets)
-                # nww = new_word.encode('utf8')
-                # nw.word = nww
-                # nw.direc = new_direc
-                # nw.pts = new_pts
                 # for ii in range(len(new_lets)):
                 #     nw.letters[ii] = new_lets[ii]
-                #
-                # print(nw.direc)
-                #print(nw)
-                #print(nw.letters)
-
-                # if nw not in Settings.node_board.words:
-                #     Settings.node_board.words.append(nw)
-                # else: lo.e('no %s', nw)
-                #Settings.node_board.words.append(nw)
-
-                #lo.x(repr(nw))
-                #lo.x(repr(nw) in Settings.node_board.words)
 
         word_lets.append(le)
 
@@ -650,7 +634,6 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
 
     #lo.i('GOOD: %s at %s : %s', word, first.str_pos(), last.str_pos())
 
-    #np_lets = np.array(word_lets, dtype=object)
     pts = Settings.node_board.get_points(word_lets) + extra_pts
 
     if lsl == 0:
@@ -660,7 +643,6 @@ cpdef void check_and_get(Node[:] node_list, str direc, uchr word, Py_ssize_t wor
         word,
         direc,
         pts,
-        #np_lets
         word_lets
     )
 
@@ -705,13 +687,12 @@ cpdef void check_nodes(Node[:] nodes, str direc):
     #for s in range(Settings.search_words_l): # todo swap test
     for s in range(swl):
         w = sw[s]
-
         word_len = w[1]
+
         if word_len > nlen:
             continue
 
         ww = w[0]
-
         #lo.d(ww)
 
         for i in range(nlen - word_len + 1):
@@ -869,6 +850,7 @@ cdef void solve(
     #cnp.ndarray letters, # str
     str dictionary
 ):
+    cdef list wordlist = []
     #todo make fnc exception
     try:
         wordlist = open(str(Path(_s.WORDS_DIR, dictionary + '.txt'))).read().splitlines()
@@ -879,7 +861,7 @@ cdef void solve(
     #blanks = list(Settings.letters).count(b'?')
     cdef uchrn blanks = Settings.letters.count(b'?')
     cdef Board full = Settings.node_board
-    cdef str w
+    #cdef str w
     cdef Py_ssize_t mnlen = max(full.nodes_cl, full.nodes_rl)
     cdef set words = {w for w in wordlist if len(w) <= mnlen}
     cdef set search_words = set()
@@ -889,7 +871,7 @@ cdef void solve(
             search_words = words
         else:
             # todo: faster if str? why gen slower?
-            search_words = {w for w in words if any(l.decode('utf8') in w for l in Settings.letters)}
+            search_words = {w for w in words if any([l.decode('utf8') in w for l in Settings.letters])}
     elif isinstance(_s.SEARCH_WORDS, tuple):
         search_words = set(wordlist[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
     elif isinstance(_s.SEARCH_WORDS, set):
@@ -906,7 +888,7 @@ cdef void solve(
     # board[8][10] = 'Y'
     # letters = [b'F', b'G']
 
-    cdef str s
+    #cdef str s
     cdef set bwords = {s.encode('utf8') for s in words}
     cdef list sw = [(s.encode('utf8'), len(s)) for s in search_words]
 
@@ -918,10 +900,12 @@ cdef void solve(
     cdef cnp.ndarray[object, ndim=2] nodes = full.nodes
     #cdef cnp.ndarray[:, :] nodes = full.nodes
     cdef int i, ic, tot
+    #cdef list search_rows, search_cols
 
     if full.new_game:
         lo.s(' = Fresh game = ')
-        no = next(full.get_by_attr('is_start', True), None)
+        #todo fix
+        #no = next(full.get_by_attr('is_start', True), None)
         # if no:
         #     check_node(no)
 
@@ -954,11 +938,11 @@ cdef void solve(
 
 cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, str log_level):
     cdef:
-        dict points
+        dict points = {}
         object pdboard
         cnp.ndarray board, default_board
         #cnp.ndarray letters
-        list letters
+        list letters = []
         #todo declare object rather than list?
         int board_size
         object board_name
@@ -968,6 +952,7 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     if log_level != DEFAULT_LOGLEVEL:
         lo.set_level(log_level)
 
+    cdef object this_board_dir
     if filename is not None:
         this_board_dir = Path(_s.BOARD_DIR, filename)
 
@@ -985,6 +970,7 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
         #letters = np.asarray(_s.LETTERS, dtype=np.bytes_)
         letters = _s.LETTERS
 
+    cdef str el
     if exclude_letters:
         for el in exclude_letters:
             #letters = letters[letters != el]
@@ -1013,7 +999,7 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
         sys.exit(1)
 
     try:
-        points = json.load(open(str(Path(_s.POINTS_DIR, dictionary + '.json'))))  # type: Dict[str, List[int]]
+        points = json.load(open(str(Path(_s.POINTS_DIR, dictionary + '.json'))))  ## type: Dict[str, List[int]]
     except FileNotFoundError as exc:
         lo.c('Could not find file: {}'.format(exc.filename))
         sys.exit(1)
@@ -1022,8 +1008,10 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     #Settings.board = board
     #Settings.shape = shapez
 
-    cpoints = {}  # type: dict
+    cdef dict cpoints = {}  # type: dict
     cdef lpts_t lpt
+    cdef str k
+    cdef list v
     for k, v in points.items():
         lpt.amt = v[0]
         lpt.pts = v[1]
@@ -1041,7 +1029,8 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     Settings.node_board = full
     #sys.exit(1)
 
-    cdef str md5_board, md5_letters
+    #cdef str md5_board, md5_letters
+    cdef object solution_filename
 
     #todo fix
     #md5_board = md5(board.tolist().encode()).hexdigest()[:9]
@@ -1063,14 +1052,14 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     else:
         lo.s('Found existing solution')
 
-        #solution = dill.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
-        solution = pickle.load(gzip.open(str(solution_filename)))  # type: List[Dict[str, Any]]
+        #solution = dill.load(gzip.open(str(solution_filename)))  ## type: List[Dict[str, Any]]
+        #solution = pickle.load(gzip.open(str(solution_filename)))  ## type: List[Dict[str, Any]]
         #Settings.word_info = solution # fix
 
     show_solution(no_words)
 
 
 cpdef void main(
-    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: List[str] = None, overwrite: bool = False, log_level: str = DEFAULT_LOGLEVEL, profile: bool = False
+    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, log_level: str = DEFAULT_LOGLEVEL, profile: bool = False
 ):
     cmain(filename, dictionary, no_words, exclude_letters, overwrite, log_level)
