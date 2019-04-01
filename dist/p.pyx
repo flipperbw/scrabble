@@ -576,6 +576,7 @@ cpdef void check_and_get(Node[:] node_list, DTYPE_t[:] word, Py_ssize_t word_len
         list word_lets = []
         list new_let_list
 
+
         WordDict w #, nw
 
         #bytes nv
@@ -585,7 +586,7 @@ cpdef void check_and_get(Node[:] node_list, DTYPE_t[:] word, Py_ssize_t word_len
 
         #lpts_t lpt
         #dict spts = Settings.points
-        uchrn[:] spts = Settings.points
+        cnp.ndarray spts = Settings.points
 
     #todo for nv in word[:word_len]:
     for i in range(word_len):
@@ -639,6 +640,7 @@ cpdef void check_and_get(Node[:] node_list, DTYPE_t[:] word, Py_ssize_t word_len
             #     else:
             #         # todo skip forward if the next letter doesnt exist?
             #         return
+
 
             if nv not in ls:
                 if blanks > 0:
