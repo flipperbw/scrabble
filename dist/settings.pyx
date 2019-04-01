@@ -79,15 +79,14 @@ LETTERS = ['']
 
 SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
-SEARCH_WORDS = (50000, 100000)
-#SEARCH_WORDS = {'EISWEIN', 'RECHEAT', 'PAJAMAS', 'CHEAT'}
+#SEARCH_WORDS = (50000, 100000)
+#SEARCH_WORDS = {'AXLIKE', 'SEA', 'SEI', 'ASDASD', 'XI', 'XIS'}
 
 
 # - NODES
 
 SEARCH_NODES = None  # type: Union[None, List[List[int]]]
-
-SEARCH_NODES = [[3, 4], []] # nodes
+#SEARCH_NODES = [[4,6,9], [3,8]] # nodes
 
 
 # - EXPORT

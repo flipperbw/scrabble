@@ -55,8 +55,8 @@ if __name__ == '__main__':
     if dargs['profile'] is True:
         import line_profiler
         profile = line_profiler.LineProfiler(
-            #p.check_and_get,
-            p.check_nodes
+            p.check_and_get,
+            #p.check_nodes
         )
         profile.runcall(p.main, **dargs)
         profile.print_stats()

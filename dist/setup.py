@@ -18,7 +18,7 @@ comp_directives = {
     'boundscheck': False,
 #move to only p
     'warn.undeclared': True,
-    'warn.maybe_uninitialized': True,
+    #'warn.maybe_uninitialized': True,
     'warn.unused': True,
     'warn.unused_arg': True,
     'warn.unused_result': True,
