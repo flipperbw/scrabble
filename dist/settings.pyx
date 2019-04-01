@@ -85,8 +85,8 @@ SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
 # - NODES
 
-SEARCH_NODES = None  # type: Union[None, List[List[int]]]
-#SEARCH_NODES = [[4,6,9], [3,8]] # nodes
+#SEARCH_NODES = None  # type: Union[None, List[List[int]]]
+SEARCH_NODES = [[4,6,9], [3,8]] # nodes
 
 
 # - EXPORT

@@ -56,9 +56,9 @@ cdef packed struct multiplier_t:
     uchrn amt
     uchr typ
 
-cdef packed struct lpts_t:
-    uchrn amt
-    uchrn pts
+# cdef packed struct lpts_t:
+#     uchrn amt
+#     uchrn pts
 
 @cython.freelist(10000)  # todo check
 cdef class Letter:
@@ -129,23 +129,29 @@ def rebuild_letter(is_blank, from_rack, pts, mult, x, y, value):
 
 cdef class WordDict:
     cdef:
+        #DTYPE_t[:] _word
         str word
         #uchr word
+        bint _is_row
         str direc
         public us pts
         list letters  # of Letter
         #Letter letters[100]
 
-    def __cinit__(self, DTYPE_t[:] word, str direc, us pts, list letters):
+    def __cinit__(self, DTYPE_t[:] word, bint is_row, us pts, list letters):
+        #self._word = word
         self.word = ''.join([chr(l) for l in word])
-        self.direc = direc
+        self._is_row = is_row
+        self.direc = 'row' if self._is_row is True else 'col'
         self.pts = pts
         self.letters = letters
 
     cdef str sol(self):
         cdef Letter lf = self.letters[0]
         cdef Letter ll = self.letters[-1]
-        return f'pts: {self.pts:3d} | dir: "{self.direc}" | pos: [{lf.get_pos_str()}] - [{ll.get_pos_str()}] | w: {self.word}'
+        return 'pts: {:3d} | dir: "{}" | pos: [{}] - [{}] | w: {}'.format(
+            self.pts, self.direc, lf.get_pos_str(), ll.get_pos_str(), self.word
+        )
 
     def __str__(self) -> str:
         # cdef Letter l
@@ -156,17 +162,18 @@ cdef class WordDict:
         #     ll.append(li)
         # cdef str ls = '\n  '.join(ll)
         return '<w: {} | pts: {} | dir: {} | letts: [\n  {}\n]>'.format(
-            self.word, self.pts, self.direc, '\n  '.join(str(l) for l in self.letters)
+            self.word, self.pts, self.direc, '\n  '.join([str(l) for l in self.letters])
         )
 
     def __repr__(self) -> str:
         return self.__str__()
 
     def __reduce__(self):
-        return rebuild_worddict, (self.word, self.direc, self.pts, self.letters)
+        return rebuild_worddict, (self.word, self._is_row, self.pts, self.letters)
 
-def rebuild_worddict(word, direc, pts, letters):
-    return WordDict(word.encode('utf8'), direc, pts, letters)
+def rebuild_worddict(_word, _is_row, pts, letters):
+    cdef cnp.ndarray word = np.array([ord(w) for w in _word], dtype=np.uint32)
+    return WordDict(word, _is_row, pts, letters)
 
 
 cdef class CSettings:
@@ -174,19 +181,17 @@ cdef class CSettings:
         cnp.ndarray board, default_board
         #cnp.ndarray[str, ndim=2] board, default_board
 
-        #list letters
+        list letters
         #cnp.ndarray[DTYPE_t, ndim=1] letters
-        DTYPE_t[:] letters
+        #DTYPE_t[:] letters
 
         uchrn blanks
         #dict shape
 
-        dict points
-        set words
-        #list search_words
-        #cnp.ndarray[:] search_words
-        #Py_ssize_t search_words_l
+        cnp.ndarray points
+        cnp.ndarray amts
 
+        set words
         Board node_board
         int num_results
 
@@ -194,14 +199,17 @@ cdef class CSettings:
         self.board = None
         self.default_board = None #np.empty((0,0), dtype=np.str_)
 
-        self.letters = None
+        self.letters = []
+        #self.letters = None
         #self.letters = np.empty(0) # dtype=bytes?
+
         self.blanks = 0
         #self.shape = {'row': 0, 'col': 0}  # type: Dict[str, int]
-        self.points = {}  ## type: Dict[str, List[int]]
+
+        self.points = None
+        self.amts = None
+
         self.words = set()  ## type: Set[bytes]
-        #self.search_words = None
-        #self.search_words_l = 0
         self.node_board = None
         self.num_results = NUM_RESULTS
 
@@ -234,7 +242,7 @@ cdef class Node:
         else:
             self.is_start = False
 
-        cdef lpts_t lpt
+        #cdef lpts_t lpt
 
         if not val:
             self.value = 0
@@ -244,12 +252,14 @@ cdef class Node:
             self.value = ord(val)
             self.display = val.upper()
 
-            try:
-                lpt = Settings.points[self.value]
-                self.points = lpt.pts
-            except (KeyError, IndexError):
-                lo.e('Could not get point value of "{}"'.format(val))
-                sys.exit(1)
+            self.points = Settings.points[self.value]
+
+            # try:
+            #     lpt = Settings.points[self.value]
+            #     self.points = lpt.pts
+            # except (KeyError, IndexError):
+            #     lo.e('Could not get point value of "{}"'.format(val))
+            #     sys.exit(1)
 
         self.up = None
         self.down = None
@@ -261,14 +271,14 @@ cdef class Node:
         self.left_lets = None
         self.right_lets = None
 
-        self.up_word = None
-        self.down_word = None
-        self.left_word = None
-        self.right_word = None
+        self.up_word = ''
+        self.down_word = ''
+        self.left_word = ''
+        self.right_word = ''
 
         self.has_edge = False
 
-    cpdef str str_pos(self):
+    cdef str str_pos(self):
         return f'[{self.x:2d},{self.y:2d}]'
 
     def __str__(self) -> str:
@@ -314,7 +324,7 @@ cdef class Board:
 
         self.board = board
         self.default_board = default_board
-        self.nodes = np.empty_like(default_board, dtype=Node)
+        self.nodes = np.zeros_like(default_board, dtype=Node)
 
         self.nodes_rl = board.shape[0]
         self.nodes_cl = board.shape[1]
@@ -384,7 +394,7 @@ cdef class Board:
         #cdef DTYPE_t v
         return ''.join([l.get_val() for l in letters]) # todo make func
 
-    cdef void _set_adj_nodes(self, str d, Node n) except *:
+    cdef void _set_adj_nodes(self, str d, Node n):
         cdef:
             #cnp.ndarray[:] loop_nodes, setret
             cnp.ndarray loop_nodes, setret
@@ -484,8 +494,6 @@ cdef class Board:
             Py_ssize_t l
             uchrn p
             Letter letter
-            lpts_t lpt
-            #dict spts = Settings.points
 
         for l in range(len_word):
             letter = (<Letter> word[l])
@@ -493,9 +501,6 @@ cdef class Board:
             if letter.from_rack is False:
                 pts += letter.pts
             elif letter.is_blank is False:
-                # lpt = <lpts_t> (spts[letter.value])
-                # p = lpt.pts  # todo exception handling and above
-
                 p = letter.pts
 
                 if letter.mult.typ == <uchr>b'l':
@@ -523,12 +528,12 @@ cdef class Board:
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-cpdef void check_and_get(Node[:] node_list, str direc, DTYPE_t[:] word, Py_ssize_t word_len) except *:
+cpdef void check_and_get(Node[:] node_list, DTYPE_t[:] word, Py_ssize_t word_len, bint is_row):
     cdef Node chk_first, chk_last
     cdef Node first = node_list[0]
     cdef Node last = node_list[word_len - 1]
 
-    if direc == 'r':
+    if is_row is True:
         chk_first = first.left
         chk_last = last.right
     else:
@@ -542,28 +547,31 @@ cpdef void check_and_get(Node[:] node_list, str direc, DTYPE_t[:] word, Py_ssize
     cdef:
         uchrn blanks = Settings.blanks
 
-        DTYPE_t[:] ls = Settings.letters.copy()
-        DTYPE_t[:] befls, aftls, newls
+        #cnp.ndarray[DTYPE_t, ndim=1] ls = Settings.letters.base.copy()
+        list ls = Settings.letters[:]
+        Py_ssize_t lslen = len(ls)
+
+        #DTYPE_t[:] befls, aftls, newls
 
         set aw = Settings.words
         Node no
         us pts
         us extra_pts = 0 #new_pts
-        Py_ssize_t i, bi, nvi
-        DTYPE_t nvv
+        Py_ssize_t i, bi #, nvi
+        #DTYPE_t nvv
         Py_ssize_t lsl
         #size_t lsl
         Letter le
         Letter b
         bint is_blank
-        bint has_let
+        #bint has_let
 
         str new_word #, new_direc
 
         #letter_list new_lets
         #cnp.ndarray[:] bef_lets, aft_lets #, np_lets #, new_lets
         Letter[:] bef_lets, aft_lets
-        str bef_word, aft_word
+        #str bef_word, aft_word
 
         list word_lets = []
         list new_let_list
@@ -572,10 +580,12 @@ cpdef void check_and_get(Node[:] node_list, str direc, DTYPE_t[:] word, Py_ssize
 
         #bytes nv
         DTYPE_t nv, nov
-        uchrn nvs
+        #uchrn nvs
+        str cnv
 
-        lpts_t lpt
-        dict spts = Settings.points
+        #lpts_t lpt
+        #dict spts = Settings.points
+        uchrn[:] spts = Settings.points
 
     #todo for nv in word[:word_len]:
     for i in range(word_len):
@@ -601,101 +611,90 @@ cpdef void check_and_get(Node[:] node_list, str direc, DTYPE_t[:] word, Py_ssize
         else:
             is_blank = False
 
-            has_let = False
-            for nvi in range(ls.shape[0]):
-                nvv = ls[nvi]
-                if nvv == nv:
-                    ls[nvi] = 0
-                    has_let = True
-                    break
+            # has_let = False
+            # for nvi in range(lslen):
+            #     nvv = ls[nvi]
+            #     if nvv == nv:
+            #         ls[nvi] = 0
+            #         has_let = True
+            #         break
+            #
+            # nvs = np.searchsorted(ls, nv)
+            # nvs = npss(ls, nv)
+            # befls = ls[:nvs]
+            # aftls = ls[nvs+1:]
+            # ls = np.concatenate([
+            #     zl,
+            #     befls,
+            #     aftls
+            # ])  # out=ls?
 
-            if has_let is False:
-                #lo.d(f'{le.value} not in {ls}')
-                if blanks > 0:
-                    #ls.remove(bl)
-                    blanks -= 1
-                    is_blank = True
-                    #lo.d('removed blank: %s', blanks)
-                else:
-                    # todo skip forward if the next letter doesnt exist?
-                    return
-
-            # if nv not in ls:
+            # if has_let is False:
             #     #lo.d(f'{le.value} not in {ls}')
             #     if blanks > 0:
-            #         #ls.remove(bl)
+            #         #ls.remove(bl)  # todo fix
             #         blanks -= 1
             #         is_blank = True
             #         #lo.d('removed blank: %s', blanks)
             #     else:
             #         # todo skip forward if the next letter doesnt exist?
             #         return
-            # else:
-            #     # nvs = np.searchsorted(ls, nv)
-            #     # nvs = npss(ls, nv)
-            #     # befls = ls[:nvs]
-            #     # aftls = ls[nvs+1:]
-            #     # ls = np.concatenate([
-            #     #     zl,
-            #     #     befls,
-            #     #     aftls
-            #     # ])  # out=ls?
-            #     for nvi in range(ls.shape[0]):
-            #         nvv = ls[nvi]
-            #         if nvv == nv:
-            #             ls[nvi] = 0
-            #             break
+
+            if nv not in ls:
+                if blanks > 0:
+                    ls.remove(bl)
+                    blanks -= 1
+                    is_blank = True
+                    #lo.d('removed blank: %s', blanks)
+                else:
+                    # todo skip forward if the next letter doesnt exist?
+                    return
+            else:
+                ls.remove(nv)
 
             le.from_rack = True
 
             if is_blank is False:
-                lpt = spts[nv]  # todo why
-                #le.pts = spts[nv]['pts']
-                le.pts = lpt.pts
-                #le.pts = (<uchrn>gg(nv))
-                #le.pts = gg(nv)
+                le.pts = spts[nv]
             else:
                 le.is_blank = True
 
-            if direc == 'r':
+            if is_row is True:
                 bef_lets = no.up_lets
-                bef_word = no.up_word
                 aft_lets = no.down_lets
-                aft_word = no.down_word
             else:
                 bef_lets = no.left_lets
-                bef_word = no.left_word
                 aft_lets = no.right_lets
-                aft_word = no.right_word
 
             if bef_lets is not None or aft_lets is not None:
                 #lo.d('bef: %s', bef_lets)
                 #lo.d('aft: %s', aft_lets)
 
+                #new_word = ''.join(chr(ns.value) for ns in new_let_list)
+                cnv = chr(nv)
+                if is_row is True:
+                    new_word = no.up_word + cnv + no.down_word
+                else:
+                    new_word = no.left_word + cnv + no.right_word
+
+                #lo.x(new_word)
+                if new_word not in aw:
+                    return
+
                 new_let_list = []
-                new_word = ''
 
                 if bef_lets is not None:
-                    new_word = bef_word
                     for bi in range(bef_lets.shape[0]):
                         b = bef_lets[bi]
                         new_let_list.append(b)
 
                 new_let_list.append(le)
-                new_word += chr(le.value)
 
                 if aft_lets is not None:
-                    new_word += aft_word
                     for bi in range(aft_lets.shape[0]):
                         b = aft_lets[bi]
                         new_let_list.append(b)
 
-                #new_word = ''.join(chr(ns.value) for ns in new_let_list)
-
-                if new_word not in aw:
-                    return
-
-                #lo.x(new_word)
                 extra_pts += (<us>Settings.node_board.get_points(new_let_list))
 
                 #new_lets = np.array(new_let_list, dtype=object)
@@ -704,20 +703,19 @@ cpdef void check_and_get(Node[:] node_list, str direc, DTYPE_t[:] word, Py_ssize
 
         word_lets.append(le)
 
-    lsl = np.count_nonzero(ls)
-    if lsl == 0:
+    #lsl = np.count_nonzero(ls)
+    lsl = len(ls)
+    if lsl == lslen:
         return
-
-    #lo.i('GOOD: %s at %s : %s', word, first.str_pos(), last.str_pos())
 
     pts = Settings.node_board.get_points(word_lets) + extra_pts
 
-    if lsl == Settings.letters.shape[0]:
+    if lsl == 0:
         pts += 35
 
     w = WordDict(
         word,
-        direc,
+        is_row,
         pts,
         word_lets
     )
@@ -732,16 +730,7 @@ cpdef void check_and_get(Node[:] node_list, str direc, DTYPE_t[:] word, Py_ssize
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-cpdef void check_nodes(
-    Node[:] nodes,
-    #object[:] sw,
-    DTYPE_t[:, :] sw,
-    #uchr[:] sw,
-    #cnp.ndarray sw,
-    #bytes[:] sw,
-    uchrn[:] swlens,
-    str direc
-) except *:
+cdef void check_nodes(Node[:] nodes, DTYPE_t[:, :] sw, uchrn[:] swlens, bint is_row):
     cdef:
         #str w #, chk_dir
         #(uchr, Py_ssize_t) w
@@ -749,10 +738,9 @@ cpdef void check_nodes(
 
         #cnp.ndarray[:] sw = Settings.search_words
         #Py_ssize_t swl = Settings.search_words_l
-        Py_ssize_t swl = sw.shape[0]
 
         Py_ssize_t word_len, i, j, s, t
-        Py_ssize_t nlen = len(nodes)
+        Py_ssize_t nlen = nodes.shape[0]
         #bytes wc
         Node[:] subnodes
         bint has_edge = False
@@ -774,7 +762,7 @@ cpdef void check_nodes(
     #     chk_dir = 'r'
 
     #for s in range(Settings.search_words_l): # todo swap test
-    for s in range(swl):
+    for s in range(sw.shape[0]):
         #w = sw[s]
         word_len = swlens[s]
 
@@ -793,16 +781,16 @@ cpdef void check_nodes(
                     break
             if has_edge is True:
                 subnodes = nodes[i:word_len + i]
-                check_and_get(subnodes, direc, ww, word_len)
+                check_and_get(subnodes, ww, word_len, is_row)
 
     return
 
 
 # todo: set default for dict? put in settings? move all settings out to options?
-cdef void solve(
+def solve(
     #cnp.ndarray letters, # str
     str dictionary
-) except *:
+) -> None:
     cdef list wordlist = []
     #todo make fnc exception
     try:
@@ -811,7 +799,8 @@ cdef void solve(
         lo.c('Could not find file: {}'.format(exc.filename))
         sys.exit(1)
 
-    cdef uchrn blanks = list(Settings.letters).count(bl)
+    cdef uchrn blanks = Settings.letters.count(bl)
+    #cdef uchrn blanks = list(Settings.letters).count(bl)
     #cdef uchrn blanks = Settings.letters.tolist().count(bl)
     cdef Board full = Settings.node_board
     #cdef str w
@@ -843,10 +832,10 @@ cdef void solve(
     # board[8][10] = 'Y'
     # letters = [b'F', b'G']
 
-    cdef str s
-    cdef set bwords = {s.encode('utf8') for s in words}
-
-    Settings.words = bwords
+    #cdef str s
+    #cdef set bwords = {s for s in words}
+    #Settings.words = bwords
+    Settings.words = words
 
     cdef str sws
     cdef Py_ssize_t swi, swl = len(search_words)
@@ -855,8 +844,8 @@ cdef void solve(
     #cdef uchr ss
     #cdef list sw = [(s.encode('utf8'), len(s)) for s in search_words]
     #cdef cnp.ndarray sw = np.zeros(swl, dtype=f'|S{mnlen}')
-    sw_ = np.array([s for s in search_words])
-    cdef cnp.ndarray sw = sw_.view('uint32').reshape(sw_.shape[0], -1)
+    cdef cnp.ndarray _sw = np.array([s for s in search_words])
+    cdef cnp.ndarray sw = _sw.view('uint32').reshape(_sw.shape[0], -1)
 
     #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, dtype=np.uint8)
     cdef cnp.ndarray swlens = np.zeros((swl,), dtype=np.uint8)
@@ -868,8 +857,8 @@ cdef void solve(
     #Settings.search_words = sw
     #Settings.search_words_l = swl
 
-    cdef cnp.ndarray[object, ndim=2] nodes = full.nodes
-    #cdef cnp.ndarray[:, :] nodes = full.nodes
+    #cdef cnp.ndarray[object, ndim=2] nodes = full.nodes
+    cdef Node[:, :] nodes = full.nodes
     cdef int i, ic, tot
     #cdef list search_rows, search_cols
 
@@ -896,13 +885,13 @@ cdef void solve(
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking row %2i  (%2i / %i)', i, ic, tot)
-            check_nodes(nodes[i], sw, swlens[:], 'r')
+            check_nodes(nodes[i], sw, swlens, True)
 
         for i in search_cols:
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking col %2i  (%2i / %i)', i, ic, tot)
-            check_nodes(nodes[:,i], sw, swlens[:], 'c')
+            check_nodes(nodes[:,i], sw, swlens, False)
 
 
 """
@@ -923,7 +912,7 @@ cdef str _print_node_range(
 cdef void show_solution(
         #WordDict[:]
         cnp.ndarray nodes, list words, bint no_words
-) except *:
+):
     # todo mark blanks
 
     cdef:
@@ -984,7 +973,9 @@ cdef void show_solution(
     print('\nPoints: {}'.format(best.pts))
 
 
-cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level) except *:
+cdef void cmain(
+    str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level
+) except *:
     cdef:
         dict points = {}
         object pdboard
@@ -1026,9 +1017,9 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
             letters.remove(el)
 
     #cdef bytes[:] bletters = [l.encode('utf8') for l in letters]
-    #cdef DTYPE_t[:] bletters = [ord(l) for l in letters]
-    cdef cnp.ndarray bletters = np.array([ord(l) for l in letters], dtype=np.uint32)
-    bletters.sort()
+    cdef list bletters = [ord(l) for l in letters]
+    #cdef cnp.ndarray bletters = np.array([ord(l) for l in letters], dtype=np.uint32)
+    #bletters.sort()
     Settings.letters = bletters
 
     board = pdboard.to_numpy()
@@ -1058,15 +1049,17 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     Settings.board = board
     #Settings.shape = shapez
 
-    cdef dict cpoints = {}  # type: dict
-    cdef lpts_t lpt
+    #cdef dict cpoints = {}
+    cdef cnp.ndarray cl_points = np.zeros(127, dtype=np.uint8)
+    cdef cnp.ndarray cl_amts = np.zeros(127, dtype=np.uint8)
+    #cdef lpts_t lpt
     cdef str k
     cdef list v
     for k, v in points.items():
-        lpt.amt = v[0]
-        lpt.pts = v[1]
-        cpoints[ord(k)] = lpt
-    Settings.points = cpoints
+        cl_amts[ord(k)] = v[0]
+        cl_points[ord(k)] = v[1]
+    Settings.points = cl_points
+    Settings.amts = cl_amts
 
     if lo.is_enabled('s'):
         lo.s('Game Board:\n{}'.format(pdboard))
@@ -1089,7 +1082,11 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
     else:
         has_cache = solution_filename.exists()
 
-    cdef Board full, solution
+    cdef Board full
+    cdef object solution_data
+    cdef Py_ssize_t r, c
+    cdef cnp.ndarray solved_board, s_nodes
+    cdef list s_words
 
     if has_cache is False:
         full = Board(board, default_board)
@@ -1111,14 +1108,17 @@ cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letter
         lo.s('Found existing solution')
         solution_data = np.load(solution_filename)
 
+        print(type(solution_data))
+
         s_nodes = solution_data['nodes']
         s_words = solution_data['words'].tolist()
 
         show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
 
 
-cpdef void main(
+#cpdef void main(
+def main(
     filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = NUM_RESULTS,
     log_level: str = DEFAULT_LOGLEVEL, profile: bool = False
-):
+) -> None:
     cmain(filename, dictionary, no_words, exclude_letters, overwrite, num_results, log_level)
