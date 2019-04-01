@@ -74,7 +74,7 @@ cdef class Letter:
         DTYPE_t value
         # todo define getter
 
-    def __cinit__(self) -> None:
+    def __cinit__(self):
         self.is_blank = False
         self.from_rack = False
         self.pts = 0
@@ -324,7 +324,7 @@ cdef class Board:
 
         self.board = board
         self.default_board = default_board
-        self.nodes = np.zeros_like(default_board, dtype=Node)
+        self.nodes = np.empty_like(default_board, dtype=Node)
 
         self.nodes_rl = board.shape[0]
         self.nodes_cl = board.shape[1]
@@ -728,9 +728,10 @@ cpdef void check_and_get(Node[:] node_list, DTYPE_t[:] word, Py_ssize_t word_len
     Settings.node_board.words.append(w)
 
 
+
 @cython.wraparound(False)
 @cython.boundscheck(False)
-cdef void check_nodes(Node[:] nodes, DTYPE_t[:, :] sw, uchrn[:] swlens, bint is_row):
+cpdef void check_nodes(Node[:] nodes, DTYPE_t[:, :] sw, uchrn[:] swlens, bint is_row):
     cdef:
         #str w #, chk_dir
         #(uchr, Py_ssize_t) w
@@ -861,6 +862,7 @@ def solve(
     cdef Node[:, :] nodes = full.nodes
     cdef int i, ic, tot
     #cdef list search_rows, search_cols
+    cdef bint is_row = True
 
     if full.new_game:
         lo.s(' = Fresh game = ')
@@ -885,13 +887,14 @@ def solve(
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking row %2i  (%2i / %i)', i, ic, tot)
-            check_nodes(nodes[i], sw, swlens, True)
+            check_nodes(nodes[i], sw, swlens, is_row)
 
+        is_row = False
         for i in search_cols:
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking col %2i  (%2i / %i)', i, ic, tot)
-            check_nodes(nodes[:,i], sw, swlens, False)
+            check_nodes(nodes[:,i], sw, swlens, is_row)
 
 
 """
