@@ -47,6 +47,7 @@ class LogWrapper:
             srcfile = __file__[:-4] + '.py'
         else:
             srcfile = __file__
+
         self._srcfile = os.path.normcase(srcfile)
 
         self.skip_main = skip_main
@@ -84,8 +85,7 @@ class LogWrapper:
     def e(self, *_ar, **_kw): pass
     def c(self, *_ar, **_kw): pass
 
-    def l(self, level,  # type: int
- msg, *args, **kwargs):
+    def l(self, level, msg, *args, **kwargs):
         self._log(level, msg, args, **kwargs)
 
     @staticmethod
@@ -104,8 +104,7 @@ class LogWrapper:
         level = self.get_level(level)
         return self._is_enabled(level)
 
-    def _is_enabled(self, level  # type: int
-):
+    def _is_enabled(self, level):
         #todo: cache lookup?
         if level in self.enabled_levels:
             return self.enabled_levels[level]
@@ -114,15 +113,13 @@ class LogWrapper:
             self.enabled_levels[level] = new_level
             return new_level
 
-    def _log(self, level,  # type: int
- msg, args, exc_info=None, extra=None):
+    def _log(self, level, msg, args, exc_info=None, extra=None):
         if not self._is_enabled(level):
             return
         if self._srcfile:
             try:
                 fn, lno, func = self.find_caller()
             except ValueError:
-                print('oops _srcfile')
                 fn, lno, func = "(unk file)", 0, "(unk function)"
         else:
             fn, lno, func = "(unk file)", 0, "(unk function)"
@@ -151,7 +148,6 @@ class LogWrapper:
         while hasattr(f, "f_code"):
             co = f.f_code
             filename = os.path.normcase(co.co_filename)
-            #print(co.co_name)
             if filename == self._srcfile or \
                     (self.skip_main and co.co_name == 'main'):
                 f = f.f_back
@@ -191,9 +187,7 @@ def _set_styles():
 
     return level_styles, field_styles, form
 
-def log_init(level = DEFAULT_LOGLEVEL,
-             skip_main= False,  # type: bool
- **_kwargs):
+def log_init(level = DEFAULT_LOGLEVEL, skip_main= False, **_kwargs):
     """Initialize logger.
     Level can be an integer, or a string in:
         SPAM, DEBUG, VERBOSE, INFO, NOTICE, WARNING, SUCCESS, ERROR, CRITICAL
