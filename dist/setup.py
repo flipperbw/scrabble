@@ -13,7 +13,7 @@ import numpy
 #print(json.dumps(x, indent=4, sort_keys=True))
 #print(Options)
 
-Options.buffer_max_dims = 4
+Options.buffer_max_dims = 3
 Options.closure_freelist_size = 16
 
 
@@ -49,7 +49,11 @@ comp_directives = {
 }
 
 extra_compile_args = [
-    "-Wall", "-Wextra", #'-fopenmp'
+    #"-Wall",
+    "-Wextra",
+    #'-fopenmp'
+    "-ffast-math",  # speed?
+    "-O3"
 ]
 
 #define_macros = [('CYTHON_NO_PYINIT_EXPORT', '1')]
