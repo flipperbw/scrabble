@@ -35,7 +35,7 @@ def parse_args():
         help='Letters to exclude from rack for solution')
 
     parser.add_argument('-r', '--num-results', type=int, default=NUM_RESULTS,
-        help='Number of solutions to show [0 for all] (default: %(default)d')
+        help='Number of solutions to show [0 for all] (default: %(default)d)')
 
     parser.add_argument('-p', '--profile', action='store_true',
         help='Profile the app')

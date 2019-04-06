@@ -73,8 +73,8 @@ DEF bl = ord('?')
 
 
 ctypedef packed struct Letter:
-    bint is_blank
-    bint from_rack
+    BOOL_t is_blank
+    BOOL_t from_rack
     BOOL_t pts
     BOOL_t x
     BOOL_t y
@@ -268,7 +268,7 @@ cdef class Node:
 
         self.letter.is_blank = False
         self.letter.from_rack = False
-        self.letter.pts = 0
+        #self.letter.pts = 0
 
         self.mult_a = mult_a
         self.mult_w = mult_w
@@ -279,14 +279,14 @@ cdef class Node:
 
         if not val:
             self.has_val = False
+            self.letter.value = 0
             self.pts = 0
             self.display = ' '  # todo display method
-            self.letter.value = 0
         else:
             self.has_val = True
+            self.letter.value = ord(val)
             self.pts = Settings.points[self.letter.value]
             self.display = val.upper()
-            self.letter.value = ord(val)
 
             # try:
             #     lpt = Settings.points[self.value]
@@ -294,6 +294,8 @@ cdef class Node:
             # except (KeyError, IndexError):
             #     lo.e('Could not get point value of "{}"'.format(val))
             #     sys.exit(1)
+
+        self.letter.pts = self.pts
 
         self.up = None
         self.down = None
@@ -334,8 +336,8 @@ cdef class Node:
             s = chr(self.letter.value)
         return '<Node: {} v: {}>'.format(self.str_pos(), s)
 
-    # def __repr__(self) -> str:
-    #     return self.__str__()
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 cdef class Board:
@@ -443,25 +445,21 @@ cdef class Board:
             node.up = self.nodes[r-1, c]
             if node.up.has_val:
                 node.has_edge = True
-                return
 
         if r < self.nodes_rl - 1:
             node.down = self.nodes[r+1, c]
             if node.down.has_val:
                 node.has_edge = True
-                return
 
         if c > 0:
             node.left = self.nodes[r, c-1]
             if node.left.has_val:
                 node.has_edge = True
-                return
 
         if c < self.nodes_cl - 1:
             node.right = self.nodes[r, c+1]
             if node.right.has_val:
                 node.has_edge = True
-                return
 
 
     cdef void _set_adj_words(self, Node n, str d):
@@ -481,8 +479,10 @@ cdef class Board:
         elif d == 'left':
             loop_nodes = self.nodes[xx, :yy][::-1]
             rev = True
-        else:
+        elif d == 'right':
             loop_nodes = self.nodes[xx, yy+1:]
+        else:
+            return
 
         cdef:
             Py_ssize_t nl = loop_nodes.shape[0]
@@ -534,6 +534,8 @@ cdef class Board:
 
         cdef BOOL_t i
         # A - Z
+
+        #todo how do i make i not unused
         for i in range(65, 91):
             #rows
             if self._check_adj_words(i, n.up, n.down, n.up_word, n.down_word):
@@ -543,7 +545,7 @@ cdef class Board:
             #cols
             if self._check_adj_words(i, n.left, n.right, n.left_word, n.right_word):
                 n.valid_lets[1, i, 0] = 1
-                n.valid_lets[1, i, 1] = n.left_pts + n.down_pts
+                n.valid_lets[1, i, 1] = n.left_pts + n.right_pts
 
 
     cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w):
@@ -586,8 +588,9 @@ cdef class Board:
 
         #lo.w(f'\n{pd.DataFrame(np.asarray(nodes))}')
 
+        # - iterate through each node
         for t in range(nlen - 1):
-            #lo.i(t)
+            #lo.i(f'=={t}')
 
             if t != 0:
                 # disable for nodes that are too long
@@ -602,21 +605,22 @@ cdef class Board:
             # for all possible wls...
             for l in range(max_swl - t):
                 # for each valid wl, if last node has a val, disable for that wl
-                ai = t + l
-                ai1 = ai + 1
+                #lo.v(l)
+                ai1 = t + l + 1
                 if ai1 < nlen:
                     no = nodes[ai1]
-                    #lo.d(nc)
+                    #lo.d(no)
                     if no.has_val:
-                        #lo.d(f'810: {t} {ai}')
-                        valid_lengths[t, ai] = False
-                        #lo.s(f'{valid_lengths.base[t]}')
+                        #lo.d(f'810: {t} {l}')
+                        valid_lengths[t, l] = False
+                        #lo.e(f'{valid_lengths.base[t]}')
                         continue
 
                 has_edge = False
                 has_blanks = False
 
                 #lo.v(f'{t}:{ai1}')
+
                 # ..this should go in reverse, set all, then stop (and set all other nodes too)
                 # if no edges or blanks, disable for that wl
 
@@ -644,12 +648,8 @@ cdef class Board:
 
 
         for t in range(nlen):
-            #no = nodes[t]
-            lo.v(nodes[t].valid_lengths[not is_row])
             nodes[t].valid_lengths[not is_row] = valid_lengths[t]
-            lo.v(nodes[t].valid_lengths[not is_row])
-            #lo.v(nodes[t])
-            #lo.v(nodes[t].base)
+            #lo.e(nodes[t].valid_lengths.base[not is_row])
 
 
     def __str__(self) -> str:
@@ -665,7 +665,7 @@ cdef class Board:
 #todo what is the difference in not setting cdef? infer types?
 
 
-cdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] lets_info, bint is_row):
+cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] lets_info, bint is_row):
     # todo fix this letter stuff
 
     cdef:
@@ -673,16 +673,14 @@ cdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] l
         Node nd
         STR_t nv
         Letter le
-        SIZE_t pts, extra_pts  # todo: does sizet work?
-        list word_lets
+        BOOL_t lpts
+        #BOOL_t bl = Settings.blanks
+        SIZE_t pts = 0  # todo: does sizet work?
+        SIZE_t extra_pts
+        SIZE_t tot_extra_pts = 0
+        SIZE_t tot_pts
+        uchr word_mult = 1
         WordDict w
-        BOOL_t bl = Settings.blanks
-
-    lo.e(wl)
-    lo.e(ww.shape)
-
-    pts = 0
-    word_lets = []
 
     # TODO HANDLE BLANKS
 
@@ -691,59 +689,42 @@ cdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] l
         nd = w_nodes[i]
         le = lets_info[i]
 
-        if not letter.from_rack:
-            pts += le.pts
-        elif not letter.is_blank:
-            p = letter.pts
+        #lo.d(type(le))  # todo: is this actually a dict?
 
-            if letter.mult_w == o_l:
-                p *= letter.mult_a
-            elif letter.mult_w == o_w:
-                word_mult *= letter.mult_a
+        # le.from_rack
+        if not nd.has_val and nd.mult_w:
+            word_mult *= nd.mult_a
 
-            pts += p
+        lpts = le.pts
+        pts += lpts
 
-        pts *= word_mult
-
-
-
-
+        # make sure this isnt counting has_val and upper words
         extra_pts = nd.valid_lets[not is_row, nv, 1]
         if extra_pts > 0:
-            extra_pts += le.pts
-            if
-            #pts += extra_pts + <SIZE_t>le.pts
+            extra_pts += lpts
+            if nd.mult_w:
+                extra_pts *= nd.mult_a
+            tot_extra_pts += extra_pts
 
-        word_lets.append(le)
+    pts *= word_mult
 
+    cdef int lcnt = 0
+    for le in lets_info:
+        if le.from_rack:
+            lcnt += 1
 
+    if lcnt == 7:
+        lo.e('full word!!')
+        pts += 35
 
-#         le.from_rack = True
-#
-#         if not is_blank:
-#             le.pts = spts[nv]
-#         else:
-#             le.is_blank = True
-#
-#
-#
-#     #lsl = np.count_nonzero(ls)
-
-#
-#     if lsl == 0:
-#         pts += 35
-#
-
-
+    tot_pts = pts + tot_extra_pts
 
     w = WordDict(
         ww,
         is_row,
-        pts,
+        tot_pts,
         list(lets_info)
     )
-
-    lo.d(w)
 
     # if w not in Settings.node_board.words:
     #     Settings.node_board.words.append(w)
@@ -808,17 +789,12 @@ cdef object rack_match(STR_t[:] word, Py_ssize_t wl, Node[:] nodes):
     for i in range(wl):
         n = nodes[i]
         le = n.letter
-        lo.w(n.letter)
 
         if n.has_val:
             let_info[i] = le
             continue
 
-        lo.w('do these match?')
         le.from_rack = True
-        lo.w(le)
-
-        # le.pts = 0
 
         let = word[i]
         le.value = let
@@ -839,6 +815,10 @@ cdef object rack_match(STR_t[:] word, Py_ssize_t wl, Node[:] nodes):
                 lepts *= n.mult_a
 
             le.pts = lepts
+
+        let_info[i] = le
+
+    #lo.v(let_info.base)
 
     if <Py_ssize_t>rack.base.sum() == Settings.rack_s:
         return
@@ -868,7 +848,7 @@ cpdef void check_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
 
         Node n
 
-        Py_ssize_t word_len, t, s, i, i_n
+        Py_ssize_t word_len, t, s, i_n
         Py_ssize_t nlen = nodes.shape[0]
 
         bint bhas_edge = False
@@ -904,25 +884,33 @@ cpdef void check_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
 
         #for i in prange(nlen - word_len + 1, nogil=True):
 
+
         for i_n in range(nlen):
             # todo swap row and col
             # - is the word length valid?
             no = nodes[i_n]
+
+
             if not no.valid_lengths[not is_row, word_len - 1]:
+                #lo.e('not valid')
                 continue
 
             w_nodes = nodes[i_n : i_n + word_len]
 
             # - do the letters match the board?
             if not lets_match(w_nodes, ww, word_len, is_row):
+                #lo.e('dont match')
                 continue
 
             # - do we have enough in the rack?
             lets_info = rack_match(ww, word_len, w_nodes)  # array of ints for word blank lets
             if not lets_info:
+                #lo.e('not rack')
                 continue
 
             # -- the word can be made
+
+            #lo.s('can make')
 
             set_word_dict(ww, word_len, w_nodes, lets_info, is_row)
 
@@ -1010,6 +998,8 @@ cdef void solve(str dictionary):
     #cdef list search_rows, search_cols
     cdef bint is_row
     #cdef Node[::1] sing_nodes
+
+    lo.s('Solving...\n')
 
     if full.new_game:
         lo.s(' = Fresh game = ')
@@ -1211,6 +1201,7 @@ cdef void cmain(
 
     if lo.is_enabled('s'):
         lo.s('Game Board:\n{}'.format(pdboard))
+        lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
         lo.s('Rack:\n{}'.format(rack))
         print()
     else:
@@ -1251,7 +1242,6 @@ cdef void cmain(
     cdef list s_words
 
     if has_cache is False:
-        lo.s('Solving...\n')
         solve(dictionary)
 
         solved_board = np.zeros(Settings.shape, dtype=np.object_)

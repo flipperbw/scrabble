@@ -13,10 +13,10 @@ import numpy
 #print(json.dumps(x, indent=4, sort_keys=True))
 #print(Options)
 
-Options.buffer_max_dims = 3
+Options.buffer_max_dims = 4
 Options.closure_freelist_size = 16
 
-
+# noinspection PyDictCreation
 comp_directives = {
     "auto_pickle": False,
     "autotestdict": False,
@@ -48,12 +48,17 @@ comp_directives = {
     #"wraparound": true
 }
 
+comp_directives['autotestdict'] = True
+comp_directives['boundscheck'] = True
+comp_directives['initializedcheck'] = True
+
 extra_compile_args = [
     #"-Wall",
     "-Wextra",
     #'-fopenmp'
     "-ffast-math",  # speed?
     "-O3"
+    #"-O1"
 ]
 
 #define_macros = [('CYTHON_NO_PYINIT_EXPORT', '1')]

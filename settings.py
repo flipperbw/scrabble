@@ -80,7 +80,7 @@ LETTERS = ['']
 SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
 
 #SEARCH_WORDS = (75000, 80000)
-#SEARCH_WORDS = {'EISWEIN', 'ESIN'}
+#SEARCH_WORDS = {'AXLIKE', 'SEA', 'SEI', 'ASDAZSD', 'XI', 'XIS'}
 
 
 # - NODES

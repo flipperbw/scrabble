@@ -772,12 +772,14 @@ def show_solution(no_words=False  # type: bool
         newlist = sorted(Settings.word_info, key=lambda k: k['pts'], reverse=True)
         best_data = newlist[:1][0]
 
+        num_top = 25
+
         if lo.is_enabled('s'):
             #todo fix this
             top10 = []  # type: List[dict]
             seen = [(best_data['pts'], best_data['word'])]
             for n in newlist:
-                if len(top10) == 10:
+                if len(top10) == num_top:
                     break
                 seen_tup = (n['pts'], n['word'])
                 if seen_tup in seen:
@@ -788,7 +790,7 @@ def show_solution(no_words=False  # type: bool
             top10.reverse()
 
             print()
-            lo.s('-- Top 10 --\n')
+            lo.s(f'-- Top {num_top} --\n')
             for sidx, s in enumerate(top10):
                 lo.s('Choice #{}\n{}\n'.format(sidx + 1, _print_result(s, no_words)))
 
