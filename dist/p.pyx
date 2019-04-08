@@ -127,57 +127,7 @@ def rebuild_letter(is_blank, from_rack, pts, mult, x, y, value):
 """
 
 
-#ctypedef class WordDict:
-cdef class WordDict:
-    cdef:
-        #DTYPE_t[:] _word
-        str word
-        #uchrp word
-        bint _is_row
-        str direc
-        readonly SIZE_t pts
-        list letters  # of Letter
-        #Letter letters[100]
-
-    def __cinit__(self, STR_t[:] word, bint is_row, SIZE_t pts, list letters):
-        #self._word = word
-        self.word = ''.join([chr(l) for l in word])
-        self._is_row = is_row
-        self.direc = 'row' if self._is_row is True else 'col'
-        self.pts = pts
-        self.letters = letters
-
-    cdef str sol(self):
-        cdef Letter lf = self.letters[0]
-        cdef Letter ll = self.letters[-1]
-        return 'pts: {:3d} | dir: "{}" | pos: [{:2d},{:2d}] - [{:2d},{:2d}] | w: {}'.format(
-            self.pts, self.direc, lf.x, lf.y, ll.x, ll.y, self.word
-        )
-
-    # def __str__(self) -> str:
-    #     # cdef Letter l
-    #     # cdef list ll = []
-    #     # cdef str li
-    #     # for l in self.letters:
-    #     #     li = str(l)
-    #     #     ll.append(li)
-    #     # cdef str ls = '\n  '.join(ll)
-    #     return '<w: {} | pts: {} | dir: {} | letts: [\n  {}\n]>'.format(
-    #         self.word, self.pts, self.direc, '\n  '.join([str(l) for l in self.letters])
-    #     )
-    #
-    # def __repr__(self) -> str:
-    #     return self.__str__()
-
-    def __reduce__(self):
-        return rebuild_worddict, (self.word, self._is_row, self.pts, self.letters)
-
-def rebuild_worddict(_word, is_row, pts, letters):
-    #cdef DTYPE_t[:] word = np.array([ord(w) for w in _word], dtype=DTYPE)
-    word = np.array([ord(w) for w in _word], dtype=STR)
-    return WordDict(word, is_row, pts, letters)
-
-
+@cython.final(True)
 cdef class CSettings:
     cdef:
         #(Py_ssize_t, Py_ssize_t) shape
@@ -230,6 +180,90 @@ cdef class CSettings:
 cdef CSettings Settings = CSettings()
 
 
+#ctypedef class WordDict:
+
+
+@cython.final(True)
+@cython.freelist(10000)
+cdef class WordDict:
+    cdef:
+        #str word
+        STR_t[:] word
+        Py_ssize_t wl, s
+        bint is_col
+        readonly SIZE_t pts
+        list letters  # of Letter
+        #Letter[:] letters
+        #Letter letters[100]
+
+    #Letter[:] letters
+    def __cinit__(
+        self, STR_t[:] word, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t pts, list letters not None
+    ):
+        #self._word = word
+        #self.word = ''.join([chr(l) for l in word])
+
+        self.word = word
+        self.wl = wl
+        self.s = s
+        self.is_col = is_col
+        self.pts = pts
+        #self.letters = letters[:wl]
+        self.letters = letters
+
+    cdef str sol(self):
+        cdef Letter lf = self.letters[0]
+        cdef Letter ll = self.letters[-1]
+        cdef str direc = 'col' if self.is_col is True else 'row'
+
+        # lo.e(self.word.base.view(f'<U{self.word.base.shape[1]}')[self.s, 0])
+        # lo.e(self.word.base.view(f'<U{self.word.base.shape[1]}')[self.s])
+        # lo.e(self.word.base[self.s].view(f'<U{self.word.base.shape[1]}'))
+
+        #cdef str word = ''.join([chr(l) for l in self.word])
+        cdef str word = ''
+        cdef Py_ssize_t i
+        for i in range(self.wl):
+            word += <str>chr(<STR_t>self.word[i])
+
+        return 'pts: {:3d} | dir: "{}" | pos: [{:2d},{:2d}] - [{:2d},{:2d}] | w: {}'.format(
+            <STR_t>self.pts, direc, lf.x, lf.y, ll.x, ll.y, word
+        )
+
+    # def __str__(self) -> str:
+    #     # cdef Letter l
+    #     # cdef list ll = []
+    #     # cdef str li
+    #     # for l in self.letters:
+    #     #     li = str(l)
+    #     #     ll.append(li)
+    #     # cdef str ls = '\n  '.join(ll)
+    #     return '<w: {} | pts: {} | dir: {} | letts: [\n  {}\n]>'.format(
+    #         self.word, self.pts, self.direc, '\n  '.join([str(l) for l in self.letters])
+    #     )
+    #
+    # def __repr__(self) -> str:
+    #     return self.__str__()
+
+    def __reduce__(self):
+        return rebuild_worddict, (
+            self.word.base[self.s, :self.wl],
+            self.wl,
+            self.s,
+            self.is_col,
+            self.pts,
+            # np.array(self.letters, [
+            #     ('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)
+            # ])
+            self.letters
+        )
+
+def rebuild_worddict(_word, wl, s, is_col, pts, letters):
+    #cdef STR_t[:] word = np.array([ord(w) for w in _word], dtype=STR)
+    return WordDict(_word, wl, s, is_col, pts, letters)
+
+
+@cython.final(True)
 cdef class Node:
     cdef:
         #uchr x, y
@@ -340,6 +374,7 @@ cdef class Node:
         return self.__str__()
 
 
+@cython.final(True)
 cdef class Board:
     cdef:
         #object[:, :] board, default_board
@@ -420,9 +455,9 @@ cdef class Board:
                 self._set_lets(node)
 
         for r in range(Settings.shape[0]):
-            self._set_map(self.nodes[r], 1)
+            self._set_map(self.nodes[r], 0)
         for r in range(Settings.shape[1]):
-            self._set_map(self.nodes[:, r], 0)
+            self._set_map(self.nodes[:, r], 1)
 
 
     #@lru_cache(1023)  # todo reenable?
@@ -560,11 +595,11 @@ cdef class Board:
         return new_word in Settings.words
 
 
-    cdef void _set_map(self, Node[:] nodes, bint is_row):
+    cdef void _set_map(self, Node[:] nodes, bint is_col):
         cdef:
-            Py_ssize_t t, l, e, ai, ai1
+            Py_ssize_t t, l, e, ai1
             Py_ssize_t nlen = nodes.shape[0]
-            Py_ssize_t max_swl = Settings.shape[not is_row]
+            Py_ssize_t max_swl = Settings.shape[is_col]
 
             # todo this vs numpy bint?
             cdef bint has_edge, has_blanks
@@ -648,8 +683,8 @@ cdef class Board:
 
 
         for t in range(nlen):
-            nodes[t].valid_lengths[not is_row] = valid_lengths[t]
-            #lo.e(nodes[t].valid_lengths.base[not is_row])
+            nodes[t].valid_lengths[is_col] = valid_lengths[t]
+            #lo.e(nodes[t].valid_lengths.base[is_col])
 
 
     def __str__(self) -> str:
@@ -665,31 +700,40 @@ cdef class Board:
 #todo what is the difference in not setting cdef? infer types?
 
 
-cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] lets_info, bint is_row):
-    # todo fix this letter stuff
-
+# @cython.binding(True)
+# @cython.linetrace(True)
+# @cython.wraparound(False)
+# cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
+@cython.wraparound(False)
+cdef SIZE_t set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
     cdef:
         Py_ssize_t i
+        Py_ssize_t lcnt = 0
         Node nd
         STR_t nv
         Letter le
         BOOL_t lpts
         #BOOL_t bl = Settings.blanks
-        SIZE_t pts = 0  # todo: does sizet work?
+        SIZE_t pts = 0  # todo: is sizet needed or better?
         SIZE_t extra_pts
         SIZE_t tot_extra_pts = 0
         SIZE_t tot_pts
         uchr word_mult = 1
-        WordDict w
+        #WordDict w
 
     # TODO HANDLE BLANKS
 
+    # todo fix this letter stuff
+
     for i in range(wl):
         nv = ww[i]
-        nd = w_nodes[i]
+        nd = nodes[i + start]
         le = lets_info[i]
 
         #lo.d(type(le))  # todo: is this actually a dict?
+
+        if le.from_rack:
+            lcnt += 1
 
         # le.from_rack
         if not nd.has_val and nd.mult_w:
@@ -699,7 +743,7 @@ cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] 
         pts += lpts
 
         # make sure this isnt counting has_val and upper words
-        extra_pts = nd.valid_lets[not is_row, nv, 1]
+        extra_pts = nd.valid_lets[is_col, nv, 1]
         if extra_pts > 0:
             extra_pts += lpts
             if nd.mult_w:
@@ -708,47 +752,42 @@ cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] w_nodes, Letter[:] 
 
     pts *= word_mult
 
-    cdef int lcnt = 0
-    for le in lets_info:
-        if le.from_rack:
-            lcnt += 1
-
     if lcnt == 7:
-        lo.e('full word!!')
         pts += 35
 
     tot_pts = pts + tot_extra_pts
 
-    w = WordDict(
-        ww,
-        is_row,
-        tot_pts,
-        list(lets_info)
-    )
+    return tot_pts
 
-    # if w not in Settings.node_board.words:
-    #     Settings.node_board.words.append(w)
-    # else:
-    #     lo.e('already saw %s', w)
+    # w = WordDict(
+    #     ww,
+    #     is_col,
+    #     tot_pts,
+    #     list(lets_info[:wl])
+    # )
+    #
+    # # if w not in Settings.node_board.words:
+    # #     Settings.node_board.words.append(w)
+    # # else:
+    # #     lo.e('already saw %s', w)
+    #
+    # Settings.node_board.words.append(w)
 
-    Settings.node_board.words.append(w)
-
+def _u2(): pass
 
 #todo should this be pyssize for word?
 @cython.wraparound(False)
-cdef bint lets_match(Node[:] nodes, STR_t[:] word, Py_ssize_t wl, bint is_row):
+cdef bint lets_match(STR_t[:] word, Py_ssize_t wl, STR_t[:, :, :, :] vl_list, bint is_col, Py_ssize_t start):
     cdef Py_ssize_t i
     cdef STR_t nv
-    cdef Node no
 
     for i in range(wl):
         nv = word[i]
-        no = nodes[i]
         # mismatch in nv?
-        if not no.valid_lets[not is_row, nv, 0]:
-            return 0
+        if not vl_list[i + start, is_col, nv, 0]:
+            return False
 
-    return 1
+    return True
 
 
 # - todo fix 127s so its just the letter?
@@ -758,40 +797,102 @@ cdef bint lets_match(Node[:] nodes, STR_t[:] word, Py_ssize_t wl, bint is_row):
 # todo indicate error
 # return c type or pointer?
 
-cdef object rack_match(STR_t[:] word, Py_ssize_t wl, Node[:] nodes):
+# ctypedef struct Letter_list:
+#     Letter
+
+#cdef object nz = np.zeros  # todo
+
+cdef Letter[:] lets_empty = np.empty(15, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
+
+#ctypedef (bint, Letter[:]) lets_ret
+# ctypedef packed struct lets_ret:
+#     bint success
+#     Letter[:] letters
+
+#DEF nu = NULL
+
+
+@cython.wraparound(False)
+cdef bint rack_check(STR_t[:] word, Py_ssize_t wl, BOOL_t[:] nvals, Py_ssize_t start):
+    # todo this vs numpy ssize?
+    cdef Py_ssize_t i
+    cdef BOOL_t nval
+
+    cdef STR_t let
+    cdef BOOL_t num
+
+    cdef BOOL_t[:] rack = Settings.rack.copy()
+
+    #cdef BOOL_t[:] rack = rack_empty.copy()
+    #cdef BOOL_t[:] rack = np.zeros(127, dtype=BOOL)
+    #cdef uchr[:] rack = np.zeros(127, dtype=BOOL)
+
+    cdef BOOL_t blanks = Settings.blanks
+
+    #rack = Settings.rack.copy()
+
+    for i in range(wl):
+        nval = nvals[i + start]
+
+        # todo remove
+        if nval:
+            continue
+
+        let = word[i]
+        num = rack[let]
+
+        if not num:
+            if blanks > 0:
+                blanks -= 1
+            else:
+                return False
+        else:
+            rack[let] -= 1
+
+    # todo need?
+    # if np.sum(rack) == Settings.rack_s:
+    #     lo.e('no letters used')
+    #     return
+
+    return True
+
+
+@cython.wraparound(False)
+cdef Letter[:] rack_match(STR_t[:] word, Py_ssize_t wl, Node[:] nodes, Py_ssize_t start):
     cdef:
         # todo this vs numpy ssize?
         Py_ssize_t i
         STR_t let
-        BOOL_t[:] rack = np.zeros(127, dtype=BOOL)
+
+        BOOL_t[:] rack = Settings.rack.copy()
+        #BOOL_t[:] rack = rack_empty.copy()
+        #BOOL_t[:] rack = np.zeros(127, dtype=BOOL)
         #uchr[:] rack = np.zeros(127, dtype=BOOL)
+
         BOOL_t num
 
         #int?
-        #BOOL_t[:] let_blanks = np.zeros(wl, dtype=BOOL)
-        Letter[:] let_info = np.zeros(wl, dtype=[
-            ('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)
-        ])
-        # bint, bint, BOOL_t, BOOL_t, BOOL_t, STR_t
+        Letter[:] lets_info = lets_empty.copy()
+
+        #list npa = [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)]
+        #Letter[:] lets_info = np.empty(wl, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
+        #Letter[:] lets_info = np.zeros(wl, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
+        #Letter lets_info[wl]
 
         Letter le
 
-        BOOL_t blanks = Settings.blanks
         BOOL_t[:] spts = Settings.points
         BOOL_t lepts
 
         Node n
 
-    rack[:] = Settings.rack
-
-    # todo is it faster to check first, then make new letters?
 
     for i in range(wl):
-        n = nodes[i]
+        n = nodes[i + start]
         le = n.letter
 
         if n.has_val:
-            let_info[i] = le
+            lets_info[i] = le
             continue
 
         le.from_rack = True
@@ -801,13 +902,7 @@ cdef object rack_match(STR_t[:] word, Py_ssize_t wl, Node[:] nodes):
         num = rack[let]
 
         if not num:
-            if blanks > 0:
-                #lo.d('removed blank: %s', blanks)
-                blanks -= 1
-                rack[bl] -= 1
-                le.is_blank = True
-            else:
-                return
+            le.is_blank = True
         else:
             rack[let] -= 1
             lepts = spts[let]
@@ -816,40 +911,65 @@ cdef object rack_match(STR_t[:] word, Py_ssize_t wl, Node[:] nodes):
 
             le.pts = lepts
 
-        let_info[i] = le
+        lets_info[i] = le
 
-    #lo.v(let_info.base)
-
-    if <Py_ssize_t>rack.base.sum() == Settings.rack_s:
-        return
-
-    return let_info
-
-    # nvs = np.searchsorted(ls, nv)
-    # nvs = npss(ls, nv)
-    # befls = ls[:nvs]
-    # aftls = ls[nvs+1:]
-    # ls = np.concatenate([
-    #     zl,
-    #     befls,
-    #     aftls
-    # ])  # out=ls?
-
-    # lsl = np.count_nonzero(ls)
+    return lets_info[:wl]
 
 
+# nvs = np.searchsorted(ls, nv)
+# nvs = npss(ls, nv)
+# befls = ls[:nvs]
+# aftls = ls[nvs+1:]
+# ls = np.concatenate([
+#     zl,
+#     befls,
+#     aftls
+# ])  # out=ls?
+
+# lsl = np.count_nonzero(ls)
+
+
+# @cython.wraparound(False)
+# cdef bint check_nodes(
+#     STR_t[:] ww, Py_ssize_t wl, Py_ssize_t sn, bint is_col, BOOL_t[:, :, :] vlens, STR_t[:, :, :, :] vlets, BOOL_t[:] nvals
+# ):
+#     # - is the word length valid?
+#     if not vlens[sn, is_col, wl - 1]:
+#         #lo.e('not valid')
+#         return False
+#
+#     # - do the letters match the board?
+#     if lets_match(ww, wl, vlets, is_col, sn) is False:
+#         #lo.e('dont match')
+#         return False
+#
+#     # - do we have enough in the rack?
+#     if rack_check(ww, wl, nvals, sn) is False:
+#         return False
+#
+#     return True
+
+
+
+@cython.binding(True)
+@cython.linetrace(True)
 @cython.wraparound(False)
-cpdef void check_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_row) except *:
+cpdef void parse_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_col):
+# @cython.wraparound(False)
+# cdef void parse_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_col):
     cdef:
-        #str w #, chk_dir
         #(uchrp, Py_ssize_t) w
         #cnp.ndarray[:] sw = Settings.search_words
         #Py_ssize_t swl = Settings.search_words_l
 
+        Py_ssize_t t
+        Py_ssize_t nlen = nodes.shape[0]
+
         Node n
 
-        Py_ssize_t word_len, t, s, i_n
-        Py_ssize_t nlen = nodes.shape[0]
+        BOOL_t[:, :, :] vlens = np.empty((nlen, 2, max(Settings.shape)), dtype=BOOL)
+        STR_t[:, :, :, :] vlets = np.empty((nlen, 2, 127, 2), dtype=STR)
+        BOOL_t[:] nvals = np.empty(nlen, BOOL)
 
         bint bhas_edge = False
 
@@ -859,60 +979,82 @@ cpdef void check_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
         n = nodes[t]
         if n.has_edge:
             bhas_edge = True
-            break
+        nvals[t] = n.has_val
+        vlets[t] = n.valid_lets
+        vlens[t] = n.valid_lengths
+
     if not bhas_edge:
-        lo.w('[empty]')
+        lo.i('-> [empty]')
         return
 
     cdef:
-        Node no
+        Py_ssize_t s, wl, sn
         STR_t[:] ww
-        Node[:] w_nodes
-        object lets_info
+        Letter[:] lets_info
+        bint matches
+        SIZE_t tot_pts
 
-    #for s in range(Settings.search_words_l): # todo swap test
+
+    #Settings.search_words_l  # todo swap test
+
     for s in range(sw.shape[0]):
         #w = sw[s]
         # is there a problem with the conversion here
-        word_len = swlens[s]
-        if word_len > nlen:
+        wl = swlens[s]
+        if wl > nlen:
             continue
+
+        #wl1 =  wl - 1
 
         ww = sw[s]
         # vs ww[:] = ...
         #lo.d(sw.base.view(f'<U{sw.shape[1]}')[s, 0])
 
-        #for i in prange(nlen - word_len + 1, nogil=True):
+        #for i in prange(nlen - wl + 1, nogil=True):
 
-
-        for i_n in range(nlen):
-            # todo swap row and col
-            # - is the word length valid?
-            no = nodes[i_n]
-
-
-            if not no.valid_lengths[not is_row, word_len - 1]:
+        for sn in range(nlen):
+            if not vlens[sn, is_col, wl - 1]:
                 #lo.e('not valid')
                 continue
 
-            w_nodes = nodes[i_n : i_n + word_len]
-
             # - do the letters match the board?
-            if not lets_match(w_nodes, ww, word_len, is_row):
+            if lets_match(ww, wl, vlets, is_col, sn) is False:
                 #lo.e('dont match')
                 continue
 
             # - do we have enough in the rack?
-            lets_info = rack_match(ww, word_len, w_nodes)  # array of ints for word blank lets
-            if not lets_info:
-                #lo.e('not rack')
+            matches = rack_check(ww, wl, nvals, sn)
+            if matches is False:
                 continue
 
-            # -- the word can be made
+            # matches = check_nodes(ww, wl, sn, is_col, vlens, vlets, nvals)
+            # if matches is True:
+                #lo.s('can make')
 
-            #lo.s('can make')
+            lets_info = rack_match(ww, wl, nodes, sn)
 
-            set_word_dict(ww, word_len, w_nodes, lets_info, is_row)
+            tot_pts = set_word_dict(ww, wl, nodes, lets_info, is_col, sn)
+
+            w = WordDict(
+                ww,
+                wl,
+                s,
+                is_col,
+                tot_pts,
+                list(lets_info)
+            )
+
+            # if w not in Settings.node_board.words:
+            #     Settings.node_board.words.append(w)
+            # else:
+            #     lo.e('already saw %s', w)
+
+            Settings.node_board.words.append(w)
+
+    return
+
+
+def _unused(): pass
 
 
 # todo: set default for dict? put in settings? move all settings out to options?
@@ -978,7 +1120,7 @@ cdef void solve(str dictionary):
         .view(STR).reshape(swl, -1)
 
     #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, dtype=np.uint8)
-    cdef SIZE_t[:] swlens = np.zeros(swl, dtype=SIZE)
+    cdef SIZE_t[:] swlens = np.empty(swl, dtype=SIZE)
 
     for swi, sws in enumerate(search_words):
         #sw[swi] = sws.encode('utf8')
@@ -996,7 +1138,7 @@ cdef void solve(str dictionary):
     cdef Py_ssize_t i, tot
     cdef int ic
     #cdef list search_rows, search_cols
-    cdef bint is_row
+    cdef bint is_col
     #cdef Node[::1] sing_nodes
 
     lo.s('Solving...\n')
@@ -1020,21 +1162,21 @@ cdef void solve(str dictionary):
         ic = 0
         tot = len(search_rows) + len(search_cols)
 
-        is_row = True
+        is_col = False
         for i in search_rows:
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking row %2i  (%2i / %i)', i, ic, tot)
             #sing_nodes = nodes[i]
-            check_nodes(nodes[i], sw, swlens, is_row)
+            parse_nodes(nodes[i], sw, swlens, is_col)
 
-        is_row = False
+        is_col = True
         for i in search_cols:
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking col %2i  (%2i / %i)', i, ic, tot)
             #sing_nodes = nodes[:,i]
-            check_nodes(nodes[:,i], sw, swlens, is_row)
+            parse_nodes(nodes[:,i], sw, swlens, is_col)
 
 
 """
@@ -1117,9 +1259,12 @@ cdef void show_solution(
     print('\nPoints: {}'.format(best.pts))
 
 
+# except *
+
+
 cdef void cmain(
     str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level
-) except *:
+):
     cdef:
         dict points = {}
         object pdboard
@@ -1262,9 +1407,9 @@ cdef void cmain(
         show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
 
 
-#cpdef void main(
-cpdef void main(
+# def
+def main(
     filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = NUM_RESULTS,
-    log_level: str = DEFAULT_LOGLEVEL, profile: bool = False
-):
+    log_level: str = DEFAULT_LOGLEVEL, **_kw
+) -> None:
     cmain(filename, dictionary, no_words, exclude_letters, overwrite, num_results, log_level)

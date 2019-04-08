@@ -13,8 +13,8 @@ import numpy
 #print(json.dumps(x, indent=4, sort_keys=True))
 #print(Options)
 
-Options.buffer_max_dims = 4
-Options.closure_freelist_size = 16
+Options.buffer_max_dims = 5
+Options.closure_freelist_size = 255
 
 # noinspection PyDictCreation
 comp_directives = {
@@ -48,9 +48,9 @@ comp_directives = {
     #"wraparound": true
 }
 
-comp_directives['autotestdict'] = True
-comp_directives['boundscheck'] = True
-comp_directives['initializedcheck'] = True
+# comp_directives['autotestdict'] = True
+# comp_directives['boundscheck'] = True
+# comp_directives['initializedcheck'] = True
 
 extra_compile_args = [
     #"-Wall",
@@ -64,17 +64,17 @@ extra_compile_args = [
 #define_macros = [('CYTHON_NO_PYINIT_EXPORT', '1')]
 define_macros: list = [('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION')]
 
-if '--prof' in sys.argv:
+if '--profile' in sys.argv:
     comp_directives['profile'] = True
-    #comp_directives['binding'] = True
 
-    sys.argv.remove('--prof')
+    sys.argv.remove('--profile')
 
 elif '--trace' in sys.argv:
-    comp_directives['linetrace'] = True
-    comp_directives['binding'] = True
+    # comp_directives['linetrace'] = True
+    # comp_directives['binding'] = True
 
-    define_macros.append(('CYTHON_TRACE', '1'))
+    #define_macros.append(('CYTHON_TRACE', '1'))
+    define_macros.append(('CYTHON_TRACE_NOGIL', '1'))
 
     sys.argv.remove('--trace')
 
@@ -88,7 +88,7 @@ ext_modules = [
         ["*.pyx"],
         extra_compile_args=extra_compile_args,
         define_macros=define_macros,
-        include_dirs=[numpy.get_include()],
+        #include_dirs=[numpy.get_include()],
         #extra_link_args=['-fopenmp']
     )
 ]

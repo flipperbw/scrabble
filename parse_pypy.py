@@ -772,7 +772,7 @@ def show_solution(no_words=False  # type: bool
         newlist = sorted(Settings.word_info, key=lambda k: k['pts'], reverse=True)
         best_data = newlist[:1][0]
 
-        num_top = 25
+        num_top = 15
 
         if lo.is_enabled('s'):
             #todo fix this

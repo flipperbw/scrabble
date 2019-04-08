@@ -39,6 +39,8 @@ def parse_args():
 
     parser.add_argument('-p', '--profile', action='store_true',
         help='Profile the app')
+    parser.add_argument('-x', '--trace', action='store_true',
+        help='Trace the app')
 
     return parser.parse_args()
 
@@ -53,12 +55,29 @@ if __name__ == '__main__':
     import p
 
     if dargs['profile'] is True:
+        import cProfile
+        import pstats
+
+        #cProfile.runctx('p.main(**dargs)', globals(), locals(), 'p.prof')
+        cProfile.run('p.main(**dargs)', 'p.prof')
+
+        s = pstats.Stats('p.prof')
+        s.sort_stats('time').print_stats(20)
+
+    elif dargs['trace'] is True:
         import line_profiler
+
         profile = line_profiler.LineProfiler(
-            p.check_and_get,
-            p.check_nodes
+            p.parse_nodes,
+            # p.set_word_dict,
+            # p.rack_check,
+            # p.lets_match,
+
+            # p.rack_match,
+            # p.check_nodes,
         )
-        profile.runcall(p.main, **dargs)
+        profile.runctx('p.main(**dargs)', globals(), locals())
         profile.print_stats()
+
     else:
         p.main(**dargs)
