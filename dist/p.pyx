@@ -19,19 +19,14 @@ import numpy as np
 import pandas as pd  # remove
 
 from logs import log_init
+
 import settings as _s
 
 #cnp.import_array()
 
 
-cdef str DEFAULT_LOGLEVEL = 'SUCCESS'
-cdef str DICTIONARY = 'wwf'
-cdef int NUM_RESULTS = 15
+cdef object lo = log_init(_s.DEFAULT_LOGLEVEL)
 
-
-cdef object lo = log_init(DEFAULT_LOGLEVEL)
-
-#cdef object exc
 
 #ctypedef unsigned short us
 ctypedef unsigned char uchr
@@ -174,7 +169,7 @@ cdef class CSettings:
 
         self.words = set()  ## type: Set[bytes]
         self.node_board = None
-        self.num_results = NUM_RESULTS
+        self.num_results = _s.NUM_RESULTS
 
 
 cdef CSettings Settings = CSettings()
@@ -182,9 +177,8 @@ cdef CSettings Settings = CSettings()
 
 #ctypedef class WordDict:
 
-
+#@cython.freelist(10000)
 @cython.final(True)
-@cython.freelist(10000)
 cdef class WordDict:
     cdef:
         #str word
@@ -199,7 +193,11 @@ cdef class WordDict:
     #Letter[:] letters
     def __cinit__(
         self, STR_t[:] word, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t pts, list letters not None
+        #self, STR_t[:] word, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t pts, Letter[:] letters
     ):
+        # lo.e(letters)
+        # lo.e(letters.shape)
+        # lo.e(letters[0])
         #self._word = word
         #self.word = ''.join([chr(l) for l in word])
 
@@ -208,8 +206,8 @@ cdef class WordDict:
         self.s = s
         self.is_col = is_col
         self.pts = pts
-        #self.letters = letters[:wl]
         self.letters = letters
+        #self.letters = list(letters)
 
     cdef str sol(self):
         cdef Letter lf = self.letters[0]
@@ -255,12 +253,12 @@ cdef class WordDict:
             # np.array(self.letters, [
             #     ('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)
             # ])
-            self.letters
+            list(self.letters)
         )
 
-def rebuild_worddict(_word, wl, s, is_col, pts, letters):
+def rebuild_worddict(word, wl, s, is_col, pts, letters):
     #cdef STR_t[:] word = np.array([ord(w) for w in _word], dtype=STR)
-    return WordDict(_word, wl, s, is_col, pts, letters)
+    return WordDict(word, wl, s, is_col, pts, letters)
 
 
 @cython.final(True)
@@ -993,6 +991,8 @@ cpdef void parse_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
         Letter[:] lets_info
         bint matches
         SIZE_t tot_pts
+        WordDict w
+        list letslist
 
 
     #Settings.search_words_l  # todo swap test
@@ -1035,19 +1035,22 @@ cpdef void parse_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
 
             tot_pts = set_word_dict(ww, wl, nodes, lets_info, is_col, sn)
 
+            letslist = list(lets_info)
+
+            # lo.e(letslist)
+            # lo.e(lets_info)
+            # lo.e(lets_info.shape)
+            # lo.e(lets_info[0])
+
             w = WordDict(
                 ww,
                 wl,
                 s,
                 is_col,
                 tot_pts,
-                list(lets_info)
+                letslist
+                #lets_info
             )
-
-            # if w not in Settings.node_board.words:
-            #     Settings.node_board.words.append(w)
-            # else:
-            #     lo.e('already saw %s', w)
 
             Settings.node_board.words.append(w)
 
@@ -1057,19 +1060,33 @@ cpdef void parse_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
 def _unused(): pass
 
 
+def loadfile(*paths, is_file: bool = True) -> Path:
+    cdef object filepath = Path(*paths)
+    if not filepath.exists():
+        lo.c('Could not find file: {}'.format(filepath.absolute()))
+        #sys.exit(1)
+        exit(1)
+    if is_file:
+        if not filepath.is_file():
+            lo.c('Path exists but is not a file: {}'.format(filepath.absolute()))
+            exit(1)
+    else:
+        if not filepath.is_dir():
+            lo.c('Path exists but is not a directory: {}'.format(filepath.absolute()))
+            exit(1)
+
+    return filepath
+
+
 # todo: set default for dict? put in settings? move all settings out to options?
 #cpdef, def
 
 
 cdef void solve(str dictionary):
     cdef list wordlist = []
-    #todo make fnc exception
-    try:
-        wordlist = open(str(Path(_s.WORDS_DIR, dictionary + '.txt'))).read().splitlines()
-    except FileNotFoundError as exc:
-        lo.c('Could not find file: {}'.format(exc.filename))
-        #sys.exit(1)
-        exit(1)
+
+    wordlist = loadfile(_s.WORDS_DIR, dictionary + '.txt').read_text().splitlines()
+    print(wordlist[0])
 
     cdef BOOL_t blanks = Settings.rack[bl]
 
@@ -1277,27 +1294,20 @@ cdef void cmain(
         bint has_cache
 
     log_level = log_level.upper()
-    if log_level != DEFAULT_LOGLEVEL:
+    if log_level != _s.DEFAULT_LOGLEVEL:
         lo.set_level(log_level)
 
     cdef object this_board_dir
     if filename is not None:
-        this_board_dir = Path(_s.BOARD_DIR, filename)
+        this_board_dir = loadfile(_s.BOARD_DIR, filename, is_file=False)
 
-        try:
-            pdboard = pd.read_pickle(Path(this_board_dir, _s.BOARD_FILENAME))
-            #rack = np.asarray(pd.read_pickle(Path(this_board_dir, _s.LETTERS_FILENAME)), dtype=np.bytes_)
-            rack = pd.read_pickle(Path(this_board_dir, _s.LETTERS_FILENAME))
-            #lo.n(rack.dtype)
-        except FileNotFoundError as exc:
-            lo.c('Could not find file: {}'.format(exc.filename))
-            #sys.exit(1)
-            exit(1)
+        pdboard = pd.read_pickle(loadfile(this_board_dir, _s.BOARD_FILENAME))
+        rack = pd.read_pickle(loadfile(this_board_dir, _s.LETTERS_FILENAME))
 
     else:
         filename = '_manual'
+
         pdboard = pd.DataFrame(_s.BOARD)
-        #rack = np.asarray(_s.LETTERS, dtype=np.bytes_)
         rack = _s.LETTERS
 
     cdef str el
@@ -1330,19 +1340,9 @@ cdef void cmain(
         #sys.exit(1)
         exit(1)
 
-    try:
-        default_board = pd.read_pickle(board_name).to_numpy(dtype=np.object_)
-    except FileNotFoundError as exc:
-        lo.c('Could not find file: {}'.format(exc.filename))
-        #sys.exit(1)
-        exit(1)
+    default_board = pd.read_pickle(loadfile(board_name)).to_numpy(dtype=np.object_)
 
-    try:
-        points = json.load(open(str(Path(_s.POINTS_DIR, dictionary + '.json'))))  ## type: Dict[str, List[int]]
-    except FileNotFoundError as exc:
-        lo.c('Could not find file: {}'.format(exc.filename))
-        #sys.exit(1)
-        exit(1)
+    points = json.load(loadfile(_s.POINTS_DIR, dictionary + '.json').open())  # Dict[str, List[int]]
 
     if lo.is_enabled('s'):
         lo.s('Game Board:\n{}'.format(pdboard))
@@ -1409,7 +1409,7 @@ cdef void cmain(
 
 # def
 def main(
-    filename: str = None, dictionary: str = DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = NUM_RESULTS,
-    log_level: str = DEFAULT_LOGLEVEL, **_kw
+    filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = _s.NUM_RESULTS,
+    log_level: str = _s.DEFAULT_LOGLEVEL, **_kw
 ) -> None:
     cmain(filename, dictionary, no_words, exclude_letters, overwrite, num_results, log_level)

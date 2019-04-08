@@ -1,9 +1,17 @@
 from pathlib import Path
 from typing import List, Set, Tuple, Union
 
+# - DEFAULTS
+
+DEFAULT_LOGLEVEL = 'SUCCESS'
+DICTIONARY = 'wwf'
+NUM_RESULTS = 15
+
+
 # - DIRS
 
 curr_dir = Path('/home/brett/dev/scrabble/')  # todo fix
+#curr_dir = Path(__file__).absolute()
 img_dir = Path(curr_dir, 'images')
 data_dir = Path(curr_dir, 'data')
 

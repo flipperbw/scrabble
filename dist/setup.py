@@ -7,7 +7,7 @@ from Cython.Build import cythonize
 from Cython.Compiler import Options
 
 #import json
-import numpy
+#import numpy
 
 #x = Options.get_directive_defaults()
 #print(json.dumps(x, indent=4, sort_keys=True))

@@ -4,13 +4,12 @@
 
 __version__ = 1.0
 
-DEFAULT_LOGLEVEL = 'SUCCESS'  # need?
-DICTIONARY = 'wwf'
-NUM_RESULTS = 15
+# noinspection PyUnreachableCode
+if False: from argparse import Namespace
 
-
-def parse_args():
+def parse_args() -> 'Namespace':
     from parsing import parser_init
+    from settings import DICTIONARY, NUM_RESULTS, DEFAULT_LOGLEVEL
 
     parser = parser_init(
         description=__doc__,
@@ -45,11 +44,9 @@ def parse_args():
     return parser.parse_args()
 
 
-ARGS = None
 if __name__ == '__main__':
     ARGS = parse_args()
 
-if __name__ == '__main__':
     dargs = vars(ARGS)
 
     import p
