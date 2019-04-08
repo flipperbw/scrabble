@@ -7,6 +7,7 @@ __version__ = 1.0
 # noinspection PyUnreachableCode
 if False: from argparse import Namespace
 
+
 def parse_args() -> 'Namespace':
     from parsing import parser_init
     from settings import DICTIONARY, NUM_RESULTS, DEFAULT_LOGLEVEL
@@ -45,20 +46,20 @@ def parse_args() -> 'Namespace':
 
 
 if __name__ == '__main__':
-    ARGS = parse_args()
-
-    dargs = vars(ARGS)
+    pargs = parse_args()
 
     import p
+
+    dargs = vars(pargs)
 
     if dargs['profile'] is True:
         import cProfile
         import pstats
 
-        #cProfile.runctx('p.main(**dargs)', globals(), locals(), 'p.prof')
-        cProfile.run('p.main(**dargs)', 'p.prof')
+        fn = 'p.prof'
 
-        s = pstats.Stats('p.prof')
+        cProfile.run('p.main(**dargs)', fn)
+        s = pstats.Stats(fn)
         s.sort_stats('time').print_stats(20)
 
     elif dargs['trace'] is True:

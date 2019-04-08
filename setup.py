@@ -6,12 +6,16 @@ from distutils.extension import Extension
 from Cython.Build import cythonize
 from Cython.Compiler import Options
 
+import compileall
+
 #import json
 #import numpy
 
 #x = Options.get_directive_defaults()
 #print(json.dumps(x, indent=4, sort_keys=True))
 #print(Options)
+
+MOD_DIR = 'scrabble'
 
 Options.buffer_max_dims = 5
 Options.closure_freelist_size = 255
@@ -85,7 +89,7 @@ ext_modules = [
     # ),
     Extension(
         "*",
-        ["*.pyx"],
+        [f"{MOD_DIR}/*.pyx"],
         extra_compile_args=extra_compile_args,
         define_macros=define_macros,
         #include_dirs=[numpy.get_include()],
@@ -100,6 +104,8 @@ ext_options = {
     #"cache": True # ?
 }
 
+
+compileall.compile_dir(MOD_DIR, maxlevels=1, optimize=2)
 
 setup(
     name='Scrabble parser',

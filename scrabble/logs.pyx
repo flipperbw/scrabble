@@ -16,6 +16,8 @@ class partialmethod(partial):
         return partial(self.func, instance,
                        *(self.args or ()), **(self.keywords or {}))
 
+
+
 #logger.d("Houston, we have a %s", "thorny problem", exc_info=1)
 
 #todo logging blank does not reset color?
