@@ -3,7 +3,8 @@
 cimport cython
 #from cython.parallel import prange
 
-cdef object json, sys, md5, Path, np, pd, log_init, _s
+cdef object json, md5, Path, np, pd, log_init, _s
+#sys
 
 import json
 #import sys
@@ -182,6 +183,7 @@ cdef CSettings Settings = CSettings()
 #ctypedef class WordDict:
 
 #@cython.freelist(10000)
+
 @cython.final(True)
 cdef class WordDict:
     cdef:
@@ -195,6 +197,8 @@ cdef class WordDict:
         #Letter letters[100]
 
     #Letter[:] letters
+    # not None
+
     def __cinit__(
         self, STR_t[:] word, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t pts, list letters not None
         #self, STR_t[:] word, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t pts, Letter[:] letters
@@ -260,7 +264,8 @@ cdef class WordDict:
             list(self.letters)
         )
 
-def rebuild_worddict(word, wl, s, is_col, pts, letters):
+
+cpdef rebuild_worddict(word, wl, s, is_col, pts, letters):
     #cdef STR_t[:] word = np.array([ord(w) for w in _word], dtype=STR)
     return WordDict(word, wl, s, is_col, pts, letters)
 
@@ -1062,11 +1067,10 @@ cpdef void parse_nodes(Node[:] nodes, STR_t[:, :] sw, SIZE_t[:] swlens, bint is_
 def _unused(): pass
 
 
-def loadfile(*paths, is_file: bool = True) -> Path:
+def loadfile(*paths: list, is_file: bool = True) -> Path:
     cdef object filepath = Path(*paths)
     if not filepath.exists():
         lo.c('Could not find file: {}'.format(filepath.absolute()))
-        #sys.exit(1)
         exit(1)
     if is_file:
         if not filepath.is_file():
@@ -1085,10 +1089,9 @@ def loadfile(*paths, is_file: bool = True) -> Path:
 
 
 cdef void solve(str dictionary):
-    cdef list wordlist = []
+    #cdef list wordlist = []
 
-    wordlist = loadfile(_s.WORDS_DIR, dictionary + '.txt').read_text().splitlines()
-    print(wordlist[0])
+    cdef list wordlist = loadfile(_s.WORDS_DIR, dictionary + '.txt').read_text().splitlines()
 
     cdef BOOL_t blanks = Settings.rack[bl]
 
@@ -1100,9 +1103,10 @@ cdef void solve(str dictionary):
         if blanks > 0:
             search_words = words
         # TODO FIX THIS
-        # else:
-        #     # todo: faster if str? why gen slower?
-        #     search_words = {w for w in words if any([chr(l) in w for l in Settings.letters])}
+        else:
+            # todo: faster if str? why gen slower?
+            #search_words = {w for w in words if any([chr(l) in w for l in Settings.letters])}
+            search_words = words
     elif isinstance(_s.SEARCH_WORDS, tuple):
         search_words = set(wordlist[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
     elif isinstance(_s.SEARCH_WORDS, set):
@@ -1126,6 +1130,10 @@ cdef void solve(str dictionary):
     cdef str sws
     cdef Py_ssize_t swi
     cdef Py_ssize_t swl = len(search_words)
+
+    if not swl:
+        lo.c('No search words')
+        exit(1)
 
     # -- TODO CHECK CONTIGUOUS --
 
@@ -1281,15 +1289,15 @@ cdef void show_solution(
 # except *
 
 
-cdef void cmain(
+cpdef void cmain(
     str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level
 ):
     cdef:
-        dict points = {}
+        dict points
         object pdboard
         object[:, :] board, default_board
         #cnp.ndarray letters
-        list rack = []
+        list rack
         #todo declare object rather than list?
         int board_size
         object board_name
@@ -1399,6 +1407,7 @@ cdef void cmain(
         show_solution(nodes=solved_board, words=Settings.node_board.words, no_words=no_words)
 
         np.savez(solution_filename, nodes=solved_board, words=Settings.node_board.words)
+
     else:
         lo.s('Found existing solution')
         solution_data = np.load(solution_filename)
@@ -1412,6 +1421,6 @@ cdef void cmain(
 # def
 def main(
     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = _s.NUM_RESULTS,
-    log_level: str = _s.DEFAULT_LOGLEVEL, **_kw
+    log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
 ) -> None:
     cmain(filename, dictionary, no_words, exclude_letters, overwrite, num_results, log_level)

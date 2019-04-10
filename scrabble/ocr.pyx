@@ -25,6 +25,9 @@ from logs import log_init
 lo = log_init('INFO')
 
 
+cnp.import_array()
+
+
 # ctypedef cnp.int32_t STR_t
 # STR = np.int32
 ctypedef cnp.uint8_t BOOL_t
