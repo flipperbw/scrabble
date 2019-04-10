@@ -76,6 +76,10 @@ ctypedef packed struct Letter:
     STR_t value
     # todo define getter
 
+
+cdef Letter[:] lets_empty = np.empty(15, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
+
+
 # todo : do comments like these causes c stuff?
 """
 @cython.freelist(50000)  # todo check
@@ -799,8 +803,6 @@ cdef bint lets_match(STR_t[:] word, Py_ssize_t wl, STR_t[:, :, :, :] vl_list, bi
 #     Letter
 
 #cdef object nz = np.zeros  # todo
-
-cdef Letter[:] lets_empty = np.empty(15, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
 
 #ctypedef (bint, Letter[:]) lets_ret
 # ctypedef packed struct lets_ret:

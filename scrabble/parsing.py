@@ -11,7 +11,6 @@ from colored import attr, fg, stylize
 
 from logs import DEFAULT_LOGLEVEL, LEVELS
 
-#from typing import Union
 
 #https://i.stack.imgur.com/KTSQa.png
 BLUE = fg(153)

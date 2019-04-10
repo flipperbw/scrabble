@@ -59,7 +59,7 @@ if __name__ == '__main__':
         import line_profiler
 
         profile = line_profiler.LineProfiler(
-            #ocr.
+            ocr.find_letter_match
         )
         profile.runctx('ocr.main(**dargs)', globals(), locals())
         profile.print_stats()

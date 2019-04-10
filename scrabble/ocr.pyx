@@ -1,19 +1,37 @@
 """Extract text from a scrabble board."""
 
+cimport cython
+
+#cdef object Path, _s
+#cv2, np, pd, Image, log_init
+
 import string
 import sys
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
+import cv2
+
+import numpy as np
+cimport numpy as cnp
+
+import pandas as pd
+from PIL import Image
+
+import settings as _s
 from logs import log_init
 
-#from settings import *
-from settings import BOARD_DIR, BOARD_FILENAME, DEF_BOARD_BIG, DEF_BOARD_SMALL, LETTERS_FILENAME, TEMPL_DIR
 
-import cv2 as cv2
-import numpy as np
-import pandas as pd
-from PIL import Image as Image
+lo = log_init('INFO')
+
+
+# ctypedef cnp.int32_t STR_t
+# STR = np.int32
+ctypedef cnp.uint8_t BOOL_t
+BOOL = np.uint8
+ctypedef cnp.float32_t FLO_t
+FLO = np.float32
+
 
 
 # img parsing
@@ -61,13 +79,9 @@ img_cut_range = {
 # --
 
 
-DEFAULT_LOGLEVEL = 'INFO'
-lo = log_init(DEFAULT_LOGLEVEL)
-
-
 default_board_files = {
-    'big': DEF_BOARD_BIG,
-    'small': DEF_BOARD_SMALL
+    'big': _s.DEF_BOARD_BIG,
+    'small': _s.DEF_BOARD_SMALL
 }
 
 
@@ -76,13 +90,13 @@ class Dirs:
         self.default_board = pd.read_pickle(default_board_files[img_typ])
 
         img_file_root = Path(img_file).stem
-        self.this_board_dir = Path(BOARD_DIR, img_file_root)
+        self.this_board_dir = Path(_s.BOARD_DIR, img_file_root)
 
         if not self.this_board_dir.exists():
             self.this_board_dir.mkdir()
 
-        self.this_board = Path(self.this_board_dir, BOARD_FILENAME)
-        self.this_letters = Path(self.this_board_dir, LETTERS_FILENAME)
+        self.this_board = Path(self.this_board_dir, _s.BOARD_FILENAME)
+        self.this_letters = Path(self.this_board_dir, _s.LETTERS_FILENAME)
 
 
 def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
@@ -93,7 +107,7 @@ def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
     return img.copy()[height[0]:height[1], width[0]:width[1]]
 
 
-def get_img(img: str) -> Optional[np.ndarray]:
+cdef object get_img(str img):
     image = cv2.imread(Path(img).expanduser().as_posix())
 
     if not np.any(image):
@@ -101,16 +115,19 @@ def get_img(img: str) -> Optional[np.ndarray]:
         return None
 
     #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    colored = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    return colored
 
 
 # todo: pickle this
 letter_templates = {}  # type: Dict[str, Dict[str, np.ndarray]]
 
 
-def create_letter_templates():
+cdef create_letter_templates():
     for l in string.ascii_lowercase:
-        templ_big = cv2.imread(Path(TEMPL_DIR, l + '.png').as_posix(), 0)
+        templ_big = cv2.imread(Path(_s.TEMPL_DIR, l + '.png').as_posix(), 0)
 
         templ_small = cv2.resize(templ_big, (0, 0), fx=1.12, fy=1.13)
         templ_rack = cv2.resize(templ_big, (0, 0), fx=2.1, fy=2.1)
@@ -122,16 +139,45 @@ def create_letter_templates():
         }
 
 
-def find_letter_match(gimg: np.ndarray, typ: str, spacing: float, dest: np.ndarray):
-    seen = {}  # type: Dict[str, Tuple[str, float]]
+cdef int TYP = cv2.TM_CCOEFF_NORMED
+cdef object mat = cv2.matchTemplate
+
+
+
+# @cython.binding(True)
+# @cython.linetrace(True)
+# cpdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
+cdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
+    cdef object seen = {}  # type: Dict[str, Tuple[str, float]]
+    cdef BOOL_t[:, :] template
+    cdef Py_ssize_t h, w, row_num, col_num, x, y
+    #cdef cnp.ndarray res
+    cdef FLO_t[:, :] res
+    #cdef cnp.ndarray[FLO_t, ndim=2] res
+    cdef cnp.ndarray[BOOL_t, ndim=2] gb
+    cdef cnp.ndarray[BOOL_t, ndim=2] tb
+
+    #cdef object res
+    #(W-w+1) \times (H-h+1)
+
 
     for l, ld in letter_templates.items():
         template = ld[typ]
 
         h, w = template.shape[:2]
 
-        res = cv2.matchTemplate(gimg, template, cv2.TM_CCOEFF_NORMED)
-        match_locations = np.where(res >= min_thresh)
+        gb = gimg.base
+        tb = template.base
+
+        #TYP
+        res = cv2.matchTemplate(image=gb, templ=tb, method=5)
+        #res = mat(image=gb, templ=tb, method=5)
+        #res = mat(image=gb, templ=tb, res=res, method=5)
+
+        #res = cv2.matchTemplate(np.array(gimg), template.base, cv2.TM_CCOEFF_NORMED)
+
+        #match_locations = res[(res >= min_thresh)]
+        match_locations = np.where(res.base >= min_thresh)
 
         l = l.upper()
 
@@ -162,12 +208,14 @@ def find_letter_match(gimg: np.ndarray, typ: str, spacing: float, dest: np.ndarr
                     lo.d(f'overriding {exist_l, exist_conf} with new {l, confidence}')
 
             seen[pos] = (l, confidence)
-            dest[row_num][col_num] = l
+            dest[row_num][col_num] = ord(l)
 
     return dest
 
 
-def create_board(board: np.ndarray, def_board: np.ndarray):
+def _u(): pass
+
+cdef object create_board(board: np.ndarray, def_board: np.ndarray):
     if def_board.shape[0] == 11:
         typ = 'small'
         spacing = 55.3
@@ -182,29 +230,32 @@ def create_board(board: np.ndarray, def_board: np.ndarray):
     white_mask = cv2.inRange(board, lower_white, upper_white)
     comb = black_mask + white_mask
 
-    gimg = cv2.bitwise_not(comb)
+    cdef BOOL_t[:, :] gimg = cv2.bitwise_not(comb)
 
     if lo.is_enabled('d'):
-        show_img(gimg)
+        show_img(gimg.base)
 
-    # noinspection PyTypeChecker
-    table = np.full_like(def_board, '', dtype='U2')
-    table = find_letter_match(gimg, typ, spacing, table)
+    cdef char[:, :] table = np.full_like(def_board, '', dtype='|S1')
 
-    df = pd.DataFrame(table)
+    find_letter_match(gimg, typ, spacing, table)
+
+    df = pd.DataFrame(table.base.astype('<U1'))
     lo.n(f'Board:\n{df}')
 
     return df
 
 
-def get_rack(img: np.ndarray):
+cdef list get_rack(object img):
     black_mask = cv2.inRange(img, lower_black, upper_black) + cv2.inRange(img, lower_black_gr, upper_black_gr) + cv2.inRange(img, lower_black_pu, upper_black_pu)
     gimg = cv2.bitwise_not(black_mask)
 
-    rack = np.array([[''] * 7], dtype='U1')
-    rack = find_letter_match(gimg, 'rack', rack_space, rack)[0]
+    cdef char[:, :] rack = np.array([[''] * 7], dtype='|S1')
 
-    lo.d(f'Letters:\n{rack}')
+    find_letter_match(gimg, 'rack', rack_space, rack)
+
+    cdef object nrack = rack.base[0].astype('<U1')
+
+    lo.d(f'Letters:\n{nrack}')
 
     buffer = 20
 
@@ -216,7 +267,7 @@ def get_rack(img: np.ndarray):
 
     letters = []
 
-    for i, l in enumerate(rack):
+    for i, l in enumerate(nrack):
         start_x = (i * rack_space) + mid_x - buffer
         end_x = start_x + (buffer * 2)
 
@@ -238,9 +289,9 @@ def show_img(img_array: np.ndarray):
     Image.fromarray(img_array).show()
 
 
-def main(filename: str, overwrite: bool = False, log_level: str = DEFAULT_LOGLEVEL, **_kwargs):
+cdef void cmain(str filename, bint overwrite, str log_level):
     log_level = log_level.upper()
-    if log_level != DEFAULT_LOGLEVEL:
+    if log_level != _s.DEFAULT_LOGLEVEL:
         lo.set_level(log_level)
 
     cv2_image = get_img(filename)
@@ -306,3 +357,6 @@ def main(filename: str, overwrite: bool = False, log_level: str = DEFAULT_LOGLEV
         pd.to_pickle(rack, this_letters)
 
     lo.s('Done parsing image.')
+
+def main(filename: str, overwrite: bool = False, log_level: str = _s.DEFAULT_LOGLEVEL, **_kwargs) -> None:
+    cmain(filename, overwrite, log_level)
