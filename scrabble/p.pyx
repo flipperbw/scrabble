@@ -1304,7 +1304,7 @@ cpdef void cmain(
         bint has_cache
 
     log_level = log_level.upper()
-    if log_level != _s.DEFAULT_LOGLEVEL:
+    if log_level != lo.logger.getEffectiveLevel():
         lo.set_level(log_level)
 
     cdef object this_board_dir

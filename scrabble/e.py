@@ -9,7 +9,7 @@ if False: from argparse import Namespace
 
 
 def parse_args() -> 'Namespace':
-    from parsing import parser_init
+    from parser_defaults import parser_init
     from settings import DICTIONARY, NUM_RESULTS, DEFAULT_LOGLEVEL
 
     parser = parser_init(

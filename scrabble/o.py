@@ -15,7 +15,7 @@ def parse_args() -> 'Namespace':
     #TODO: set customnamespace for completion here
     #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
 
-    from parsing import parser_init
+    from parser_defaults import parser_init
 
     parser = parser_init(
         description=__doc__,

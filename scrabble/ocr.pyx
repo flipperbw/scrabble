@@ -36,27 +36,26 @@ ctypedef cnp.float32_t FLO_t
 FLO = np.float32
 
 
+# - img parsing
 
-# img parsing
+RACK_SPACE = 106
 
-min_thresh = 0.7
+MIN_THRESH = 0.7
 
-lower_black = np.array([64, 22, 0], dtype="uint16")
-upper_black = np.array([78, 36, 24], dtype="uint16")
-lower_white = np.array([230, 230, 230], dtype="uint16")
-upper_white = np.array([255, 255, 255], dtype="uint16")
+LOWER_BLACK = np.array([64, 22, 0], dtype="uint16")
+UPPER_BLACK = np.array([78, 36, 24], dtype="uint16")
+LOWER_WHITE = np.array([230, 230, 230], dtype="uint16")
+UPPER_WHITE = np.array([255, 255, 255], dtype="uint16")
 
 # todo all colors
-lower_black_gr = np.array([16, 54, 0], dtype="uint16")
-upper_black_gr = np.array([30, 68, 24], dtype="uint16")
-lower_black_pu = np.array([52, 0, 66], dtype="uint16")
-upper_black_pu = np.array([66, 12, 80], dtype="uint16")
-lower_black_te = np.array([0, 15, 66], dtype="uint16")
-upper_black_te = np.array([12, 29, 80], dtype="uint16")
+LOWER_BLACK_GR = np.array([16, 54, 0], dtype="uint16")
+UPPER_BLACK_GR = np.array([30, 68, 24], dtype="uint16")
+LOWER_BLACK_PU = np.array([52, 0, 66], dtype="uint16")
+UPPER_BLACK_PU = np.array([66, 12, 80], dtype="uint16")
+LOWER_BLACK_TE = np.array([0, 15, 66], dtype="uint16")
+UPPER_BLACK_TE = np.array([12, 29, 80], dtype="uint16")
 
-rack_space = 106
-
-img_cut_range = {
+IMG_CUT_RANGE = {
     'big': {
         'board': {
             'height': (305, 1049),
@@ -79,10 +78,10 @@ img_cut_range = {
     },
 }
 
-# --
+# -
 
 
-default_board_files = {
+DEFAULT_BOARD_FILES = {
     'big': _s.DEF_BOARD_BIG,
     'small': _s.DEF_BOARD_SMALL
 }
@@ -90,7 +89,7 @@ default_board_files = {
 
 class Dirs:
     def __init__(self, img_file: str, img_typ: str):
-        self.default_board = pd.read_pickle(default_board_files[img_typ])
+        self.default_board = pd.read_pickle(DEFAULT_BOARD_FILES[img_typ])
 
         img_file_root = Path(img_file).stem
         self.this_board_dir = Path(_s.BOARD_DIR, img_file_root)
@@ -103,7 +102,7 @@ class Dirs:
 
 
 def cut_img(img: np.ndarray, typ: str, kind: str) -> np.ndarray:
-    ranges = img_cut_range[typ][kind]
+    ranges = IMG_CUT_RANGE[typ][kind]
     height = ranges['height']
     width = ranges['width']
 
@@ -146,7 +145,6 @@ cdef int TYP = cv2.TM_CCOEFF_NORMED
 cdef object mat = cv2.matchTemplate
 
 
-
 # @cython.binding(True)
 # @cython.linetrace(True)
 # cpdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
@@ -179,8 +177,8 @@ cdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, cha
 
         #res = cv2.matchTemplate(np.array(gimg), template.base, cv2.TM_CCOEFF_NORMED)
 
-        #match_locations = res[(res >= min_thresh)]
-        match_locations = np.where(res.base >= min_thresh)
+        #match_locations = res[(res >= MIN_THRESH)]
+        match_locations = np.where(res.base >= MIN_THRESH)
 
         l = l.upper()
 
@@ -226,11 +224,11 @@ cdef object create_board(board: np.ndarray, def_board: np.ndarray):
         typ = 'big'
         spacing = 49.6
 
-    black_mask = cv2.inRange(board, lower_black, upper_black) + \
-                 cv2.inRange(board, lower_black_gr, upper_black_gr) + \
-                 cv2.inRange(board, lower_black_pu, upper_black_pu) + \
-                 cv2.inRange(board, lower_black_te, upper_black_te)
-    white_mask = cv2.inRange(board, lower_white, upper_white)
+    black_mask = cv2.inRange(board, LOWER_BLACK, UPPER_BLACK) + \
+                 cv2.inRange(board, LOWER_BLACK_GR, UPPER_BLACK_GR) + \
+                 cv2.inRange(board, LOWER_BLACK_PU, UPPER_BLACK_PU) + \
+                 cv2.inRange(board, LOWER_BLACK_TE, UPPER_BLACK_TE)
+    white_mask = cv2.inRange(board, LOWER_WHITE, UPPER_WHITE)
     comb = black_mask + white_mask
 
     cdef BOOL_t[:, :] gimg = cv2.bitwise_not(comb)
@@ -249,12 +247,12 @@ cdef object create_board(board: np.ndarray, def_board: np.ndarray):
 
 
 cdef list get_rack(object img):
-    black_mask = cv2.inRange(img, lower_black, upper_black) + cv2.inRange(img, lower_black_gr, upper_black_gr) + cv2.inRange(img, lower_black_pu, upper_black_pu)
+    black_mask = cv2.inRange(img, LOWER_BLACK, UPPER_BLACK) + cv2.inRange(img, LOWER_BLACK_GR, UPPER_BLACK_GR) + cv2.inRange(img, LOWER_BLACK_PU, UPPER_BLACK_PU)
     gimg = cv2.bitwise_not(black_mask)
 
     cdef char[:, :] rack = np.array([[''] * 7], dtype='|S1')
 
-    find_letter_match(gimg, 'rack', rack_space, rack)
+    find_letter_match(gimg, 'rack', RACK_SPACE, rack)
 
     cdef object nrack = rack.base[0].astype('<U1')
 
@@ -263,7 +261,7 @@ cdef list get_rack(object img):
     buffer = 20
 
     mid_y = img.shape[0] // 2
-    mid_x = rack_space // 2
+    mid_x = RACK_SPACE // 2
 
     start_y = mid_y - buffer
     end_y = start_y + (buffer * 2)
@@ -271,7 +269,7 @@ cdef list get_rack(object img):
     letters = []
 
     for i, l in enumerate(nrack):
-        start_x = (i * rack_space) + mid_x - buffer
+        start_x = (i * RACK_SPACE) + mid_x - buffer
         end_x = start_x + (buffer * 2)
 
         imgflat = img[start_y:end_y, start_x:end_x].flatten()
@@ -294,7 +292,7 @@ def show_img(img_array: np.ndarray):
 
 cdef void cmain(str filename, bint overwrite, str log_level):
     log_level = log_level.upper()
-    if log_level != _s.DEFAULT_LOGLEVEL:
+    if log_level != lo.logger.getEffectiveLevel():
         lo.set_level(log_level)
 
     cv2_image = get_img(filename)

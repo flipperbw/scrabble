@@ -1,13 +1,13 @@
 *.*prof
 *.html
 *.so
-*.c
-*.cpp
+#*.c
+#*.cpp
 
-.ipynb_checkpoints/
-/data/boards/*/
-/data/wordlists/.extra/
-/data/solutions/
-!/data/solutions/.empty
+/scrabble/data/boards/*/
+/scrabble/data/wordlists/.extra/
+/scrabble/data/solutions/
 /test/
+/old/
 build/
+#.ipynb_checkpoints/
