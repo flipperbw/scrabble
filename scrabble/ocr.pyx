@@ -145,6 +145,7 @@ cdef int TYP = cv2.TM_CCOEFF_NORMED
 cdef object mat = cv2.matchTemplate
 
 
+
 # @cython.binding(True)
 # @cython.linetrace(True)
 # cpdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
