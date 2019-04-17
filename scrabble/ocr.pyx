@@ -1,3 +1,5 @@
+# cython: warn.maybe_uninitialized=True, warn.undeclared=True, warn.unused=True, warn.unused_arg=True, warn.unused_result=True, infer_types.verbose=True
+
 """Extract text from a scrabble board."""
 
 cimport cython

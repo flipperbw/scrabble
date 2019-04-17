@@ -1,3 +1,5 @@
+# cython: warn.maybe_uninitialized=True, warn.undeclared=True, warn.unused=True, warn.unused_arg=True, warn.unused_result=True, infer_types.verbose=True
+
 """Parse and solve a scrabble board."""
 
 cimport cython
@@ -17,7 +19,6 @@ from pathlib import Path
 #from functools import lru_cache
 
 import numpy as np
-cimport numpy as cnp
 
 import pandas as pd  # remove
 
@@ -27,9 +28,7 @@ import settings as _s
 
 
 cnp.import_array()
-cnp.import_umath()
-
-#ctypedef
+#cnp.import_umath()
 
 
 cdef object lo = log_init(_s.DEFAULT_LOGLEVEL)
@@ -258,29 +257,30 @@ cpdef rebuild_worddict(word, wl, s, is_col, pts, letters):
 cdef class Node:
     # todo test no types in cinit
     def __cinit__(self, BOOL_t x, BOOL_t y, str val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
-        self.letter.x = x
-        self.letter.y = y
+        self.n.letter.x = x
+        self.n.letter.y = y
 
-        self.letter.is_blank = False
-        self.letter.from_rack = False
+        self.n.letter.is_blank = False
+        self.n.letter.from_rack = False
         #self.letter.pts = 0
 
-        self.mult_a = mult_a
-        self.mult_w = mult_w
+        self.n.mult_a = mult_a
+        self.n.mult_w = mult_w
 
-        self.is_start = is_start
+        self.n.is_start = is_start
+        self.n.has_edge = False
 
         #cdef lpts_t lpt
 
         if not val:
-            self.has_val = False
-            self.letter.value = 0
-            self.pts = 0
+            self.n.has_val = False
+            self.n.letter.value = 0
+            self.n.pts = 0
             self.display = ' '  # todo display method
         else:
-            self.has_val = True
-            self.letter.value = ord(val)
-            self.pts = Settings.points[self.letter.value]
+            self.n.has_val = True
+            self.n.letter.value = ord(val)
+            self.n.pts = Settings.points[self.n.letter.value]
             self.display = val.upper()
 
             # try:
@@ -290,7 +290,7 @@ cdef class Node:
             #     lo.e('Could not get point value of "{}"'.format(val))
             #     sys.exit(1)
 
-        self.letter.pts = self.pts
+        self.n.letter.pts = self.n.pts
 
         self.up = None
         self.down = None
@@ -312,20 +312,31 @@ cdef class Node:
         self.left_pts = 0
         self.right_pts = 0
 
-        self.has_edge = False
+        # cdef cnp.npy_intp dims_vlets[3]
+        # dims_vlets[0] = 2
+        # dims_vlets[1] = MAX_ORD
+        # dims_vlets[2] = 2
+        # self.n.valid_lets = cnp.PyArray_ZEROS(3, dims_vlets, cnp.NPY_INT32, 0)
 
-        self.valid_lets = npz((2, MAX_ORD, 2), STR)
+        # cdef cnp.npy_intp dims_vlens[2]
+        # dims_vlens[0] = 2
+        # dims_vlens[1] = Settings.shape[0] if Settings.shape[0] > Settings.shape[1] else Settings.shape[1]
+        # self.valid_lengths = cnp.PyArray_ZEROS(2, dims_vlens, cnp.NPY_UINT8, 0)
 
-        self.valid_lengths = npz((2, max(Settings.shape)), BOOL)
+        self.vlet_view = self.n.valid_lets
+        self.vlet_view[:, :, :] = 0
+
+        self.vlen_view = self.n.valid_lengths
+        self.vlen_view[:, :] = False
 
 
     def str_pos(self) -> str:
-        return f'[{self.letter.x:2d},{self.letter.y:2d}]'
+        return f'[{self.n.letter.x:2d},{self.n.letter.y:2d}]'
 
     def __str__(self) -> str:
         cdef str s
-        if self.has_val:
-            s = chr(self.letter.value)
+        if self.n.has_val:
+            s = chr(self.n.letter.value)
         else:
             s = '_'
         return '<Node: {} v: {}>'.format(self.str_pos(), s)
@@ -346,7 +357,9 @@ cdef class Board:
 
         #self.board = board
         #self.default_board = default_board
+
         self.nodes = np.zeros_like(default_board, Node)
+        #self.nodes = np.empty_like(default_board, Node)
 
         self.nodes_rl = Settings.shape[0]
         self.nodes_cl = Settings.shape[1]
@@ -427,23 +440,23 @@ cdef class Board:
 
         if r > 0:
             node.up = self.nodes[r-1, c]
-            if node.up.has_val:
-                node.has_edge = True
+            if node.up.n.has_val:
+                node.n.has_edge = True
 
         if r < self.nodes_rl - 1:
             node.down = self.nodes[r+1, c]
-            if node.down.has_val:
-                node.has_edge = True
+            if node.down.n.has_val:
+                node.n.has_edge = True
 
         if c > 0:
             node.left = self.nodes[r, c-1]
-            if node.left.has_val:
-                node.has_edge = True
+            if node.left.n.has_val:
+                node.n.has_edge = True
 
         if c < self.nodes_cl - 1:
             node.right = self.nodes[r, c+1]
-            if node.right.has_val:
-                node.has_edge = True
+            if node.right.n.has_val:
+                node.n.has_edge = True
 
 
     cdef void _set_adj_words(self, Node n, str d):
@@ -451,8 +464,8 @@ cdef class Board:
             Node[:] loop_nodes
             #cnp.ndarray loop_nodes
             bint rev = False
-            int xx = n.letter.x
-            int yy = n.letter.y
+            int xx = n.n.letter.x
+            int yy = n.n.letter.y
 
 
         if d == 'up':
@@ -479,12 +492,12 @@ cdef class Board:
 
         for ni in range(nl):
             p = loop_nodes[ni]
-            if not p.has_val:
+            if not p.n.has_val:
                 break
             else:
-                lets_pts += p.pts  # <STR_t>
+                lets_pts += p.n.pts  # <STR_t>
 
-                nv = p.letter.value
+                nv = p.n.letter.value
                 l_s = chr(nv)
                 if rev:
                     lets_str = l_s + lets_str
@@ -508,12 +521,12 @@ cdef class Board:
 
     # move to checknodes?
     cdef void _set_lets(self, Node n):
-        if n.has_val:
-            n.valid_lets[:, n.letter.value, 0] = 1
+        if n.n.has_val:
+            n.vlet_view[:, n.n.letter.value, 0] = 1
             return
 
-        if not n.has_edge:
-            n.valid_lets[:, L_ST:L_EN, 0] = 1
+        if not n.n.has_edge:
+            n.vlet_view[:, L_ST:L_EN, 0] = 1
             return
 
         cdef Py_ssize_t i_s = L_ST
@@ -521,19 +534,19 @@ cdef class Board:
         while i_s < L_EN:
             # - rows
             if self._check_adj_words(i_s, n.up, n.down, n.up_word, n.down_word):
-                n.valid_lets[0, i_s, 0] = 1
-                n.valid_lets[0, i_s, 1] = n.up_pts + n.down_pts
+                n.vlet_view[0, i_s, 0] = 1
+                n.vlet_view[0, i_s, 1] = n.up_pts + n.down_pts
 
             # - cols
             if self._check_adj_words(i_s, n.left, n.right, n.left_word, n.right_word):
-                n.valid_lets[1, i_s, 0] = 1
-                n.valid_lets[1, i_s, 1] = n.left_pts + n.right_pts
+                n.vlet_view[1, i_s, 0] = 1
+                n.vlet_view[1, i_s, 1] = n.left_pts + n.right_pts
 
             i_s += 1
 
 
     cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w):
-        if (bef is None or not bef.has_val) and (aft is None or not aft.has_val):
+        if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):
             return True
 
         cdef str new_word = bef_w + <str>chr(i) + aft_w
@@ -557,17 +570,20 @@ cdef class Board:
 
             #bint?
             # x = Node, y = lens
-            BOOL_t[:, ::1] valid_lengths = np.ones((nlen, nlen), BOOL)
+            bint valid_lengths[15][15]
+            bint[:, :] vlen_view = valid_lengths
+
+        vlen_view[:, :] = True
 
         # disable one letter words
-        valid_lengths[:, 0] = 0
+        vlen_view[:, 0] = False
 
         # disable last node
-        valid_lengths[nlen - 1, :] = 0
+        vlen_view[nlen - 1, :] = False
 
         # disable < max word length
         if max_swl < nlen:
-            valid_lengths[:, max_swl:] = 0
+            vlen_view[:, max_swl:] = False
 
         #lo.w(f'\n{pd.DataFrame(np.asarray(nodes))}')
 
@@ -577,12 +593,12 @@ cdef class Board:
 
             if t != 0:
                 # disable for nodes that are too long
-                valid_lengths[t, nlen-t:] = False
+                vlen_view[t, nlen-t:] = False
 
                 # if prev node has a val, disable for all lengths
                 no = nodes[t - 1]
-                if no.has_val:
-                    valid_lengths[t, :] = False
+                if no.n.has_val:
+                    vlen_view[t, :] = False
                     continue
 
             # for all possible wls...
@@ -593,10 +609,10 @@ cdef class Board:
                 if ai1 < nlen:
                     no = nodes[ai1]
                     #lo.d(no)
-                    if no.has_val:
+                    if no.n.has_val:
                         #lo.d(f'810: {t} {l}')
-                        valid_lengths[t, l] = False
-                        #lo.e(f'{valid_lengths.base[t]}')
+                        vlen_view[t, l] = False
+                        #lo.e(f'{vlen_view.base[t]}')
                         continue
 
                 has_edge = False
@@ -612,9 +628,9 @@ cdef class Board:
                 e = t
                 while e < ai1:
                     no = nodes[e]
-                    if no.has_edge:
+                    if no.n.has_edge:
                         has_edge = True
-                    if not no.has_val:
+                    if not no.n.has_val:
                         has_blanks = True
 
                     if has_edge and has_blanks:
@@ -627,16 +643,16 @@ cdef class Board:
                 #lo.w(has_edge)
                 if not has_edge or not has_blanks:
                     #lo.v('set f')
-                    valid_lengths[t, l] = False
+                    vlen_view[t, l] = False
 
-                #lo.s(f'{valid_lengths.base[t]}')
+                #lo.s(f'{vlen_view.base[t]}')
 
-        #lo.s(f'\n{valid_lengths.base}')
+        #lo.s(f'\n{vlen_view.base}')
 
 
         for t in range(nlen):
-            nodes[t].valid_lengths[is_col] = valid_lengths[t]
-            #lo.e(nodes[t].valid_lengths.base[is_col])
+            nodes[t].vlen_view[is_col] = vlen_view[t]
+            #lo.e(nodes[t].vlen_view.base[is_col])
 
 
     def __str__(self) -> str:
@@ -657,11 +673,11 @@ cdef class Board:
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, Node[::1] nodes, Letter[::1] lets_info, bint is_col, Py_ssize_t start):
+cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[15], Letter[::1] lets_info, bint is_col, Py_ssize_t start):
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
-        Node nd
+        N nd
         STR_t nv
         Letter le
         BOOL_t lpts
@@ -699,7 +715,7 @@ cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, Node[::1] nodes, Letter[
         pts += lpts
 
         # make sure this isnt counting has_val and upper words
-        extra_pts = nd.valid_lets[is_col, nv, 1]
+        extra_pts = nd.valid_lets[is_col][nv][1]
         if extra_pts > 0:
             extra_pts += lpts
             if nd.mult_w:
@@ -736,7 +752,7 @@ def _u2(): pass
 #todo test nogil more
 
 @cython.wraparound(False)
-cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, STR_t[:, :, ::1] vl_list, Py_ssize_t start) nogil:
+cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, long[:, :, ::1] vl_list, Py_ssize_t start) nogil:
     cdef Py_ssize_t i
     cdef STR_t nv
 
@@ -812,7 +828,7 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, BOOL_t[::1] nvals, Py_ssize
 
 
 @cython.wraparound(False)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, Node[::1] nodes, Py_ssize_t start):
+cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[15], Py_ssize_t start):
     cdef:
         Py_ssize_t i
         STR_t let
@@ -837,7 +853,7 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, Node[::1] nodes, Py_
         BOOL_t[::1] spts = Settings.points
         BOOL_t lepts
 
-        Node n
+        N n
 
 
     for i in range(wl):
@@ -929,29 +945,32 @@ cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE
 #cdef loi
 
 
-@cython.binding(True)
-@cython.linetrace(True)
-@cython.wraparound(False)
-cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col):
+# @cython.binding(True)
+# @cython.linetrace(True)
 # @cython.wraparound(False)
-# cdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col):
+# cpdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
+@cython.wraparound(False)
+cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col):
     cdef:
         #(uchrp, Py_ssize_t) w
         #cnp.ndarray[:] sw = Settings.search_words
         #Py_ssize_t swl = Settings.search_words_l
 
         Py_ssize_t t
-        Py_ssize_t nlen = nodes.shape[0]
+        Py_ssize_t nlen = Settings.shape[is_col]
 
-        Node n
+        N n
 
-        cnp.npy_intp dims_vlens[2]
+        #cnp.npy_intp dims_vlens[2]
         cnp.npy_intp dims_vlets[3]
         cnp.npy_intp dims_nvals[1]  # todo without array?
 
         #BOOL_t[:, :, ::1] vlens = npe((nlen, 2, max(Settings.shape)), BOOL)
-        BOOL_t[:, ::1] vlens
-        STR_t[:, :, ::1] vlets
+        #bint[:, ::1] vlens
+        #bint vlens[15][15]
+        #bint[:, :] vlens_view = vlens
+
+        long[:, :, ::1] vlets
         BOOL_t[::1] nvals
 
         bint bhas_edge = False
@@ -970,8 +989,8 @@ cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bi
         return
 
 
-    dims_vlens[0] = nlen
-    dims_vlens[1] = Settings.shape[is_col]
+    # dims_vlens[0] = nlen
+    # dims_vlens[1] = Settings.shape[is_col]
 
     dims_vlets[0] = nlen
     dims_vlets[1] = MAX_ORD
@@ -979,13 +998,14 @@ cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bi
 
     dims_nvals[0] = nlen
 
-    vlens = cnp.PyArray_EMPTY(2, dims_vlens, cnp.NPY_UINT8, 0)
-    vlets = cnp.PyArray_EMPTY(3, dims_vlets, cnp.NPY_INT32, 0)
+    #vlens = cnp.PyArray_EMPTY(2, dims_vlens, cnp.NPY_BOOL, 0)
+    vlets = cnp.PyArray_EMPTY(3, dims_vlets, cnp.NPY_LONG, 0)
     nvals = cnp.PyArray_EMPTY(1, dims_nvals, cnp.NPY_UINT8, 0)
 
     for t in range(nlen):
         n = nodes[t]
-        vlens[t] = n.valid_lengths[is_col]
+        #vlens[t] = n.valid_lengths[is_col]
+        #vlens_view[t] = n.valid_lengths[is_col]
         vlets[t] = n.valid_lets[is_col]
         nvals[t] = n.has_val
 
@@ -1001,6 +1021,7 @@ cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bi
 
 
     #Settings.search_words_l  # todo swap test
+
 
     for s in range(sw.shape[0]):
         #w = sw[s]
@@ -1019,7 +1040,10 @@ cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bi
 
         for sn in range(nlen):
             # - is the word a valid length?
-            if vlens[sn, wl1] == 0:
+            #if vlens[sn, wl1] == 0:
+            #if vlens_view[sn, wl1] is False:
+
+            if nodes[sn].valid_lengths[is_col][wl1] is False:
                 #lo.e('not valid')
                 continue
 
@@ -1206,7 +1230,17 @@ cdef void solve(str dictionary):
     Settings.node_board = full
 
     cdef Node[:, ::1] nodes = full.nodes # need?
-    cdef Node[::1] sing_nodes
+    #cdef Node[::1] sing_nodes
+    #cdef N[:] ns_r = npe(Settings.shape[0], N)
+    #cdef N[:] ns_c = npe(Settings.shape[1], N)
+    cdef N ns_r[15]
+    cdef N ns_c[15]
+    #cdef N[:] ns_rv
+    #cdef N[:] ns_cv
+
+    cdef Py_ssize_t ni
+    cdef Node no
+
     cdef Py_ssize_t i, tot
     cdef int ic
     cdef list search_rows, search_cols
@@ -1238,8 +1272,16 @@ cdef void solve(str dictionary):
             if lo.is_enabled('s'):
                 ic += 1
                 lo.s('Checking row %2i  (%2i / %i)', i, ic, tot)
-            sing_nodes = nodes[i]
-            parse_nodes(sing_nodes, sw, swlens, is_col)
+            #sing_nodes = nodes[i]
+
+            for ni in range(Settings.shape[0]):
+                no = nodes[i, ni]
+                ns_r[ni] = no.n
+
+            #ns_rv = ns_r
+
+            #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
+            parse_nodes(ns_r, sw, swlens, is_col)
 
         is_col = True
         for i in search_cols:
@@ -1249,8 +1291,15 @@ cdef void solve(str dictionary):
 
             #sing_nodes = nodes.T[i]
             #sing_nodes = nodes[i]
-            sing_nodes = np.asarray(nodes.T[i], Node, 'C')
-            parse_nodes(sing_nodes, sw, swlens, is_col)
+            #sing_nodes = np.asarray(nodes.T[i], Node, 'C')
+
+            for ni in range(Settings.shape[1]):
+                no = nodes[ni, i]
+                ns_c[ni] = no.n
+
+            #ns_cv = ns_c
+
+            parse_nodes(ns_c, sw, swlens, is_col)
 
 
 """

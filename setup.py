@@ -1,15 +1,15 @@
 import sys
 
 from distutils.core import setup
-from distutils.extension import Extension
+#from distutils.extension import Extension
 
 from Cython.Build import cythonize
 from Cython.Compiler import Options
-from Cython.Distutils import build_ext
+from Cython.Distutils import build_ext, Extension
 
 import compileall
 
-import numpy
+#import numpy  # todo need?
 
 #import json
 #x = Options.get_directive_defaults()
@@ -19,8 +19,8 @@ import numpy
 MOD_DIR = 'scrabble'
 
 Options.buffer_max_dims = 5
-#Options.closure_freelist_size = 2047
-Options.closure_freelist_size = 2 ** 19
+Options.closure_freelist_size = 2047
+#Options.closure_freelist_size = 2 ** 19
 Options.annotate = True
 #Options.clear_to_none = False
 
@@ -43,8 +43,6 @@ comp_directives = {
     #'fast_gil': True,
     #'final': True,  # todo check
 
-    "infer_types": True,
-    "infer_types.verbose": True,
     "initializedcheck": False,
 
     #'internal': True,
@@ -60,15 +58,9 @@ comp_directives = {
 
     'overflowcheck.fold': False,
 
-    "warn": True,
-    "warn.maybe_uninitialized": True,
-    "warn.undeclared": True,
-    "warn.unused": True,
-    "warn.unused_arg": True,
-    "warn.unused_result": True,
-
     #"wraparound": true
 }
+
 
 extra_compile_args = [
     #"-Wall",
@@ -108,10 +100,9 @@ elif '--trace' in sys.argv:
 extensions = [
     Extension(
         "*", [f"{MOD_DIR}/*.pyx"],
+        #include_dirs=[numpy.get_include()],  # '/home/brett/scrabble/scrabble'
         extra_compile_args=extra_compile_args,
         define_macros=define_macros,
-        include_dirs=[numpy.get_include()]
-        #include_dirs=['/home/brett/scrabble/scrabble']
     )
 
     # Extension("p", ["p.pyx"],
@@ -242,6 +233,7 @@ extensions = [
     # ),
 ]
 
+compileall.compile_dir(MOD_DIR, maxlevels=0, optimize=2, workers=4)
 
 ext_options = {
     "compiler_directives": comp_directives,
@@ -249,12 +241,12 @@ ext_options = {
     #"cache": True  #todo ?
 }
 
-compileall.compile_dir(MOD_DIR, maxlevels=0, optimize=2, workers=4)
+setup_ext = cythonize(extensions, **ext_options)
 
 setup(
     name='Scrabble parser',
     cmdclass = {'build_ext': build_ext},
-    ext_modules=cythonize(extensions, **ext_options)
+    ext_modules=setup_ext
 )
 
 

@@ -63,18 +63,50 @@ cdef class WordDict:
     cdef str sol(self)
 
 
+
+ctypedef packed struct N:
+    Letter letter
+
+    BOOL_t mult_a
+    BOOL_t mult_w
+
+    bint is_start
+    bint has_edge
+    bint has_val
+    BOOL_t pts
+
+    # x: r/c, y: lval, z: ok/pts
+    long valid_lets[2][127][2]
+
+    # x: r/c, y: lens
+    bint valid_lengths[2][15]
+
+
 @cython.final(True)
 cdef class Node:
     #uchr x, y
 
-    cdef Letter letter
+    # cdef Letter letter
+    #
+    # cdef BOOL_t mult_a
+    # cdef BOOL_t mult_w
+    #
+    # cdef bint is_start
+    # cdef bint has_val
+    # cdef BOOL_t pts
+    #
+    # cdef bint has_edge
+    #
+    # # x: r/c, y: lval, z: ok/pts
+    # cdef STR_t[:, :, ::1] valid_lets
+    #
+    # x: r/c, y: lens
+    #cdef BOOL_t[:, ::1] valid_lengths
 
-    cdef BOOL_t mult_a
-    cdef BOOL_t mult_w
+    cdef N n
 
-    cdef bint is_start
-    cdef bint has_val
-    cdef BOOL_t pts
+    cdef public long[:, :, :] vlet_view
+    cdef public bint[:, :] vlen_view
 
     cdef readonly str display
 
@@ -85,24 +117,19 @@ cdef class Node:
     cdef str up_word, down_word, left_word, right_word
     cdef STR_t up_pts, down_pts, left_pts, right_pts
 
-    cdef bint has_edge
 
-    # x: r/c, y: lval, z: ok/pts
-    cdef STR_t[:, :, ::1] valid_lets
-
-    # x: r/c, y: lens
-    cdef BOOL_t[:, ::1] valid_lengths
-
-
+@cython.final(True)
 cdef class Board:
     cdef:
         #object[:, :] board, default_board
-        bint new_game
+
         #nodelist_t nodes
         #cnp.ndarray nodes
         #cnp.ndarray[:, :] nodes
         Node[:, ::1] nodes
+
         Py_ssize_t nodes_rl, nodes_cl
+        bint new_game
 
         list words  # todo of word_dicts, what about an object? _pyx_v_self->words = ((PyObject*)__pyx_t_4);
         #np.ndarray[dtype=word_dict] words
@@ -119,19 +146,19 @@ cdef class Board:
 
 
 @cython.final(True)
-cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, Node[::1] nodes, Letter[::1] lets_info, bint is_col, Py_ssize_t start)
+cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[15], Letter[::1] lets_info, bint is_col, Py_ssize_t start)
 
 @cython.final(True)
-cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, STR_t[:, :, ::1] vl_list, Py_ssize_t start) nogil
+cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, long[:, :, ::1] vl_list, Py_ssize_t start) nogil
 
 @cython.final(True)
 cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, BOOL_t[::1] nvals, Py_ssize_t start) nogil
 
 @cython.final(True)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, Node[::1] nodes, Py_ssize_t start)
+cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[15], Py_ssize_t start)
 
 @cython.final(True)
-cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col)
+cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col)
 
 @cython.final(True)
 cdef void solve(str dictionary)
