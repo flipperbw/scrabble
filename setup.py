@@ -19,7 +19,8 @@ import numpy
 MOD_DIR = 'scrabble'
 
 Options.buffer_max_dims = 5
-Options.closure_freelist_size = 1023
+#Options.closure_freelist_size = 2047
+Options.closure_freelist_size = 2 ** 19
 Options.annotate = True
 #Options.clear_to_none = False
 

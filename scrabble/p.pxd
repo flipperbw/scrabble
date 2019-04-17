@@ -1,5 +1,8 @@
+cimport cython
+
 cimport numpy as cnp
 
+ctypedef cnp.uint32_t STRU_t
 ctypedef cnp.int32_t STR_t
 ctypedef cnp.uint8_t BOOL_t
 ctypedef cnp.intp_t SIZE_t
@@ -14,18 +17,20 @@ ctypedef packed struct Letter:
     # todo define getter
 
 
+@cython.final(True)
 cdef class CSettings:
     cdef:
         #(Py_ssize_t, Py_ssize_t) shape
         Py_ssize_t shape[2]
 
+        #object[:, ::1] board, default_board
         object[:, ::1] board
-        object[::1, :] default_board
+        object[:, :] default_board
         #Node[:, :] board, default_board  # todo
 
-        #list letters
         # ord = uint8
         BOOL_t[::1] rack
+        list rack_l
 
         Py_ssize_t rack_s
 
@@ -41,20 +46,24 @@ cdef class CSettings:
         int num_results
 
 
+@cython.final(True)
 cdef class WordDict:
     cdef:
         #str word
         STR_t[::1] word
         #Py_ssize_t wl, s
         BOOL_t wl
-        int s
-        bint is_col
+        STR_t s
+        BOOL_t is_col
         readonly STR_t pts
         list letters  # of Letter
         #Letter[:] letters
         #Letter letters[100]
 
+    cdef str sol(self)
 
+
+@cython.final(True)
 cdef class Node:
     #uchr x, y
 
@@ -108,6 +117,23 @@ cdef class Board:
     cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w)
     cdef void _set_map(self, Node[:] nodes, bint is_col)
 
-cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, STR_t[:, :, :, ::1] vl_list, bint is_col, Py_ssize_t start) nogil
+
+@cython.final(True)
+cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, Node[::1] nodes, Letter[::1] lets_info, bint is_col, Py_ssize_t start)
+
+@cython.final(True)
+cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, STR_t[:, :, ::1] vl_list, Py_ssize_t start) nogil
+
+@cython.final(True)
 cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, BOOL_t[::1] nvals, Py_ssize_t start) nogil
+
+@cython.final(True)
+cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, Node[::1] nodes, Py_ssize_t start)
+
+@cython.final(True)
+cpdef void parse_nodes(Node[::1] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col)
+
+@cython.final(True)
+cdef void solve(str dictionary)
+
 # todo check if need func sig
