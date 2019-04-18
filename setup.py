@@ -1,16 +1,17 @@
 import sys
 
 from distutils.core import setup
-from distutils.extension import Extension
+#from distutils.extension import Extension
 
 from Cython.Build import cythonize
 from Cython.Compiler import Options
+from Cython.Distutils import build_ext, Extension
 
 import compileall
 
-#import json
-import numpy
+#import numpy  # todo need?
 
+#import json
 #x = Options.get_directive_defaults()
 #print(json.dumps(x, indent=4, sort_keys=True))
 #print(Options)
@@ -18,10 +19,16 @@ import numpy
 MOD_DIR = 'scrabble'
 
 Options.buffer_max_dims = 5
-Options.closure_freelist_size = 255
+Options.closure_freelist_size = 2047
+#Options.closure_freelist_size = 2 ** 19
+Options.annotate = True
+#Options.clear_to_none = False
 
 # noinspection PyDictCreation
 comp_directives = {
+    'allow_none_for_extension_args': False,
+    #'annotation_typing': True,
+
     "auto_pickle": False,
     "autotestdict": False,
     "boundscheck": False,
@@ -31,50 +38,56 @@ comp_directives = {
     # "control_flow.dot_annotate_defs": false,
     # "control_flow.dot_output": "",
 
-    #"fast_gil": True,
-    "infer_types": True,
-    "infer_types.verbose": True,
+    "embedsignature": True,
+
+    #'fast_gil': True,
+    #'final': True,  # todo check
+
     "initializedcheck": False,
-    #"language_level": '3str',
-    "language_level": '3',
+
+    #'internal': True,
+
+    "language_level": '3',  # '3str',
     #"np_pythran": True,
+
+    #"set_initial_path": null,
 
     # "optimize.inline_defnode_calls": true,
     # "optimize.unpack_method_calls": true,
     # "optimize.unpack_method_calls_in_pyinit": false,
 
-    "warn.maybe_uninitialized": True,
-    "warn.undeclared": True,
-    "warn.unused": True,
-    "warn.unused_arg": True,
-    "warn.unused_result": True,
+    'overflowcheck.fold': False,
 
     #"wraparound": true
 }
 
-# comp_directives['autotestdict'] = True
-# comp_directives['boundscheck'] = True
-# comp_directives['initializedcheck'] = True
 
 extra_compile_args = [
     #"-Wall",
     "-Wextra",
-    #'-fopenmp'
     "-ffast-math",  # speed?
+    #'-fopenmp'
     "-O3"
     #"-O1"
 ]
 
-#define_macros = [('CYTHON_NO_PYINIT_EXPORT', '1')]
-define_macros: list = [('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION')]
+define_macros: list = [
+    ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'),
+    #('CYTHON_FAST_PYCALL', '1'),
+    #('CYTHON_NO_PYINIT_EXPORT', '1')
+]
+
 
 if '--profile' in sys.argv:
     comp_directives['profile'] = True
     #comp_directives['binding'] = True
 
+    #define_macros.append(('CYTHON_TRACE_NOGIL', '1'))
+
     sys.argv.remove('--profile')
 
 elif '--trace' in sys.argv:
+    #comp_directives['profile'] = True
     # comp_directives['linetrace'] = True
     # comp_directives['binding'] = True
 
@@ -83,7 +96,15 @@ elif '--trace' in sys.argv:
 
     sys.argv.remove('--trace')
 
+
 extensions = [
+    Extension(
+        "*", [f"{MOD_DIR}/*.pyx"],
+        #include_dirs=[numpy.get_include()],  # '/home/brett/scrabble/scrabble'
+        extra_compile_args=extra_compile_args,
+        define_macros=define_macros,
+    )
+
     # Extension("p", ["p.pyx"],
     #     extra_compile_args=['-fopenmp'],
     #     extra_link_args=['-fopenmp'],
@@ -152,26 +173,80 @@ extensions = [
     #     #     '-lopencv_core'
     #     # ]
     # ),
-    Extension(
-        "*", [f"{MOD_DIR}/*.pyx"],
-        extra_compile_args=extra_compile_args,
-        define_macros=define_macros
-    )
+
+    # Extension(
+    #     "*", [f"{MOD_DIR}/*.pyx"],
+    #     extra_compile_args=extra_compile_args,
+    #     define_macros=define_macros,
+    #     include_dirs=[
+    #         numpy.get_include(),
+    #         '/usr/include/opencv',
+    #         '/usr/include/opencv2',
+    #     ],
+    #
+    #     library_dirs=['/usr/lib', '/usr/lib/x86_64-linux-gnu'],
+    #     libraries=['opencv_imgproc', 'opencv_saliency']
+    #
+    #     # extra_link_args=[
+    #     #     '-lopencv_shape',
+    #     #     '-lopencv_stitching',
+    #     #     '-lopencv_superres',
+    #     #     '-lopencv_videostab',
+    #     #     '-lopencv_aruco',
+    #     #     '-lopencv_bgsegm',
+    #     #     '-lopencv_bioinspired',
+    #     #     '-lopencv_ccalib',
+    #     #     '-lopencv_datasets',
+    #     #     '-lopencv_dpm',
+    #     #     '-lopencv_face',
+    #     #     '-lopencv_freetype',
+    #     #     '-lopencv_fuzzy',
+    #     #     '-lopencv_hdf',
+    #     #     '-lopencv_line_descriptor',
+    #     #     '-lopencv_optflow',
+    #     #     '-lopencv_video',
+    #     #     '-lopencv_plot',
+    #     #     '-lopencv_reg',
+    #     #     '-lopencv_saliency',
+    #     #     '-lopencv_stereo',
+    #     #     '-lopencv_structured_light',
+    #     #     '-lopencv_phase_unwrapping',
+    #     #     '-lopencv_rgbd',
+    #     #     '-lopencv_viz',
+    #     #     '-lopencv_surface_matching',
+    #     #     '-lopencv_text',
+    #     #     '-lopencv_ximgproc',
+    #     #     '-lopencv_calib3d',
+    #     #     '-lopencv_features2d',
+    #     #     '-lopencv_flann',
+    #     #     '-lopencv_xobjdetect',
+    #     #     '-lopencv_objdetect',
+    #     #     '-lopencv_ml',
+    #     #     '-lopencv_xphoto',
+    #     #     '-lopencv_highgui',
+    #     #     '-lopencv_videoio',
+    #     #     '-lopencv_imgcodecs',
+    #     #     '-lopencv_photo',
+    #     #     '-lopencv_imgproc',
+    #     #     '-lopencv_core'
+    #     # ]
+    # ),
 ]
 
+compileall.compile_dir(MOD_DIR, maxlevels=0, optimize=2, workers=4)
 
 ext_options = {
     "compiler_directives": comp_directives,
-    "annotate": True,
-    #"cache": True # ?
+    #"annotate": True,
+    #"cache": True  #todo ?
 }
 
-
-compileall.compile_dir(MOD_DIR, maxlevels=1, optimize=2)
+setup_ext = cythonize(extensions, **ext_options)
 
 setup(
     name='Scrabble parser',
-    ext_modules=cythonize(extensions, **ext_options)
+    cmdclass = {'build_ext': build_ext},
+    ext_modules=setup_ext
 )
 
 

@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import textwrap
+from typing import Union
 
 import verboselogs
 from colored import attr, fg, stylize
@@ -13,6 +14,7 @@ from logs import DEFAULT_LOGLEVEL, LEVELS
 
 
 #https://i.stack.imgur.com/KTSQa.png
+
 BLUE = fg(153)
 RED = fg(160)
 GREEN = fg(120)
@@ -38,20 +40,10 @@ class CustomArgumentParser(argparse.ArgumentParser):
         self.exit(2, 'Error: {}'.format(message))
 
 
-def terminal_size():
-    sizes = os.popen('stty size').read().split()
-    if len(sizes) != 2:
-        rows = 120
-        cols = 120
-    else:
-        rows, cols = sizes
-    return int(cols), int(rows)
-
-
 class CustomHelpFormatter(argparse.HelpFormatter):
     def __init__(self, prog):
         if sys.stdout.isatty():
-            width = min(terminal_size()[0] - 2, 120)
+            width = min(self._terminal_size()[0] - 2, 120)
         else:
             width = 120
         max_help = 40
@@ -61,6 +53,16 @@ class CustomHelpFormatter(argparse.HelpFormatter):
         if prefix is None:
             prefix = '{}\n  '.format(stylize("Usage:", BLUE))
         return super().add_usage(usage, actions, groups, prefix)
+
+    @staticmethod
+    def _terminal_size():
+        sizes = os.popen('stty size').read().split()
+        if len(sizes) != 2:
+            rows = 120
+            cols = 120
+        else:
+            rows, cols = sizes
+        return int(cols), int(rows)
 
     def _split_lines(self, text, width):
         split_text = text.split('\n')
@@ -94,12 +96,7 @@ class CustomHelpFormatter(argparse.HelpFormatter):
 
 
 def parser_init(
-        description,  # type: str
-        usage=None,  # type: str
-        add_debug=True,  # type: bool
-        log_level=DEFAULT_LOGLEVEL,
-        version=1.0,
-        **kwargs
+    description: str, usage: str = None, add_debug: bool = True, log_level: Union[int, str] = DEFAULT_LOGLEVEL, version: float = 1.0, **kwargs
 ):
     pargs = {
         'description': stylize(description, GRAY),
@@ -127,6 +124,7 @@ def parser_init(
 
         if isinstance(log_level, int):
             log_level = verboselogs.logging.getLevelName(log_level)
+
         grp_debug.add_argument(
             '-l', '--log-level', type=str, default=str(log_level).lower(), choices=[l.lower() for l in LEVELS], metavar='<lvl>',
             help='Log level for output (default: %(default)s)\nChoices: {%(choices)s}'

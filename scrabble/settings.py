@@ -10,8 +10,7 @@ NUM_RESULTS = 15
 
 # - DIRS
 
-curr_dir = Path('/home/brett/dev/scrabble/')  # todo fix
-#curr_dir = Path(__file__).absolute()
+curr_dir = Path(__file__).parent.absolute()
 img_dir = Path(curr_dir, 'images')
 data_dir = Path(curr_dir, 'data')
 
@@ -86,9 +85,8 @@ LETTERS = ['']
 # - WORDS
 
 SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
+#SEARCH_WORDS = {'EXUVIAL', 'HEIR', 'AAAX'}
 #SEARCH_WORDS = (0, 120000)
-#SEARCH_WORDS = {'AXLIKE', 'SEA', 'SEI', 'ASDAZSD', 'XI', 'XIS'}
-#SEARCH_WORDS = {'XYZ', 'EDDY', 'AAA'}
 
 
 # - NODES

@@ -27,7 +27,7 @@ DICTIONARY = 'wwf'
 
 
 def parse_args():
-    from parsing import parser_init
+    from parser_defaults import parser_init
 
     parser = parser_init(
         description=__doc__,

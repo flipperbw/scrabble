@@ -159,15 +159,21 @@ class LogWrapper:
         return rv
 
 def _set_styles():
+    #print(coloredlogs.DEFAULT_LEVEL_STYLES)
+
     level_styles = {
         la: coloredlogs.DEFAULT_LEVEL_STYLES[ln.lower()] for ln, la in LEVELS.items()
     }
 
     # 'black', 'blue', 'cyan', 'green', 'magenta', 'red', 'white' and 'yellow'  # todo
-    level_styles['i'] = {'color': 'cyan', 'bright': True}
-    level_styles['info'] = level_styles['i']
     level_styles['d'] = {'color': 'cyan'}  # make gray
     level_styles['debug'] = level_styles['d']
+    level_styles['i'] = {'color': 'cyan', 'bright': True}
+    level_styles['info'] = level_styles['i']
+    level_styles['e'] = {'color': 'red', 'bold': True}
+    level_styles['error'] = level_styles['c']
+    level_styles['c'] = {'color': 'red'}
+    level_styles['critical'] = level_styles['c']
 
     field_styles = coloredlogs.DEFAULT_FIELD_STYLES
 
