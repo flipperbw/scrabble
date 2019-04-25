@@ -1,4 +1,4 @@
-BUILD_CMD=python ./setup.py build_ext -i
+BUILD_CMD=python3 ./setup.py build_ext -i
 PARSE_CMD=time -p ./scrabble/e.py
 OCR_CMD=time -p ./scrabble/o.py
 
