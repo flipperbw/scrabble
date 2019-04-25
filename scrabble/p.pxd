@@ -26,9 +26,7 @@ cdef class CSettings:
         int rack[MAX_ORD]
 
         list rack_l
-
         Py_ssize_t rack_s
-
         BOOL_t blanks
 
         # ord = uint8
@@ -56,25 +54,27 @@ ctypedef packed struct Letter_List:
     Py_ssize_t len
 
 
+ctypedef packed struct WordDict_Struct:
+    BOOL_t is_col
+    Letter_List letters
+
+
 @cython.final(True)
 cdef class WordDict:
     cdef:
-        #str word
-        STR_t[::1] word
-        #Py_ssize_t wl, s
-        BOOL_t wl
-        STR_t s
-        BOOL_t is_col
+        WordDict_Struct w
         readonly STR_t pts
-        Letter_List letters
-        #list letters  # of Letter
-        #Letter[:] letters
-        #Letter letters[100]
 
-    cdef str sol(self)
+    cdef void sol(self, char* buffer)
+
+cpdef WordDict rebuild_worddict(WordDict_Struct w, int pts)
 
 
 #ctypedef long valid_let_t[MAX_ORD][2]
+
+# cdef packed struct multiplier_t:
+#     uchr amt
+#     uchrp typ
 
 
 ctypedef packed struct N:
@@ -117,14 +117,13 @@ cdef class Node:
     cdef STR_t up_pts, down_pts, left_pts, right_pts
 
 
+# todo do I need final?
 @cython.final(True)
 cdef class Board:
     cdef:
         #object[:, :] board, default_board
 
         #nodelist_t nodes
-        #cnp.ndarray nodes
-        #cnp.ndarray[:, :] nodes
         Node[:, ::1] nodes
 
         Py_ssize_t nodes_rl, nodes_cl
@@ -144,25 +143,28 @@ cdef class Board:
     cdef void _set_map(self, Node[:] nodes, bint is_col)
 
 
-@cython.final(True)
-cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Letter_List lets_info, bint is_col, Py_ssize_t start) nogil
 
-@cython.final(True)
+
+cdef SIZE_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil
+
 #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil
 cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil
 
-@cython.final(True)
 cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil
 
-@cython.final(True)
 cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil
 
-cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t tot_pts, Letter_List lets_info)
+cdef void add_word(Letter_List lets_info, bint is_col, SIZE_t tot_pts)
 
-@cython.final(True)
 cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) # nogil
 
-@cython.final(True)
+cpdef object loadfile(tuple paths, bint is_file=*)
+
 cdef void solve(str dictionary)
+
+cdef void print_board(STR_t[:, ::1] nodes, Letter_List lets)
+cdef void show_solution(STR_t[:, ::1] nodes, list words, bint no_words)
+
+cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level)
 
 # todo check if need func sig

@@ -66,8 +66,8 @@ if __name__ == '__main__':
         import line_profiler
 
         profile = line_profiler.LineProfiler(
-            p.parse_nodes,
-            #p.solve,
+            #p.parse_nodes,
+            p.solve,
             #p.cmain,
             # p.set_word_dict,
             # p.rack_check,
