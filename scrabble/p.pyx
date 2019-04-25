@@ -5,6 +5,8 @@
 cimport cython
 #from cython.parallel import prange
 
+from libc.stdio cimport printf
+
 cdef object json, md5, Path, np, pd, log_init, _s
 #cdef module np
 #sys
@@ -45,9 +47,9 @@ ctypedef unsigned char uchr
 #ctypedef cnp.int32_t STR_t
 #ctypedef cnp.uint8_t BOOL_t
 #ctypedef cnp.intp_t SIZE_t
-cdef type STR = np.int32
-cdef type BOOL = np.uint8
-cdef type SIZE = np.intp
+cdef type STR = <type>np.int32
+cdef type BOOL = <type>np.uint8
+cdef type SIZE = <type>np.intp
 
 cdef object npz = np.zeros
 cdef object npe = np.empty
@@ -64,9 +66,10 @@ cdef object npe = np.empty
 #cdef bytes NUL = b'\0'
 #DEF NUL = b'\0'
 DEF bl = ord('?')
-DEF MAX_ORD = 127  # todo replace 127
 DEF L_ST = 65
 DEF L_EN = 91
+DEF MAX_NODES = 15
+DEF MAX_ORD = 127  # todo replace 127
 
 # cdef packed struct multiplier_t:
 #     uchr amt
@@ -77,7 +80,7 @@ DEF L_EN = 91
 #     uchr pts
 
 
-cdef Letter[::1] lets_empty = npe(15, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
+cdef Letter[::1] lets_empty = npe(MAX_NODES, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
 
 
 # todo : do comments like these causes c stuff?
@@ -323,8 +326,11 @@ cdef class Node:
         # dims_vlens[1] = Settings.shape[0] if Settings.shape[0] > Settings.shape[1] else Settings.shape[1]
         # self.valid_lengths = cnp.PyArray_ZEROS(2, dims_vlens, cnp.NPY_UINT8, 0)
 
+        self.plet_view = self.n.pts_lets
+        self.plet_view[:, :] = 0
+
         self.vlet_view = self.n.valid_lets
-        self.vlet_view[:, :, :] = 0
+        self.vlet_view[:, :] = False
 
         self.vlen_view = self.n.valid_lengths
         self.vlen_view[:, :] = False
@@ -522,11 +528,11 @@ cdef class Board:
     # move to checknodes?
     cdef void _set_lets(self, Node n):
         if n.n.has_val:
-            n.vlet_view[:, n.n.letter.value, 0] = 1
+            n.vlet_view[:, n.n.letter.value] = True
             return
 
         if not n.n.has_edge:
-            n.vlet_view[:, L_ST:L_EN, 0] = 1
+            n.vlet_view[:, L_ST:L_EN] = True
             return
 
         cdef Py_ssize_t i_s = L_ST
@@ -534,22 +540,24 @@ cdef class Board:
         while i_s < L_EN:
             # - rows
             if self._check_adj_words(i_s, n.up, n.down, n.up_word, n.down_word):
-                n.vlet_view[0, i_s, 0] = 1
-                n.vlet_view[0, i_s, 1] = n.up_pts + n.down_pts
+                n.vlet_view[0, i_s] = True
+                n.plet_view[0, i_s] = n.up_pts + n.down_pts
 
             # - cols
             if self._check_adj_words(i_s, n.left, n.right, n.left_word, n.right_word):
-                n.vlet_view[1, i_s, 0] = 1
-                n.vlet_view[1, i_s, 1] = n.left_pts + n.right_pts
+                n.vlet_view[1, i_s] = True
+                n.plet_view[1, i_s] = n.left_pts + n.right_pts
 
             i_s += 1
 
 
     cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w):
+        cdef str new_word
+
         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):
             return True
 
-        cdef str new_word = bef_w + <str>chr(i) + aft_w
+        new_word = bef_w + <str>chr(i) + aft_w
         #new_word = ''.join(chr(ns.value) for ns in new_let_list)
 
         #lo.x(new_word)
@@ -564,14 +572,14 @@ cdef class Board:
             Py_ssize_t max_swl = Settings.shape[is_col]
 
             # todo this vs numpy bint?
-            cdef bint has_edge, has_blanks
+            bint has_edge, has_blanks
 
-            cdef Node no
+            Node no
 
-            #bint?
-            # x = Node, y = lens
-            bint valid_lengths[15][15]
-            bint[:, :] vlen_view = valid_lengths
+            bint valid_lengths[MAX_NODES][MAX_NODES]
+            bint[:, :] vlen_view
+
+        vlen_view = valid_lengths
 
         vlen_view[:, :] = True
 
@@ -649,10 +657,8 @@ cdef class Board:
 
         #lo.s(f'\n{vlen_view.base}')
 
-
         for t in range(nlen):
-            nodes[t].vlen_view[is_col] = vlen_view[t]
-            #lo.e(nodes[t].vlen_view.base[is_col])
+            nodes[t].vlen_view[is_col, :nlen] = valid_lengths[t]
 
 
     def __str__(self) -> str:
@@ -673,7 +679,7 @@ cdef class Board:
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[15], Letter[::1] lets_info, bint is_col, Py_ssize_t start):
+cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Letter[::1] lets_info, bint is_col, Py_ssize_t start) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
@@ -715,7 +721,7 @@ cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[15], Letter[::1]
         pts += lpts
 
         # make sure this isnt counting has_val and upper words
-        extra_pts = nd.valid_lets[is_col][nv][1]
+        extra_pts = nd.pts_lets[is_col][nv]
         if extra_pts > 0:
             extra_pts += lpts
             if nd.mult_w:
@@ -745,21 +751,20 @@ cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[15], Letter[::1]
     #
     # Settings.node_board.words.append(w)
 
-def _u2(): pass
-
 
 #todo should this be pyssize for word?
 #todo test nogil more
 
 @cython.wraparound(False)
-cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, long[:, :, ::1] vl_list, Py_ssize_t start) nogil:
+cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil:
+#cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil:
     cdef Py_ssize_t i
     cdef STR_t nv
 
     for i in range(wl):
         nv = word[i]
         # mismatch in nv?
-        if not vl_list[i + start, nv, 0]:
+        if not nodes[i + start].valid_lets[is_col][nv]:
             return False
 
     return True
@@ -783,13 +788,12 @@ cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, long[:, :, ::1] vl_list, Py
 
 
 @cython.wraparound(False)
-cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, BOOL_t[::1] nvals, Py_ssize_t start) nogil:
+cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks) nogil:  # or memview for nvals?
     # todo this vs numpy ssize?
     cdef BOOL_t nval
     cdef Py_ssize_t i
     cdef STR_t let
     cdef BOOL_t num
-    cdef BOOL_t blanks
 
     cdef BOOL_t[::1] rack
     #cdef BOOL_t[:] rack = Settings.rack.copy()
@@ -799,7 +803,6 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, BOOL_t[::1] nvals, Py_ssize
 
     with gil:
         rack = Settings.rack.copy()
-        blanks = Settings.blanks
 
     for i in range(wl):
         nval = nvals[i + start]
@@ -828,12 +831,12 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, BOOL_t[::1] nvals, Py_ssize
 
 
 @cython.wraparound(False)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[15], Py_ssize_t start):
+cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start) nogil:
     cdef:
         Py_ssize_t i
         STR_t let
 
-        BOOL_t[::1] rack = Settings.rack.copy()
+        BOOL_t[::1] rack
         #BOOL_t[:] rack = rack_empty.copy()
         #BOOL_t[:] rack = np.zeros(MAX_ORD, BOOL)
         #uchr[:] rack = np.zeros(MAX_ORD, BOOL)
@@ -841,7 +844,7 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[15], Py_ssiz
         BOOL_t num
 
         #int?
-        Letter[::1] lets_info = lets_empty.copy()
+        Letter[::1] lets_info
 
         #list npa = [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)]
         #Letter[:] lets_info = np.empty(wl, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
@@ -854,6 +857,11 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[15], Py_ssiz
         BOOL_t lepts
 
         N n
+
+
+    with gil:
+        rack = Settings.rack.copy()
+        lets_info = lets_empty.copy()
 
 
     for i in range(wl):
@@ -922,35 +930,15 @@ cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE
 # lsl = np.count_nonzero(ls)
 
 
-# @cython.wraparound(False)
-# cdef bint check_nodes(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t sn, BOOL_t[:, ::1] vlens, STR_t[:, :, ::1] vlets, BOOL_t[::1] nvals) nogil:
-#
-#     # - is the word a valid length?
-#     if vlens[sn, wl - 1] == 0:
-#         #lo.e('not valid')
-#         return False
-#
-#     # - do the letters match the board?
-#     if lets_match(ww, wl, vlets, sn) is False:
-#         #lo.e('dont match')
-#         return False
-#
-#     # - do we have enough in the rack?
-#     if rack_check(ww, wl, nvals, sn) is False:
-#         return False
-#
-#     return True
-
-
 #cdef loi
 
 
 # @cython.binding(True)
 # @cython.linetrace(True)
 # @cython.wraparound(False)
-# cpdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
+# cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
 @cython.wraparound(False)
-cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col):
+cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col): # nogil:
     cdef:
         #(uchrp, Py_ssize_t) w
         #cnp.ndarray[:] sw = Settings.search_words
@@ -961,17 +949,13 @@ cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is
 
         N n
 
-        #cnp.npy_intp dims_vlens[2]
-        cnp.npy_intp dims_vlets[3]
-        cnp.npy_intp dims_nvals[1]  # todo without array?
+        #cnp.npy_intp dims_vlets[3]
 
-        #BOOL_t[:, :, ::1] vlens = npe((nlen, 2, max(Settings.shape)), BOOL)
-        #bint[:, ::1] vlens
-        #bint vlens[15][15]
-        #bint[:, :] vlens_view = vlens
+        #valid_let_t vlets[MAX_NODES]
+        #bint vlets[MAX_NODES][MAX_ORD]
+        #bint[:, ::1] vlets_view
 
-        long[:, :, ::1] vlets
-        BOOL_t[::1] nvals
+        bint nvals[MAX_NODES]
 
         bint bhas_edge = False
 
@@ -984,30 +968,28 @@ cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is
             break
 
     if not bhas_edge:
+        #with gil:
         if lo.is_enabled('i'):
             lo.i('-> [empty]')
         return
 
 
-    # dims_vlens[0] = nlen
-    # dims_vlens[1] = Settings.shape[is_col]
+    # dims_vlets[0] = nlen
+    # dims_vlets[1] = MAX_ORD
+    # dims_vlets[2] = 2
+    #
+    # vlets = cnp.PyArray_EMPTY(3, dims_vlets, cnp.NPY_LONG, 0)
 
-    dims_vlets[0] = nlen
-    dims_vlets[1] = MAX_ORD
-    dims_vlets[2] = 2
-
-    dims_nvals[0] = nlen
-
-    #vlens = cnp.PyArray_EMPTY(2, dims_vlens, cnp.NPY_BOOL, 0)
-    vlets = cnp.PyArray_EMPTY(3, dims_vlets, cnp.NPY_LONG, 0)
-    nvals = cnp.PyArray_EMPTY(1, dims_nvals, cnp.NPY_UINT8, 0)
+    #vlets_view = vlets
 
     for t in range(nlen):
         n = nodes[t]
         #vlens[t] = n.valid_lengths[is_col]
         #vlens_view[t] = n.valid_lengths[is_col]
-        vlets[t] = n.valid_lets[is_col]
         nvals[t] = n.has_val
+
+        #vlets[t] = n.valid_lets[is_col]
+        #vlets_view[t] = n.valid_lets[is_col]
 
 
     cdef:
@@ -1018,6 +1000,7 @@ cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is
         SIZE_t tot_pts
         #WordDict w
         #list letslist
+        BOOL_t blanks = Settings.blanks
 
 
     #Settings.search_words_l  # todo swap test
@@ -1048,20 +1031,20 @@ cdef void parse_nodes(N nodes[15], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is
                 continue
 
             # - do the letters match the board?
-            if lets_match(ww, wl, vlets, sn) is False:
+            if lets_match(ww, wl, nodes, sn, is_col) is False:
                 #lo.e('dont match')
                 continue
 
             # - do we have enough in the rack?
-            if rack_check(ww, wl, nvals, sn) is False:
+            if rack_check(ww, wl, nvals, sn, blanks) is False:
                 #lo.e('not enough rack')
                 continue
 
-            #with gil:
             lets_info = rack_match(ww, wl, nodes, sn)
 
             tot_pts = set_word_dict(ww, wl, nodes, lets_info, is_col, sn)
 
+            #with gil:
             add_word(ww, wl, s, is_col, tot_pts, lets_info)
 
             # letslist = list(lets_info)
@@ -1233,8 +1216,8 @@ cdef void solve(str dictionary):
     #cdef Node[::1] sing_nodes
     #cdef N[:] ns_r = npe(Settings.shape[0], N)
     #cdef N[:] ns_c = npe(Settings.shape[1], N)
-    cdef N ns_r[15]
-    cdef N ns_c[15]
+    cdef N ns_r[MAX_NODES]
+    cdef N ns_c[MAX_NODES]
     #cdef N[:] ns_rv
     #cdef N[:] ns_cv
 
@@ -1336,17 +1319,21 @@ cdef void show_solution(
         #str[:, ::1] nodes_copy
 
     if not words:
-        print('\nNo solution.')
+        printf('\nNo solution.\n')
         return
 
     newlist = sorted(words, key=lambda k: k.pts, reverse=True)
+    # if not newlist:
+    #     lo.e('Error: solution list is empty')
+    #     return
+
     if lo.is_enabled('s'):
         if Settings.num_results == 0:
             cutlist = newlist
         else:
             cutlist = newlist[:Settings.num_results]
 
-        print()
+        printf('\n')
         lo.s(f'-- Results ({len(cutlist)} / {len(newlist)}) --\n')
         for w in reversed(cutlist):
             lo.s(w.sol())
@@ -1373,7 +1360,7 @@ cdef void show_solution(
     cdef int smalltens = 9361
 
     if no_words:  # todo: print xs instead?
-        print(f'\n<solution hidden> (len: {len(best.word)})')
+        printf('\n<solution hidden> (len: %zu)\n', len(best.word))
 
     else:
         nodes_copy = nodes[:, :]
@@ -1382,7 +1369,7 @@ cdef void show_solution(
             x = letter.x
             y = letter.y
             if not nodes_copy[x, y] or nodes_copy[x, y] == ' ':
-                nodes_copy[x, y] = f'{board_hl}{chr(letter.value)}{board_cl}'
+                nodes_copy[x, y] = board_hl + chr(letter.value) + board_cl
 
         js = []
         for i in range(nodes_copy.shape[0]):
@@ -1393,7 +1380,7 @@ cdef void show_solution(
 
         horiz =  u_dash + (f'{u_dash}+' * nodes_copy.shape[1]) + u_dash
 
-        print(f'\n     {" ".join(js)}')
+        print('\n     {}'.format(' '.join(js)))
 
         print('   ' + u_bx_ul + horiz + u_bx_ur)
 
@@ -1402,7 +1389,7 @@ cdef void show_solution(
 
         print('   ' + u_bx_bl + horiz + u_bx_br)
 
-    print(f'\nPoints: {best.pts}')
+    printf('\nPoints: %i\n', best.pts)
 
 
 # except *
@@ -1467,7 +1454,7 @@ cdef void cmain(
     board = pdboard.to_numpy(np.object_)  # type: np.ndarray
 
     board_size = board.size
-    if board_size == 15 * 15:
+    if board_size == MAX_NODES * MAX_NODES:
         board_name = _s.DEF_BOARD_BIG
     elif board_size == 11 * 11:
         board_name = _s.DEF_BOARD_SMALL
@@ -1547,7 +1534,6 @@ cdef void cmain(
         s_words = solution_data['words'].tolist()
 
         show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
-
 
 
 # def
