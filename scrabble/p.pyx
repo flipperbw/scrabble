@@ -142,7 +142,11 @@ cdef class CSettings:
         self.board = None
         self.default_board = None
 
-        self.rack = npz(MAX_ORD, BOOL)
+        cdef Py_ssize_t i = 0
+        while i < MAX_ORD:
+            self.rack[i] = 0
+            i += 1
+
         self.rack_l = []
 
         self.rack_s = 0
@@ -786,23 +790,22 @@ cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssiz
 
 #DEF nu = NULL
 
-
+# todo combine this with below?
 @cython.wraparound(False)
-cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks) nogil:  # or memview for nvals?
+cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil:  # or memview for nvals?
     # todo this vs numpy ssize?
-    cdef BOOL_t nval
-    cdef Py_ssize_t i
-    cdef STR_t let
-    cdef BOOL_t num
+    cdef:
+        BOOL_t nval
+        Py_ssize_t i
+        Py_ssize_t r = 0
+        STR_t let
+        BOOL_t num
+        int rack[MAX_ORD]
 
-    cdef BOOL_t[::1] rack
-    #cdef BOOL_t[:] rack = Settings.rack.copy()
-    #cdef BOOL_t[:] rack = rack_empty.copy()
-    #cdef BOOL_t[:] rack = np.zeros(MAX_ORD, BOOL)
-    #cdef uchr[:] rack = np.zeros(MAX_ORD, BOOL)
 
-    with gil:
-        rack = Settings.rack.copy()
+    while r < MAX_ORD:
+        rack[r] = base_rack[r]
+        r += 1
 
     for i in range(wl):
         nval = nvals[i + start]
@@ -831,15 +834,13 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_s
 
 
 @cython.wraparound(False)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start) nogil:
+cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil:
     cdef:
         Py_ssize_t i
+        Py_ssize_t r = 0
         STR_t let
 
-        BOOL_t[::1] rack
-        #BOOL_t[:] rack = rack_empty.copy()
-        #BOOL_t[:] rack = np.zeros(MAX_ORD, BOOL)
-        #uchr[:] rack = np.zeros(MAX_ORD, BOOL)
+        int rack[MAX_ORD]
 
         BOOL_t num
 
@@ -860,9 +861,12 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
 
 
     with gil:
-        rack = Settings.rack.copy()
+        #rack = Settings.rack.copy()
         lets_info = lets_empty.copy()
 
+    while r < MAX_ORD:
+        rack[r] = base_rack[r]
+        r += 1
 
     for i in range(wl):
         n = nodes[i + start]
@@ -1001,6 +1005,7 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
         #WordDict w
         #list letslist
         BOOL_t blanks = Settings.blanks
+        int[:] base_rack = Settings.rack
 
 
     #Settings.search_words_l  # todo swap test
@@ -1036,11 +1041,11 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
                 continue
 
             # - do we have enough in the rack?
-            if rack_check(ww, wl, nvals, sn, blanks) is False:
+            if rack_check(ww, wl, nvals, sn, blanks, base_rack) is False:
                 #lo.e('not enough rack')
                 continue
 
-            lets_info = rack_match(ww, wl, nodes, sn)
+            lets_info = rack_match(ww, wl, nodes, sn, base_rack)
 
             tot_pts = set_word_dict(ww, wl, nodes, lets_info, is_col, sn)
 
@@ -1438,17 +1443,14 @@ cdef void cmain(
             #letters = letters[letters != el]
             rack.remove(el)
 
-    #cdef list rack_b = [ord(l) for l in letters]
-    cdef BOOL_t[::1] rack_b = npz(MAX_ORD, BOOL)
     cdef object l
     for l in rack:
         # actually a long... TODO check ords
-        rack_b[<Py_ssize_t>ord(l)] += 1
+        Settings.rack[<Py_ssize_t>ord(l)] += 1
 
     #rack_b.sort()
 
     Settings.rack_l = rack
-    Settings.rack[::1] = rack_b
     Settings.rack_s = len(rack)
 
     board = pdboard.to_numpy(np.object_)  # type: np.ndarray

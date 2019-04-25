@@ -32,7 +32,8 @@ cdef class CSettings:
         #Node[:, :] board, default_board  # todo
 
         # ord = uint8
-        BOOL_t[::1] rack
+        int rack[MAX_ORD]
+
         list rack_l
 
         Py_ssize_t rack_s
@@ -144,10 +145,10 @@ cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Lett
 cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil
 
 @cython.final(True)
-cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks) nogil
+cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil
 
 @cython.final(True)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start) nogil
+cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil
 
 @cython.final(True)
 cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) # nogil
