@@ -80,9 +80,6 @@ DEF MAX_ORD = 127  # todo replace 127
 #     uchr pts
 
 
-cdef Letter[::1] lets_empty = npe(MAX_NODES, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
-
-
 # todo : do comments like these causes c stuff?
 """
 @cython.freelist(50000)  # todo check
@@ -172,7 +169,7 @@ cdef class WordDict:
     #Letter[:] letters
     def __cinit__(
         #self, STR_t[::1] word, SIZE wl, Py_ssize_t s, bint is_col, SIZE_t pts, list letters not None  # todo check not none
-        self, word, int wl, int s, bint is_col, int pts, list letters
+        self, word, int wl, int s, bint is_col, int pts, Letter_List letters
     ):
         # lo.e(letters)
         # lo.e(letters.shape)
@@ -192,8 +189,8 @@ cdef class WordDict:
     cdef str sol(self):
         cdef str direc = 'c' if self.is_col is True else 'r'
 
-        cdef Letter lf = self.letters[0]
-        cdef Letter ll = self.letters[-1]
+        cdef Letter lf = self.letters.l[0]
+        cdef Letter ll = self.letters.l[-1]
 
         cdef str pos
         if self.is_col is True:
@@ -252,7 +249,7 @@ cdef class WordDict:
             # np.array(self.letters, [
             #     ('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)
             # ])
-            list(self.letters)
+            self.letters
         )
 
 cpdef rebuild_worddict(word, wl, s, is_col, pts, letters):
@@ -683,7 +680,7 @@ cdef class Board:
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Letter[::1] lets_info, bint is_col, Py_ssize_t start) nogil:
+cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Letter_List lets_info, bint is_col, Py_ssize_t start) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
@@ -710,7 +707,7 @@ cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Lett
     for i in range(wl):
         nv = ww[i]
         nd = nodes[i + start]
-        le = lets_info[i]
+        le = lets_info.l[i]
 
         #lo.d(type(le))  # todo: is this actually a dict?
 
@@ -834,7 +831,7 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_s
 
 
 @cython.wraparound(False)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil:
+cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t r = 0
@@ -845,7 +842,8 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
         BOOL_t num
 
         #int?
-        Letter[::1] lets_info
+        Letter_List lets_info
+        #Letter[:] lets_view = <Letter[:MAX_NODES]>lets_info
 
         #list npa = [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)]
         #Letter[:] lets_info = np.empty(wl, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
@@ -859,10 +857,10 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
 
         N n
 
+    #cdef Letter[::1] lets_empty = npe(MAX_NODES, [('is_blank', BOOL), ('from_rack', BOOL), ('pts', BOOL), ('x', BOOL), ('y', BOOL), ('value', STR)])
+    #lets_info = lets_empty.copy()
 
-    with gil:
-        #rack = Settings.rack.copy()
-        lets_info = lets_empty.copy()
+    lets_info.len = wl
 
     while r < MAX_ORD:
         rack[r] = base_rack[r]
@@ -873,7 +871,7 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
         le = n.letter
 
         if n.has_val:
-            lets_info[i] = le
+            lets_info.l[i] = le
             continue
 
         le.from_rack = True
@@ -892,16 +890,16 @@ cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
 
             le.pts = lepts
 
-        lets_info[i] = le
+        lets_info.l[i] = le
 
-    return lets_info[:wl]
+    return lets_info
 
 
-cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t tot_pts, Letter[::1] lets_info):
-    cdef list letslist
+cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t tot_pts, Letter_List lets_info):
+    #cdef list letslist
     cdef WordDict w
 
-    letslist = list(lets_info)
+    #letslist = list(lets_info.l)
 
     # lo.e(letslist)
     # lo.e(lets_info)
@@ -914,8 +912,8 @@ cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE
         <int>s,
         is_col,
         tot_pts,
-        letslist
-        #lets_info
+        #letslist
+        lets_info
     )
 
     Settings.node_board.words.append(w)
@@ -999,7 +997,7 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
     cdef:
         Py_ssize_t s, wl, wl1, sn
         STR_t[::1] ww
-        Letter[::1] lets_info
+        Letter_List lets_info
         #bint matches
         SIZE_t tot_pts
         #WordDict w
@@ -1316,7 +1314,7 @@ cdef void show_solution(
     cdef:
         WordDict w, best
         list newlist, cutlist, js
-        Py_ssize_t rown, i
+        Py_ssize_t rown, i, l
         BOOL_t x, y
         str horiz
         Letter letter
@@ -1370,7 +1368,8 @@ cdef void show_solution(
     else:
         nodes_copy = nodes[:, :]
 
-        for letter in best.letters:
+        for l in range(best.letters.len):
+            letter = best.letters.l[l]
             x = letter.x
             y = letter.y
             if not nodes_copy[x, y] or nodes_copy[x, y] == ' ':

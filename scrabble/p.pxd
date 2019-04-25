@@ -10,15 +10,6 @@ ctypedef cnp.int32_t STR_t
 ctypedef cnp.uint8_t BOOL_t
 ctypedef cnp.intp_t SIZE_t
 
-ctypedef packed struct Letter:
-    BOOL_t is_blank
-    BOOL_t from_rack
-    BOOL_t pts
-    BOOL_t x
-    BOOL_t y
-    STR_t value
-    # todo define getter
-
 
 @cython.final(True)
 cdef class CSettings:
@@ -50,6 +41,21 @@ cdef class CSettings:
         int num_results
 
 
+ctypedef packed struct Letter:
+    BOOL_t is_blank
+    BOOL_t from_rack
+    BOOL_t pts
+    BOOL_t x
+    BOOL_t y
+    STR_t value
+    # todo define getter
+
+
+ctypedef packed struct Letter_List:
+    Letter l[MAX_NODES]
+    Py_ssize_t len
+
+
 @cython.final(True)
 cdef class WordDict:
     cdef:
@@ -60,7 +66,8 @@ cdef class WordDict:
         STR_t s
         BOOL_t is_col
         readonly STR_t pts
-        list letters  # of Letter
+        Letter_List letters
+        #list letters  # of Letter
         #Letter[:] letters
         #Letter letters[100]
 
@@ -138,7 +145,7 @@ cdef class Board:
 
 
 @cython.final(True)
-cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Letter[::1] lets_info, bint is_col, Py_ssize_t start) nogil
+cdef SIZE_t set_word_dict(STR_t[::1] ww, Py_ssize_t wl, N nodes[MAX_NODES], Letter_List lets_info, bint is_col, Py_ssize_t start) nogil
 
 @cython.final(True)
 #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil
@@ -148,7 +155,9 @@ cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssiz
 cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil
 
 @cython.final(True)
-cdef Letter[::1] rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil
+cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil
+
+cdef void add_word(STR_t[::1] ww, Py_ssize_t wl, Py_ssize_t s, bint is_col, SIZE_t tot_pts, Letter_List lets_info)
 
 @cython.final(True)
 cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) # nogil
