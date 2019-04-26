@@ -85,7 +85,7 @@ LETTERS = ['']
 # - WORDS
 
 SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
-#SEARCH_WORDS = {'EXUVIAL', 'HEIR', 'AAAX'}
+#SEARCH_WORDS = {'SOX', 'OXIDANT', 'ANOXIA', 'ATAXIA'}
 #SEARCH_WORDS = (0, 120000)
 
 

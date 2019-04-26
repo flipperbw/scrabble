@@ -1,14 +1,23 @@
 cimport cython
-
 cimport numpy as cnp
 
 DEF MAX_NODES = 15
 DEF MAX_ORD = 127  # todo replace 127
 
-ctypedef cnp.uint32_t STRU_t
+#ctypedef cnp.uint32_t STRU_t
+ctypedef unsigned short STRU_t
 ctypedef cnp.int32_t STR_t
 ctypedef cnp.uint8_t BOOL_t
 ctypedef cnp.intp_t SIZE_t
+
+ctypedef const void * c_void
+
+ctypedef unsigned char uchr
+ctypedef unsigned char* uchrp
+
+#ctypedef unsigned short us
+#ctypedef (us, us) dual
+#ctypedef us dual[2]
 
 
 @cython.final(True)
@@ -45,7 +54,8 @@ ctypedef packed struct Letter:
     BOOL_t pts
     BOOL_t x
     BOOL_t y
-    STR_t value
+    #STR_t value
+    uchr value
     # todo define getter
 
 
@@ -54,21 +64,19 @@ ctypedef packed struct Letter_List:
     Py_ssize_t len
 
 
-ctypedef packed struct WordDict_Struct:
+ctypedef packed struct WordDict:
     BOOL_t is_col
+    STRU_t pts
+    char word[64]
+    #Letter_List* letters
     Letter_List letters
 
+ctypedef packed struct WordDict_List:
+    WordDict l[10000]  # todo catch 10000
+    Py_ssize_t len
 
-@cython.final(True)
-cdef class WordDict:
-    cdef:
-        WordDict_Struct w
-        readonly STR_t pts
 
-    cdef void sol(self, char* buffer)
-
-cpdef WordDict rebuild_worddict(WordDict_Struct w, int pts)
-
+cdef void sol(WordDict wd, char* buffer)
 
 #ctypedef long valid_let_t[MAX_ORD][2]
 
@@ -88,14 +96,14 @@ ctypedef packed struct N:
     bint has_val
     BOOL_t pts
 
-    # x: r/c, y: lval
+    # - x: r/c, y: lval
     long pts_lets[2][MAX_ORD]
 
-    # x: r/c, y: lval
+    # - x: r/c, y: lval
     bint valid_lets[2][MAX_ORD]
     #valid_let_t valid_lets[2]
 
-    # x: r/c, y: lens
+    # - x: r/c, y: lens
     bint valid_lengths[2][MAX_ORD]  # technically only 15
 
 
@@ -129,10 +137,8 @@ cdef class Board:
         Py_ssize_t nodes_rl, nodes_cl
         bint new_game
 
-        list words  # todo of word_dicts, what about an object? _pyx_v_self->words = ((PyObject*)__pyx_t_4);
-        #np.ndarray[dtype=word_dict] words
-        #cnp.ndarray words
-        #WordDict[:] words
+        WordDict_List words
+
 
     cdef Node get(self, int x, int y)
     cdef Node get_by_attr(self, str attr, v)
@@ -143,9 +149,7 @@ cdef class Board:
     cdef void _set_map(self, Node[:] nodes, bint is_col)
 
 
-
-
-cdef SIZE_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil
+cdef STRU_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil
 
 #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil
 cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil
@@ -154,16 +158,15 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_s
 
 cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil
 
-cdef void add_word(Letter_List lets_info, bint is_col, SIZE_t tot_pts)
-
 cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) # nogil
 
 cpdef object loadfile(tuple paths, bint is_file=*)
 
 cdef void solve(str dictionary)
 
-cdef void print_board(STR_t[:, ::1] nodes, Letter_List lets)
-cdef void show_solution(STR_t[:, ::1] nodes, list words, bint no_words)
+cdef void print_board(uchr[:, ::1] nodes, Letter_List lets)
+cdef int mycmp(c_void pa, c_void pb) nogil
+cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words)
 
 cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level)
 

@@ -6,6 +6,7 @@ cimport cython
 #from cython.parallel import prange
 
 from libc.stdio cimport printf, snprintf
+from libc.stdlib cimport qsort
 
 
 cdef object json, np, pd, md5, Path, _s, log_init
@@ -33,14 +34,6 @@ from logs import log_init
 cdef object lo = log_init(_s.DEFAULT_LOGLEVEL)
 
 
-#ctypedef unsigned short us
-ctypedef unsigned char uchr
-
-#ctypedef unsigned char* uchrp
-#ctypedef (us, us) dual
-#ctypedef us dual[2]
-
-#ctypedef cnp.uint32_t DTYPE_t
 cdef type STR = <type>np.int32
 cdef type BOOL = <type>np.uint8
 cdef type SIZE = <type>np.intp
@@ -108,51 +101,40 @@ cdef CSettings Settings = CSettings()
 
 #@cython.freelist(10000)
 
-@cython.final(True)
-cdef class WordDict:
-    def __cinit__(self, int pts):
-        #self.w = w
-        self.pts = pts
 
-    #def str sol(self):
-    @cython.wraparound(False)
-    cdef void sol(self, char* buffer):
-        cdef char direc = b'c' if self.w.is_col is True else b'r'
+@cython.wraparound(False)
+cdef void sol(WordDict wd, char* buffer):
+    cdef Letter lf = wd.letters.l[0]
+    cdef Letter ll = wd.letters.l[wd.letters.len - 1]
 
-        cdef Letter lf = self.w.letters.l[0]
-        cdef Letter ll = self.w.letters.l[self.w.letters.len - 1]
+    cdef char direc
+    cdef BOOL_t p1, p2, p3
 
-        cdef BOOL_t p1, p2, p3
-        if self.w.is_col is True:
-            p1 = lf.y
-            p2 = lf.x
-            p3 = ll.x
+    if wd.is_col:
+        direc = b'c'
+        p1 = lf.y
+        p2 = lf.x
+        p3 = ll.x
+    else:
+        direc = b'r'
+        p1 = lf.x
+        p2 = lf.y
+        p3 = ll.y
+
+    cdef Py_ssize_t i = 0
+    cdef uchr word[MAX_NODES]
+
+    while i < MAX_NODES:
+        if i < wd.letters.len:
+            word[i] = wd.letters.l[i].value
         else:
-            p1 = lf.x
-            p2 = lf.y
-            p3 = ll.y
+            word[i] = NUL
+        i += 1
 
-        cdef char word[MAX_NODES + 1]
-        cdef Py_ssize_t i
-        for i in range(MAX_NODES + 1):
-            if i < self.w.letters.len:
-                word[i] = self.w.letters.l[i].value
-            else:
-                word[i] = NUL
-
-        snprintf(buffer, 64, 'pts: %3i | dir: %c | pos: %2u x %2u,%2u | w: %s',
-            self.pts, direc, p1, p2, p3, word
-        )
-
-    def __reduce__(self):
-        return rebuild_worddict, (self.w, self.pts)
-
-
-@cython.final(True)
-cpdef WordDict rebuild_worddict(WordDict_Struct ws, int pts):
-    cdef WordDict wd = WordDict(pts)
-    wd.w = ws
-    return wd
+    #wd.word
+    snprintf(buffer, 64, 'pts: %3i | dir: %c | pos: %2u x %2u,%2u | w: %s',
+        wd.pts, direc, p1, p2, p3, word
+    )
 
 
 @cython.final(True)
@@ -241,7 +223,7 @@ cdef class Node:
     def __str__(self) -> str:
         cdef str s
         if self.n.has_val:
-            s = chr(self.n.letter.value)
+            s = chr(self.n.letter.value)  # todo switch to c stuff
         else:
             s = '_'
         return '<Node: {} v: {}>'.format(self.str_pos(), s)
@@ -269,10 +251,10 @@ cdef class Board:
         self.nodes_rl = Settings.shape[0]
         self.nodes_cl = Settings.shape[1]
 
-        #self.words = np.empty(0, WordDict)
-        self.words = []
-
         self.new_game = False
+
+        self.words.len = 0
+        #self.words_view = self.words.l
 
         for r in range(self.nodes_rl):
             for c in range(self.nodes_cl):
@@ -393,7 +375,7 @@ cdef class Board:
             str l_s
             str lets_str = ''
             STR_t lets_pts = 0
-            STR_t nv
+            uchr nv
 
         for ni in range(nl):
             p = loop_nodes[ni]
@@ -561,7 +543,7 @@ cdef class Board:
 
 
     def __str__(self) -> str:
-        return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, len(self.words))
+        return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, self.words.len)
 
     # def __reduce__(self):
     #     return rebuild, (Settings.board, Settings.default_board)
@@ -571,26 +553,26 @@ cdef class Board:
 
 
 #todo what is the difference in not setting cdef? infer types?
-
+#   why was i doing SIZE_t below?
 
 # @cython.binding(True)
 # @cython.linetrace(True)
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef SIZE_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil:
+cdef STRU_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
         N nd
         Letter le
-        STR_t nv
+        uchr nv
         BOOL_t lpts
         #BOOL_t bl = Settings.blanks
-        SIZE_t pts = 0  # todo: is sizet needed or better?
-        SIZE_t extra_pts
-        SIZE_t tot_extra_pts = 0
-        SIZE_t tot_pts
+        STRU_t pts = 0  # todo: is sizet needed or better?
+        STRU_t extra_pts
+        STRU_t tot_extra_pts = 0
+        STRU_t tot_pts
         uchr word_mult = 1
 
     # TODO HANDLE BLANKS
@@ -761,20 +743,6 @@ cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
     return lets_info
 
 
-cdef void add_word(Letter_List lets_info, bint is_col, SIZE_t tot_pts):
-    cdef WordDict w
-    cdef WordDict_Struct ws
-
-    w = WordDict(tot_pts)
-
-    ws.is_col = is_col
-    ws.letters = lets_info
-
-    w.w = ws
-
-    Settings.node_board.words.append(w)
-
-
 #cdef loi
 
 
@@ -811,8 +779,14 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
         STR_t[::1] ww
         BOOL_t blanks = Settings.blanks
         int[:] base_rack = Settings.rack
+        #Letter_List* lets_info
         Letter_List lets_info
-        SIZE_t tot_pts
+        STRU_t tot_pts
+
+        WordDict wd
+        char buffer[64]
+        SIZE_t orig_len = Settings.node_board.words.len
+
 
     for i in range(nlen):
         n = nodes[i]
@@ -847,10 +821,19 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
                 continue
 
             lets_info = rack_match(ww, wl, nodes, sn, base_rack)
-
             tot_pts = calc_pts(lets_info, nodes, is_col, sn)
 
-            add_word(lets_info, is_col, tot_pts)
+            #add_word(lets_info, is_col, tot_pts)
+            wd.is_col = is_col
+            wd.pts = tot_pts
+            wd.letters = lets_info
+            sol(wd, buffer)
+            wd.word = buffer
+
+            Settings.node_board.words.l[orig_len] = wd
+            orig_len += 1
+
+    Settings.node_board.words.len = orig_len
 
 
 def _unused(): pass
@@ -1078,7 +1061,7 @@ cdef str _print_node_range(
 """
 
 
-cdef void print_board(STR_t[:, ::1] nodes, Letter_List lets):
+cdef void print_board(uchr[:, ::1] nodes, Letter_List lets):
     cdef:
         Py_ssize_t i
         Py_ssize_t rown, colt = 0, colb = 0
@@ -1124,9 +1107,9 @@ cdef void print_board(STR_t[:, ::1] nodes, Letter_List lets):
 
 
     cdef:
-        STR_t best_map[MAX_NODES][MAX_NODES]
-        STR_t[:, ::1] best_map_v = best_map
-        STR_t nval, bval
+        uchr best_map[MAX_NODES][MAX_NODES]
+        uchr[:, ::1] best_map_v = best_map
+        uchr nval, bval
         Py_ssize_t l
         Letter letter
         BOOL_t x, y
@@ -1168,43 +1151,58 @@ cdef void print_board(STR_t[:, ::1] nodes, Letter_List lets):
     printf('%lc%lc%lc\n', u_dash, u_dash, u_bx_br)
 
 
-#WordDict[:]
-cdef void show_solution(STR_t[:, ::1] nodes, list words, bint no_words):
+
+cdef int mycmp(c_void pa, c_void pb) nogil:
+    #cdef STRU_t a = (<WordDict *>pa).pts
+    #cdef STRU_t b = (<WordDict *>pb).pts
+    #return b - a
+    return <STRU_t>(<WordDict *>pb).pts - <STRU_t>(<WordDict *>pa).pts
+    # test -1
+
+
+#[:]
+cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
     # todo mark blanks
 
-    if not words:
+    if words.len == 0:
         printf('\nNo solution.\n')
         return
 
-    cdef list newlist = sorted(words, key=lambda k: k.pts, reverse=True)
+    #cdef list newlist = sorted(words.l, key=lambda k: k.pts, reverse=True)
     # if not newlist:
     #     lo.e('Error: solution list is empty')
     #     return
 
     cdef:
-        WordDict w, best
-        list cutlist
-        char buffer[64]
+        #WordDict* w
+        WordDict* best
+        Py_ssize_t cut_num
+        WordDict* word_list = words.l
+
+    qsort(word_list, words.len, sizeof(WordDict), &mycmp)
 
     if lo.is_enabled('s'):
         if Settings.num_results == 0:
-            cutlist = newlist
+            cut_num = words.len
         else:
-            cutlist = newlist[:Settings.num_results]
+            cut_num = Settings.num_results if Settings.num_results < words.len else words.len
 
         printf('\n')
-        lo.s(f'-- Results ({len(cutlist)} / {len(newlist)}) --\n')
-        for w in reversed(cutlist):
-            w.sol(buffer)
-            lo.s(buffer.decode())
+        lo.s(f'-- Results ({cut_num} / {words.len}) --\n')
+        cut_num -= 1
+        while cut_num >= 0:
+            #w = &word_list[cut_num]
+            lo.s(word_list[cut_num].word.decode())
+            cut_num -= 1
 
-    best = newlist[0]
+    best = &word_list[0]
 
     if no_words:  # todo: print xs instead?
-        printf('\n<solution hidden> (len: %zu)\n', best.w.letters.len)
+        #printf('\n<solution hidden> (len: %zu)\n', best.letters.len)
+        printf('\n<solution hidden> (len: %i)\n', 12)
 
     else:
-        print_board(nodes, best.w.letters)
+        print_board(nodes, best.letters)
 
 
     printf('\nPoints: %i\n', best.pts)
@@ -1324,7 +1322,7 @@ cdef void cmain(
 
     cdef Py_ssize_t r, c
     #cdef object[:, ::1] solved_board, s_nodes
-    cdef STR_t[:, ::1] solved_board, s_nodes
+    cdef uchr[:, ::1] solved_board, s_nodes
 
     cdef object solution_data  # <class 'numpy.lib.npyio.NpzFile'>
     cdef list s_words
@@ -1333,14 +1331,14 @@ cdef void cmain(
         solve(dictionary)
 
         #solved_board = npz(Settings.shape, np.object_)
-        solved_board = npz((Settings.shape[0], Settings.shape[1]), STR)
+        solved_board = npz((Settings.shape[0], Settings.shape[1]), BOOL)
         for r in range(solved_board.shape[0]):
             for c in range(solved_board.shape[1]):
                 solved_board[r, c] = Settings.node_board.nodes[r, c].n.letter.value
 
-        show_solution(nodes=solved_board, words=Settings.node_board.words, no_words=no_words)
+        show_solution(solved_board, Settings.node_board.words, no_words)
 
-        np.savez(solution_filename, nodes=solved_board, words=Settings.node_board.words)
+        #np.savez(solution_filename, nodes=solved_board, words=Settings.node_board.words)
 
     else:
         lo.s('Found existing solution')
@@ -1349,7 +1347,7 @@ cdef void cmain(
         s_nodes = solution_data['nodes']
         s_words = solution_data['words'].tolist()
 
-        show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
+        #show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
 
 
 # def
