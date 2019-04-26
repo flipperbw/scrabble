@@ -14,10 +14,23 @@ ctypedef const void * c_void
 
 ctypedef unsigned char uchr
 ctypedef unsigned char* uchrp
+ctypedef const unsigned char cuchr
+ctypedef const unsigned char* cuchrp
 
 #ctypedef unsigned short us
 #ctypedef (us, us) dual
 #ctypedef us dual[2]
+
+# cdef packed struct lpts_t:
+#     uchr amt
+#     uchr pts
+
+
+cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold=*) nogil
+cdef cuchr[:] chklog(s, int lvl)
+cdef void los(s)
+cdef void loe(s)
+cdef void loi(s)
 
 
 @cython.final(True)
@@ -33,6 +46,7 @@ cdef class CSettings:
 
         # ord = uint8
         int rack[MAX_ORD]
+        int[:] rack_v
 
         list rack_l
         Py_ssize_t rack_s
@@ -68,6 +82,7 @@ ctypedef packed struct WordDict:
     BOOL_t is_col
     STRU_t pts
     char word[64]
+    #char* word
     #Letter_List* letters
     Letter_List letters
 
@@ -76,7 +91,7 @@ ctypedef packed struct WordDict_List:
     Py_ssize_t len
 
 
-cdef void sol(WordDict wd, char* buffer)
+cdef void sol(WordDict wd, char* buff) nogil
 
 #ctypedef long valid_let_t[MAX_ORD][2]
 
@@ -139,7 +154,6 @@ cdef class Board:
 
         WordDict_List words
 
-
     cdef Node get(self, int x, int y)
     cdef Node get_by_attr(self, str attr, v)
     cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c)
@@ -158,7 +172,7 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_s
 
 cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil
 
-cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) # nogil
+cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil
 
 cpdef object loadfile(tuple paths, bint is_file=*)
 
@@ -168,6 +182,6 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets)
 cdef int mycmp(c_void pa, c_void pb) nogil
 cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words)
 
-cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level)
+cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level)
 
 # todo check if need func sig

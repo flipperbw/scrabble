@@ -5,11 +5,11 @@
 cimport cython
 #from cython.parallel import prange
 
-from libc.stdio cimport printf, snprintf
+from libc.stdio cimport printf, snprintf, puts
 from libc.stdlib cimport qsort
 
 
-cdef object json, np, pd, md5, Path, _s, log_init
+cdef object json, np, pd, Path, _s, log_init
 #cdef module np
 #import sys
 
@@ -17,7 +17,6 @@ import json
 import numpy as np
 import pandas as pd  # remove
 
-from hashlib import md5
 from pathlib import Path
 
 import settings as _s
@@ -29,9 +28,6 @@ from logs import log_init
 
 #cnp.import_array()
 #cnp.import_umath()
-
-
-cdef object lo = log_init(_s.DEFAULT_LOGLEVEL)
 
 
 cdef type STR = <type>np.int32
@@ -58,11 +54,110 @@ DEF L_EN = 91
 DEF MAX_NODES = 15
 DEF MAX_ORD = 127  # todo replace 127
 
+# - logging
 
-# cdef packed struct lpts_t:
-#     uchr amt
-#     uchr pts
+DEF _k = b'\x1B['
+DEF K_RES = _k + b'0m'
+DEF K_BLK = 30
+DEF K_RED = 31
+DEF K_GRN = 32
+DEF K_YEL = 33
+DEF K_BLU = 34
+DEF K_MAG = 35
+DEF K_CYN = 36
+DEF K_WHT = 37
+DEF K_BLK_L = 90
+DEF K_RED_L = 91
+DEF K_GRN_L = 92
+DEF K_YEL_L = 93
+DEF K_BLU_L = 94
+DEF K_MAG_L = 95
+DEF K_CYN_L = 96
+DEF K_WHT_L = 97
 
+cdef enum LogLvl:
+    NOTSET = 0
+    SPAM = 5
+    DEBUG = 10
+    VERBOSE = 15
+    INFO = 20
+    NOTICE = 25
+    WARNING = 30
+    SUCCESS = 35
+    ERROR = 40
+    CRITICAL = 50
+    ALWAYS = 60
+
+cdef object lo = log_init(_s.DEFAULT_LOGLEVEL)
+cdef int lo_lvl = lo.get_level(_s.DEFAULT_LOGLEVEL)
+
+#todo add bold and stuff
+cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:
+    cdef Py_ssize_t i = 0
+
+    printf('%s%dm', _k, K_BLK_L)
+    while i < 3:
+        printf('%c', ctxt[i])
+        i += 1
+    printf(K_RES)
+
+    printf('%s%d;%dm', _k, bold, c)
+    while i < ts:
+        printf('%c', ctxt[i])
+        i += 1
+    puts(K_RES)
+
+# todo check if this is actually faster
+
+cdef cuchr[:] chklog(s, int lvl):
+    if s is None: return NUL
+    if lo_lvl > lvl: return NUL
+    if type(s) is not unicode: return NUL
+
+    cdef bytes s_st
+    if lvl == 0:    s_st = b'(_) '
+    elif lvl == 5:  s_st = b'(x) '
+    elif lvl == 10: s_st = b'(d) '
+    elif lvl == 15: s_st = b'(v) '
+    elif lvl == 20: s_st = b'(i) '
+    elif lvl == 25: s_st = b'(n) '
+    elif lvl == 30: s_st = b'(w) '
+    elif lvl == 35: s_st = b'(s) '
+    elif lvl == 40: s_st = b'(e) '
+    elif lvl == 50: s_st = b'(c) '
+    elif lvl == 60: s_st = b'(a) '
+    else: s_st = bytes(lvl)
+
+    #cdef str sp = '(' + s_st + ') ' + s
+    #s = '(' + s_st + ') ' + s
+    #cdef bytes sb = <bytes>(<unicode>s).encode('utf-8')
+    #sb = (<unicode>s).encode('utf8')
+    #return sb
+
+    return s_st + <bytes>((<unicode>s).encode('utf8'))
+
+cdef void los(s):
+    cdef LogLvl lvl = SUCCESS
+    cdef SIZE_t color = K_GRN_L
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void loe(s):
+    cdef LogLvl lvl = ERROR
+    cdef SIZE_t color = K_RED
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void loi(s):
+    cdef LogLvl lvl = INFO
+    cdef SIZE_t color = K_CYN_L
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+# -
 
 @cython.final(True)
 cdef class CSettings:
@@ -81,6 +176,8 @@ cdef class CSettings:
         while i < MAX_ORD:
             self.rack[i] = 0
             i += 1
+
+        self.rack_v = self.rack
 
         self.rack_l = []
         self.rack_s = 0
@@ -101,9 +198,9 @@ cdef CSettings Settings = CSettings()
 
 #@cython.freelist(10000)
 
-
+# *
 @cython.wraparound(False)
-cdef void sol(WordDict wd, char* buffer):
+cdef void sol(WordDict wd, char* buff) nogil:
     cdef Letter lf = wd.letters.l[0]
     cdef Letter ll = wd.letters.l[wd.letters.len - 1]
 
@@ -131,8 +228,9 @@ cdef void sol(WordDict wd, char* buffer):
             word[i] = NUL
         i += 1
 
-    #wd.word
-    snprintf(buffer, 64, 'pts: %3i | dir: %c | pos: %2u x %2u,%2u | w: %s',
+    #cdef char* buffz = wd.word
+
+    snprintf(buff, 64, 'pts: %3i | dir: %c | pos: %2u x %2u,%2u | w: %s',
         wd.pts, direc, p1, p2, p3, word
     )
 
@@ -751,7 +849,7 @@ cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
 # @cython.wraparound(False)
 # cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
 @cython.wraparound(False)
-cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col): # nogil:
+cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:
     cdef:
         Py_ssize_t t
         Py_ssize_t nlen = Settings.shape[is_col]
@@ -766,11 +864,9 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
             break
 
     if not bhas_edge:
-        #with gil:
-        if lo.is_enabled('i'):
-            lo.i('-> [empty]')
+        #if lo.is_enabled('i'):
+        #loi('-> [empty]')
         return
-
 
     cdef:
         Py_ssize_t i
@@ -778,13 +874,12 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
         Py_ssize_t s, wl, wl1, sn
         STR_t[::1] ww
         BOOL_t blanks = Settings.blanks
-        int[:] base_rack = Settings.rack
+        int[:] base_rack = Settings.rack_v
         #Letter_List* lets_info
         Letter_List lets_info
         STRU_t tot_pts
 
         WordDict wd
-        char buffer[64]
         SIZE_t orig_len = Settings.node_board.words.len
 
 
@@ -823,15 +918,14 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
             lets_info = rack_match(ww, wl, nodes, sn, base_rack)
             tot_pts = calc_pts(lets_info, nodes, is_col, sn)
 
-            #add_word(lets_info, is_col, tot_pts)
             wd.is_col = is_col
             wd.pts = tot_pts
             wd.letters = lets_info
-            sol(wd, buffer)
-            wd.word = buffer
+            sol(wd, wd.word)
 
             Settings.node_board.words.l[orig_len] = wd
             orig_len += 1
+            #loe(Settings.node_board.words.l[orig_len].word)
 
     Settings.node_board.words.len = orig_len
 
@@ -995,10 +1089,10 @@ cdef void solve(str dictionary):
     cdef list search_rows, search_cols
     cdef bint is_col
 
-    lo.s('Solving...\n')
+    los('Solving...\n')
 
     if full.new_game:
-        lo.s(' = Fresh game = ')
+        los(' = Fresh game = ')
         #todo fix
         #no = next(full.get_by_attr('is_start', True), None)
         # if no:
@@ -1008,15 +1102,14 @@ cdef void solve(str dictionary):
         if _s.SEARCH_NODES is None:
             search_rows = list(range(Settings.shape[0]))
             search_cols = list(range(Settings.shape[1]))
-            if lo.is_enabled('s'):
-                lo.s('Checking all lines (%2i x %2i)...', Settings.shape[0], Settings.shape[1])
+            if lo_lvl <= LogLvl.SUCCESS:
+                los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
 
         else:
             search_rows = _s.SEARCH_NODES[0]
             search_cols = _s.SEARCH_NODES[1]
-            if lo.is_enabled('s'):
-                lo.s(f'Checking custom lines ({search_rows}, {search_cols})...')
-
+            if lo_lvl <= LogLvl.SUCCESS:
+                los(f'Checking custom lines ({search_rows}, {search_cols})...')
 
         is_col = False
         for ir in search_rows:
@@ -1151,13 +1244,12 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets):
     printf('%lc%lc%lc\n', u_dash, u_dash, u_bx_br)
 
 
-
 cdef int mycmp(c_void pa, c_void pb) nogil:
-    #cdef STRU_t a = (<WordDict *>pa).pts
-    #cdef STRU_t b = (<WordDict *>pb).pts
-    #return b - a
-    return <STRU_t>(<WordDict *>pb).pts - <STRU_t>(<WordDict *>pa).pts
-    # test -1
+    cdef STRU_t a = (<WordDict *>pa).pts
+    cdef STRU_t b = (<WordDict *>pb).pts
+    if a < b: return 1
+    if a > b: return -1
+    return 0
 
 
 #[:]
@@ -1168,13 +1260,7 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
         printf('\nNo solution.\n')
         return
 
-    #cdef list newlist = sorted(words.l, key=lambda k: k.pts, reverse=True)
-    # if not newlist:
-    #     lo.e('Error: solution list is empty')
-    #     return
-
     cdef:
-        #WordDict* w
         WordDict* best
         Py_ssize_t cut_num
         WordDict* word_list = words.l
@@ -1188,11 +1274,11 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
             cut_num = Settings.num_results if Settings.num_results < words.len else words.len
 
         printf('\n')
-        lo.s(f'-- Results ({cut_num} / {words.len}) --\n')
+        los(f'-- Results ({cut_num} / {words.len}) --\n')
         cut_num -= 1
         while cut_num >= 0:
             #w = &word_list[cut_num]
-            lo.s(word_list[cut_num].word.decode())
+            los(word_list[cut_num].word.decode())
             cut_num -= 1
 
     best = &word_list[0]
@@ -1217,7 +1303,7 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
 # ):
 @cython.wraparound(False)
 cdef void cmain(
-    str filename, str dictionary, bint no_words, list exclude_letters, bint overwrite, int num_results, str log_level
+    str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level
 ):
     cdef:
         dict points
@@ -1230,22 +1316,21 @@ cdef void cmain(
         #todo declare object rather than list?
         int board_size
         object board_name
-        bint has_cache
 
     log_level = log_level.upper()
     if log_level != lo.logger.getEffectiveLevel():
         lo.set_level(log_level)
 
+    global lo_lvl
+    lo_lvl = lo.get_level(log_level)
+
     cdef object this_board_dir
     if filename is not None:
         this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)
-
         pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))
         rack = pd.read_pickle(loadfile((this_board_dir, _s.LETTERS_FILENAME)))
 
     else:
-        filename = '_manual'
-
         pdboard = pd.DataFrame(_s.BOARD)
         rack = _s.LETTERS
 
@@ -1283,9 +1368,9 @@ cdef void cmain(
     points = json.load(loadfile((_s.POINTS_DIR, dictionary + '.json')).open())  # Dict[str, List[int]]
 
     if lo.is_enabled('s'):
-        lo.s('Game Board:\n{}'.format(pdboard))
+        los('Game Board:\n{}'.format(pdboard))
         lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
-        lo.s('Rack:\n{}'.format(rack))
+        los('Rack:\n{}'.format(rack))
         printf('\n')
     else:
         printf('Running...\n')
@@ -1312,47 +1397,24 @@ cdef void cmain(
 
     # todo add search words and nodes
 
-    cdef str md5_rack = md5(''.join(sorted(rack)).encode()).hexdigest()[:9:1]
-    cdef object solution_filename = Path(_s.SOLUTIONS_DIR, '{}_{}.npz'.format(filename, md5_rack))
-
-    if overwrite is True:
-        has_cache = False
-    else:
-        has_cache = solution_filename.exists()
-
+    #cdef object[:, ::1] solved_board
+    cdef uchr[:, ::1] solved_board
     cdef Py_ssize_t r, c
-    #cdef object[:, ::1] solved_board, s_nodes
-    cdef uchr[:, ::1] solved_board, s_nodes
 
-    cdef object solution_data  # <class 'numpy.lib.npyio.NpzFile'>
-    cdef list s_words
+    solve(dictionary)
 
-    if has_cache is False:
-        solve(dictionary)
+    #solved_board = npz(Settings.shape, np.object_)
+    solved_board = npz((Settings.shape[0], Settings.shape[1]), BOOL)
+    for r in range(solved_board.shape[0]):
+        for c in range(solved_board.shape[1]):
+            solved_board[r, c] = Settings.node_board.nodes[r, c].n.letter.value
 
-        #solved_board = npz(Settings.shape, np.object_)
-        solved_board = npz((Settings.shape[0], Settings.shape[1]), BOOL)
-        for r in range(solved_board.shape[0]):
-            for c in range(solved_board.shape[1]):
-                solved_board[r, c] = Settings.node_board.nodes[r, c].n.letter.value
-
-        show_solution(solved_board, Settings.node_board.words, no_words)
-
-        #np.savez(solution_filename, nodes=solved_board, words=Settings.node_board.words)
-
-    else:
-        lo.s('Found existing solution')
-        solution_data = np.load(solution_filename)
-
-        s_nodes = solution_data['nodes']
-        s_words = solution_data['words'].tolist()
-
-        #show_solution(nodes=s_nodes, words=s_words, no_words=no_words)
+    show_solution(solved_board, Settings.node_board.words, no_words)
 
 
 # def
 def main(
-    filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, overwrite: bool = False, num_results: int = _s.NUM_RESULTS,
+    filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,
     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
 ) -> None:
-    cmain(filename, dictionary, no_words, exclude_letters, overwrite, num_results, log_level)
+    cmain(filename, dictionary, no_words, exclude_letters, num_results, log_level)

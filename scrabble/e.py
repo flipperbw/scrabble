@@ -22,12 +22,6 @@ def parse_args() -> 'Namespace':
     parser.add_argument('filename', type=str, default='',
         help='File path for the image')
 
-    parser.add_argument('-n', '--no-words', action='store_true',
-        help='Hide actual words')
-
-    parser.add_argument('-o', '--overwrite', action='store_true',
-        help='Overwrite existing cache')
-
     parser.add_argument('-d', '--dictionary', type=str, default=DICTIONARY,
         help='Dictionary/wordlist name to use for solving (default: %(default)s)')
 
@@ -36,6 +30,9 @@ def parse_args() -> 'Namespace':
 
     parser.add_argument('-r', '--num-results', type=int, default=NUM_RESULTS,
         help='Number of solutions to show [0 for all] (default: %(default)d)')
+
+    parser.add_argument('-n', '--no-words', action='store_true',
+        help='Hide actual words')
 
     parser.add_argument('-p', '--profile', action='store_true',
         help='Profile the app')
