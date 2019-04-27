@@ -10,7 +10,7 @@ from libc.stdlib cimport qsort
 
 #from scrabble import logger as log
 from scrabble cimport logger as log
-from scrabble.logger cimport lo, los, clos
+from scrabble.logger cimport lo, can_log, los, loe, loc, clos
 
 
 cdef object json, sys, np, pd, Path, _s
@@ -969,7 +969,7 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) 
 
     qsort(word_list, words.len, sizeof(WordDict), &mycmp)
 
-    if log.lo_lvl <= log.LogLvl.SUCCESS:
+    if can_log('s'):
         if Settings.num_results == 0:
             cut_num = words.len
         else:
@@ -1006,15 +1006,15 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) 
 cpdef object loadfile(tuple paths, bint is_file = True):
     cdef object filepath = Path(*paths)
     if not filepath.exists():
-        lo.c('Could not find file: {}'.format(filepath.absolute()))
+        loc('Could not find file: {}'.format(filepath.absolute()))
         sys.exit(1)
     if is_file:
         if not filepath.is_file():
-            lo.c('Path exists but is not a file: {}'.format(filepath.absolute()))
+            loc('Path exists but is not a file: {}'.format(filepath.absolute()))
             sys.exit(1)
     else:
         if not filepath.is_dir():
-            lo.c('Path exists but is not a directory: {}'.format(filepath.absolute()))
+            loc('Path exists but is not a directory: {}'.format(filepath.absolute()))
             sys.exit(1)
 
     return filepath
@@ -1092,12 +1092,12 @@ cdef void solve(str dictionary):
         search_words = frozenset(_s.SEARCH_WORDS)
     else:
         search_words = frozenset()  # why necessary?
-        lo.c('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
+        loc('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
         sys.exit(1)
 
     cdef Py_ssize_t swl = len(search_words)
     if swl == 0:
-        lo.c('No search words')
+        loc('No search words')
         sys.exit(1)
 
     Settings.blanks = blanks
@@ -1171,13 +1171,13 @@ cdef void solve(str dictionary):
         if _s.SEARCH_NODES is None:
             search_rows = list(range(Settings.shape[0]))
             search_cols = list(range(Settings.shape[1]))
-            if log.lo_lvl <= log.LogLvl.SUCCESS:
+            if can_log('s'):
                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
 
         else:
             search_rows = _s.SEARCH_NODES[0]
             search_cols = _s.SEARCH_NODES[1]
-            if log.lo_lvl <= log.LogLvl.SUCCESS:
+            if can_log('s'):
                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
 
         is_col = False
@@ -1248,22 +1248,22 @@ cdef void cmain(
         rack = _s.LETTERS
 
     if not rack:
-        lo.c('Rack is empty')
+        loc('Rack is empty')
         return
 
     cdef str el
-    if exclude_letters:
-        for el in exclude_letters:
-            #letters = letters[letters != el]
-            rack.remove(el)
+    for el in exclude_letters:
+        rack.remove(el)
 
-    cdef object l
-    for l in rack:
-        # actually a long... TODO check ords
-        if l and len(l) == 1:
+    # todo change this so theyre actually just single letters
+    cdef str l # py unci
+    cdef Py_ssize_t li
+    for li in range(len(rack)):
+        l = str((<list>rack)[li])
+        if len(l) == 1:
             Settings.rack[<Py_ssize_t>ord(l)] += 1
         else:
-            lo.e(f'Rack letter is not valid: "{l}"')
+            loe('Rack letter is not valid: "%s"' % l)
 
     #rack_b.sort()
 
@@ -1278,7 +1278,7 @@ cdef void cmain(
     elif board_size == 11 * 11:
         board_name = _s.DEF_BOARD_SMALL
     else:
-        lo.c('Board size ({}) has no match'.format(board_size))
+        loc('Board size ({}) has no match'.format(board_size))
         return
 
     default_board = pd.read_pickle(loadfile((board_name,))).to_numpy(np.object_)
@@ -1341,4 +1341,8 @@ def main(
     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,
     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
 ) -> None:
+
+    if exclude_letters is None:
+        exclude_letters = []
+
     cmain(filename, dictionary, no_words, exclude_letters, num_results, log_level)

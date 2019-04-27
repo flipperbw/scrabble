@@ -84,6 +84,25 @@ cdef object lo = log_init(DEFAULT_LOGLEVEL)
 cdef int lo_lvl = lo.get_level(DEFAULT_LOGLEVEL)
 
 
+cdef int lvl_alias[127]
+cdef int[:] lvl_alias_v = lvl_alias
+lvl_alias_v[:] = 0
+lvl_alias_v[ord('x')] = 5
+lvl_alias_v[ord('d')] = 10
+lvl_alias_v[ord('v')] = 15
+lvl_alias_v[ord('i')] = 20
+lvl_alias_v[ord('n')] = 25
+lvl_alias_v[ord('w')] = 30
+lvl_alias_v[ord('s')] = 35
+lvl_alias_v[ord('e')] = 40
+lvl_alias_v[ord('c')] = 50
+lvl_alias_v[ord('a')] = 60
+
+cdef bint can_log(Py_UNICODE lvl) nogil:
+    cdef int lal = lvl_alias_v[lvl]
+    return lo_lvl <= lal
+
+
 #todo add bold and stuff
 cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:
     cdef Py_ssize_t i = 0
@@ -103,8 +122,8 @@ cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:
 
 #def chklog(s, int lvl, *ar) -> cchr[:]:
 cdef cuchr[:] chklog(s, int lvl):
-    if s is None: return NUL
     if lo_lvl > lvl: return NUL
+    if s is None: return NUL
     if type(s) is not unicode: return NUL
 
     cdef bytes s_st
@@ -142,6 +161,49 @@ cdef void clos(cchrp s, ...) nogil:
     puts(KS_RES)
 
 
+
+cdef void lox(s):
+    cdef LogLvl lvl = SPAM
+    cdef Py_ssize_t color = K_WHT
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void lod(s):
+    cdef LogLvl lvl = DEBUG
+    cdef Py_ssize_t color = K_CYN
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void lov(s):
+    cdef LogLvl lvl = VERBOSE
+    cdef Py_ssize_t color = K_BLU
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void loi(s):
+    cdef LogLvl lvl = INFO
+    cdef Py_ssize_t color = K_RES
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void lon(s):
+    cdef LogLvl lvl = NOTICE
+    cdef Py_ssize_t color = K_MAG
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void low(s):
+    cdef LogLvl lvl = WARNING
+    cdef Py_ssize_t color = K_YEL
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
 cdef void los(s):
     cdef LogLvl lvl = SUCCESS ##
     cdef Py_ssize_t color = K_GRN_L ##
@@ -153,14 +215,15 @@ cdef void los(s):
 
 cdef void loe(s):
     cdef LogLvl lvl = ERROR
+    cdef Py_ssize_t color = K_RED_L
+    cdef cuchr[:] txt = chklog(s, lvl)
+    cdef Py_ssize_t ts = len(txt)
+    if ts > 3: clog(txt, ts, color)
+
+cdef void loc(s):
+    cdef LogLvl lvl = CRITICAL
     cdef Py_ssize_t color = K_RED
     cdef cuchr[:] txt = chklog(s, lvl)
     cdef Py_ssize_t ts = len(txt)
     if ts > 3: clog(txt, ts, color)
 
-cdef void loi(s):
-    cdef LogLvl lvl = INFO
-    cdef Py_ssize_t color = K_CYN_L
-    cdef cuchr[:] txt = chklog(s, lvl)
-    cdef Py_ssize_t ts = len(txt)
-    if ts > 3: clog(txt, ts, color)

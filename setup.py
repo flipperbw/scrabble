@@ -8,7 +8,7 @@ from Cython.Compiler import Options
 from Cython.Distutils import build_ext
 #from Cython.Distutils import build_ext, Extension
 
-import compileall
+#import compileall
 
 import numpy  # todo need?
 
@@ -101,7 +101,7 @@ elif '--trace' in sys.argv:
 
 all_macros = define_macros + debug_macros
 
-#include_dirs=['..', '.', './scrabble', '/home/brett/scrabble', '/home/brett/scrabble/scrabble']
+
 include_dirs=['.']
 
 extensions = [

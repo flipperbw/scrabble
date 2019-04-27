@@ -9,6 +9,7 @@ if False: from argparse import Namespace
 
 
 def parse_args() -> 'Namespace':
+    # todo how can i get both . and regular calling script to work?
     from .parser_defaults import parser_init
     from .settings import DICTIONARY, NUM_RESULTS, DEFAULT_LOGLEVEL
 
@@ -25,7 +26,7 @@ def parse_args() -> 'Namespace':
     parser.add_argument('-d', '--dictionary', type=str, default=DICTIONARY,
         help='Dictionary/wordlist name to use for solving (default: %(default)s)')
 
-    parser.add_argument('-e', '--exclude-letters', type=lambda x: x.split(','), metavar='L [,L...]',
+    parser.add_argument('-e', '--exclude-letters', type=lambda x: [y.upper() for y in x.split(',')], metavar='L [,L...]',
         help='Letters to exclude from rack for solution')
 
     parser.add_argument('-r', '--num-results', type=int, default=NUM_RESULTS,
