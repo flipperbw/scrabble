@@ -38,3 +38,8 @@ ocr-p:
 	$(OCR_CMD) -p $(args)
 ocr-t:
 	$(OCR_CMD) -x $(args)
+
+
+.PHONY: clean
+clean:
+	rm -rf ./build ./scrabble/__pycache__ ./scrabble/*.c ./scrabble/*.so ./scrabble/*.html

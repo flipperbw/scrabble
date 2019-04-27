@@ -9,11 +9,18 @@
                 "NPY_1_7_API_VERSION"
             ]
         ],
-        "depends": [],
+        "depends": [
+            "/usr/local/lib/python3.6/dist-packages/numpy/core/include/numpy/arrayobject.h",
+            "/usr/local/lib/python3.6/dist-packages/numpy/core/include/numpy/ufuncobject.h"
+        ],
         "extra_compile_args": [
             "-Wextra",
             "-ffast-math",
             "-O3"
+        ],
+        "include_dirs": [
+            ".",
+            "/usr/local/lib/python3.6/dist-packages/numpy/core/include"
         ],
         "name": "scrabble.ocr",
         "sources": [
@@ -24124,7 +24131,7 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *__
   return __pyx_r;
 }
 
-static struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack *__pyx_freelist_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack[2047];
+static struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack *__pyx_freelist_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack[4096];
 static int __pyx_freecount_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack = 0;
 
 static PyObject *__pyx_tp_new_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
@@ -24145,7 +24152,7 @@ static void __pyx_tp_dealloc_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabbl
   struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack *p = (struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack *)o;
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->__pyx_v_imgflat);
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack < 2047) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack)))) {
+  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack < 4096) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack)))) {
     __pyx_freelist_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack[__pyx_freecount_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack++] = ((struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrabble_3ocr_get_rack *)o);
   } else {
     (*Py_TYPE(o)->tp_free)(o);
@@ -24228,7 +24235,7 @@ static PyTypeObject __pyx_type_8scrabble_3ocr___pyx_scope_struct____pyx_f_8scrab
   #endif
 };
 
-static struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct_1_genexpr *__pyx_freelist_8scrabble_3ocr___pyx_scope_struct_1_genexpr[2047];
+static struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct_1_genexpr *__pyx_freelist_8scrabble_3ocr___pyx_scope_struct_1_genexpr[4096];
 static int __pyx_freecount_8scrabble_3ocr___pyx_scope_struct_1_genexpr = 0;
 
 static PyObject *__pyx_tp_new_8scrabble_3ocr___pyx_scope_struct_1_genexpr(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
@@ -24250,7 +24257,7 @@ static void __pyx_tp_dealloc_8scrabble_3ocr___pyx_scope_struct_1_genexpr(PyObjec
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->__pyx_outer_scope);
   Py_CLEAR(p->__pyx_v_pixel);
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8scrabble_3ocr___pyx_scope_struct_1_genexpr < 2047) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct_1_genexpr)))) {
+  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8scrabble_3ocr___pyx_scope_struct_1_genexpr < 4096) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct_1_genexpr)))) {
     __pyx_freelist_8scrabble_3ocr___pyx_scope_struct_1_genexpr[__pyx_freecount_8scrabble_3ocr___pyx_scope_struct_1_genexpr++] = ((struct __pyx_obj_8scrabble_3ocr___pyx_scope_struct_1_genexpr *)o);
   } else {
     (*Py_TYPE(o)->tp_free)(o);
