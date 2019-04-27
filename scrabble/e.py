@@ -9,8 +9,8 @@ if False: from argparse import Namespace
 
 
 def parse_args() -> 'Namespace':
-    from parser_defaults import parser_init
-    from settings import DICTIONARY, NUM_RESULTS, DEFAULT_LOGLEVEL
+    from .parser_defaults import parser_init
+    from .settings import DICTIONARY, NUM_RESULTS, DEFAULT_LOGLEVEL
 
     parser = parser_init(
         description=__doc__,
@@ -45,7 +45,10 @@ def parse_args() -> 'Namespace':
 if __name__ == '__main__':
     pargs = parse_args()
 
-    import p
+    from scrabble import p
+    #from scrabble import main
+    #from scrabble.p import main
+    #from p import main
 
     dargs = vars(pargs)
 
@@ -64,7 +67,7 @@ if __name__ == '__main__':
 
         profile = line_profiler.LineProfiler(
             #p.parse_nodes,
-            p.solve,
+            #p.solve,
             #p.cmain,
             # p.set_word_dict,
             # p.rack_check,
@@ -78,3 +81,4 @@ if __name__ == '__main__':
 
     else:
         p.main(**dargs)
+        #main(**dargs)

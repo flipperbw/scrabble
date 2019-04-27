@@ -5,22 +5,24 @@
 cimport cython
 #from cython.parallel import prange
 
-from libc.stdio cimport printf, snprintf, puts
+from libc.stdio cimport printf, snprintf
 from libc.stdlib cimport qsort
 
+#from scrabble import logger as log
+from scrabble cimport logger as log
+from scrabble.logger cimport lo, los, clos
 
-cdef object json, np, pd, Path, _s, log_init
+
+cdef object json, sys, np, pd, Path, _s
 #cdef module np
-#import sys
 
 import json
+import sys
 import numpy as np
 import pandas as pd  # remove
-
 from pathlib import Path
 
-import settings as _s
-from logs import log_init
+import scrabble.settings as _s
 
 #import signal
 #from functools import lru_cache
@@ -54,110 +56,9 @@ DEF L_EN = 91
 DEF MAX_NODES = 15
 DEF MAX_ORD = 127  # todo replace 127
 
-# - logging
+#cdef object lo = log.lo
+#los = log.los
 
-DEF _k = b'\x1B['
-DEF K_RES = _k + b'0m'
-DEF K_BLK = 30
-DEF K_RED = 31
-DEF K_GRN = 32
-DEF K_YEL = 33
-DEF K_BLU = 34
-DEF K_MAG = 35
-DEF K_CYN = 36
-DEF K_WHT = 37
-DEF K_BLK_L = 90
-DEF K_RED_L = 91
-DEF K_GRN_L = 92
-DEF K_YEL_L = 93
-DEF K_BLU_L = 94
-DEF K_MAG_L = 95
-DEF K_CYN_L = 96
-DEF K_WHT_L = 97
-
-cdef enum LogLvl:
-    NOTSET = 0
-    SPAM = 5
-    DEBUG = 10
-    VERBOSE = 15
-    INFO = 20
-    NOTICE = 25
-    WARNING = 30
-    SUCCESS = 35
-    ERROR = 40
-    CRITICAL = 50
-    ALWAYS = 60
-
-cdef object lo = log_init(_s.DEFAULT_LOGLEVEL)
-cdef int lo_lvl = lo.get_level(_s.DEFAULT_LOGLEVEL)
-
-#todo add bold and stuff
-cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:
-    cdef Py_ssize_t i = 0
-
-    printf('%s%dm', _k, K_BLK_L)
-    while i < 3:
-        printf('%c', ctxt[i])
-        i += 1
-    printf(K_RES)
-
-    printf('%s%d;%dm', _k, bold, c)
-    while i < ts:
-        printf('%c', ctxt[i])
-        i += 1
-    puts(K_RES)
-
-# todo check if this is actually faster
-
-cdef cuchr[:] chklog(s, int lvl):
-    if s is None: return NUL
-    if lo_lvl > lvl: return NUL
-    if type(s) is not unicode: return NUL
-
-    cdef bytes s_st
-    if lvl == 0:    s_st = b'(_) '
-    elif lvl == 5:  s_st = b'(x) '
-    elif lvl == 10: s_st = b'(d) '
-    elif lvl == 15: s_st = b'(v) '
-    elif lvl == 20: s_st = b'(i) '
-    elif lvl == 25: s_st = b'(n) '
-    elif lvl == 30: s_st = b'(w) '
-    elif lvl == 35: s_st = b'(s) '
-    elif lvl == 40: s_st = b'(e) '
-    elif lvl == 50: s_st = b'(c) '
-    elif lvl == 60: s_st = b'(a) '
-    else: s_st = bytes(lvl)
-
-    #cdef str sp = '(' + s_st + ') ' + s
-    #s = '(' + s_st + ') ' + s
-    #cdef bytes sb = <bytes>(<unicode>s).encode('utf-8')
-    #sb = (<unicode>s).encode('utf8')
-    #return sb
-
-    return s_st + <bytes>((<unicode>s).encode('utf8'))
-
-cdef void los(s):
-    cdef LogLvl lvl = SUCCESS
-    cdef SIZE_t color = K_GRN_L
-    cdef cuchr[:] txt = chklog(s, lvl)
-    cdef Py_ssize_t ts = len(txt)
-    if ts > 3: clog(txt, ts, color)
-
-cdef void loe(s):
-    cdef LogLvl lvl = ERROR
-    cdef SIZE_t color = K_RED
-    cdef cuchr[:] txt = chklog(s, lvl)
-    cdef Py_ssize_t ts = len(txt)
-    if ts > 3: clog(txt, ts, color)
-
-cdef void loi(s):
-    cdef LogLvl lvl = INFO
-    cdef SIZE_t color = K_CYN_L
-    cdef cuchr[:] txt = chklog(s, lvl)
-    cdef Py_ssize_t ts = len(txt)
-    if ts > 3: clog(txt, ts, color)
-
-# -
 
 @cython.final(True)
 cdef class CSettings:
@@ -378,9 +279,9 @@ cdef class Board:
                         if bval is None:
                             self.new_game = True
                     else:
-                        x = dbval[0]
+                        x = (<str>dbval)[0]
                         mult_a = <BOOL_t>int(x)
-                        if dbval[1] == 'w':
+                        if (<str>dbval)[1] == 'w':
                             mult_w = 1
 
                 if bval is None:
@@ -485,7 +386,7 @@ cdef class Board:
                 nv = p.n.letter.value
                 l_s = chr(nv)
                 if rev:
-                    lets_str = l_s + lets_str
+                    lets_str = <str>l_s + lets_str
                 else:
                     lets_str += l_s
 
@@ -536,7 +437,7 @@ cdef class Board:
         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):
             return True
 
-        new_word = bef_w + <str>chr(i) + aft_w
+        new_word = <str>bef_w + <str>chr(i) + aft_w
         #new_word = ''.join(chr(ns.value) for ns in new_let_list)
 
         #lo.x(new_word)
@@ -933,212 +834,6 @@ cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, 
 def _unused(): pass
 
 
-@cython.final(True)
-cpdef object loadfile(tuple paths, bint is_file = True):
-    cdef object filepath = Path(*paths)
-    if not filepath.exists():
-        lo.c('Could not find file: {}'.format(filepath.absolute()))
-        exit(1)
-    if is_file:
-        if not filepath.is_file():
-            lo.c('Path exists but is not a file: {}'.format(filepath.absolute()))
-            exit(1)
-    else:
-        if not filepath.is_dir():
-            lo.c('Path exists but is not a directory: {}'.format(filepath.absolute()))
-            exit(1)
-
-    return filepath
-
-
-# todo: set default for dict? put in settings? move all settings out to options?
-#cpdef, def
-
-
-# @cython.binding(True)
-# @cython.linetrace(True)
-#cpdef void solve(str dictionary):
-cdef void solve(str dictionary):
-    cdef:
-        list wordlist
-        BOOL_t blanks
-        Py_ssize_t wl_len, mnlen, wi, wl #, sl
-        set s_words
-        frozenset words
-        #set s_search_words
-        frozenset search_words
-        str w
-        #object l
-
-    wordlist = loadfile((_s.WORDS_DIR, dictionary + '.txt')).read_text().splitlines()
-    if not wordlist:
-        return
-
-    blanks = Settings.rack[bl]
-    mnlen = Settings.shape[0] if Settings.shape[0] > Settings.shape[1] else Settings.shape[1]
-
-    #s_words = {w for w in wordlist if len(w) <= mnlen}
-    s_words = set()
-
-    # todo why does this check for none?
-    wl_len = len(wordlist)
-    for wi in range(wl_len):
-        w = <str>(wordlist[wi])
-        wl = len(w)
-        if wl <= mnlen:
-            s_words.add(w)
-
-    words = frozenset(s_words)
-
-    if _s.SEARCH_WORDS is None:
-        if blanks > 0:
-            search_words = words
-        else:
-            # TODO FIX THIS
-            #lo.e(len(words))
-
-            # todo: faster if str? why gen slower?
-            #search_words = frozenset({w for w in words if any([l in w for l in Settings.rack_l])})
-
-            #s_search_words = set()
-
-            # for w in words:
-            #     for sl in range(Settings.rack_s):
-            #         l = Settings.rack_l[sl]
-            #         if l in w:
-            #             s_search_words.add(w)
-            #             break
-
-            #search_words = frozenset(s_search_words)
-
-            search_words = words
-
-            #lo.e(len(search_words))
-
-    elif isinstance(_s.SEARCH_WORDS, tuple):
-        search_words = frozenset(wordlist[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
-    elif isinstance(_s.SEARCH_WORDS, set):
-        search_words = frozenset(_s.SEARCH_WORDS)
-    else:
-        search_words = frozenset()  # why necessary?
-        lo.c('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
-        #sys.exit(1)
-        exit(1)
-
-    cdef Py_ssize_t swl = len(search_words)
-    if swl == 0:
-        lo.c('No search words')
-        exit(1)
-
-    Settings.blanks = blanks
-
-    # todo allow extra mods
-    # print(board)
-    # print(board[10])
-    # board[8][10] = 'Y'
-    # letters = [b'F', b'G']
-
-    #cdef set bwords = {s for s in words}
-    Settings.words = words
-
-    # -- TODO CHECK CONTIGUOUS --
-
-    cdef:
-        str sws
-        Py_ssize_t swi
-
-    # todo as one?
-    #cdef uchrp ss
-    #cdef list sw = [(s.encode('utf8'), len(s)) for s in search_words]
-    #cdef cnp.ndarray sw = np.zeros(swl, f'|S{mnlen}')
-    #cdef cnp.ndarray[:] _sw = np.array([s for s in search_words])
-    # const
-
-    # xx = np.array(list(search_words))
-    # print(xx.shape)
-    # print(xx.dtype)
-
-    cdef STR_t[:, ::1] sw = np.array(list(search_words)).view(STR).reshape(swl, -1)
-
-    #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, np.uint8)
-    cdef SIZE_t[::1] swlens = npe(swl, SIZE)
-
-    for swi, sws in enumerate(search_words):
-        #sw[swi] = sws.encode('utf8')
-        swlens[swi] = len(sws)
-
-    #Settings.search_words = sw
-    #Settings.search_words_l = swl
-
-    cdef Board full = Board(Settings.board, Settings.default_board)
-    Settings.node_board = full
-
-    cdef Node[:, ::1] nodes = full.nodes # need?
-    #cdef Node[::1] sing_nodes
-    #cdef N[:] ns_r = npe(Settings.shape[0], N)
-    #cdef N[:] ns_c = npe(Settings.shape[1], N)
-    cdef N ns_r[MAX_NODES]
-    cdef N ns_c[MAX_NODES]
-    #cdef N[:] ns_rv
-    #cdef N[:] ns_cv
-
-    cdef Py_ssize_t ni
-    cdef Node no
-
-    cdef Py_ssize_t ir, ic
-    cdef list search_rows, search_cols
-    cdef bint is_col
-
-    los('Solving...\n')
-
-    if full.new_game:
-        los(' = Fresh game = ')
-        #todo fix
-        #no = next(full.get_by_attr('is_start', True), None)
-        # if no:
-        #     check_node(no)
-
-    else:
-        if _s.SEARCH_NODES is None:
-            search_rows = list(range(Settings.shape[0]))
-            search_cols = list(range(Settings.shape[1]))
-            if lo_lvl <= LogLvl.SUCCESS:
-                los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
-
-        else:
-            search_rows = _s.SEARCH_NODES[0]
-            search_cols = _s.SEARCH_NODES[1]
-            if lo_lvl <= LogLvl.SUCCESS:
-                los(f'Checking custom lines ({search_rows}, {search_cols})...')
-
-        is_col = False
-        for ir in search_rows:
-            #sing_nodes = nodes[i]
-
-            for ni in range(Settings.shape[0]):
-                no = nodes[ir, ni]
-                ns_r[ni] = no.n
-
-            #ns_rv = ns_r
-
-            #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
-            parse_nodes(ns_r, sw, swlens, is_col)
-
-        is_col = True
-        for ic in search_cols:
-            #sing_nodes = nodes.T[i]
-            #sing_nodes = nodes[i]
-            #sing_nodes = np.asarray(nodes.T[i], Node, 'C')
-
-            for ni in range(Settings.shape[1]):
-                no = nodes[ni, ic]
-                ns_c[ni] = no.n
-
-            #ns_cv = ns_c
-
-            parse_nodes(ns_c, sw, swlens, is_col)
-
-
 """
 cdef str _print_node_range(
     vector[pair[int, int]] n  # list[tuple[int,int]]
@@ -1154,7 +849,7 @@ cdef str _print_node_range(
 """
 
 
-cdef void print_board(uchr[:, ::1] nodes, Letter_List lets):
+cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t rown, colt = 0, colb = 0
@@ -1201,13 +896,20 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets):
 
     cdef:
         uchr best_map[MAX_NODES][MAX_NODES]
-        uchr[:, ::1] best_map_v = best_map
+        #uchr[:, ::1] best_map_v = best_map
         uchr nval, bval
         Py_ssize_t l
+        Py_ssize_t r = 0, c
         Letter letter
         BOOL_t x, y
 
-    best_map_v[:, :] = 0
+    #best_map_v[:, :] = 0
+    while r < MAX_NODES:
+        c = 0
+        while c < MAX_NODES:
+            best_map[r][c] = 0
+            c += 1
+        r += 1
 
     for l in range(lets.len):
         letter = lets.l[l]
@@ -1215,7 +917,7 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets):
         y = letter.y
         nval = nodes[x, y]
         if not nval:
-            best_map_v[x, y] = letter.value
+            best_map[x][y] = letter.value
 
     # - rows
     for rown in range(nodes.shape[0]):
@@ -1223,7 +925,7 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets):
         for i in range(nodes.shape[1]):
             nval = nodes[rown, i]
             if not nval:
-                bval = best_map_v[rown, i]
+                bval = best_map[rown][i]
                 if bval:
                     printf('%s%c%s', board_hl, bval, board_cl)
                 else:
@@ -1253,7 +955,7 @@ cdef int mycmp(c_void pa, c_void pb) nogil:
 
 
 #[:]
-cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
+cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) nogil:
     # todo mark blanks
 
     if words.len == 0:
@@ -1267,18 +969,24 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
 
     qsort(word_list, words.len, sizeof(WordDict), &mycmp)
 
-    if lo.is_enabled('s'):
+    if log.lo_lvl <= log.LogLvl.SUCCESS:
         if Settings.num_results == 0:
             cut_num = words.len
         else:
             cut_num = Settings.num_results if Settings.num_results < words.len else words.len
 
         printf('\n')
-        los(f'-- Results ({cut_num} / {words.len}) --\n')
+        #los('-- Results (%i / %i) --\n', cut_num, words.len)
+        #los('-- Results ({} / {}) --\n'.format(cut_num, words.len))
+        clos('-- Results (%zu / %zu) --\n', cut_num, words.len)
         cut_num -= 1
         while cut_num >= 0:
             #w = &word_list[cut_num]
-            los(word_list[cut_num].word.decode())
+            #los(word_list[cut_num].word)
+            # printf('%s(s)%s %s%s%s\n',
+            #    log.KS_BLK_L, log.KS_RES, log.KS_GRN_L, word_list[cut_num].word, log.KS_RES
+            # )
+            clos('%s', word_list[cut_num].word)
             cut_num -= 1
 
     best = &word_list[0]
@@ -1294,6 +1002,212 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
     printf('\nPoints: %i\n', best.pts)
 
 
+@cython.final(True)
+cpdef object loadfile(tuple paths, bint is_file = True):
+    cdef object filepath = Path(*paths)
+    if not filepath.exists():
+        lo.c('Could not find file: {}'.format(filepath.absolute()))
+        sys.exit(1)
+    if is_file:
+        if not filepath.is_file():
+            lo.c('Path exists but is not a file: {}'.format(filepath.absolute()))
+            sys.exit(1)
+    else:
+        if not filepath.is_dir():
+            lo.c('Path exists but is not a directory: {}'.format(filepath.absolute()))
+            sys.exit(1)
+
+    return filepath
+
+
+# todo: set default for dict? put in settings? move all settings out to options?
+#cpdef, def
+
+# @cython.binding(True)
+# @cython.linetrace(True)
+#cpdef void solve(str dictionary):
+cdef void solve(str dictionary):
+    cdef:
+        #list wordlist
+        str wordlist_load
+        str w
+        BOOL_t blanks
+        Py_ssize_t mnlen, wl  #, sl
+        set s_words
+        frozenset words
+        #set s_search_words
+        frozenset search_words
+        #object l
+
+    wordlist_load = loadfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
+    if not wordlist_load:
+        return
+
+    mnlen = Settings.shape[0] if Settings.shape[0] > Settings.shape[1] else Settings.shape[1]
+
+    #s_words = {w for w in wordlist_load.splitlines() if len(w) <= mnlen}
+    s_words = set()
+
+    # todo why does this check for none?
+    for w in wordlist_load.splitlines():
+        wl = len(<str>w)
+        if wl <= mnlen:
+            s_words.add(w)
+
+    if not s_words:
+        return
+
+    words = frozenset(s_words)
+
+    blanks = Settings.rack[bl]
+
+    if _s.SEARCH_WORDS is None:
+        if blanks > 0:
+            search_words = words
+        else:
+            # TODO FIX THIS
+            #lo.e(len(words))
+
+            # todo: faster if str? why gen slower?
+            #search_words = frozenset({w for w in words if any([l in w for l in Settings.rack_l])})
+
+            #s_search_words = set()
+
+            # for w in words:
+            #     for sl in range(Settings.rack_s):
+            #         l = Settings.rack_l[sl]
+            #         if l in w:
+            #             s_search_words.add(w)
+            #             break
+
+            #search_words = frozenset(s_search_words)
+
+            search_words = words
+
+            #lo.e(len(search_words))
+
+    elif isinstance(_s.SEARCH_WORDS, tuple):
+        search_words = frozenset(list(s_words)[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
+    elif isinstance(_s.SEARCH_WORDS, set):
+        search_words = frozenset(_s.SEARCH_WORDS)
+    else:
+        search_words = frozenset()  # why necessary?
+        lo.c('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
+        sys.exit(1)
+
+    cdef Py_ssize_t swl = len(search_words)
+    if swl == 0:
+        lo.c('No search words')
+        sys.exit(1)
+
+    Settings.blanks = blanks
+
+    # todo allow extra mods
+    # print(board)
+    # print(board[10])
+    # board[8][10] = 'Y'
+    # letters = [b'F', b'G']
+
+    #cdef set bwords = {s for s in words}
+    Settings.words = words
+
+    # -- TODO CHECK CONTIGUOUS --
+
+    cdef:
+        str sws
+        Py_ssize_t swi
+
+    # todo as one?
+    #cdef uchrp ss
+    #cdef list sw = [(s.encode('utf8'), len(s)) for s in search_words]
+    #cdef cnp.ndarray sw = np.zeros(swl, f'|S{mnlen}')
+    #cdef cnp.ndarray[:] _sw = np.array([s for s in search_words])
+    # const
+
+    # xx = np.array(list(search_words))
+    # print(xx.shape)
+    # print(xx.dtype)
+
+    cdef STR_t[:, ::1] sw = np.array(list(search_words)).view(STR).reshape(swl, -1)
+
+    #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, np.uint8)
+    cdef SIZE_t[::1] swlens = npe(swl, SIZE)
+
+    for swi, sws in enumerate(search_words):
+        #sw[swi] = sws.encode('utf8')
+        swlens[swi] = len(sws)
+
+    #Settings.search_words = sw
+    #Settings.search_words_l = swl
+
+    cdef Board full = Board(Settings.board, Settings.default_board)
+    Settings.node_board = full
+
+    #cdef Node[::1] sing_nodes
+    #cdef N[:] ns_r = npe(Settings.shape[0], N)
+    #cdef N[:] ns_c = npe(Settings.shape[1], N)
+    cdef N ns_r[MAX_NODES]
+    cdef N ns_c[MAX_NODES]
+    #cdef N[:] ns_rv
+    #cdef N[:] ns_cv
+
+    cdef Py_ssize_t ni
+    cdef Node no
+
+    cdef Py_ssize_t ir, ic
+    cdef list search_rows, search_cols
+    cdef bint is_col
+
+    los('Solving...\n')
+
+    if full.new_game:
+        los(' = Fresh game = ')
+        #todo fix
+        #no = next(full.get_by_attr('is_start', True), None)
+        # if no:
+        #     check_node(no)
+
+    else:
+        if _s.SEARCH_NODES is None:
+            search_rows = list(range(Settings.shape[0]))
+            search_cols = list(range(Settings.shape[1]))
+            if log.lo_lvl <= log.LogLvl.SUCCESS:
+                los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
+
+        else:
+            search_rows = _s.SEARCH_NODES[0]
+            search_cols = _s.SEARCH_NODES[1]
+            if log.lo_lvl <= log.LogLvl.SUCCESS:
+                los(f'Checking custom lines ({search_rows}, {search_cols})...')
+
+        is_col = False
+        for ir in search_rows:
+            #sing_nodes = nodes[i]
+
+            for ni in range(Settings.shape[0]):
+                no = full.nodes[ir, ni]
+                ns_r[ni] = no.n
+
+            #ns_rv = ns_r
+
+            #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
+            parse_nodes(ns_r, sw, swlens, is_col)
+
+        is_col = True
+        for ic in search_cols:
+            #sing_nodes = nodes.T[i]
+            #sing_nodes = nodes[i]
+            #sing_nodes = np.asarray(nodes.T[i], Node, 'C')
+
+            for ni in range(Settings.shape[1]):
+                no = full.nodes[ni, ic]
+                ns_c[ni] = no.n
+
+            #ns_cv = ns_c
+
+            parse_nodes(ns_c, sw, swlens, is_col)
+
+
 # except *
 
 # @cython.binding(True)
@@ -1304,7 +1218,7 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
 @cython.wraparound(False)
 cdef void cmain(
     str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level
-):
+) except *:
     cdef:
         dict points
         object pdboard
@@ -1321,8 +1235,7 @@ cdef void cmain(
     if log_level != lo.logger.getEffectiveLevel():
         lo.set_level(log_level)
 
-    global lo_lvl
-    lo_lvl = lo.get_level(log_level)
+    log.lo_lvl = lo.get_level(log_level)
 
     cdef object this_board_dir
     if filename is not None:
@@ -1334,6 +1247,10 @@ cdef void cmain(
         pdboard = pd.DataFrame(_s.BOARD)
         rack = _s.LETTERS
 
+    if not rack:
+        lo.c('Rack is empty')
+        return
+
     cdef str el
     if exclude_letters:
         for el in exclude_letters:
@@ -1343,7 +1260,10 @@ cdef void cmain(
     cdef object l
     for l in rack:
         # actually a long... TODO check ords
-        Settings.rack[<Py_ssize_t>ord(l)] += 1
+        if l and len(l) == 1:
+            Settings.rack[<Py_ssize_t>ord(l)] += 1
+        else:
+            lo.e(f'Rack letter is not valid: "{l}"')
 
     #rack_b.sort()
 
@@ -1358,18 +1278,17 @@ cdef void cmain(
     elif board_size == 11 * 11:
         board_name = _s.DEF_BOARD_SMALL
     else:
-        board_name = None
         lo.c('Board size ({}) has no match'.format(board_size))
-        #sys.exit(1)
-        exit(1)
+        return
 
     default_board = pd.read_pickle(loadfile((board_name,))).to_numpy(np.object_)
 
-    points = json.load(loadfile((_s.POINTS_DIR, dictionary + '.json')).open())  # Dict[str, List[int]]
+    points = json.load(loadfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
 
     if lo.is_enabled('s'):
         los('Game Board:\n{}'.format(pdboard))
-        lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
+        if lo.is_enabled('v'):
+            lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
         los('Rack:\n{}'.format(rack))
         printf('\n')
     else:
@@ -1385,11 +1304,15 @@ cdef void cmain(
     #cdef lpts_t lpt
     cdef str k
     cdef list v
+    cdef BOOL_t vv[2]
     cdef SIZE_t ok
+
     for k, v in points.items():
         ok = ord(k)
-        cl_amts[ok] = (<int>v[0])
-        cl_points[ok] = (<int>v[1])
+        vv = v  # type: list
+        cl_amts[ok] = vv[0]
+        cl_points[ok] = vv[1]
+
     Settings.points = cl_points
     Settings.amts = cl_amts
 
@@ -1397,19 +1320,20 @@ cdef void cmain(
 
     # todo add search words and nodes
 
-    #cdef object[:, ::1] solved_board
-    cdef uchr[:, ::1] solved_board
-    cdef Py_ssize_t r, c
 
     solve(dictionary)
 
-    #solved_board = npz(Settings.shape, np.object_)
-    solved_board = npz((Settings.shape[0], Settings.shape[1]), BOOL)
-    for r in range(solved_board.shape[0]):
-        for c in range(solved_board.shape[1]):
-            solved_board[r, c] = Settings.node_board.nodes[r, c].n.letter.value
+    cdef uchr solved_board[MAX_NODES][MAX_NODES]
+    cdef uchr[:, ::1] solved_board_v = solved_board
+    cdef Py_ssize_t r, c
 
-    show_solution(solved_board, Settings.node_board.words, no_words)
+    for r in range(board.shape[0]):
+        for c in range(board.shape[1]):
+            solved_board[r][c] = Settings.node_board.nodes[r, c].n.letter.value
+
+    show_solution(
+        solved_board_v[:board.shape[0], :board.shape[1]], Settings.node_board.words, no_words
+    )
 
 
 # def

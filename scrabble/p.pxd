@@ -16,6 +16,8 @@ ctypedef unsigned char uchr
 ctypedef unsigned char* uchrp
 ctypedef const unsigned char cuchr
 ctypedef const unsigned char* cuchrp
+ctypedef const char cchr
+ctypedef const char* cchrp
 
 #ctypedef unsigned short us
 #ctypedef (us, us) dual
@@ -24,13 +26,6 @@ ctypedef const unsigned char* cuchrp
 # cdef packed struct lpts_t:
 #     uchr amt
 #     uchr pts
-
-
-cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold=*) nogil
-cdef cuchr[:] chklog(s, int lvl)
-cdef void los(s)
-cdef void loe(s)
-cdef void loi(s)
 
 
 @cython.final(True)
@@ -174,14 +169,16 @@ cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
 
 cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil
 
+
+cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil
+cdef int mycmp(c_void pa, c_void pb) nogil
+cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) nogil
+
+
 cpdef object loadfile(tuple paths, bint is_file=*)
 
 cdef void solve(str dictionary)
 
-cdef void print_board(uchr[:, ::1] nodes, Letter_List lets)
-cdef int mycmp(c_void pa, c_void pb) nogil
-cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words)
-
-cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level)
+cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level) except *
 
 # todo check if need func sig

@@ -75,7 +75,7 @@ BOARD = [      #
 # - LETTERS
 
 #LETTERS = list('TOTHBYU')
-LETTERS = ['']
+LETTERS = [] # type: List[str]
 
 
 # todo wordlist?

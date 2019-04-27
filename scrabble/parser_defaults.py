@@ -10,7 +10,7 @@ from typing import Union
 import verboselogs
 from colored import attr, fg, stylize
 
-from logs import DEFAULT_LOGLEVEL, LEVELS
+from .logs import DEFAULT_LOGLEVEL, LEVELS
 
 
 #https://i.stack.imgur.com/KTSQa.png

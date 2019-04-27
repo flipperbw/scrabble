@@ -1,6 +1,6 @@
 BUILD_CMD=python3 ./setup.py build_ext -i
-PARSE_CMD=time -p ./scrabble/e.py
-OCR_CMD=time -p ./scrabble/o.py
+PARSE_CMD=time -p python3 -m scrabble.e
+OCR_CMD=time -p python3 -m scrabble.o
 
 
 .PHONY: run run-p run-t
