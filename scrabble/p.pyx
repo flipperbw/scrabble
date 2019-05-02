@@ -1,4 +1,6 @@
-# cython: warn.maybe_uninitialized=True, warn.undeclared=True, warn.unused=True, warn.unused_arg=True, warn.unused_result=True, infer_types.verbose=True
+# cython: warn.maybe_uninitialized=True, warn.undeclared=True, warn.unused=True, warn.unused_arg=True, warn.unused_result=True
+
+# , infer_types.verbose=True
 
 """Parse and solve a scrabble board."""
 
@@ -10,13 +12,14 @@ from libc.stdlib cimport qsort
 
 #from scrabble import logger as log
 from scrabble cimport logger as log
-from scrabble.logger cimport lo, can_log, los, loe, loc, clos
+from scrabble.logger cimport can_log, los, lov, loe, loc, clos
 
 
-cdef object json, sys, np, pd, Path, _s
+cdef object json, pickle, sys, np, pd, Path, _s
 #cdef module np
 
 import json
+import pickle
 import sys
 import numpy as np
 import pandas as pd  # remove
@@ -139,7 +142,7 @@ cdef void sol(WordDict wd, char* buff) nogil:
 @cython.final(True)
 cdef class Node:
     # todo test no types in cinit
-    def __cinit__(self, BOOL_t x, BOOL_t y, str val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
+    def __cinit__(self, BOOL_t x, BOOL_t y, char val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
         self.n.letter.x = x
         self.n.letter.y = y
 
@@ -162,8 +165,10 @@ cdef class Node:
             #self.display = ' '  # todo display method
         else:
             self.n.has_val = True
-            self.n.letter.value = ord(val)
+            self.n.letter.value = val
+            loe(self.n.letter.value)
             self.n.pts = Settings.points[self.n.letter.value]
+            loe(self.n.pts)
             #self.display = val.upper()
 
             # try:
@@ -233,10 +238,11 @@ cdef class Node:
 
 @cython.final(True)
 cdef class Board:
-    def __cinit__(self, object[:, ::1] board, object[:, :] default_board):  # todo fix c contig
+    def __cinit__(self, char[:, ::1] board, object[:, :] default_board):  # todo fix c contig
         cdef:
-            Py_ssize_t r, c
-            str dbval, bval, x, d
+            Py_ssize_t r, c, du
+            str dbval, x #, d, bval
+            char bval
             BOOL_t mult_a, mult_w
             Node node
             #cnp.ndarray board
@@ -247,26 +253,26 @@ cdef class Board:
         self.nodes = np.zeros_like(default_board, Node)
         #self.nodes = np.empty_like(default_board, Node)
 
-        self.nodes_rl = Settings.shape[0]
-        self.nodes_cl = Settings.shape[1]
+        #self.nodes_rl = Settings.shape[0] # default board shape instead
+        #self.nodes_cl = Settings.shape[1]
 
         self.new_game = False
 
         self.words.len = 0
         #self.words_view = self.words.l
 
-        for r in range(self.nodes_rl):
-            for c in range(self.nodes_cl):
+        for r in range(self.nodes.shape[0]):
+            for c in range(self.nodes.shape[1]):
                 bval = board[r, c]
 
-                if not bval:
-                    bval = None
-                else:
-                    bval = bval.strip()
-                    if not bval:
-                        bval = None
-                    else:
-                        bval = bval.upper()
+                # if bval: # = NUL?
+                #     bval = None
+                # else:
+                #     bval = bval.strip()
+                #     if not bval:
+                #         bval = None
+                #     else:
+                #         bval = bval.upper()
 
                 dbval = default_board[r, c]
 
@@ -276,7 +282,7 @@ cdef class Board:
                 if dbval:
                     dbval = dbval.strip()
                     if dbval == 'x':
-                        if bval is None:
+                        if not bval:
                             self.new_game = True
                     else:
                         x = (<str>dbval)[0]
@@ -284,20 +290,21 @@ cdef class Board:
                         if (<str>dbval)[1] == 'w':
                             mult_w = 1
 
-                if bval is None:
-                    bval = ''
+                # if bval is None:
+                #     bval = ''
 
-                node = Node(r, c, bval, mult_a, mult_w, self.new_game)
+                #node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, True if self.new_game else False)
+                node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, <BOOL_t>self.new_game)
                 self.nodes[r, c] = node
 
-        for r in range(self.nodes_rl):
-            for c in range(self.nodes_cl):
+        for r in range(self.nodes.shape[0]):
+            for c in range(self.nodes.shape[1]):
                 node = self.nodes[r, c]
 
                 self._set_edge(r, c)
 
-                for d in ('up', 'down', 'left', 'right'):
-                    self._set_adj_words(node, d)
+                for du in range(4): # u, d, l, r
+                    self._set_adj_words(node, du)
 
                 self._set_lets(node)
 
@@ -306,13 +313,20 @@ cdef class Board:
         for r in range(Settings.shape[1]):
             self._set_map(self.nodes[:, r], 1)
 
+        self.nodesnv = <N[:self.nodes.shape[0], :self.nodes.shape[1]]>self.nodesn
+        #self.nodesnv = self.nodesn[:self.nodes_rl, :self.nodes_cl]
 
-    #@lru_cache(1023)  # todo reenable?
-    cdef Node get(self, int x, int y):
-        return <Node>self.nodes[x, y]
+        for r in range(self.nodes.shape[0]):
+            for c in range(self.nodes.shape[1]):
+                self.nodesnv[r, c] = self.nodes[r, c].n
 
-    cdef Node get_by_attr(self, str attr, v):
-        return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
+
+    # #@lru_cache(1023)  # todo reenable?
+    # cdef Node get(self, int x, int y):
+    #     return <Node>self.nodes[x, y]
+
+    # cdef Node get_by_attr(self, str attr, v):
+    #     return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
 
 
     # cdef str _lets_as_str(self, list letters):
@@ -329,7 +343,7 @@ cdef class Board:
             if node.up.n.has_val:
                 node.n.has_edge = True
 
-        if r < self.nodes_rl - 1:
+        if r < self.nodes.shape[0] - 1:
             node.down = self.nodes[r+1, c]
             if node.down.n.has_val:
                 node.n.has_edge = True
@@ -339,13 +353,13 @@ cdef class Board:
             if node.left.n.has_val:
                 node.n.has_edge = True
 
-        if c < self.nodes_cl - 1:
+        if c < self.nodes.shape[1] - 1:
             node.right = self.nodes[r, c+1]
             if node.right.n.has_val:
                 node.n.has_edge = True
 
 
-    cdef void _set_adj_words(self, Node n, str d):
+    cdef void _set_adj_words(self, Node n, Py_ssize_t d):
         cdef:
             Node[:] loop_nodes
             #cnp.ndarray loop_nodes
@@ -354,15 +368,15 @@ cdef class Board:
             int yy = n.n.letter.y
 
 
-        if d == 'up':
+        if d == 0:
             loop_nodes = self.nodes[:xx, yy][::-1]
             rev = True
-        elif d == 'down':
+        elif d == 1:
             loop_nodes = self.nodes[xx+1:, yy]
-        elif d == 'left':
+        elif d == 2:
             loop_nodes = self.nodes[xx, :yy][::-1]
             rev = True
-        elif d == 'right':
+        elif d == 3:
             loop_nodes = self.nodes[xx, yy+1:]
         else:
             return
@@ -370,37 +384,40 @@ cdef class Board:
         cdef:
             Py_ssize_t nl = loop_nodes.shape[0]
             Py_ssize_t ni
-            Node p
-            str l_s
+            N* p
+            #str l_s
+            Py_UCS4 lls
             str lets_str = ''
             STR_t lets_pts = 0
-            uchr nv
+            #uchr nv
 
         for ni in range(nl):
-            p = loop_nodes[ni]
-            if not p.n.has_val:
+            p = &loop_nodes[ni].n
+            if not p.has_val:
                 break
             else:
-                lets_pts += p.n.pts  # <STR_t>
+                lets_pts += p.pts
 
-                nv = p.n.letter.value
-                l_s = chr(nv)
+                #nv = p.letter.value
+                #l_s = <str>chr(<int>nv)
+                lls = p.letter.value
                 if rev:
-                    lets_str = <str>l_s + lets_str
+                    #lets_str = <str>lls + lets_str
+                    lets_str = lls + lets_str
                 else:
-                    lets_str += l_s
+                    lets_str += lls
 
         if lets_str:
-            if d == 'up':
+            if d == 0:
                 n.up_word = lets_str
                 n.up_pts = lets_pts
-            elif d == 'down':
+            elif d == 1:
                 n.down_word = lets_str
                 n.down_pts = lets_pts
-            elif d == 'left':
+            elif d == 2:
                 n.left_word = lets_str
                 n.left_pts = lets_pts
-            elif d == 'right':
+            elif d == 3:
                 n.right_word = lets_str
                 n.right_pts = lets_pts
 
@@ -415,7 +432,8 @@ cdef class Board:
             n.vlet_view[:, L_ST:L_EN] = True
             return
 
-        cdef Py_ssize_t i_s = L_ST
+        #cdef Py_ssize_t i_s = L_ST
+        cdef uchr i_s = L_ST
 
         while i_s < L_EN:
             # - rows
@@ -431,13 +449,14 @@ cdef class Board:
             i_s += 1
 
 
-    cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w):
+    cdef bint _check_adj_words(self, uchr i, Node bef, Node aft, str bef_w, str aft_w):
         cdef str new_word
 
         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):
             return True
 
-        new_word = <str>bef_w + <str>chr(i) + aft_w
+        #new_word = <str>bef_w + <str>chr(i) + aft_w
+        new_word = <str>bef_w + <str>chr(i) + <str>aft_w
         #new_word = ''.join(chr(ns.value) for ns in new_let_list)
 
         #lo.x(new_word)
@@ -456,10 +475,10 @@ cdef class Board:
 
             Node no
 
-            bint valid_lengths[MAX_NODES][MAX_NODES]
-            bint[:, :] vlen_view
+            BOOL_t valid_lengths[MAX_NODES][MAX_NODES]
+            BOOL_t[:, :] vlen_view = valid_lengths
 
-        vlen_view = valid_lengths
+        #vlen_view = valid_lengths
 
         vlen_view[:, :] = True
 
@@ -542,7 +561,7 @@ cdef class Board:
 
 
     def __str__(self) -> str:
-        return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, self.words.len)
+        return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes.shape[0], self.nodes.shape[1], self.words.len)
 
     # def __reduce__(self):
     #     return rebuild, (Settings.board, Settings.default_board)
@@ -559,7 +578,7 @@ cdef class Board:
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef STRU_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil:
+cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
@@ -613,7 +632,7 @@ cdef STRU_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_
 #todo test nogil more
 
 @cython.wraparound(False)
-cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil:
+cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) nogil:
 #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil:
     cdef Py_ssize_t i
     cdef STR_t nv
@@ -687,7 +706,7 @@ cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_s
 
 
 @cython.wraparound(False)
-cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil:
+cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int[:] base_rack) nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t r = 0
@@ -750,7 +769,7 @@ cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], 
 # @cython.wraparound(False)
 # cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
 @cython.wraparound(False)
-cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:
+cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:
     cdef:
         Py_ssize_t t
         Py_ssize_t nlen = Settings.shape[is_col]
@@ -1003,7 +1022,7 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) 
 
 
 @cython.final(True)
-cpdef object loadfile(tuple paths, bint is_file = True):
+cpdef object checkfile(tuple paths, bint is_file = True):
     cdef object filepath = Path(*paths)
     if not filepath.exists():
         loc('Could not find file: {}'.format(filepath.absolute()))
@@ -1026,7 +1045,8 @@ cpdef object loadfile(tuple paths, bint is_file = True):
 # @cython.binding(True)
 # @cython.linetrace(True)
 #cpdef void solve(str dictionary):
-cdef void solve(str dictionary):
+@cython.wraparound(False)
+cdef void solve(str dictionary) except *:
     cdef:
         #list wordlist
         str wordlist_load
@@ -1039,7 +1059,7 @@ cdef void solve(str dictionary):
         frozenset search_words
         #object l
 
-    wordlist_load = loadfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
+    wordlist_load = checkfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
     if not wordlist_load:
         return
 
@@ -1095,7 +1115,7 @@ cdef void solve(str dictionary):
         loc('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
         sys.exit(1)
 
-    cdef Py_ssize_t swl = len(search_words)
+    cdef INT_32 swl = len(search_words)
     if swl == 0:
         loc('No search words')
         sys.exit(1)
@@ -1146,13 +1166,10 @@ cdef void solve(str dictionary):
     #cdef Node[::1] sing_nodes
     #cdef N[:] ns_r = npe(Settings.shape[0], N)
     #cdef N[:] ns_c = npe(Settings.shape[1], N)
-    cdef N ns_r[MAX_NODES]
-    cdef N ns_c[MAX_NODES]
-    #cdef N[:] ns_rv
-    #cdef N[:] ns_cv
-
-    cdef Py_ssize_t ni
-    cdef Node no
+    # cdef N ns_r[MAX_NODES]
+    # cdef N ns_c[MAX_NODES]
+    # cdef N[::1] ns_rv = <N[:Settings.shape[0]]>ns_r
+    # cdef N[::1] ns_cv = <N[:Settings.shape[1]]>ns_c
 
     cdef Py_ssize_t ir, ic
     cdef list search_rows, search_cols
@@ -1184,28 +1201,24 @@ cdef void solve(str dictionary):
         for ir in search_rows:
             #sing_nodes = nodes[i]
 
-            for ni in range(Settings.shape[0]):
-                no = full.nodes[ir, ni]
-                ns_r[ni] = no.n
-
-            #ns_rv = ns_r
+            # for ni in range(Settings.shape[0]):
+            #     no = full.nodes[ir, ni]
+            #     ns_r[ni] = no.n
 
             #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
-            parse_nodes(ns_r, sw, swlens, is_col)
+            parse_nodes(full.nodesnv[ir], sw, swlens, is_col)
 
         is_col = True
         for ic in search_cols:
             #sing_nodes = nodes.T[i]
             #sing_nodes = nodes[i]
             #sing_nodes = np.asarray(nodes.T[i], Node, 'C')
+            #
+            # for ni in range(Settings.shape[1]):
+            #     no = full.nodes[ni, ic]
+            #     ns_c[ni] = no.n
 
-            for ni in range(Settings.shape[1]):
-                no = full.nodes[ni, ic]
-                ns_c[ni] = no.n
-
-            #ns_cv = ns_c
-
-            parse_nodes(ns_c, sw, swlens, is_col)
+            parse_nodes(full.nodesnv[:, ic], sw, swlens, is_col)
 
 
 # except *
@@ -1220,57 +1233,54 @@ cdef void cmain(
     str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level
 ) except *:
     cdef:
-        dict points
-        object pdboard
-        #object[:, ::1] board, default_board
-        object[:, ::1] board
-        object[:, :] default_board
-        #cnp.ndarray letters
+        object this_board_dir # type: Path
+        char[:, ::1] board
         list rack
-        #todo declare object rather than list?
+
+        object[:, :] default_board  # type: np.ndarray
+
+        dict points
+
         int board_size
         object board_name
 
-    log_level = log_level.upper()
-    if log_level != lo.logger.getEffectiveLevel():
-        lo.set_level(log_level)
+    log_level = log_level.lower()
+    if log_level == 'spam': log_level = 'x'
+    cdef Py_UCS4 log_lvl_ch = (<str>log_level)[0]
+    log.lo_lvl = log.lvl_alias[log_lvl_ch]
 
-    log.lo_lvl = lo.get_level(log_level)
-
-    cdef object this_board_dir
+    # todo individ check so can just pass rack
     if filename is not None:
-        this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)
-        pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))
-        rack = pd.read_pickle(loadfile((this_board_dir, _s.LETTERS_FILENAME)))
+        this_board_dir = checkfile((_s.BOARD_DIR, filename), is_file=False)
+        #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
+        board = pickle.load(checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb'))
+        rack = pickle.load(checkfile((this_board_dir, _s.LETTERS_FILENAME)).open('rb'))
 
     else:
-        pdboard = pd.DataFrame(_s.BOARD)
+        board = np.array(_s.BOARD, dtype='|S1')
         rack = _s.LETTERS
 
     if not rack:
         loc('Rack is empty')
         return
 
+
     cdef str el
     for el in exclude_letters:
         rack.remove(el)
 
-    # todo change this so theyre actually just single letters
-    cdef str l # py unci
-    cdef Py_ssize_t li
-    for li in range(len(rack)):
-        l = str((<list>rack)[li])
-        if len(l) == 1:
-            Settings.rack[<Py_ssize_t>ord(l)] += 1
-        else:
-            loe('Rack letter is not valid: "%s"' % l)
-
-    #rack_b.sort()
-
     Settings.rack_l = rack
     Settings.rack_s = len(rack)
 
-    board = pdboard.to_numpy(np.object_)  # type: np.ndarray
+    cdef Py_UCS4 l
+    cdef Py_ssize_t li
+    for li in range(Settings.rack_s):
+        #todo check less than 7 letters
+        l = (<list>rack)[li]
+        if len(l) == 1:
+            Settings.rack[l] += 1
+        else:
+            loe('Rack letter is not valid: "%s"' % l)
 
     board_size = board.size
     if board_size == MAX_NODES * MAX_NODES:
@@ -1281,16 +1291,16 @@ cdef void cmain(
         loc('Board size ({}) has no match'.format(board_size))
         return
 
-    default_board = pd.read_pickle(loadfile((board_name,))).to_numpy(np.object_)
+    default_board = pd.read_pickle(checkfile((board_name,))).to_numpy(np.object_) # .to_numpy('|S2')
 
-    points = json.load(loadfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
+    points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
 
-    if lo.is_enabled('s'):
-        los('Game Board:\n{}'.format(pdboard))
-        if lo.is_enabled('v'):
-            lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
-        los('Rack:\n{}'.format(rack))
-        printf('\n')
+    if can_log('s'):
+        los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?
+        if can_log('v'):
+            #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
+            lov('Default:\n{}'.format(default_board))
+        los('Rack:\n{}\n'.format(rack))
     else:
         printf('Running...\n')
 

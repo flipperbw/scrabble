@@ -62,13 +62,14 @@ comp_directives = {
     #"wraparound": true
 }
 
+include_dirs=['.']
 
 extra_compile_args = [
     #"-Wall",
     "-Wextra",
     "-ffast-math",  # speed?
-    "-O3"
-    #"-O1"
+    #"-O3"
+    "-O0"
     #'-fopenmp'
 ]
 
@@ -102,21 +103,27 @@ elif '--trace' in sys.argv:
 all_macros = define_macros + debug_macros
 
 
-include_dirs=['.']
+poss_exts = {
+    '--scrabble': False,
+    '--ocr': False,
+    '--logger': False
+}
 
-extensions = [
-    # Extension(
-    #     #f"{MOD_DIR}.*",
-    #     "*",
-    #     [f"{MOD_DIR}/*.pyx"],
-    #     #include_dirs=[numpy.get_include()],  # '/home/brett/scrabble/scrabble'
-    #     #include_dirs=['.', MOD_DIR, './scrabble', '/home/brett/scrabble/scrabble', '/home/brett/scrabble'],  # '/home/brett/scrabble/scrabble'
-    #     include_dirs=['.', MOD_DIR, numpy.get_include()],
-    #     extra_compile_args=extra_compile_args,
-    #     define_macros=define_macros,
-    # )
+build_all = True
+for k in poss_exts:
+    if k in sys.argv:
+        poss_exts[k] = True
+        build_all = False
+        sys.argv.remove(k)
 
-    Extension(
+if build_all is True:
+    for k in poss_exts:
+        poss_exts[k] = True
+
+extensions = []  # type: list
+
+if poss_exts['--scrabble']:
+    extensions.append(Extension(
         "scrabble.p",
         #"p",
         [f"{MOD_DIR}/p.pyx"],
@@ -125,83 +132,98 @@ extensions = [
         define_macros=all_macros,
         #extra_compile_args=['-fopenmp'],
         #extra_link_args=['-fopenmp'],
-    ),
+    ))
 
-    Extension(
+if poss_exts['--ocr']:
+    extensions.append(Extension(
         "scrabble.ocr",
         [f"{MOD_DIR}/ocr.pyx"],
         include_dirs=include_dirs + [numpy.get_include()],
+        #include_dirs=include_dirs,
         extra_compile_args=extra_compile_args,
         define_macros=all_macros,
-    ),
+    ))
 
-    Extension(
+if poss_exts['--logger']:
+    extensions.append(Extension(
         "scrabble.logger",
         [f"{MOD_DIR}/logger.pyx"],
         include_dirs=include_dirs,
         extra_compile_args=extra_compile_args,
         define_macros=debug_macros,
-    ),
+    ))
 
-    # Extension(
-    #     f"{MOD_DIR}/ocr", [f"{MOD_DIR}/ocr.pyx"],
-    #     extra_compile_args=extra_compile_args,
-    #     define_macros=define_macros,
-    #     include_dirs=[
-    #         numpy.get_include(),
-    #         '/usr/include/opencv',
-    #         '/usr/include/opencv2',
-    #     ],
-    #
-    #     library_dirs=['/usr/lib', '/usr/lib/x86_64-linux-gnu'],
-    #     libraries=['opencv_imgproc', 'opencv_saliency']
-    #
-    #     #extra_link_args=['-fopenmp']
-    #     # extra_link_args=[
-    #     #     '-lopencv_shape',
-    #     #     '-lopencv_stitching',
-    #     #     '-lopencv_superres',
-    #     #     '-lopencv_videostab',
-    #     #     '-lopencv_aruco',
-    #     #     '-lopencv_bgsegm',
-    #     #     '-lopencv_bioinspired',
-    #     #     '-lopencv_ccalib',
-    #     #     '-lopencv_datasets',
-    #     #     '-lopencv_dpm',
-    #     #     '-lopencv_face',
-    #     #     '-lopencv_freetype',
-    #     #     '-lopencv_fuzzy',
-    #     #     '-lopencv_hdf',
-    #     #     '-lopencv_line_descriptor',
-    #     #     '-lopencv_optflow',
-    #     #     '-lopencv_video',
-    #     #     '-lopencv_plot',
-    #     #     '-lopencv_reg',
-    #     #     '-lopencv_saliency',
-    #     #     '-lopencv_stereo',
-    #     #     '-lopencv_structured_light',
-    #     #     '-lopencv_phase_unwrapping',
-    #     #     '-lopencv_rgbd',
-    #     #     '-lopencv_viz',
-    #     #     '-lopencv_surface_matching',
-    #     #     '-lopencv_text',
-    #     #     '-lopencv_ximgproc',
-    #     #     '-lopencv_calib3d',
-    #     #     '-lopencv_features2d',
-    #     #     '-lopencv_flann',
-    #     #     '-lopencv_xobjdetect',
-    #     #     '-lopencv_objdetect',
-    #     #     '-lopencv_ml',
-    #     #     '-lopencv_xphoto',
-    #     #     '-lopencv_highgui',
-    #     #     '-lopencv_videoio',
-    #     #     '-lopencv_imgcodecs',
-    #     #     '-lopencv_photo',
-    #     #     '-lopencv_imgproc',
-    #     #     '-lopencv_core'
-    #     # ]
-    # ),
-]
+# extensions = [
+#     # Extension(
+#     #     #f"{MOD_DIR}.*",
+#     #     "*",
+#     #     [f"{MOD_DIR}/*.pyx"],
+#     #     #include_dirs=[numpy.get_include()],  # '/home/brett/scrabble/scrabble'
+#     #     #include_dirs=['.', MOD_DIR, './scrabble', '/home/brett/scrabble/scrabble', '/home/brett/scrabble'],  # '/home/brett/scrabble/scrabble'
+#     #     include_dirs=['.', MOD_DIR, numpy.get_include()],
+#     #     extra_compile_args=extra_compile_args,
+#     #     define_macros=define_macros,
+#     # )
+#
+#     # Extension(
+#     #     f"{MOD_DIR}/ocr", [f"{MOD_DIR}/ocr.pyx"],
+#     #     extra_compile_args=extra_compile_args,
+#     #     define_macros=define_macros,
+#     #     include_dirs=[
+#     #         numpy.get_include(),
+#     #         '/usr/include/opencv',
+#     #         '/usr/include/opencv2',
+#     #     ],
+#     #
+#     #     library_dirs=['/usr/lib', '/usr/lib/x86_64-linux-gnu'],
+#     #     libraries=['opencv_imgproc', 'opencv_saliency']
+#     #
+#     #     #extra_link_args=['-fopenmp']
+#     #     # extra_link_args=[
+#     #     #     '-lopencv_shape',
+#     #     #     '-lopencv_stitching',
+#     #     #     '-lopencv_superres',
+#     #     #     '-lopencv_videostab',
+#     #     #     '-lopencv_aruco',
+#     #     #     '-lopencv_bgsegm',
+#     #     #     '-lopencv_bioinspired',
+#     #     #     '-lopencv_ccalib',
+#     #     #     '-lopencv_datasets',
+#     #     #     '-lopencv_dpm',
+#     #     #     '-lopencv_face',
+#     #     #     '-lopencv_freetype',
+#     #     #     '-lopencv_fuzzy',
+#     #     #     '-lopencv_hdf',
+#     #     #     '-lopencv_line_descriptor',
+#     #     #     '-lopencv_optflow',
+#     #     #     '-lopencv_video',
+#     #     #     '-lopencv_plot',
+#     #     #     '-lopencv_reg',
+#     #     #     '-lopencv_saliency',
+#     #     #     '-lopencv_stereo',
+#     #     #     '-lopencv_structured_light',
+#     #     #     '-lopencv_phase_unwrapping',
+#     #     #     '-lopencv_rgbd',
+#     #     #     '-lopencv_viz',
+#     #     #     '-lopencv_surface_matching',
+#     #     #     '-lopencv_text',
+#     #     #     '-lopencv_ximgproc',
+#     #     #     '-lopencv_calib3d',
+#     #     #     '-lopencv_features2d',
+#     #     #     '-lopencv_flann',
+#     #     #     '-lopencv_xobjdetect',
+#     #     #     '-lopencv_objdetect',
+#     #     #     '-lopencv_ml',
+#     #     #     '-lopencv_xphoto',
+#     #     #     '-lopencv_highgui',
+#     #     #     '-lopencv_videoio',
+#     #     #     '-lopencv_imgcodecs',
+#     #     #     '-lopencv_photo',
+#     #     #     '-lopencv_imgproc',
+#     #     #     '-lopencv_core'
+#     #     # ]
+#     # ),
+# ]
 
 #compileall.compile_dir(MOD_DIR, maxlevels=0, optimize=2, workers=4)
 

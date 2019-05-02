@@ -1194,9 +1194,18 @@ typedef unsigned char __pyx_t_8scrabble_6logger_uchr;
  */
 typedef unsigned char const __pyx_t_8scrabble_6logger_cuchr;
 
+/* "scrabble/p.pxd":7
+ * DEF MAX_ORD = 127  # todo replace 127
+ * 
+ * ctypedef cnp.uint32_t INT_32             # <<<<<<<<<<<<<<
+ * ctypedef unsigned short STRU_t
+ * ctypedef cnp.int32_t STR_t
+ */
+typedef __pyx_t_5numpy_uint32_t __pyx_t_8scrabble_1p_INT_32;
+
 /* "scrabble/p.pxd":8
  * 
- * #ctypedef cnp.uint32_t STRU_t
+ * ctypedef cnp.uint32_t INT_32
  * ctypedef unsigned short STRU_t             # <<<<<<<<<<<<<<
  * ctypedef cnp.int32_t STR_t
  * ctypedef cnp.uint8_t BOOL_t
@@ -1204,7 +1213,7 @@ typedef unsigned char const __pyx_t_8scrabble_6logger_cuchr;
 typedef unsigned short __pyx_t_8scrabble_1p_STRU_t;
 
 /* "scrabble/p.pxd":9
- * #ctypedef cnp.uint32_t STRU_t
+ * ctypedef cnp.uint32_t INT_32
  * ctypedef unsigned short STRU_t
  * ctypedef cnp.int32_t STR_t             # <<<<<<<<<<<<<<
  * ctypedef cnp.uint8_t BOOL_t
@@ -1282,10 +1291,9 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_8scrabble_1p_CSettings;
 struct __pyx_obj_8scrabble_1p_Node;
 struct __pyx_obj_8scrabble_1p_Board;
-struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr;
+struct __pyx_obj_8scrabble_1p_CSettings;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -1328,7 +1336,7 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 struct __pyx_opt_args_8scrabble_6logger_clog;
 
-/* "logger.pxd":47
+/* "logger.pxd":48
  * cdef cchrp KS_RES, KS_BLK, KS_RED, KS_GRN, KS_YEL, KS_BLU, KS_MAG, KS_CYN, KS_WHT, KS_BLK_L, KS_RED_L, KS_GRN_L, KS_YEL_L, KS_BLU_L, KS_MAG_L, KS_CYN_L, KS_WHT_L
  * 
  * ctypedef enum LogLvl:             # <<<<<<<<<<<<<<
@@ -1376,7 +1384,7 @@ typedef unsigned char *__pyx_t_8scrabble_6logger_uchrp;
  */
 typedef unsigned char const *__pyx_t_8scrabble_6logger_cuchrp;
 
-/* "logger.pxd":27
+/* "logger.pxd":28
  * 
  * 
  * cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold=*) nogil             # <<<<<<<<<<<<<<
@@ -1397,7 +1405,7 @@ struct __pyx_t_8scrabble_1p_WordDict_List;
 typedef struct __pyx_t_8scrabble_1p_WordDict_List __pyx_t_8scrabble_1p_WordDict_List;
 struct __pyx_t_8scrabble_1p_N;
 typedef struct __pyx_t_8scrabble_1p_N __pyx_t_8scrabble_1p_N;
-struct __pyx_opt_args_8scrabble_1p_loadfile;
+struct __pyx_opt_args_8scrabble_1p_checkfile;
 
 /* "scrabble/p.pxd":13
  * ctypedef cnp.intp_t SIZE_t
@@ -1435,8 +1443,8 @@ typedef unsigned char const *__pyx_t_8scrabble_1p_cuchrp;
  */
 typedef char const *__pyx_t_8scrabble_1p_cchrp;
 
-/* "scrabble/p.pxd":60
- * 
+/* "scrabble/p.pxd":33
+ * cdef object npe
  * 
  * ctypedef packed struct Letter:             # <<<<<<<<<<<<<<
  *     BOOL_t is_blank
@@ -1461,7 +1469,7 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_Letter {
   #pragma pack(pop)
 #endif
 
-/* "scrabble/p.pxd":71
+/* "scrabble/p.pxd":44
  * 
  * 
  * ctypedef packed struct Letter_List:             # <<<<<<<<<<<<<<
@@ -1483,12 +1491,12 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_Letter_List {
   #pragma pack(pop)
 #endif
 
-/* "scrabble/p.pxd":76
+/* "scrabble/p.pxd":49
  * 
  * 
  * ctypedef packed struct WordDict:             # <<<<<<<<<<<<<<
- *     BOOL_t is_col
- *     STRU_t pts
+ *     char word[64]
+ *     #char* word
  */
 #if defined(__SUNPRO_C)
   #pragma pack(1)
@@ -1496,10 +1504,10 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_Letter_List {
   #pragma pack(push, 1)
 #endif
 struct __Pyx_PACKED __pyx_t_8scrabble_1p_WordDict {
-  __pyx_t_8scrabble_1p_BOOL_t is_col;
-  __pyx_t_8scrabble_1p_STRU_t pts;
   char word[64];
   __pyx_t_8scrabble_1p_Letter_List letters;
+  __pyx_t_8scrabble_1p_BOOL_t is_col;
+  __pyx_t_8scrabble_1p_STRU_t pts;
 };
 #if defined(__SUNPRO_C)
   #pragma pack()
@@ -1507,8 +1515,8 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_WordDict {
   #pragma pack(pop)
 #endif
 
-/* "scrabble/p.pxd":84
- *     Letter_List letters
+/* "scrabble/p.pxd":57
+ *     STRU_t pts
  * 
  * ctypedef packed struct WordDict_List:             # <<<<<<<<<<<<<<
  *     WordDict l[10000]  # todo catch 10000
@@ -1529,12 +1537,12 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_WordDict_List {
   #pragma pack(pop)
 #endif
 
-/* "scrabble/p.pxd":98
+/* "scrabble/p.pxd":71
  * 
  * 
  * ctypedef packed struct N:             # <<<<<<<<<<<<<<
- *     Letter letter
- * 
+ *     # - x: r/c, y: lval
+ *     long pts_lets[2][MAX_ORD]
  */
 #if defined(__SUNPRO_C)
   #pragma pack(1)
@@ -1542,16 +1550,16 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_WordDict_List {
   #pragma pack(push, 1)
 #endif
 struct __Pyx_PACKED __pyx_t_8scrabble_1p_N {
+  long pts_lets[2][0x7F];
+  __pyx_t_8scrabble_1p_BOOL_t valid_lets[2][0x7F];
+  __pyx_t_8scrabble_1p_BOOL_t valid_lengths[2][0x7F];
   __pyx_t_8scrabble_1p_Letter letter;
   __pyx_t_8scrabble_1p_BOOL_t mult_a;
   __pyx_t_8scrabble_1p_BOOL_t mult_w;
+  __pyx_t_8scrabble_1p_BOOL_t pts;
   int is_start;
   int has_edge;
   int has_val;
-  __pyx_t_8scrabble_1p_BOOL_t pts;
-  long pts_lets[2][0x7F];
-  int valid_lets[2][0x7F];
-  int valid_lengths[2][0x7F];
 };
 #if defined(__SUNPRO_C)
   #pragma pack()
@@ -1559,44 +1567,19 @@ struct __Pyx_PACKED __pyx_t_8scrabble_1p_N {
   #pragma pack(pop)
 #endif
 
-/* "scrabble/p.pxd":178
+/* "scrabble/p.pxd":185
  * 
  * 
- * cpdef object loadfile(tuple paths, bint is_file=*)             # <<<<<<<<<<<<<<
+ * cpdef object checkfile(tuple paths, bint is_file=*)             # <<<<<<<<<<<<<<
  * 
- * cdef void solve(str dictionary)
+ * cdef void solve(str dictionary) except *
  */
-struct __pyx_opt_args_8scrabble_1p_loadfile {
+struct __pyx_opt_args_8scrabble_1p_checkfile {
   int __pyx_n;
   int is_file;
 };
 
-/* "scrabble/p.pxd":32
- * 
- * @cython.final(True)
- * cdef class CSettings:             # <<<<<<<<<<<<<<
- *     cdef:
- *         #(Py_ssize_t, Py_ssize_t) shape
- */
-struct __pyx_obj_8scrabble_1p_CSettings {
-  PyObject_HEAD
-  Py_ssize_t shape[2];
-  __Pyx_memviewslice board;
-  __Pyx_memviewslice default_board;
-  int rack[0x7F];
-  __Pyx_memviewslice rack_v;
-  PyObject *rack_l;
-  Py_ssize_t rack_s;
-  __pyx_t_8scrabble_1p_BOOL_t blanks;
-  __Pyx_memviewslice points;
-  __Pyx_memviewslice amts;
-  PyObject *words;
-  struct __pyx_obj_8scrabble_1p_Board *node_board;
-  int num_results;
-};
-
-
-/* "scrabble/p.pxd":121
+/* "scrabble/p.pxd":100
  * 
  * @cython.final(True)
  * cdef class Node:             # <<<<<<<<<<<<<<
@@ -1609,7 +1592,6 @@ struct __pyx_obj_8scrabble_1p_Node {
   __Pyx_memviewslice plet_view;
   __Pyx_memviewslice vlet_view;
   __Pyx_memviewslice vlen_view;
-  PyObject *display;
   struct __pyx_obj_8scrabble_1p_Node *up;
   struct __pyx_obj_8scrabble_1p_Node *down;
   struct __pyx_obj_8scrabble_1p_Node *left;
@@ -1625,7 +1607,7 @@ struct __pyx_obj_8scrabble_1p_Node {
 };
 
 
-/* "scrabble/p.pxd":140
+/* "scrabble/p.pxd":119
  * # todo do I need final?
  * @cython.final(True)
  * cdef class Board:             # <<<<<<<<<<<<<<
@@ -1636,24 +1618,35 @@ struct __pyx_obj_8scrabble_1p_Board {
   PyObject_HEAD
   struct __pyx_vtabstruct_8scrabble_1p_Board *__pyx_vtab;
   __Pyx_memviewslice nodes;
-  Py_ssize_t nodes_rl;
-  Py_ssize_t nodes_cl;
-  int new_game;
+  __pyx_t_8scrabble_1p_N nodesn[15][15];
+  __Pyx_memviewslice nodesnv;
   __pyx_t_8scrabble_1p_WordDict_List words;
+  int new_game;
 };
 
 
-/* "scrabble/p.pyx":314
- *         return <Node>self.nodes[x, y]
+/* "scrabble/p.pxd":140
  * 
- *     cdef Node get_by_attr(self, str attr, v):             # <<<<<<<<<<<<<<
- *         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
- * 
+ * @cython.final(True)
+ * cdef class CSettings:             # <<<<<<<<<<<<<<
+ *     cdef:
+ *         #object[:, ::1] board, default_board
  */
-struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr {
+struct __pyx_obj_8scrabble_1p_CSettings {
   PyObject_HEAD
-  PyObject *__pyx_v_attr;
-  PyObject *__pyx_v_v;
+  __Pyx_memviewslice board;
+  __Pyx_memviewslice default_board;
+  __Pyx_memviewslice points;
+  __Pyx_memviewslice amts;
+  int rack[0x7F];
+  __Pyx_memviewslice rack_v;
+  Py_ssize_t shape[2];
+  PyObject *rack_l;
+  Py_ssize_t rack_s;
+  __pyx_t_8scrabble_1p_BOOL_t blanks;
+  PyObject *words;
+  struct __pyx_obj_8scrabble_1p_Board *node_board;
+  int num_results;
 };
 
 
@@ -1735,28 +1728,24 @@ struct __pyx_memoryviewslice_obj {
 
 
 
-/* "scrabble/p.pyx":235
+/* "scrabble/p.pyx":240
  * 
  * @cython.final(True)
  * cdef class Board:             # <<<<<<<<<<<<<<
- *     def __cinit__(self, object[:, ::1] board, object[:, :] default_board):  # todo fix c contig
+ *     def __cinit__(self, char[:, ::1] board, object[:, :] default_board):  # todo fix c contig
  *         cdef:
  */
 
 struct __pyx_vtabstruct_8scrabble_1p_Board {
-  struct __pyx_obj_8scrabble_1p_Node *(*get)(struct __pyx_obj_8scrabble_1p_Board *, int, int);
-  struct __pyx_obj_8scrabble_1p_Node *(*get_by_attr)(struct __pyx_obj_8scrabble_1p_Board *, PyObject *, PyObject *);
   void (*_set_edge)(struct __pyx_obj_8scrabble_1p_Board *, Py_ssize_t, Py_ssize_t);
-  void (*_set_adj_words)(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *, PyObject *);
+  void (*_set_adj_words)(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *, Py_ssize_t);
   void (*_set_lets)(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *);
   int (*_check_adj_words)(struct __pyx_obj_8scrabble_1p_Board *, __pyx_t_8scrabble_1p_BOOL_t, struct __pyx_obj_8scrabble_1p_Node *, struct __pyx_obj_8scrabble_1p_Node *, PyObject *, PyObject *);
   void (*_set_map)(struct __pyx_obj_8scrabble_1p_Board *, __Pyx_memviewslice, int);
 };
 static struct __pyx_vtabstruct_8scrabble_1p_Board *__pyx_vtabptr_8scrabble_1p_Board;
-static struct __pyx_obj_8scrabble_1p_Node *__pyx_f_8scrabble_1p_5Board_get(struct __pyx_obj_8scrabble_1p_Board *, int, int);
-static struct __pyx_obj_8scrabble_1p_Node *__pyx_f_8scrabble_1p_5Board_get_by_attr(struct __pyx_obj_8scrabble_1p_Board *, PyObject *, PyObject *);
 static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_Board *, Py_ssize_t, Py_ssize_t);
-static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *, PyObject *);
+static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *, Py_ssize_t);
 static void __pyx_f_8scrabble_1p_5Board__set_lets(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *);
 static int __pyx_f_8scrabble_1p_5Board__check_adj_words(struct __pyx_obj_8scrabble_1p_Board *, __pyx_t_8scrabble_1p_BOOL_t, struct __pyx_obj_8scrabble_1p_Node *, struct __pyx_obj_8scrabble_1p_Node *, PyObject *, PyObject *);
 static void __pyx_f_8scrabble_1p_5Board__set_map(struct __pyx_obj_8scrabble_1p_Board *, __Pyx_memviewslice, int);
@@ -1927,24 +1916,6 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
 
-/* ArgTypeTest.proto */
-#define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
-    ((likely((Py_TYPE(obj) == type) | (none_allowed && (obj == Py_None)))) ? 1 :\
-        __Pyx__ArgTypeTest(obj, type, name, exact))
-static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
-
-/* UnicodeAsUCS4.proto */
-static CYTHON_INLINE Py_UCS4 __Pyx_PyUnicode_AsPy_UCS4(PyObject*);
-
-/* object_ord.proto */
-#if PY_MAJOR_VERSION >= 3
-#define __Pyx_PyObject_Ord(c)\
-    (likely(PyUnicode_Check(c)) ? (long)__Pyx_PyUnicode_AsPy_UCS4(c) : __Pyx__PyObject_Ord(c))
-#else
-#define __Pyx_PyObject_Ord(c) __Pyx__PyObject_Ord(c)
-#endif
-static long __Pyx__PyObject_Ord(PyObject* c);
-
 /* PyObjectFormat.proto */
 #if CYTHON_USE_UNICODE_WRITER
 static PyObject* __Pyx_PyObject_Format(PyObject* s, PyObject* f);
@@ -2054,72 +2025,6 @@ static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int 
 static CYTHON_INLINE Py_UCS4 __Pyx_GetItemInt_Unicode_Fast(PyObject* ustring, Py_ssize_t i,
                                                            int wraparound, int boundscheck);
 
-/* GetAttr.proto */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *, PyObject *);
-
-/* None.proto */
-static CYTHON_INLINE void __Pyx_RaiseClosureNameError(const char *varname);
-
-/* FetchCommonType.proto */
-static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
-
-/* CythonFunction.proto */
-#define __Pyx_CyFunction_USED 1
-#define __Pyx_CYFUNCTION_STATICMETHOD  0x01
-#define __Pyx_CYFUNCTION_CLASSMETHOD   0x02
-#define __Pyx_CYFUNCTION_CCLASS        0x04
-#define __Pyx_CyFunction_GetClosure(f)\
-    (((__pyx_CyFunctionObject *) (f))->func_closure)
-#define __Pyx_CyFunction_GetClassObj(f)\
-    (((__pyx_CyFunctionObject *) (f))->func_classobj)
-#define __Pyx_CyFunction_Defaults(type, f)\
-    ((type *)(((__pyx_CyFunctionObject *) (f))->defaults))
-#define __Pyx_CyFunction_SetDefaultsGetter(f, g)\
-    ((__pyx_CyFunctionObject *) (f))->defaults_getter = (g)
-typedef struct {
-    PyCFunctionObject func;
-#if PY_VERSION_HEX < 0x030500A0
-    PyObject *func_weakreflist;
-#endif
-    PyObject *func_dict;
-    PyObject *func_name;
-    PyObject *func_qualname;
-    PyObject *func_doc;
-    PyObject *func_globals;
-    PyObject *func_code;
-    PyObject *func_closure;
-    PyObject *func_classobj;
-    void *defaults;
-    int defaults_pyobjects;
-    int flags;
-    PyObject *defaults_tuple;
-    PyObject *defaults_kwdict;
-    PyObject *(*defaults_getter)(PyObject *);
-    PyObject *func_annotations;
-} __pyx_CyFunctionObject;
-static PyTypeObject *__pyx_CyFunctionType = 0;
-#define __Pyx_CyFunction_Check(obj)  (__Pyx_TypeCheck(obj, __pyx_CyFunctionType))
-#define __Pyx_CyFunction_NewEx(ml, flags, qualname, self, module, globals, code)\
-    __Pyx_CyFunction_New(__pyx_CyFunctionType, ml, flags, qualname, self, module, globals, code)
-static PyObject *__Pyx_CyFunction_New(PyTypeObject *, PyMethodDef *ml,
-                                      int flags, PyObject* qualname,
-                                      PyObject *self,
-                                      PyObject *module, PyObject *globals,
-                                      PyObject* code);
-static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *m,
-                                                         size_t size,
-                                                         int pyobjects);
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *m,
-                                                            PyObject *tuple);
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *m,
-                                                             PyObject *dict);
-static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *m,
-                                                              PyObject *dict);
-static int __pyx_CyFunction_init(void);
-
-/* ExtTypeTest.proto */
-static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
-
 /* PyThreadStateGet.proto */
 #if CYTHON_FAST_THREAD_STATE
 #define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
@@ -2169,6 +2074,12 @@ static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* s
 
 /* PyObjectCall2Args.proto */
 static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
+/* ArgTypeTest.proto */
+#define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
+    ((likely((Py_TYPE(obj) == type) | (none_allowed && (obj == Py_None)))) ? 1 :\
+        __Pyx__ArgTypeTest(obj, type, name, exact))
+static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
 
 /* GetItemInt.proto */
 #define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
@@ -2281,6 +2192,18 @@ static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* dict, int is_dict, 
 static CYTHON_INLINE int __Pyx_dict_iter_next(PyObject* dict_or_iter, Py_ssize_t orig_length, Py_ssize_t* ppos,
                                               PyObject** pkey, PyObject** pvalue, PyObject** pitem, int is_dict);
 
+/* UnicodeAsUCS4.proto */
+static CYTHON_INLINE Py_UCS4 __Pyx_PyUnicode_AsPy_UCS4(PyObject*);
+
+/* object_ord.proto */
+#if PY_MAJOR_VERSION >= 3
+#define __Pyx_PyObject_Ord(c)\
+    (likely(PyUnicode_Check(c)) ? (long)__Pyx_PyUnicode_AsPy_UCS4(c) : __Pyx__PyObject_Ord(c))
+#else
+#define __Pyx_PyObject_Ord(c) __Pyx__PyObject_Ord(c)
+#endif
+static long __Pyx__PyObject_Ord(PyObject* c);
+
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
@@ -2294,6 +2217,9 @@ static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key);
 #define __Pyx_PyDict_GetItem(d, key) PyObject_GetItem(d, key)
 #define __Pyx_PyObject_Dict_GetItem(obj, name)  PyObject_GetItem(obj, name)
 #endif
+
+/* ExtTypeTest.proto */
+static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
 
 /* GetTopmostException.proto */
 #if CYTHON_USE_EXC_INFO_STACK
@@ -2343,6 +2269,9 @@ static CYTHON_INLINE Py_ssize_t __Pyx_div_Py_ssize_t(Py_ssize_t, Py_ssize_t);
 
 static CYTHON_UNUSED int __pyx_array_getbuffer(PyObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /*proto*/
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *); /*proto*/
+/* GetAttr.proto */
+static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *, PyObject *);
+
 /* ObjectGetItem.proto */
 #if CYTHON_USE_TYPE_SLOTS
 static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key);
@@ -2654,16 +2583,16 @@ static int __Pyx_ValidateAndInit_memviewslice(
                 PyObject *original_obj);
 
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(PyObject *, int writable_flag);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_char(PyObject *, int writable_flag);
 
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_object(PyObject *, int writable_flag);
 
 /* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_uint8(npy_uint8 value);
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value);
 
 /* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value);
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_uint8(npy_uint8 value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -2673,15 +2602,25 @@ static CYTHON_INLINE PyObject *__pyx_memview_get_long(const char *itemp);
 static CYTHON_INLINE int __pyx_memview_set_long(const char *itemp, PyObject *obj);
 
 /* MemviewDtypeToObject.proto */
-static CYTHON_INLINE PyObject *__pyx_memview_get_int(const char *itemp);
-static CYTHON_INLINE int __pyx_memview_set_int(const char *itemp, PyObject *obj);
+static CYTHON_INLINE PyObject *__pyx_memview_get_nn___pyx_t_8scrabble_1p_BOOL_t(const char *itemp);
+static CYTHON_INLINE int __pyx_memview_set_nn___pyx_t_8scrabble_1p_BOOL_t(const char *itemp, PyObject *obj);
 
 /* MemviewObjectToObject.proto */
 static PyObject *__pyx_memview_get_object(const char *itemp);
 static int __pyx_memview_set_object(const char *itemp, PyObject *obj);
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_char(char value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_uint32(npy_uint32 value);
+
+/* MemviewDtypeToObject.proto */
+static CYTHON_INLINE PyObject *__pyx_memview_get_char(const char *itemp);
+static CYTHON_INLINE int __pyx_memview_set_char(const char *itemp, PyObject *obj);
 
 /* RealImag.proto */
 #if CYTHON_CCOMPLEX
@@ -2801,13 +2740,18 @@ static struct __pyx_typeinfo_string __Pyx_TypeInfoToFormat(__Pyx_TypeInfo *type)
 static CYTHON_INLINE npy_uint8 __Pyx_PyInt_As_npy_uint8(PyObject *);
 
 /* CIntFromPy.proto */
+static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
+
+/* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
-/* CIntFromPy.proto */
-static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
+/* ObjectAsUCS4.proto */
+#define __Pyx_PyObject_AsPy_UCS4(x)\
+    (likely(PyUnicode_Check(x)) ? __Pyx_PyUnicode_AsPy_UCS4(x) : __Pyx__PyObject_AsPy_UCS4(x))
+static Py_UCS4 __Pyx__PyObject_AsPy_UCS4(PyObject*);
 
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_int(PyObject *, int writable_flag);
@@ -2819,7 +2763,13 @@ static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_nn_
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_long(PyObject *, int writable_flag);
 
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_int(PyObject *, int writable_flag);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(PyObject *, int writable_flag);
+
+/* ObjectToMemviewSlice.proto */
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(PyObject *, int writable_flag);
+
+/* ObjectToMemviewSlice.proto */
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_N(PyObject *, int writable_flag);
 
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_nn___pyx_t_8scrabble_1p_STR_t(PyObject *, int writable_flag);
@@ -2833,6 +2783,18 @@ static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_n
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
+/* PyObjectSetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
+static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
+#else
+#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
+#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
+#endif
+
+/* VoidPtrExport.proto */
+static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig);
+
 /* FunctionExport.proto */
 static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
 
@@ -2845,12 +2807,10 @@ static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
-static struct __pyx_obj_8scrabble_1p_Node *__pyx_f_8scrabble_1p_5Board_get(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, int __pyx_v_x, int __pyx_v_y); /* proto*/
-static struct __pyx_obj_8scrabble_1p_Node *__pyx_f_8scrabble_1p_5Board_get_by_attr(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, PyObject *__pyx_v_attr, PyObject *__pyx_v_v); /* proto*/
 static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, Py_ssize_t __pyx_v_r, Py_ssize_t __pyx_v_c); /* proto*/
-static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_n, PyObject *__pyx_v_d); /* proto*/
+static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_n, Py_ssize_t __pyx_v_d); /* proto*/
 static void __pyx_f_8scrabble_1p_5Board__set_lets(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_n); /* proto*/
-static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_i, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_bef, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_aft, PyObject *__pyx_v_bef_w, PyObject *__pyx_v_aft_w); /* proto*/
+static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __pyx_t_8scrabble_1p_uchr __pyx_v_i, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_bef, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_aft, PyObject *__pyx_v_bef_w, PyObject *__pyx_v_aft_w); /* proto*/
 static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __Pyx_memviewslice __pyx_v_nodes, int __pyx_v_is_col); /* proto*/
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *__pyx_v_self); /* proto*/
 static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__pyx_v_self, PyObject *__pyx_v_index); /* proto*/
@@ -2902,6 +2862,8 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 /* Module declarations from 'scrabble' */
 
 /* Module declarations from 'scrabble.logger' */
+static int (*__pyx_vp_8scrabble_6logger_lvl_alias)[0x7F] = 0;
+#define __pyx_v_8scrabble_6logger_lvl_alias (*__pyx_vp_8scrabble_6logger_lvl_alias)
 static PyObject **__pyx_vp_8scrabble_6logger_lo = 0;
 #define __pyx_v_8scrabble_6logger_lo (*__pyx_vp_8scrabble_6logger_lo)
 static int *__pyx_vp_8scrabble_6logger_lo_lvl = 0;
@@ -2941,21 +2903,24 @@ static __pyx_t_8scrabble_6logger_cchrp *__pyx_vp_8scrabble_6logger_KS_CYN_L = 0;
 static __pyx_t_8scrabble_6logger_cchrp *__pyx_vp_8scrabble_6logger_KS_WHT_L = 0;
 #define __pyx_v_8scrabble_6logger_KS_WHT_L (*__pyx_vp_8scrabble_6logger_KS_WHT_L)
 static int (*__pyx_f_8scrabble_6logger_can_log)(Py_UNICODE); /*proto*/
+static void (*__pyx_f_8scrabble_6logger_lov)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_los)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_loe)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_loc)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_clos)(__pyx_t_8scrabble_6logger_cchrp, ...); /*proto*/
 
 /* Module declarations from 'scrabble.p' */
-static PyTypeObject *__pyx_ptype_8scrabble_1p_CSettings = 0;
 static PyTypeObject *__pyx_ptype_8scrabble_1p_Node = 0;
 static PyTypeObject *__pyx_ptype_8scrabble_1p_Board = 0;
-static PyTypeObject *__pyx_ptype_8scrabble_1p___pyx_scope_struct__get_by_attr = 0;
+static PyTypeObject *__pyx_ptype_8scrabble_1p_CSettings = 0;
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
 static PyTypeObject *__pyx_memoryviewslice_type = 0;
+static PyObject *__pyx_v_8scrabble_1p_npz = 0;
+static PyObject *__pyx_v_8scrabble_1p_npe = 0;
 static PyObject *__pyx_v_8scrabble_1p_json = 0;
+static PyObject *__pyx_v_8scrabble_1p_pickle = 0;
 static PyObject *__pyx_v_8scrabble_1p_sys = 0;
 static PyObject *__pyx_v_8scrabble_1p_np = 0;
 static PyObject *__pyx_v_8scrabble_1p_pd = 0;
@@ -2964,8 +2929,6 @@ static PyObject *__pyx_v_8scrabble_1p__s = 0;
 static PyTypeObject *__pyx_v_8scrabble_1p_STR = 0;
 static PyTypeObject *__pyx_v_8scrabble_1p_BOOL = 0;
 static PyTypeObject *__pyx_v_8scrabble_1p_SIZE = 0;
-static PyObject *__pyx_v_8scrabble_1p_npz = 0;
-static PyObject *__pyx_v_8scrabble_1p_npe = 0;
 static struct __pyx_obj_8scrabble_1p_CSettings *__pyx_v_8scrabble_1p_Settings = 0;
 static PyObject *generic = 0;
 static PyObject *strided = 0;
@@ -2975,15 +2938,15 @@ static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict, char *); /*proto*/
-static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabble_1p_Letter_List, __pyx_t_8scrabble_1p_N *, int, Py_ssize_t); /*proto*/
-static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice, Py_ssize_t, __pyx_t_8scrabble_1p_N *, Py_ssize_t, int); /*proto*/
+static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabble_1p_Letter_List, __Pyx_memviewslice, int, Py_ssize_t); /*proto*/
+static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice, Py_ssize_t, __Pyx_memviewslice, Py_ssize_t, int); /*proto*/
 static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice, Py_ssize_t, int *, Py_ssize_t, __pyx_t_8scrabble_1p_BOOL_t, __Pyx_memviewslice); /*proto*/
-static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_memviewslice, Py_ssize_t, __pyx_t_8scrabble_1p_N *, Py_ssize_t, __Pyx_memviewslice); /*proto*/
-static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *, __Pyx_memviewslice, __Pyx_memviewslice, int); /*proto*/
+static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_memviewslice, Py_ssize_t, __Pyx_memviewslice, Py_ssize_t, __Pyx_memviewslice); /*proto*/
+static void __pyx_f_8scrabble_1p_parse_nodes(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, int); /*proto*/
 static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice, __pyx_t_8scrabble_1p_Letter_List); /*proto*/
 static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void, __pyx_t_8scrabble_1p_c_void); /*proto*/
 static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice, __pyx_t_8scrabble_1p_WordDict_List, int); /*proto*/
-static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8scrabble_1p_loadfile *__pyx_optional_args); /*proto*/
+static PyObject *__pyx_f_8scrabble_1p_checkfile(PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8scrabble_1p_checkfile *__pyx_optional_args); /*proto*/
 static void __pyx_f_8scrabble_1p_solve(PyObject *); /*proto*/
 static void __pyx_f_8scrabble_1p_cmain(PyObject *, PyObject *, int, PyObject *, int, PyObject *); /*proto*/
 static int __Pyx_carray_from_py___pyx_t_8scrabble_1p_BOOL_t(PyObject *, __pyx_t_8scrabble_1p_BOOL_t *, Py_ssize_t); /*proto*/
@@ -3023,9 +2986,36 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, 
 static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_long = { "long", NULL, sizeof(long), { 0 }, 0, IS_UNSIGNED(long) ? 'U' : 'I', IS_UNSIGNED(long), 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_uchr = { "uchr", NULL, sizeof(__pyx_t_8scrabble_1p_uchr), { 0 }, 0, IS_UNSIGNED(__pyx_t_8scrabble_1p_uchr) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_1p_uchr), 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_object = { "Python object", NULL, sizeof(PyObject *), { 0 }, 0, 'O', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t = { "BOOL_t", NULL, sizeof(__pyx_t_8scrabble_1p_BOOL_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_8scrabble_1p_BOOL_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_1p_BOOL_t), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_long___5b_2_5d__5b_0x7F_5d_ = { "long", NULL, sizeof(long), { 2, 0x7F }, 2, IS_UNSIGNED(long) ? 'U' : 'I', IS_UNSIGNED(long), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo___pyx_t_8scrabble_1p_BOOL_t___5b_2_5d__5b_0x7F_5d_ = { "BOOL_t", NULL, sizeof(__pyx_t_8scrabble_1p_BOOL_t), { 2, 0x7F }, 2, IS_UNSIGNED(__pyx_t_8scrabble_1p_BOOL_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_1p_BOOL_t), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_uchr = { "uchr", NULL, sizeof(__pyx_t_8scrabble_1p_uchr), { 0 }, 0, IS_UNSIGNED(__pyx_t_8scrabble_1p_uchr) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_1p_uchr), 0 };
+static __Pyx_StructField __Pyx_StructFields_nn___pyx_t_8scrabble_1p_Letter[] = {
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "is_blank", offsetof(__pyx_t_8scrabble_1p_Letter, is_blank)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "from_rack", offsetof(__pyx_t_8scrabble_1p_Letter, from_rack)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "pts", offsetof(__pyx_t_8scrabble_1p_Letter, pts)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "x", offsetof(__pyx_t_8scrabble_1p_Letter, x)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "y", offsetof(__pyx_t_8scrabble_1p_Letter, y)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_uchr, "value", offsetof(__pyx_t_8scrabble_1p_Letter, value)},
+  {NULL, NULL, 0}
+};
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_Letter = { "Letter", __Pyx_StructFields_nn___pyx_t_8scrabble_1p_Letter, sizeof(__pyx_t_8scrabble_1p_Letter), { 0 }, 0, 'S', 0, __PYX_BUF_FLAGS_PACKED_STRUCT };
+static __Pyx_StructField __Pyx_StructFields_nn___pyx_t_8scrabble_1p_N[] = {
+  {&__Pyx_TypeInfo_long___5b_2_5d__5b_0x7F_5d_, "pts_lets", offsetof(__pyx_t_8scrabble_1p_N, pts_lets)},
+  {&__Pyx_TypeInfo___pyx_t_8scrabble_1p_BOOL_t___5b_2_5d__5b_0x7F_5d_, "valid_lets", offsetof(__pyx_t_8scrabble_1p_N, valid_lets)},
+  {&__Pyx_TypeInfo___pyx_t_8scrabble_1p_BOOL_t___5b_2_5d__5b_0x7F_5d_, "valid_lengths", offsetof(__pyx_t_8scrabble_1p_N, valid_lengths)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_Letter, "letter", offsetof(__pyx_t_8scrabble_1p_N, letter)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "mult_a", offsetof(__pyx_t_8scrabble_1p_N, mult_a)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "mult_w", offsetof(__pyx_t_8scrabble_1p_N, mult_w)},
+  {&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, "pts", offsetof(__pyx_t_8scrabble_1p_N, pts)},
+  {&__Pyx_TypeInfo_int, "is_start", offsetof(__pyx_t_8scrabble_1p_N, is_start)},
+  {&__Pyx_TypeInfo_int, "has_edge", offsetof(__pyx_t_8scrabble_1p_N, has_edge)},
+  {&__Pyx_TypeInfo_int, "has_val", offsetof(__pyx_t_8scrabble_1p_N, has_val)},
+  {NULL, NULL, 0}
+};
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_N = { "N", __Pyx_StructFields_nn___pyx_t_8scrabble_1p_N, sizeof(__pyx_t_8scrabble_1p_N), { 0 }, 0, 'S', 0, __PYX_BUF_FLAGS_PACKED_STRUCT };
+static __Pyx_TypeInfo __Pyx_TypeInfo_char = { "char", NULL, sizeof(char), { 0 }, 0, 'H', IS_UNSIGNED(char), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_object = { "Python object", NULL, sizeof(PyObject *), { 0 }, 0, 'O', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_STR_t = { "STR_t", NULL, sizeof(__pyx_t_8scrabble_1p_STR_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_8scrabble_1p_STR_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_1p_STR_t), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_SIZE_t = { "SIZE_t", NULL, sizeof(__pyx_t_8scrabble_1p_SIZE_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_8scrabble_1p_SIZE_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_1p_SIZE_t), 0 };
 #define __Pyx_MODULE_NAME "scrabble.p"
@@ -3035,7 +3025,6 @@ int __pyx_module_is_main_scrabble__p = 0;
 /* Implementation of 'scrabble.p' */
 static PyObject *__pyx_builtin_chr;
 static PyObject *__pyx_builtin_range;
-static PyObject *__pyx_builtin_filter;
 static PyObject *__pyx_builtin_enumerate;
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_RuntimeError;
@@ -3050,43 +3039,42 @@ static const char __pyx_k_[] = "";
 static const char __pyx_k_O[] = "O";
 static const char __pyx_k_T[] = "T{";
   static const char __pyx_k_c[] = "c";
-  static const char __pyx_k_s[] = "s";
-  static const char __pyx_k_v[] = "v";
+  static const char __pyx_k_s[] = "(%s)";
   static const char __pyx_k_x[] = "x";
   static const char __pyx_k_y[] = "y";
   static const char __pyx_k_2d[] = "2d";
+  static const char __pyx_k_U1[] = "<U1";
   static const char __pyx_k__2[] = "[";
   static const char __pyx_k__3[] = ",";
   static const char __pyx_k__4[] = "]";
   static const char __pyx_k__5[] = "_";
-  static const char __pyx_k__7[] = ", ";
-  static const char __pyx_k__8[] = ")...";
+  static const char __pyx_k__6[] = ", ";
+  static const char __pyx_k__7[] = ")...";
   static const char __pyx_k_id[] = "id";
   static const char __pyx_k_kw[] = "_kw";
-  static const char __pyx_k_up[] = "up";
-  static const char __pyx_k__37[] = "^";
-  static const char __pyx_k__38[] = ":";
-static const char __pyx_k__39[] = "}";
-static const char __pyx_k__40[] = "*";
+  static const char __pyx_k_rb[] = "rb";
+  static const char __pyx_k__36[] = "^";
+  static const char __pyx_k__37[] = ":";
+static const char __pyx_k__38[] = "}";
+static const char __pyx_k__39[] = "*";
 static const char __pyx_k_chr[] = "chr";
 static const char __pyx_k_new[] = "__new__";
+static const char __pyx_k_npe[] = "npe";
+static const char __pyx_k_npz[] = "npz";
 static const char __pyx_k_obj[] = "obj";
-static const char __pyx_k_s_2[] = "(%s)";
 static const char __pyx_k_str[] = "__str__";
 static const char __pyx_k_sys[] = "sys";
 static const char __pyx_k_txt[] = ".txt";
 static const char __pyx_k_val[] = "val";
 static const char __pyx_k_Node[] = "Node";
 static const char __pyx_k_Path[] = "Path";
-static const char __pyx_k_Rack[] = "Rack:\n{}";
+static const char __pyx_k_Rack[] = "Rack:\n{}\n";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_dict[] = "__dict__";
-static const char __pyx_k_down[] = "down";
 static const char __pyx_k_exit[] = "exit";
 static const char __pyx_k_intp[] = "intp";
 static const char __pyx_k_join[] = "join";
 static const char __pyx_k_json[] = ".json";
-static const char __pyx_k_left[] = "left";
 static const char __pyx_k_load[] = "load";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_mode[] = "mode";
@@ -3095,6 +3083,7 @@ static const char __pyx_k_ndim[] = "ndim";
 static const char __pyx_k_open[] = "open";
 static const char __pyx_k_pack[] = "pack";
 static const char __pyx_k_size[] = "size";
+static const char __pyx_k_spam[] = "spam";
 static const char __pyx_k_step[] = "step";
 static const char __pyx_k_stop[] = "stop";
 static const char __pyx_k_view[] = "view";
@@ -3109,25 +3098,23 @@ static const char __pyx_k_error[] = "error";
 static const char __pyx_k_flags[] = "flags";
 static const char __pyx_k_int32[] = "int32";
 static const char __pyx_k_items[] = "items";
+static const char __pyx_k_lower[] = "lower";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_paths[] = "paths";
 static const char __pyx_k_range[] = "range";
-static const char __pyx_k_right[] = "right";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_start[] = "start";
 static const char __pyx_k_strip[] = "strip";
 static const char __pyx_k_uint8[] = "uint8";
-static const char __pyx_k_upper[] = "upper";
 static const char __pyx_k_zeros[] = "zeros";
 static const char __pyx_k_Node_v[] = "<Node: {} v: {}>";
+static const char __pyx_k_astype[] = "astype";
 static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_exists[] = "exists";
-static const char __pyx_k_filter[] = "filter";
 static const char __pyx_k_format[] = "format";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_is_dir[] = "is_dir";
 static const char __pyx_k_json_2[] = "json";
-static const char __pyx_k_logger[] = "logger";
 static const char __pyx_k_main_2[] = "main";
 static const char __pyx_k_mult_a[] = "mult_a";
 static const char __pyx_k_mult_w[] = "mult_w";
@@ -3157,21 +3144,19 @@ static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_is_start[] = "is_start";
 static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_no_words[] = "no_words";
+static const char __pyx_k_pyx_capi[] = "__pyx_capi__";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_to_numpy[] = "to_numpy";
 static const char __pyx_k_BOARD_DIR[] = "BOARD_DIR";
 static const char __pyx_k_CSettings[] = "CSettings";
-static const char __pyx_k_DataFrame[] = "DataFrame";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_WORDS_DIR[] = "WORDS_DIR";
 static const char __pyx_k_enumerate[] = "enumerate";
-static const char __pyx_k_get_level[] = "get_level";
 static const char __pyx_k_log_level[] = "log_level";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_read_text[] = "read_text";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
-static const char __pyx_k_set_level[] = "set_level";
 static const char __pyx_k_DICTIONARY[] = "DICTIONARY";
 static const char __pyx_k_Fresh_game[] = " = Fresh game = ";
 static const char __pyx_k_Game_Board[] = "Game Board:\n{}";
@@ -3179,7 +3164,6 @@ static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_POINTS_DIR[] = "POINTS_DIR";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_dictionary[] = "dictionary";
-static const char __pyx_k_is_enabled[] = "is_enabled";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_scrabble_p[] = "scrabble.p";
@@ -3213,7 +3197,6 @@ static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_DEFAULT_LOGLEVEL[] = "DEFAULT_LOGLEVEL";
 static const char __pyx_k_LETTERS_FILENAME[] = "LETTERS_FILENAME";
-static const char __pyx_k_getEffectiveLevel[] = "getEffectiveLevel";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_scrabble_settings[] = "scrabble.settings";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
@@ -3237,7 +3220,6 @@ static const char __pyx_k_Path_exists_but_is_not_a_file[] = "Path exists but is 
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
 static const char __pyx_k_Incompatible_search_words_type[] = "Incompatible search words type: {}";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
-static const char __pyx_k_Board_get_by_attr_locals_lambda[] = "Board.get_by_attr.<locals>.<lambda>";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static const char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
@@ -3268,7 +3250,6 @@ static PyObject *__pyx_n_s_BOARD;
 static PyObject *__pyx_n_s_BOARD_DIR;
 static PyObject *__pyx_n_s_BOARD_FILENAME;
 static PyObject *__pyx_n_s_Board;
-static PyObject *__pyx_n_s_Board_get_by_attr_locals_lambda;
 static PyObject *__pyx_kp_u_Board_size_d_x_d_words;
 static PyObject *__pyx_kp_u_Board_size_has_no_match;
 static PyObject *__pyx_kp_s_Buffer_view_does_not_expose_stri;
@@ -3284,7 +3265,6 @@ static PyObject *__pyx_n_s_DEFAULT_LOGLEVEL;
 static PyObject *__pyx_n_s_DEF_BOARD_BIG;
 static PyObject *__pyx_n_s_DEF_BOARD_SMALL;
 static PyObject *__pyx_n_s_DICTIONARY;
-static PyObject *__pyx_n_s_DataFrame;
 static PyObject *__pyx_kp_u_Default;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
@@ -3326,23 +3306,25 @@ static PyObject *__pyx_n_s_SEARCH_WORDS;
 static PyObject *__pyx_kp_u_Solving;
 static PyObject *__pyx_kp_b_T;
 static PyObject *__pyx_n_s_TypeError;
+static PyObject *__pyx_kp_u_U1;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_n_s_WORDS_DIR;
 static PyObject *__pyx_kp_u__2;
 static PyObject *__pyx_kp_u__3;
+static PyObject *__pyx_kp_b__36;
 static PyObject *__pyx_kp_b__37;
 static PyObject *__pyx_kp_b__38;
-static PyObject *__pyx_kp_b__39;
+static PyObject *__pyx_n_s__39;
 static PyObject *__pyx_kp_u__4;
-static PyObject *__pyx_n_s__40;
 static PyObject *__pyx_n_u__5;
+static PyObject *__pyx_kp_u__6;
 static PyObject *__pyx_kp_u__7;
-static PyObject *__pyx_kp_u__8;
 static PyObject *__pyx_n_s_absolute;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_array;
+static PyObject *__pyx_n_s_astype;
 static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_board;
 static PyObject *__pyx_n_s_c;
@@ -3355,7 +3337,6 @@ static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_default_board;
 static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_dictionary;
-static PyObject *__pyx_n_u_down;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_empty;
 static PyObject *__pyx_n_s_encode;
@@ -3365,13 +3346,10 @@ static PyObject *__pyx_n_s_exclude_letters;
 static PyObject *__pyx_n_s_exists;
 static PyObject *__pyx_n_s_exit;
 static PyObject *__pyx_n_s_filename;
-static PyObject *__pyx_n_s_filter;
 static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_fortran;
 static PyObject *__pyx_n_u_fortran;
-static PyObject *__pyx_n_s_getEffectiveLevel;
-static PyObject *__pyx_n_s_get_level;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
 static PyObject *__pyx_n_s_id;
@@ -3379,7 +3357,6 @@ static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_int32;
 static PyObject *__pyx_n_s_intp;
 static PyObject *__pyx_n_s_is_dir;
-static PyObject *__pyx_n_s_is_enabled;
 static PyObject *__pyx_n_s_is_file;
 static PyObject *__pyx_n_s_is_start;
 static PyObject *__pyx_n_s_items;
@@ -3389,10 +3366,9 @@ static PyObject *__pyx_n_s_join;
 static PyObject *__pyx_kp_u_json;
 static PyObject *__pyx_n_s_json_2;
 static PyObject *__pyx_n_s_kw;
-static PyObject *__pyx_n_u_left;
 static PyObject *__pyx_n_s_load;
 static PyObject *__pyx_n_s_log_level;
-static PyObject *__pyx_n_s_logger;
+static PyObject *__pyx_n_s_lower;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_main_2;
 static PyObject *__pyx_n_s_memview;
@@ -3407,6 +3383,8 @@ static PyObject *__pyx_n_s_ndim;
 static PyObject *__pyx_n_s_new;
 static PyObject *__pyx_kp_s_no_default___reduce___due_to_non;
 static PyObject *__pyx_n_s_no_words;
+static PyObject *__pyx_n_s_npe;
+static PyObject *__pyx_n_s_npz;
 static PyObject *__pyx_n_s_num_results;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_kp_u_numpy_core_multiarray_failed_to;
@@ -3420,6 +3398,7 @@ static PyObject *__pyx_n_s_pathlib;
 static PyObject *__pyx_n_s_paths;
 static PyObject *__pyx_n_s_pickle;
 static PyObject *__pyx_n_s_pyx_PickleError;
+static PyObject *__pyx_n_s_pyx_capi;
 static PyObject *__pyx_n_s_pyx_checksum;
 static PyObject *__pyx_n_s_pyx_getbuffer;
 static PyObject *__pyx_n_s_pyx_result;
@@ -3428,6 +3407,7 @@ static PyObject *__pyx_n_s_pyx_type;
 static PyObject *__pyx_n_s_pyx_unpickle_Enum;
 static PyObject *__pyx_n_s_pyx_vtable;
 static PyObject *__pyx_n_s_range;
+static PyObject *__pyx_n_u_rb;
 static PyObject *__pyx_n_s_read_pickle;
 static PyObject *__pyx_n_s_read_text;
 static PyObject *__pyx_n_s_reduce;
@@ -3435,17 +3415,15 @@ static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_n_s_remove;
 static PyObject *__pyx_n_s_reshape;
-static PyObject *__pyx_n_u_right;
-static PyObject *__pyx_n_u_s;
-static PyObject *__pyx_kp_u_s_2;
+static PyObject *__pyx_kp_u_s;
 static PyObject *__pyx_n_s_scrabble_p;
 static PyObject *__pyx_kp_s_scrabble_p_pyx;
 static PyObject *__pyx_n_s_scrabble_settings;
-static PyObject *__pyx_n_s_set_level;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
 static PyObject *__pyx_n_s_size;
+static PyObject *__pyx_n_u_spam;
 static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_step;
 static PyObject *__pyx_n_s_stop;
@@ -3466,11 +3444,7 @@ static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_unused;
-static PyObject *__pyx_n_u_up;
 static PyObject *__pyx_n_s_update;
-static PyObject *__pyx_n_s_upper;
-static PyObject *__pyx_n_s_v;
-static PyObject *__pyx_n_u_v;
 static PyObject *__pyx_n_s_val;
 static PyObject *__pyx_n_s_view;
 static PyObject *__pyx_n_s_x;
@@ -3479,7 +3453,7 @@ static PyObject *__pyx_n_s_y;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_n_s_zeros_like;
 static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble_1p_CSettings *__pyx_v_self); /* proto */
-static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_x, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_y, PyObject *__pyx_v_val, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_a, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_w, int __pyx_v_is_start); /* proto */
+static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_x, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_y, char __pyx_v_val, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_a, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_w, int __pyx_v_is_start); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p_4Node_6__repr__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self); /* proto */
@@ -3489,12 +3463,10 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_9vlet_view___get__(struct __pyx_obj
 static int __pyx_pf_8scrabble_1p_4Node_9vlet_view_2__set__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p_4Node_9vlen_view___get__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self); /* proto */
 static int __pyx_pf_8scrabble_1p_4Node_9vlen_view_2__set__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
-static PyObject *__pyx_pf_8scrabble_1p_4Node_7display___get__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self); /* proto */
 static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_default_board); /* proto */
-static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__pyx_v_obj); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p__unused(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_8scrabble_1p_2loadfile(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_paths, int __pyx_v_is_file); /* proto */
+static PyObject *__pyx_pf_8scrabble_1p_2checkfile(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_paths, int __pyx_v_is_file); /* proto */
 static PyObject *__pyx_pf_8scrabble_1p_4main(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_dictionary, PyObject *__pyx_v_no_words, PyObject *__pyx_v_exclude_letters, PyObject *__pyx_v_num_results, PyObject *__pyx_v_log_level, CYTHON_UNUSED PyObject *__pyx_v__kw); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
@@ -3540,10 +3512,9 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_16_memoryviewslice_4base___get__
 static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUSED struct __pyx_memoryviewslice_obj *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_tp_new_8scrabble_1p_CSettings(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_8scrabble_1p_Node(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_8scrabble_1p_Board(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_8scrabble_1p___pyx_scope_struct__get_by_attr(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_8scrabble_1p_CSettings(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -3555,11 +3526,11 @@ static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_127;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_neg_1;
+static PyObject *__pyx_k__8;
 static PyObject *__pyx_k__9;
 static PyObject *__pyx_k__10;
-static PyObject *__pyx_k__11;
-static PyObject *__pyx_tuple__6;
-static PyObject *__pyx_slice__33;
+static PyObject *__pyx_slice__32;
+static PyObject *__pyx_tuple__11;
 static PyObject *__pyx_tuple__12;
 static PyObject *__pyx_tuple__13;
 static PyObject *__pyx_tuple__14;
@@ -3580,23 +3551,22 @@ static PyObject *__pyx_tuple__28;
 static PyObject *__pyx_tuple__29;
 static PyObject *__pyx_tuple__30;
 static PyObject *__pyx_tuple__31;
-static PyObject *__pyx_tuple__32;
+static PyObject *__pyx_tuple__33;
 static PyObject *__pyx_tuple__34;
 static PyObject *__pyx_tuple__35;
-static PyObject *__pyx_tuple__36;
-static PyObject *__pyx_tuple__42;
+static PyObject *__pyx_tuple__41;
+static PyObject *__pyx_tuple__43;
 static PyObject *__pyx_tuple__44;
 static PyObject *__pyx_tuple__45;
 static PyObject *__pyx_tuple__46;
 static PyObject *__pyx_tuple__47;
 static PyObject *__pyx_tuple__48;
-static PyObject *__pyx_tuple__49;
-static PyObject *__pyx_codeobj__41;
-static PyObject *__pyx_codeobj__43;
-static PyObject *__pyx_codeobj__50;
+static PyObject *__pyx_codeobj__40;
+static PyObject *__pyx_codeobj__42;
+static PyObject *__pyx_codeobj__49;
 /* Late includes */
 
-/* "scrabble/p.pyx":65
+/* "scrabble/p.pyx":68
  * @cython.final(True)
  * cdef class CSettings:
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -3636,7 +3606,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
   int __pyx_t_10;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "scrabble/p.pyx":67
+  /* "scrabble/p.pyx":70
  *     def __cinit__(self):
  *         #self.shape = (0, 0)
  *         self.shape[0] = 0             # <<<<<<<<<<<<<<
@@ -3645,7 +3615,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
  */
   (__pyx_v_self->shape[0]) = 0;
 
-  /* "scrabble/p.pyx":68
+  /* "scrabble/p.pyx":71
  *         #self.shape = (0, 0)
  *         self.shape[0] = 0
  *         self.shape[1] = 0             # <<<<<<<<<<<<<<
@@ -3654,33 +3624,33 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
  */
   (__pyx_v_self->shape[1]) = 0;
 
-  /* "scrabble/p.pyx":73
+  /* "scrabble/p.pyx":76
  *         # self.board = np.zeros(self.shape, np.object_)
  *         # self.default_board = np.zeros(self.shape, np.object_)
  *         self.board = None             # <<<<<<<<<<<<<<
  *         self.default_board = None
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_char(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 76, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->board, 0);
   __pyx_v_self->board = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/p.pyx":74
+  /* "scrabble/p.pyx":77
  *         # self.default_board = np.zeros(self.shape, np.object_)
  *         self.board = None
  *         self.default_board = None             # <<<<<<<<<<<<<<
  * 
  *         cdef Py_ssize_t i = 0
  */
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_object(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 74, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsds_object(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 77, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->default_board, 0);
   __pyx_v_self->default_board = __pyx_t_2;
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
 
-  /* "scrabble/p.pyx":76
+  /* "scrabble/p.pyx":79
  *         self.default_board = None
  * 
  *         cdef Py_ssize_t i = 0             # <<<<<<<<<<<<<<
@@ -3689,7 +3659,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
  */
   __pyx_v_i = 0;
 
-  /* "scrabble/p.pyx":77
+  /* "scrabble/p.pyx":80
  * 
  *         cdef Py_ssize_t i = 0
  *         while i < MAX_ORD:             # <<<<<<<<<<<<<<
@@ -3700,7 +3670,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
     __pyx_t_3 = ((__pyx_v_i < 0x7F) != 0);
     if (!__pyx_t_3) break;
 
-    /* "scrabble/p.pyx":78
+    /* "scrabble/p.pyx":81
  *         cdef Py_ssize_t i = 0
  *         while i < MAX_ORD:
  *             self.rack[i] = 0             # <<<<<<<<<<<<<<
@@ -3709,7 +3679,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
  */
     (__pyx_v_self->rack[__pyx_v_i]) = 0;
 
-    /* "scrabble/p.pyx":79
+    /* "scrabble/p.pyx":82
  *         while i < MAX_ORD:
  *             self.rack[i] = 0
  *             i += 1             # <<<<<<<<<<<<<<
@@ -3719,7 +3689,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
     __pyx_v_i = (__pyx_v_i + 1);
   }
 
-  /* "scrabble/p.pyx":81
+  /* "scrabble/p.pyx":84
  *             i += 1
  * 
  *         self.rack_v = self.rack             # <<<<<<<<<<<<<<
@@ -3729,33 +3699,33 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
   __pyx_t_4 = __pyx_v_self->rack;
   if (!__pyx_t_4) {
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-    __PYX_ERR(0, 81, __pyx_L1_error)
+    __PYX_ERR(0, 84, __pyx_L1_error)
   }
   __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_int);
   __pyx_t_6 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)0x7F));
-  if (unlikely(!__pyx_t_7 || !__pyx_t_6 || !PyBytes_AsString(__pyx_t_7))) __PYX_ERR(0, 81, __pyx_L1_error)
+  if (unlikely(!__pyx_t_7 || !__pyx_t_6 || !PyBytes_AsString(__pyx_t_7))) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_5 = __pyx_array_new(__pyx_t_6, sizeof(int), PyBytes_AS_STRING(__pyx_t_7), (char *) "fortran", (char *) __pyx_t_4);
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 81, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_t_5), PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_t_5), PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->rack_v, 0);
   __pyx_v_self->rack_v = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "scrabble/p.pyx":83
+  /* "scrabble/p.pyx":86
  *         self.rack_v = self.rack
  * 
  *         self.rack_l = []             # <<<<<<<<<<<<<<
  *         self.rack_s = 0
  *         self.blanks = 0
  */
-  __pyx_t_7 = PyList_New(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_7 = PyList_New(0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 86, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_7);
   __Pyx_GOTREF(__pyx_v_self->rack_l);
@@ -3763,7 +3733,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
   __pyx_v_self->rack_l = ((PyObject*)__pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "scrabble/p.pyx":84
+  /* "scrabble/p.pyx":87
  * 
  *         self.rack_l = []
  *         self.rack_s = 0             # <<<<<<<<<<<<<<
@@ -3772,7 +3742,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
  */
   __pyx_v_self->rack_s = 0;
 
-  /* "scrabble/p.pyx":85
+  /* "scrabble/p.pyx":88
  *         self.rack_l = []
  *         self.rack_s = 0
  *         self.blanks = 0             # <<<<<<<<<<<<<<
@@ -3781,40 +3751,40 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
  */
   __pyx_v_self->blanks = 0;
 
-  /* "scrabble/p.pyx":87
+  /* "scrabble/p.pyx":90
  *         self.blanks = 0
  * 
  *         self.points = None             # <<<<<<<<<<<<<<
  *         self.amts = None
  * 
  */
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 87, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 90, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->points, 0);
   __pyx_v_self->points = __pyx_t_9;
   __pyx_t_9.memview = NULL;
   __pyx_t_9.data = NULL;
 
-  /* "scrabble/p.pyx":88
+  /* "scrabble/p.pyx":91
  * 
  *         self.points = None
  *         self.amts = None             # <<<<<<<<<<<<<<
  * 
  *         self.words = frozenset()  ## type: Set[bytes]
  */
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(Py_None, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 91, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->amts, 0);
   __pyx_v_self->amts = __pyx_t_9;
   __pyx_t_9.memview = NULL;
   __pyx_t_9.data = NULL;
 
-  /* "scrabble/p.pyx":90
+  /* "scrabble/p.pyx":93
  *         self.amts = None
  * 
  *         self.words = frozenset()  ## type: Set[bytes]             # <<<<<<<<<<<<<<
  *         self.node_board = None
  *         self.num_results = _s.NUM_RESULTS
  */
-  __pyx_t_7 = __Pyx_PyFrozenSet_New(((PyObject *)NULL)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyFrozenSet_New(((PyObject *)NULL)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_GIVEREF(__pyx_t_7);
   __Pyx_GOTREF(__pyx_v_self->words);
@@ -3822,7 +3792,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
   __pyx_v_self->words = ((PyObject*)__pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "scrabble/p.pyx":91
+  /* "scrabble/p.pyx":94
  * 
  *         self.words = frozenset()  ## type: Set[bytes]
  *         self.node_board = None             # <<<<<<<<<<<<<<
@@ -3835,20 +3805,20 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
   __Pyx_DECREF(((PyObject *)__pyx_v_self->node_board));
   __pyx_v_self->node_board = ((struct __pyx_obj_8scrabble_1p_Board *)Py_None);
 
-  /* "scrabble/p.pyx":92
+  /* "scrabble/p.pyx":95
  *         self.words = frozenset()  ## type: Set[bytes]
  *         self.node_board = None
  *         self.num_results = _s.NUM_RESULTS             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_NUM_RESULTS); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_NUM_RESULTS); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_v_self->num_results = __pyx_t_10;
 
-  /* "scrabble/p.pyx":65
+  /* "scrabble/p.pyx":68
  * @cython.final(True)
  * cdef class CSettings:
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -3874,7 +3844,7 @@ static int __pyx_pf_8scrabble_1p_9CSettings___cinit__(struct __pyx_obj_8scrabble
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":104
+/* "scrabble/p.pyx":107
  * # *
  * @cython.wraparound(False)
  * cdef void sol(WordDict wd, char* buff) nogil:             # <<<<<<<<<<<<<<
@@ -3895,7 +3865,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
   __pyx_t_8scrabble_1p_BOOL_t __pyx_t_2;
   __pyx_t_8scrabble_1p_uchr __pyx_t_3;
 
-  /* "scrabble/p.pyx":105
+  /* "scrabble/p.pyx":108
  * @cython.wraparound(False)
  * cdef void sol(WordDict wd, char* buff) nogil:
  *     cdef Letter lf = wd.letters.l[0]             # <<<<<<<<<<<<<<
@@ -3904,7 +3874,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
  */
   __pyx_v_lf = (__pyx_v_wd.letters.l[0]);
 
-  /* "scrabble/p.pyx":106
+  /* "scrabble/p.pyx":109
  * cdef void sol(WordDict wd, char* buff) nogil:
  *     cdef Letter lf = wd.letters.l[0]
  *     cdef Letter ll = wd.letters.l[wd.letters.len - 1]             # <<<<<<<<<<<<<<
@@ -3913,7 +3883,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
  */
   __pyx_v_ll = (__pyx_v_wd.letters.l[(__pyx_v_wd.letters.len - 1)]);
 
-  /* "scrabble/p.pyx":111
+  /* "scrabble/p.pyx":114
  *     cdef BOOL_t p1, p2, p3
  * 
  *     if wd.is_col:             # <<<<<<<<<<<<<<
@@ -3923,7 +3893,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
   __pyx_t_1 = (__pyx_v_wd.is_col != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":112
+    /* "scrabble/p.pyx":115
  * 
  *     if wd.is_col:
  *         direc = b'c'             # <<<<<<<<<<<<<<
@@ -3932,7 +3902,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
  */
     __pyx_v_direc = 'c';
 
-    /* "scrabble/p.pyx":113
+    /* "scrabble/p.pyx":116
  *     if wd.is_col:
  *         direc = b'c'
  *         p1 = lf.y             # <<<<<<<<<<<<<<
@@ -3942,7 +3912,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_2 = __pyx_v_lf.y;
     __pyx_v_p1 = __pyx_t_2;
 
-    /* "scrabble/p.pyx":114
+    /* "scrabble/p.pyx":117
  *         direc = b'c'
  *         p1 = lf.y
  *         p2 = lf.x             # <<<<<<<<<<<<<<
@@ -3952,7 +3922,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_2 = __pyx_v_lf.x;
     __pyx_v_p2 = __pyx_t_2;
 
-    /* "scrabble/p.pyx":115
+    /* "scrabble/p.pyx":118
  *         p1 = lf.y
  *         p2 = lf.x
  *         p3 = ll.x             # <<<<<<<<<<<<<<
@@ -3962,7 +3932,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_2 = __pyx_v_ll.x;
     __pyx_v_p3 = __pyx_t_2;
 
-    /* "scrabble/p.pyx":111
+    /* "scrabble/p.pyx":114
  *     cdef BOOL_t p1, p2, p3
  * 
  *     if wd.is_col:             # <<<<<<<<<<<<<<
@@ -3972,7 +3942,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     goto __pyx_L3;
   }
 
-  /* "scrabble/p.pyx":117
+  /* "scrabble/p.pyx":120
  *         p3 = ll.x
  *     else:
  *         direc = b'r'             # <<<<<<<<<<<<<<
@@ -3982,7 +3952,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
   /*else*/ {
     __pyx_v_direc = 'r';
 
-    /* "scrabble/p.pyx":118
+    /* "scrabble/p.pyx":121
  *     else:
  *         direc = b'r'
  *         p1 = lf.x             # <<<<<<<<<<<<<<
@@ -3992,7 +3962,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_2 = __pyx_v_lf.x;
     __pyx_v_p1 = __pyx_t_2;
 
-    /* "scrabble/p.pyx":119
+    /* "scrabble/p.pyx":122
  *         direc = b'r'
  *         p1 = lf.x
  *         p2 = lf.y             # <<<<<<<<<<<<<<
@@ -4002,7 +3972,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_2 = __pyx_v_lf.y;
     __pyx_v_p2 = __pyx_t_2;
 
-    /* "scrabble/p.pyx":120
+    /* "scrabble/p.pyx":123
  *         p1 = lf.x
  *         p2 = lf.y
  *         p3 = ll.y             # <<<<<<<<<<<<<<
@@ -4014,7 +3984,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
   }
   __pyx_L3:;
 
-  /* "scrabble/p.pyx":122
+  /* "scrabble/p.pyx":125
  *         p3 = ll.y
  * 
  *     cdef Py_ssize_t i = 0             # <<<<<<<<<<<<<<
@@ -4023,7 +3993,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
  */
   __pyx_v_i = 0;
 
-  /* "scrabble/p.pyx":125
+  /* "scrabble/p.pyx":128
  *     cdef uchr word[MAX_NODES]
  * 
  *     while i < MAX_NODES:             # <<<<<<<<<<<<<<
@@ -4034,7 +4004,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_1 = ((__pyx_v_i < 15) != 0);
     if (!__pyx_t_1) break;
 
-    /* "scrabble/p.pyx":126
+    /* "scrabble/p.pyx":129
  * 
  *     while i < MAX_NODES:
  *         if i < wd.letters.len:             # <<<<<<<<<<<<<<
@@ -4044,7 +4014,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_t_1 = ((__pyx_v_i < __pyx_v_wd.letters.len) != 0);
     if (__pyx_t_1) {
 
-      /* "scrabble/p.pyx":127
+      /* "scrabble/p.pyx":130
  *     while i < MAX_NODES:
  *         if i < wd.letters.len:
  *             word[i] = wd.letters.l[i].value             # <<<<<<<<<<<<<<
@@ -4054,7 +4024,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
       __pyx_t_3 = (__pyx_v_wd.letters.l[__pyx_v_i]).value;
       (__pyx_v_word[__pyx_v_i]) = __pyx_t_3;
 
-      /* "scrabble/p.pyx":126
+      /* "scrabble/p.pyx":129
  * 
  *     while i < MAX_NODES:
  *         if i < wd.letters.len:             # <<<<<<<<<<<<<<
@@ -4064,7 +4034,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
       goto __pyx_L6;
     }
 
-    /* "scrabble/p.pyx":129
+    /* "scrabble/p.pyx":132
  *             word[i] = wd.letters.l[i].value
  *         else:
  *             word[i] = NUL             # <<<<<<<<<<<<<<
@@ -4076,7 +4046,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     }
     __pyx_L6:;
 
-    /* "scrabble/p.pyx":130
+    /* "scrabble/p.pyx":133
  *         else:
  *             word[i] = NUL
  *         i += 1             # <<<<<<<<<<<<<<
@@ -4086,7 +4056,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
     __pyx_v_i = (__pyx_v_i + 1);
   }
 
-  /* "scrabble/p.pyx":134
+  /* "scrabble/p.pyx":137
  *     #cdef char* buffz = wd.word
  * 
  *     snprintf(buff, 64, 'pts: %3i | dir: %c | pos: %2u x %2u,%2u | w: %s',             # <<<<<<<<<<<<<<
@@ -4095,7 +4065,7 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
  */
   (void)(snprintf(__pyx_v_buff, 64, ((char const *)"pts: %3i | dir: %c | pos: %2u x %2u,%2u | w: %s"), __pyx_v_wd.pts, __pyx_v_direc, __pyx_v_p1, __pyx_v_p2, __pyx_v_p3, __pyx_v_word));
 
-  /* "scrabble/p.pyx":104
+  /* "scrabble/p.pyx":107
  * # *
  * @cython.wraparound(False)
  * cdef void sol(WordDict wd, char* buff) nogil:             # <<<<<<<<<<<<<<
@@ -4106,10 +4076,10 @@ static void __pyx_f_8scrabble_1p_sol(__pyx_t_8scrabble_1p_WordDict __pyx_v_wd, c
   /* function exit code */
 }
 
-/* "scrabble/p.pyx":142
+/* "scrabble/p.pyx":145
  * cdef class Node:
  *     # todo test no types in cinit
- *     def __cinit__(self, BOOL_t x, BOOL_t y, str val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):             # <<<<<<<<<<<<<<
+ *     def __cinit__(self, BOOL_t x, BOOL_t y, char val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):             # <<<<<<<<<<<<<<
  *         self.n.letter.x = x
  *         self.n.letter.y = y
  */
@@ -4119,7 +4089,7 @@ static int __pyx_pw_8scrabble_1p_4Node_1__cinit__(PyObject *__pyx_v_self, PyObje
 static int __pyx_pw_8scrabble_1p_4Node_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __pyx_t_8scrabble_1p_BOOL_t __pyx_v_x;
   __pyx_t_8scrabble_1p_BOOL_t __pyx_v_y;
-  PyObject *__pyx_v_val = 0;
+  char __pyx_v_val;
   __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_a;
   __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_w;
   int __pyx_v_is_start;
@@ -4157,35 +4127,35 @@ static int __pyx_pw_8scrabble_1p_4Node_1__cinit__(PyObject *__pyx_v_self, PyObje
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 1); __PYX_ERR(0, 142, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 1); __PYX_ERR(0, 145, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_val)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 2); __PYX_ERR(0, 142, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 2); __PYX_ERR(0, 145, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mult_a)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 3); __PYX_ERR(0, 142, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 3); __PYX_ERR(0, 145, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mult_w)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 4); __PYX_ERR(0, 142, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 4); __PYX_ERR(0, 145, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_is_start)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 5); __PYX_ERR(0, 142, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, 5); __PYX_ERR(0, 145, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 142, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 145, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
@@ -4197,61 +4167,54 @@ static int __pyx_pw_8scrabble_1p_4Node_1__cinit__(PyObject *__pyx_v_self, PyObje
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
-    __pyx_v_x = __Pyx_PyInt_As_npy_uint8(values[0]); if (unlikely((__pyx_v_x == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L3_error)
-    __pyx_v_y = __Pyx_PyInt_As_npy_uint8(values[1]); if (unlikely((__pyx_v_y == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L3_error)
-    __pyx_v_val = ((PyObject*)values[2]);
-    __pyx_v_mult_a = __Pyx_PyInt_As_npy_uint8(values[3]); if (unlikely((__pyx_v_mult_a == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L3_error)
-    __pyx_v_mult_w = __Pyx_PyInt_As_npy_uint8(values[4]); if (unlikely((__pyx_v_mult_w == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L3_error)
-    __pyx_v_is_start = __Pyx_PyObject_IsTrue(values[5]); if (unlikely((__pyx_v_is_start == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L3_error)
+    __pyx_v_x = __Pyx_PyInt_As_npy_uint8(values[0]); if (unlikely((__pyx_v_x == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
+    __pyx_v_y = __Pyx_PyInt_As_npy_uint8(values[1]); if (unlikely((__pyx_v_y == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
+    __pyx_v_val = __Pyx_PyInt_As_char(values[2]); if (unlikely((__pyx_v_val == (char)-1) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
+    __pyx_v_mult_a = __Pyx_PyInt_As_npy_uint8(values[3]); if (unlikely((__pyx_v_mult_a == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
+    __pyx_v_mult_w = __Pyx_PyInt_As_npy_uint8(values[4]); if (unlikely((__pyx_v_mult_w == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
+    __pyx_v_is_start = __Pyx_PyObject_IsTrue(values[5]); if (unlikely((__pyx_v_is_start == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 142, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 145, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("scrabble.p.Node.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_val), (&PyUnicode_Type), 0, "val", 1))) __PYX_ERR(0, 142, __pyx_L1_error)
   __pyx_r = __pyx_pf_8scrabble_1p_4Node___cinit__(((struct __pyx_obj_8scrabble_1p_Node *)__pyx_v_self), __pyx_v_x, __pyx_v_y, __pyx_v_val, __pyx_v_mult_a, __pyx_v_mult_w, __pyx_v_is_start);
 
   /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __pyx_r = -1;
-  __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_x, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_y, PyObject *__pyx_v_val, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_a, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_w, int __pyx_v_is_start) {
+static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_x, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_y, char __pyx_v_val, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_a, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_w, int __pyx_v_is_start) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  int __pyx_t_2;
-  long __pyx_t_3;
-  size_t __pyx_t_4;
-  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_5;
-  long (*__pyx_t_6)[0x7F];
-  struct __pyx_array_obj *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  size_t __pyx_t_3;
+  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_4;
+  long (*__pyx_t_5)[0x7F];
+  struct __pyx_array_obj *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  __Pyx_memviewslice __pyx_t_8 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __pyx_t_8scrabble_1p_BOOL_t (*__pyx_t_9)[0x7F];
   __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int (*__pyx_t_11)[0x7F];
-  __Pyx_memviewslice __pyx_t_12 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "scrabble/p.pyx":143
+  /* "scrabble/p.pyx":146
  *     # todo test no types in cinit
- *     def __cinit__(self, BOOL_t x, BOOL_t y, str val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
+ *     def __cinit__(self, BOOL_t x, BOOL_t y, char val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
  *         self.n.letter.x = x             # <<<<<<<<<<<<<<
  *         self.n.letter.y = y
  * 
  */
   __pyx_v_self->n.letter.x = __pyx_v_x;
 
-  /* "scrabble/p.pyx":144
- *     def __cinit__(self, BOOL_t x, BOOL_t y, str val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
+  /* "scrabble/p.pyx":147
+ *     def __cinit__(self, BOOL_t x, BOOL_t y, char val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
  *         self.n.letter.x = x
  *         self.n.letter.y = y             # <<<<<<<<<<<<<<
  * 
@@ -4259,7 +4222,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.letter.y = __pyx_v_y;
 
-  /* "scrabble/p.pyx":146
+  /* "scrabble/p.pyx":149
  *         self.n.letter.y = y
  * 
  *         self.n.letter.is_blank = False             # <<<<<<<<<<<<<<
@@ -4268,7 +4231,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.letter.is_blank = 0;
 
-  /* "scrabble/p.pyx":147
+  /* "scrabble/p.pyx":150
  * 
  *         self.n.letter.is_blank = False
  *         self.n.letter.from_rack = False             # <<<<<<<<<<<<<<
@@ -4277,7 +4240,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.letter.from_rack = 0;
 
-  /* "scrabble/p.pyx":150
+  /* "scrabble/p.pyx":153
  *         #self.letter.pts = 0
  * 
  *         self.n.mult_a = mult_a             # <<<<<<<<<<<<<<
@@ -4286,7 +4249,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.mult_a = __pyx_v_mult_a;
 
-  /* "scrabble/p.pyx":151
+  /* "scrabble/p.pyx":154
  * 
  *         self.n.mult_a = mult_a
  *         self.n.mult_w = mult_w             # <<<<<<<<<<<<<<
@@ -4295,7 +4258,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.mult_w = __pyx_v_mult_w;
 
-  /* "scrabble/p.pyx":153
+  /* "scrabble/p.pyx":156
  *         self.n.mult_w = mult_w
  * 
  *         self.n.is_start = is_start             # <<<<<<<<<<<<<<
@@ -4304,7 +4267,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.is_start = __pyx_v_is_start;
 
-  /* "scrabble/p.pyx":154
+  /* "scrabble/p.pyx":157
  * 
  *         self.n.is_start = is_start
  *         self.n.has_edge = False             # <<<<<<<<<<<<<<
@@ -4313,18 +4276,17 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->n.has_edge = 0;
 
-  /* "scrabble/p.pyx":158
+  /* "scrabble/p.pyx":161
  *         #cdef lpts_t lpt
  * 
  *         if not val:             # <<<<<<<<<<<<<<
  *             self.n.has_val = False
  *             self.n.letter.value = 0
  */
-  __pyx_t_1 = (__pyx_v_val != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_val) != 0);
-  __pyx_t_2 = ((!__pyx_t_1) != 0);
-  if (__pyx_t_2) {
+  __pyx_t_1 = ((!(__pyx_v_val != 0)) != 0);
+  if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":159
+    /* "scrabble/p.pyx":162
  * 
  *         if not val:
  *             self.n.has_val = False             # <<<<<<<<<<<<<<
@@ -4333,7 +4295,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
     __pyx_v_self->n.has_val = 0;
 
-    /* "scrabble/p.pyx":160
+    /* "scrabble/p.pyx":163
  *         if not val:
  *             self.n.has_val = False
  *             self.n.letter.value = 0             # <<<<<<<<<<<<<<
@@ -4342,7 +4304,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
     __pyx_v_self->n.letter.value = 0;
 
-    /* "scrabble/p.pyx":161
+    /* "scrabble/p.pyx":164
  *             self.n.has_val = False
  *             self.n.letter.value = 0
  *             self.n.pts = 0             # <<<<<<<<<<<<<<
@@ -4351,7 +4313,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
     __pyx_v_self->n.pts = 0;
 
-    /* "scrabble/p.pyx":158
+    /* "scrabble/p.pyx":161
  *         #cdef lpts_t lpt
  * 
  *         if not val:             # <<<<<<<<<<<<<<
@@ -4361,49 +4323,72 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
     goto __pyx_L3;
   }
 
-  /* "scrabble/p.pyx":164
+  /* "scrabble/p.pyx":167
  *             #self.display = ' '  # todo display method
  *         else:
  *             self.n.has_val = True             # <<<<<<<<<<<<<<
- *             self.n.letter.value = ord(val)
- *             self.n.pts = Settings.points[self.n.letter.value]
+ *             self.n.letter.value = val
+ *             loe(self.n.letter.value)
  */
   /*else*/ {
     __pyx_v_self->n.has_val = 1;
 
-    /* "scrabble/p.pyx":165
+    /* "scrabble/p.pyx":168
  *         else:
  *             self.n.has_val = True
- *             self.n.letter.value = ord(val)             # <<<<<<<<<<<<<<
+ *             self.n.letter.value = val             # <<<<<<<<<<<<<<
+ *             loe(self.n.letter.value)
  *             self.n.pts = Settings.points[self.n.letter.value]
+ */
+    __pyx_v_self->n.letter.value = __pyx_v_val;
+
+    /* "scrabble/p.pyx":169
+ *             self.n.has_val = True
+ *             self.n.letter.value = val
+ *             loe(self.n.letter.value)             # <<<<<<<<<<<<<<
+ *             self.n.pts = Settings.points[self.n.letter.value]
+ *             loe(self.n.pts)
+ */
+    __pyx_t_2 = __Pyx_PyInt_From_unsigned_char(__pyx_v_self->n.letter.value); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_f_8scrabble_6logger_loe(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+    /* "scrabble/p.pyx":170
+ *             self.n.letter.value = val
+ *             loe(self.n.letter.value)
+ *             self.n.pts = Settings.points[self.n.letter.value]             # <<<<<<<<<<<<<<
+ *             loe(self.n.pts)
  *             #self.display = val.upper()
  */
-    __pyx_t_3 = __Pyx_PyObject_Ord(__pyx_v_val); if (unlikely(__pyx_t_3 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 165, __pyx_L1_error)
-    __pyx_v_self->n.letter.value = __pyx_t_3;
+    __pyx_t_3 = __pyx_v_self->n.letter.value;
+    __pyx_v_self->n.pts = (*((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_8scrabble_1p_Settings->points.data) + __pyx_t_3)) )));
 
-    /* "scrabble/p.pyx":166
- *             self.n.has_val = True
- *             self.n.letter.value = ord(val)
- *             self.n.pts = Settings.points[self.n.letter.value]             # <<<<<<<<<<<<<<
+    /* "scrabble/p.pyx":171
+ *             loe(self.n.letter.value)
+ *             self.n.pts = Settings.points[self.n.letter.value]
+ *             loe(self.n.pts)             # <<<<<<<<<<<<<<
  *             #self.display = val.upper()
  * 
  */
-    __pyx_t_4 = __pyx_v_self->n.letter.value;
-    __pyx_v_self->n.pts = (*((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_8scrabble_1p_Settings->points.data) + __pyx_t_4)) )));
+    __pyx_t_2 = __Pyx_PyInt_From_npy_uint8(__pyx_v_self->n.pts); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_f_8scrabble_6logger_loe(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_L3:;
 
-  /* "scrabble/p.pyx":176
+  /* "scrabble/p.pyx":181
  *             #     sys.exit(1)
  * 
  *         self.n.letter.pts = self.n.pts             # <<<<<<<<<<<<<<
  * 
  *         self.up = None
  */
-  __pyx_t_5 = __pyx_v_self->n.pts;
-  __pyx_v_self->n.letter.pts = __pyx_t_5;
+  __pyx_t_4 = __pyx_v_self->n.pts;
+  __pyx_v_self->n.letter.pts = __pyx_t_4;
 
-  /* "scrabble/p.pyx":178
+  /* "scrabble/p.pyx":183
  *         self.n.letter.pts = self.n.pts
  * 
  *         self.up = None             # <<<<<<<<<<<<<<
@@ -4416,7 +4401,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(((PyObject *)__pyx_v_self->up));
   __pyx_v_self->up = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None);
 
-  /* "scrabble/p.pyx":179
+  /* "scrabble/p.pyx":184
  * 
  *         self.up = None
  *         self.down = None             # <<<<<<<<<<<<<<
@@ -4429,7 +4414,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(((PyObject *)__pyx_v_self->down));
   __pyx_v_self->down = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None);
 
-  /* "scrabble/p.pyx":180
+  /* "scrabble/p.pyx":185
  *         self.up = None
  *         self.down = None
  *         self.left = None             # <<<<<<<<<<<<<<
@@ -4442,7 +4427,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(((PyObject *)__pyx_v_self->left));
   __pyx_v_self->left = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None);
 
-  /* "scrabble/p.pyx":181
+  /* "scrabble/p.pyx":186
  *         self.down = None
  *         self.left = None
  *         self.right = None             # <<<<<<<<<<<<<<
@@ -4455,7 +4440,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(((PyObject *)__pyx_v_self->right));
   __pyx_v_self->right = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None);
 
-  /* "scrabble/p.pyx":188
+  /* "scrabble/p.pyx":193
  *         # self.right_lets = None
  * 
  *         self.up_word = ''             # <<<<<<<<<<<<<<
@@ -4468,7 +4453,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(__pyx_v_self->up_word);
   __pyx_v_self->up_word = __pyx_kp_u_;
 
-  /* "scrabble/p.pyx":189
+  /* "scrabble/p.pyx":194
  * 
  *         self.up_word = ''
  *         self.down_word = ''             # <<<<<<<<<<<<<<
@@ -4481,7 +4466,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(__pyx_v_self->down_word);
   __pyx_v_self->down_word = __pyx_kp_u_;
 
-  /* "scrabble/p.pyx":190
+  /* "scrabble/p.pyx":195
  *         self.up_word = ''
  *         self.down_word = ''
  *         self.left_word = ''             # <<<<<<<<<<<<<<
@@ -4494,7 +4479,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(__pyx_v_self->left_word);
   __pyx_v_self->left_word = __pyx_kp_u_;
 
-  /* "scrabble/p.pyx":191
+  /* "scrabble/p.pyx":196
  *         self.down_word = ''
  *         self.left_word = ''
  *         self.right_word = ''             # <<<<<<<<<<<<<<
@@ -4507,7 +4492,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __Pyx_DECREF(__pyx_v_self->right_word);
   __pyx_v_self->right_word = __pyx_kp_u_;
 
-  /* "scrabble/p.pyx":193
+  /* "scrabble/p.pyx":198
  *         self.right_word = ''
  * 
  *         self.up_pts = 0             # <<<<<<<<<<<<<<
@@ -4516,7 +4501,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->up_pts = 0;
 
-  /* "scrabble/p.pyx":194
+  /* "scrabble/p.pyx":199
  * 
  *         self.up_pts = 0
  *         self.down_pts = 0             # <<<<<<<<<<<<<<
@@ -4525,7 +4510,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->down_pts = 0;
 
-  /* "scrabble/p.pyx":195
+  /* "scrabble/p.pyx":200
  *         self.up_pts = 0
  *         self.down_pts = 0
  *         self.left_pts = 0             # <<<<<<<<<<<<<<
@@ -4534,7 +4519,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->left_pts = 0;
 
-  /* "scrabble/p.pyx":196
+  /* "scrabble/p.pyx":201
  *         self.down_pts = 0
  *         self.left_pts = 0
  *         self.right_pts = 0             # <<<<<<<<<<<<<<
@@ -4543,36 +4528,36 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  */
   __pyx_v_self->right_pts = 0;
 
-  /* "scrabble/p.pyx":209
+  /* "scrabble/p.pyx":214
  *         # self.valid_lengths = cnp.PyArray_ZEROS(2, dims_vlens, cnp.NPY_UINT8, 0)
  * 
  *         self.plet_view = self.n.pts_lets             # <<<<<<<<<<<<<<
  *         self.plet_view[:, :] = 0
  * 
  */
-  __pyx_t_6 = __pyx_v_self->n.pts_lets;
-  if (!__pyx_t_6) {
+  __pyx_t_5 = __pyx_v_self->n.pts_lets;
+  if (!__pyx_t_5) {
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-    __PYX_ERR(0, 209, __pyx_L1_error)
+    __PYX_ERR(0, 214, __pyx_L1_error)
   }
-  __pyx_t_9 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_long);
-  __pyx_t_8 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)2), ((Py_ssize_t)0x7F));
-  if (unlikely(!__pyx_t_9 || !__pyx_t_8 || !PyBytes_AsString(__pyx_t_9))) __PYX_ERR(0, 209, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __pyx_array_new(__pyx_t_8, sizeof(long), PyBytes_AS_STRING(__pyx_t_9), (char *) "c", (char *) __pyx_t_6);
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 209, __pyx_L1_error)
+  __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_long);
+  __pyx_t_2 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)2), ((Py_ssize_t)0x7F));
+  if (unlikely(!__pyx_t_7 || !__pyx_t_2 || !PyBytes_AsString(__pyx_t_7))) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_dsds_long(((PyObject *)__pyx_t_7), PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 209, __pyx_L1_error)
-  __Pyx_DECREF(((PyObject *)__pyx_t_7)); __pyx_t_7 = 0;
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = __pyx_array_new(__pyx_t_2, sizeof(long), PyBytes_AS_STRING(__pyx_t_7), (char *) "c", (char *) __pyx_t_5);
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dsds_long(((PyObject *)__pyx_t_6), PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 214, __pyx_L1_error)
+  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->plet_view, 0);
-  __pyx_v_self->plet_view = __pyx_t_10;
-  __pyx_t_10.memview = NULL;
-  __pyx_t_10.data = NULL;
+  __pyx_v_self->plet_view = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
 
-  /* "scrabble/p.pyx":210
+  /* "scrabble/p.pyx":215
  * 
  *         self.plet_view = self.n.pts_lets
  *         self.plet_view[:, :] = 0             # <<<<<<<<<<<<<<
@@ -4602,36 +4587,36 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
       }
   }
 
-  /* "scrabble/p.pyx":212
+  /* "scrabble/p.pyx":217
  *         self.plet_view[:, :] = 0
  * 
  *         self.vlet_view = self.n.valid_lets             # <<<<<<<<<<<<<<
  *         self.vlet_view[:, :] = False
  * 
  */
-  __pyx_t_11 = __pyx_v_self->n.valid_lets;
-  if (!__pyx_t_11) {
+  __pyx_t_9 = __pyx_v_self->n.valid_lets;
+  if (!__pyx_t_9) {
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-    __PYX_ERR(0, 212, __pyx_L1_error)
+    __PYX_ERR(0, 217, __pyx_L1_error)
   }
-  __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_int);
-  __pyx_t_9 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)2), ((Py_ssize_t)0x7F));
-  if (unlikely(!__pyx_t_8 || !__pyx_t_9 || !PyBytes_AsString(__pyx_t_8))) __PYX_ERR(0, 212, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_7 = __pyx_array_new(__pyx_t_9, sizeof(int), PyBytes_AS_STRING(__pyx_t_8), (char *) "c", (char *) __pyx_t_11);
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_2 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t);
+  __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)2), ((Py_ssize_t)0x7F));
+  if (unlikely(!__pyx_t_2 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_2))) __PYX_ERR(0, 217, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_t_7), PyBUF_WRITABLE); if (unlikely(!__pyx_t_12.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
-  __Pyx_DECREF(((PyObject *)__pyx_t_7)); __pyx_t_7 = 0;
+  __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_8scrabble_1p_BOOL_t), PyBytes_AS_STRING(__pyx_t_2), (char *) "c", (char *) __pyx_t_9);
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(((PyObject *)__pyx_t_6), PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->vlet_view, 0);
-  __pyx_v_self->vlet_view = __pyx_t_12;
-  __pyx_t_12.memview = NULL;
-  __pyx_t_12.data = NULL;
+  __pyx_v_self->vlet_view = __pyx_t_10;
+  __pyx_t_10.memview = NULL;
+  __pyx_t_10.data = NULL;
 
-  /* "scrabble/p.pyx":213
+  /* "scrabble/p.pyx":218
  * 
  *         self.vlet_view = self.n.valid_lets
  *         self.vlet_view[:, :] = False             # <<<<<<<<<<<<<<
@@ -4639,7 +4624,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  *         self.vlen_view = self.n.valid_lengths
  */
   {
-      int __pyx_temp_scalar = 0;
+      __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
       {
           Py_ssize_t __pyx_temp_extent_0 = __pyx_v_self->vlet_view.shape[0];
           Py_ssize_t __pyx_temp_stride_0 = __pyx_v_self->vlet_view.strides[0];
@@ -4653,7 +4638,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
           for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
             __pyx_temp_pointer_1 = __pyx_temp_pointer_0;
             for (__pyx_temp_idx_1 = 0; __pyx_temp_idx_1 < __pyx_temp_extent_1; __pyx_temp_idx_1++) {
-              *((int *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
+              *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
               __pyx_temp_pointer_1 += __pyx_temp_stride_1;
             }
             __pyx_temp_pointer_0 += __pyx_temp_stride_0;
@@ -4661,36 +4646,36 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
       }
   }
 
-  /* "scrabble/p.pyx":215
+  /* "scrabble/p.pyx":220
  *         self.vlet_view[:, :] = False
  * 
  *         self.vlen_view = self.n.valid_lengths             # <<<<<<<<<<<<<<
  *         self.vlen_view[:, :] = False
  * 
  */
-  __pyx_t_11 = __pyx_v_self->n.valid_lengths;
-  if (!__pyx_t_11) {
+  __pyx_t_9 = __pyx_v_self->n.valid_lengths;
+  if (!__pyx_t_9) {
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-    __PYX_ERR(0, 215, __pyx_L1_error)
+    __PYX_ERR(0, 220, __pyx_L1_error)
   }
-  __pyx_t_9 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_int);
-  __pyx_t_8 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)2), ((Py_ssize_t)0x7F));
-  if (unlikely(!__pyx_t_9 || !__pyx_t_8 || !PyBytes_AsString(__pyx_t_9))) __PYX_ERR(0, 215, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __pyx_array_new(__pyx_t_8, sizeof(int), PyBytes_AS_STRING(__pyx_t_9), (char *) "c", (char *) __pyx_t_11);
-  if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 215, __pyx_L1_error)
+  __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t);
+  __pyx_t_2 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)2), ((Py_ssize_t)0x7F));
+  if (unlikely(!__pyx_t_7 || !__pyx_t_2 || !PyBytes_AsString(__pyx_t_7))) __PYX_ERR(0, 220, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_t_7), PyBUF_WRITABLE); if (unlikely(!__pyx_t_12.memview)) __PYX_ERR(0, 215, __pyx_L1_error)
-  __Pyx_DECREF(((PyObject *)__pyx_t_7)); __pyx_t_7 = 0;
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = __pyx_array_new(__pyx_t_2, sizeof(__pyx_t_8scrabble_1p_BOOL_t), PyBytes_AS_STRING(__pyx_t_7), (char *) "c", (char *) __pyx_t_9);
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(((PyObject *)__pyx_t_6), PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->vlen_view, 0);
-  __pyx_v_self->vlen_view = __pyx_t_12;
-  __pyx_t_12.memview = NULL;
-  __pyx_t_12.data = NULL;
+  __pyx_v_self->vlen_view = __pyx_t_10;
+  __pyx_t_10.memview = NULL;
+  __pyx_t_10.data = NULL;
 
-  /* "scrabble/p.pyx":216
+  /* "scrabble/p.pyx":221
  * 
  *         self.vlen_view = self.n.valid_lengths
  *         self.vlen_view[:, :] = False             # <<<<<<<<<<<<<<
@@ -4698,7 +4683,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
  * 
  */
   {
-      int __pyx_temp_scalar = 0;
+      __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
       {
           Py_ssize_t __pyx_temp_extent_0 = __pyx_v_self->vlen_view.shape[0];
           Py_ssize_t __pyx_temp_stride_0 = __pyx_v_self->vlen_view.strides[0];
@@ -4712,7 +4697,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
           for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
             __pyx_temp_pointer_1 = __pyx_temp_pointer_0;
             for (__pyx_temp_idx_1 = 0; __pyx_temp_idx_1 < __pyx_temp_extent_1; __pyx_temp_idx_1++) {
-              *((int *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
+              *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
               __pyx_temp_pointer_1 += __pyx_temp_stride_1;
             }
             __pyx_temp_pointer_0 += __pyx_temp_stride_0;
@@ -4720,10 +4705,10 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
       }
   }
 
-  /* "scrabble/p.pyx":142
+  /* "scrabble/p.pyx":145
  * cdef class Node:
  *     # todo test no types in cinit
- *     def __cinit__(self, BOOL_t x, BOOL_t y, str val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):             # <<<<<<<<<<<<<<
+ *     def __cinit__(self, BOOL_t x, BOOL_t y, char val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):             # <<<<<<<<<<<<<<
  *         self.n.letter.x = x
  *         self.n.letter.y = y
  */
@@ -4732,11 +4717,11 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_7));
-  __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(((PyObject *)__pyx_t_6));
+  __Pyx_XDECREF(__pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
   __Pyx_AddTraceback("scrabble.p.Node.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
@@ -4744,7 +4729,7 @@ static int __pyx_pf_8scrabble_1p_4Node___cinit__(struct __pyx_obj_8scrabble_1p_N
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":219
+/* "scrabble/p.pyx":224
  * 
  * 
  *     def str_pos(self) -> str:             # <<<<<<<<<<<<<<
@@ -4776,7 +4761,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("str_pos", 0);
 
-  /* "scrabble/p.pyx":220
+  /* "scrabble/p.pyx":225
  * 
  *     def str_pos(self) -> str:
  *         return f'[{self.n.letter.x:2d},{self.n.letter.y:2d}]'             # <<<<<<<<<<<<<<
@@ -4784,7 +4769,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble
  *     def __str__(self) -> str:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyTuple_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = 0;
   __pyx_t_3 = 127;
@@ -4792,9 +4777,9 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble
   __pyx_t_2 += 1;
   __Pyx_GIVEREF(__pyx_kp_u__2);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_kp_u__2);
-  __pyx_t_4 = __Pyx_PyInt_From_npy_uint8(__pyx_v_self->n.letter.x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_npy_uint8(__pyx_v_self->n.letter.x); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_Format(__pyx_t_4, __pyx_kp_u_2d); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Format(__pyx_t_4, __pyx_kp_u_2d); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_3 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) > __pyx_t_3) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_5) : __pyx_t_3;
@@ -4806,9 +4791,9 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble
   __pyx_t_2 += 1;
   __Pyx_GIVEREF(__pyx_kp_u__3);
   PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_kp_u__3);
-  __pyx_t_5 = __Pyx_PyInt_From_npy_uint8(__pyx_v_self->n.letter.y); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_npy_uint8(__pyx_v_self->n.letter.y); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_Format(__pyx_t_5, __pyx_kp_u_2d); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Format(__pyx_t_5, __pyx_kp_u_2d); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_3 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) > __pyx_t_3) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_4) : __pyx_t_3;
@@ -4820,14 +4805,14 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble
   __pyx_t_2 += 1;
   __Pyx_GIVEREF(__pyx_kp_u__4);
   PyTuple_SET_ITEM(__pyx_t_1, 4, __pyx_kp_u__4);
-  __pyx_t_4 = __Pyx_PyUnicode_Join(__pyx_t_1, 5, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyUnicode_Join(__pyx_t_1, 5, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":219
+  /* "scrabble/p.pyx":224
  * 
  * 
  *     def str_pos(self) -> str:             # <<<<<<<<<<<<<<
@@ -4848,7 +4833,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_2str_pos(struct __pyx_obj_8scrabble
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":222
+/* "scrabble/p.pyx":227
  *         return f'[{self.n.letter.x:2d},{self.n.letter.y:2d}]'
  * 
  *     def __str__(self) -> str:             # <<<<<<<<<<<<<<
@@ -4882,7 +4867,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   int __pyx_t_7;
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "scrabble/p.pyx":224
+  /* "scrabble/p.pyx":229
  *     def __str__(self) -> str:
  *         cdef str s
  *         if self.n.has_val:             # <<<<<<<<<<<<<<
@@ -4892,23 +4877,23 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   __pyx_t_1 = (__pyx_v_self->n.has_val != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":225
+    /* "scrabble/p.pyx":230
  *         cdef str s
  *         if self.n.has_val:
  *             s = chr(self.n.letter.value)  # todo switch to c stuff             # <<<<<<<<<<<<<<
  *         else:
  *             s = '_'
  */
-    __pyx_t_2 = __Pyx_PyInt_From_unsigned_char(__pyx_v_self->n.letter.value); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_From_unsigned_char(__pyx_v_self->n.letter.value); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 225, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 225, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 230, __pyx_L1_error)
     __pyx_v_s = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "scrabble/p.pyx":224
+    /* "scrabble/p.pyx":229
  *     def __str__(self) -> str:
  *         cdef str s
  *         if self.n.has_val:             # <<<<<<<<<<<<<<
@@ -4918,7 +4903,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
     goto __pyx_L3;
   }
 
-  /* "scrabble/p.pyx":227
+  /* "scrabble/p.pyx":232
  *             s = chr(self.n.letter.value)  # todo switch to c stuff
  *         else:
  *             s = '_'             # <<<<<<<<<<<<<<
@@ -4931,7 +4916,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   }
   __pyx_L3:;
 
-  /* "scrabble/p.pyx":228
+  /* "scrabble/p.pyx":233
  *         else:
  *             s = '_'
  *         return '<Node: {} v: {}>'.format(self.str_pos(), s)             # <<<<<<<<<<<<<<
@@ -4939,9 +4924,9 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
  *     def __repr__(self) -> str:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Node_v, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 228, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Node_v, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 233, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_str_pos); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 228, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_str_pos); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 233, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -4955,7 +4940,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   }
   __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 233, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = NULL;
@@ -4973,7 +4958,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_4, __pyx_v_s};
-    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -4982,14 +4967,14 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_t_4, __pyx_v_s};
-    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_5) {
       __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __pyx_t_5 = NULL;
@@ -5000,7 +4985,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
     __Pyx_GIVEREF(__pyx_v_s);
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_7, __pyx_v_s);
     __pyx_t_4 = 0;
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 228, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
@@ -5009,7 +4994,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":222
+  /* "scrabble/p.pyx":227
  *         return f'[{self.n.letter.x:2d},{self.n.letter.y:2d}]'
  * 
  *     def __str__(self) -> str:             # <<<<<<<<<<<<<<
@@ -5033,7 +5018,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_4__str__(struct __pyx_obj_8scrabble
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":230
+/* "scrabble/p.pyx":235
  *         return '<Node: {} v: {}>'.format(self.str_pos(), s)
  * 
  *     def __repr__(self) -> str:             # <<<<<<<<<<<<<<
@@ -5062,7 +5047,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_6__repr__(struct __pyx_obj_8scrabbl
   PyObject *__pyx_t_3 = NULL;
   __Pyx_RefNannySetupContext("__repr__", 0);
 
-  /* "scrabble/p.pyx":231
+  /* "scrabble/p.pyx":236
  * 
  *     def __repr__(self) -> str:
  *         return self.__str__()             # <<<<<<<<<<<<<<
@@ -5070,7 +5055,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_6__repr__(struct __pyx_obj_8scrabbl
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_str); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -5084,14 +5069,14 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_6__repr__(struct __pyx_obj_8scrabbl
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 236, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":230
+  /* "scrabble/p.pyx":235
  *         return '<Node: {} v: {}>'.format(self.str_pos(), s)
  * 
  *     def __repr__(self) -> str:             # <<<<<<<<<<<<<<
@@ -5112,12 +5097,12 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_6__repr__(struct __pyx_obj_8scrabbl
   return __pyx_r;
 }
 
-/* "scrabble/p.pxd":124
+/* "scrabble/p.pxd":103
  *     cdef N n
  * 
  *     cdef public long[:, :] plet_view             # <<<<<<<<<<<<<<
- *     cdef public bint[:, :] vlet_view
- *     cdef public bint[:, :] vlen_view
+ *     cdef public BOOL_t[:, :] vlet_view
+ *     cdef public BOOL_t[:, :] vlen_view
  */
 
 /* Python wrapper */
@@ -5139,7 +5124,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_9plet_view___get__(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->plet_view, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 124, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->plet_view, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 103, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5174,7 +5159,7 @@ static int __pyx_pf_8scrabble_1p_4Node_9plet_view_2__set__(struct __pyx_obj_8scr
   __Pyx_RefNannyDeclarations
   __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("__set__", 0);
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_long(__pyx_v_value, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 124, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_long(__pyx_v_value, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 103, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->plet_view, 0);
   __pyx_v_self->plet_view = __pyx_t_1;
   __pyx_t_1.memview = NULL;
@@ -5192,11 +5177,11 @@ static int __pyx_pf_8scrabble_1p_4Node_9plet_view_2__set__(struct __pyx_obj_8scr
   return __pyx_r;
 }
 
-/* "scrabble/p.pxd":125
+/* "scrabble/p.pxd":104
  * 
  *     cdef public long[:, :] plet_view
- *     cdef public bint[:, :] vlet_view             # <<<<<<<<<<<<<<
- *     cdef public bint[:, :] vlen_view
+ *     cdef public BOOL_t[:, :] vlet_view             # <<<<<<<<<<<<<<
+ *     cdef public BOOL_t[:, :] vlen_view
  * 
  */
 
@@ -5219,7 +5204,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_9vlet_view___get__(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->vlet_view, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 125, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->vlet_view, 2, (PyObject *(*)(char *)) __pyx_memview_get_nn___pyx_t_8scrabble_1p_BOOL_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn___pyx_t_8scrabble_1p_BOOL_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 104, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5254,7 +5239,7 @@ static int __pyx_pf_8scrabble_1p_4Node_9vlet_view_2__set__(struct __pyx_obj_8scr
   __Pyx_RefNannyDeclarations
   __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("__set__", 0);
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_v_value, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 125, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(__pyx_v_value, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 104, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->vlet_view, 0);
   __pyx_v_self->vlet_view = __pyx_t_1;
   __pyx_t_1.memview = NULL;
@@ -5272,12 +5257,12 @@ static int __pyx_pf_8scrabble_1p_4Node_9vlet_view_2__set__(struct __pyx_obj_8scr
   return __pyx_r;
 }
 
-/* "scrabble/p.pxd":126
+/* "scrabble/p.pxd":105
  *     cdef public long[:, :] plet_view
- *     cdef public bint[:, :] vlet_view
- *     cdef public bint[:, :] vlen_view             # <<<<<<<<<<<<<<
+ *     cdef public BOOL_t[:, :] vlet_view
+ *     cdef public BOOL_t[:, :] vlen_view             # <<<<<<<<<<<<<<
  * 
- *     cdef readonly str display
+ *     cdef Node up, down, left, right
  */
 
 /* Python wrapper */
@@ -5299,7 +5284,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4Node_9vlen_view___get__(struct __pyx_obj
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__get__", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->vlen_view, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 126, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_self->vlen_view, 2, (PyObject *(*)(char *)) __pyx_memview_get_nn___pyx_t_8scrabble_1p_BOOL_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn___pyx_t_8scrabble_1p_BOOL_t, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5334,7 +5319,7 @@ static int __pyx_pf_8scrabble_1p_4Node_9vlen_view_2__set__(struct __pyx_obj_8scr
   __Pyx_RefNannyDeclarations
   __Pyx_memviewslice __pyx_t_1 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("__set__", 0);
-  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(__pyx_v_value, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 126, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(__pyx_v_value, PyBUF_WRITABLE); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(1, 105, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->vlen_view, 0);
   __pyx_v_self->vlen_view = __pyx_t_1;
   __pyx_t_1.memview = NULL;
@@ -5352,49 +5337,12 @@ static int __pyx_pf_8scrabble_1p_4Node_9vlen_view_2__set__(struct __pyx_obj_8scr
   return __pyx_r;
 }
 
-/* "scrabble/p.pxd":128
- *     cdef public bint[:, :] vlen_view
- * 
- *     cdef readonly str display             # <<<<<<<<<<<<<<
- * 
- *     cdef Node up, down, left, right
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8scrabble_1p_4Node_7display_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8scrabble_1p_4Node_7display_1__get__(PyObject *__pyx_v_self) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_8scrabble_1p_4Node_7display___get__(((struct __pyx_obj_8scrabble_1p_Node *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8scrabble_1p_4Node_7display___get__(struct __pyx_obj_8scrabble_1p_Node *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_self->display);
-  __pyx_r = __pyx_v_self->display;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "scrabble/p.pyx":236
+/* "scrabble/p.pyx":241
  * @cython.final(True)
  * cdef class Board:
- *     def __cinit__(self, object[:, ::1] board, object[:, :] default_board):  # todo fix c contig             # <<<<<<<<<<<<<<
+ *     def __cinit__(self, char[:, ::1] board, object[:, :] default_board):  # todo fix c contig             # <<<<<<<<<<<<<<
  *         cdef:
- *             Py_ssize_t r, c
+ *             Py_ssize_t r, c, du
  */
 
 /* Python wrapper */
@@ -5428,11 +5376,11 @@ static int __pyx_pw_8scrabble_1p_5Board_1__cinit__(PyObject *__pyx_v_self, PyObj
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_default_board)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(0, 236, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, 1); __PYX_ERR(0, 241, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 236, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) __PYX_ERR(0, 241, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -5440,22 +5388,22 @@ static int __pyx_pw_8scrabble_1p_5Board_1__cinit__(PyObject *__pyx_v_self, PyObj
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 236, __pyx_L3_error)
-    __pyx_v_default_board = __Pyx_PyObject_to_MemoryviewSlice_dsds_object(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_default_board.memview)) __PYX_ERR(0, 236, __pyx_L3_error)
+    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_d_dc_char(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 241, __pyx_L3_error)
+    __pyx_v_default_board = __Pyx_PyObject_to_MemoryviewSlice_dsds_object(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_default_board.memview)) __PYX_ERR(0, 241, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 236, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 241, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("scrabble.p.Board.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(((PyObject *)__pyx_v_board.memview) == Py_None)) {
-    PyErr_Format(PyExc_TypeError, "Argument '%.200s' must not be None", "board"); __PYX_ERR(0, 236, __pyx_L1_error)
+    PyErr_Format(PyExc_TypeError, "Argument '%.200s' must not be None", "board"); __PYX_ERR(0, 241, __pyx_L1_error)
   }
   if (unlikely(((PyObject *)__pyx_v_default_board.memview) == Py_None)) {
-    PyErr_Format(PyExc_TypeError, "Argument '%.200s' must not be None", "default_board"); __PYX_ERR(0, 236, __pyx_L1_error)
+    PyErr_Format(PyExc_TypeError, "Argument '%.200s' must not be None", "default_board"); __PYX_ERR(0, 241, __pyx_L1_error)
   }
   __pyx_r = __pyx_pf_8scrabble_1p_5Board___cinit__(((struct __pyx_obj_8scrabble_1p_Board *)__pyx_v_self), __pyx_v_board, __pyx_v_default_board);
 
@@ -5471,10 +5419,10 @@ static int __pyx_pw_8scrabble_1p_5Board_1__cinit__(PyObject *__pyx_v_self, PyObj
 static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_default_board) {
   Py_ssize_t __pyx_v_r;
   Py_ssize_t __pyx_v_c;
+  Py_ssize_t __pyx_v_du;
   PyObject *__pyx_v_dbval = 0;
-  PyObject *__pyx_v_bval = 0;
   PyObject *__pyx_v_x = 0;
-  PyObject *__pyx_v_d = 0;
+  char __pyx_v_bval;
   __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_a;
   __pyx_t_8scrabble_1p_BOOL_t __pyx_v_mult_w;
   struct __pyx_obj_8scrabble_1p_Node *__pyx_v_node = 0;
@@ -5495,33 +5443,42 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
   Py_ssize_t __pyx_t_13;
   Py_ssize_t __pyx_t_14;
   Py_ssize_t __pyx_t_15;
-  int __pyx_t_16;
-  int __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  Py_ssize_t __pyx_t_19;
+  Py_ssize_t __pyx_t_16;
+  Py_ssize_t __pyx_t_17;
+  int __pyx_t_18;
+  int __pyx_t_19;
   Py_UCS4 __pyx_t_20;
   __pyx_t_8scrabble_1p_BOOL_t __pyx_t_21;
   PyObject *__pyx_t_22 = NULL;
-  Py_ssize_t __pyx_t_23;
+  PyObject *__pyx_t_23 = NULL;
   Py_ssize_t __pyx_t_24;
-  struct __pyx_obj_8scrabble_1p_Node **__pyx_t_25;
-  Py_ssize_t __pyx_t_26;
+  Py_ssize_t __pyx_t_25;
+  struct __pyx_obj_8scrabble_1p_Node **__pyx_t_26;
   Py_ssize_t __pyx_t_27;
   Py_ssize_t __pyx_t_28;
-  __Pyx_memviewslice __pyx_t_29 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_29;
   __Pyx_memviewslice __pyx_t_30 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_31 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __pyx_t_8scrabble_1p_N (*__pyx_t_32)[15];
+  struct __pyx_array_obj *__pyx_t_33 = NULL;
+  __Pyx_memviewslice __pyx_t_34 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_35;
+  Py_ssize_t __pyx_t_36;
+  __pyx_t_8scrabble_1p_N __pyx_t_37;
+  Py_ssize_t __pyx_t_38;
+  Py_ssize_t __pyx_t_39;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "scrabble/p.pyx":247
+  /* "scrabble/p.pyx":253
  *         #self.default_board = default_board
  * 
  *         self.nodes = np.zeros_like(default_board, Node)             # <<<<<<<<<<<<<<
  *         #self.nodes = np.empty_like(default_board, Node)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 253, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_default_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_default_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 253, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
@@ -5538,7 +5495,7 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_3, ((PyObject *)__pyx_ptype_8scrabble_1p_Node)};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -5547,14 +5504,14 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_3, ((PyObject *)__pyx_ptype_8scrabble_1p_Node)};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else
   #endif
   {
-    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 247, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -5565,38 +5522,20 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
     __Pyx_GIVEREF(((PyObject *)__pyx_ptype_8scrabble_1p_Node));
     PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_5, ((PyObject *)__pyx_ptype_8scrabble_1p_Node));
     __pyx_t_3 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 247, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 247, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 253, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __PYX_XDEC_MEMVIEW(&__pyx_v_self->nodes, 0);
   __pyx_v_self->nodes = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "scrabble/p.pyx":250
- *         #self.nodes = np.empty_like(default_board, Node)
- * 
- *         self.nodes_rl = Settings.shape[0]             # <<<<<<<<<<<<<<
- *         self.nodes_cl = Settings.shape[1]
- * 
- */
-  __pyx_v_self->nodes_rl = (__pyx_v_8scrabble_1p_Settings->shape[0]);
-
-  /* "scrabble/p.pyx":251
- * 
- *         self.nodes_rl = Settings.shape[0]
- *         self.nodes_cl = Settings.shape[1]             # <<<<<<<<<<<<<<
- * 
- *         self.new_game = False
- */
-  __pyx_v_self->nodes_cl = (__pyx_v_8scrabble_1p_Settings->shape[1]);
-
-  /* "scrabble/p.pyx":253
- *         self.nodes_cl = Settings.shape[1]
+  /* "scrabble/p.pyx":259
+ *         #self.nodes_cl = Settings.shape[1]
  * 
  *         self.new_game = False             # <<<<<<<<<<<<<<
  * 
@@ -5604,7 +5543,7 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  */
   __pyx_v_self->new_game = 0;
 
-  /* "scrabble/p.pyx":255
+  /* "scrabble/p.pyx":261
  *         self.new_game = False
  * 
  *         self.words.len = 0             # <<<<<<<<<<<<<<
@@ -5613,174 +5552,61 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  */
   __pyx_v_self->words.len = 0;
 
-  /* "scrabble/p.pyx":258
+  /* "scrabble/p.pyx":264
  *         #self.words_view = self.words.l
  * 
- *         for r in range(self.nodes_rl):             # <<<<<<<<<<<<<<
- *             for c in range(self.nodes_cl):
+ *         for r in range(self.nodes.shape[0]):             # <<<<<<<<<<<<<<
+ *             for c in range(self.nodes.shape[1]):
  *                 bval = board[r, c]
  */
-  __pyx_t_8 = __pyx_v_self->nodes_rl;
+  __pyx_t_8 = (__pyx_v_self->nodes.shape[0]);
   __pyx_t_9 = __pyx_t_8;
   for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
     __pyx_v_r = __pyx_t_10;
 
-    /* "scrabble/p.pyx":259
+    /* "scrabble/p.pyx":265
  * 
- *         for r in range(self.nodes_rl):
- *             for c in range(self.nodes_cl):             # <<<<<<<<<<<<<<
+ *         for r in range(self.nodes.shape[0]):
+ *             for c in range(self.nodes.shape[1]):             # <<<<<<<<<<<<<<
  *                 bval = board[r, c]
  * 
  */
-    __pyx_t_11 = __pyx_v_self->nodes_cl;
+    __pyx_t_11 = (__pyx_v_self->nodes.shape[1]);
     __pyx_t_12 = __pyx_t_11;
     for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
       __pyx_v_c = __pyx_t_13;
 
-      /* "scrabble/p.pyx":260
- *         for r in range(self.nodes_rl):
- *             for c in range(self.nodes_cl):
+      /* "scrabble/p.pyx":266
+ *         for r in range(self.nodes.shape[0]):
+ *             for c in range(self.nodes.shape[1]):
  *                 bval = board[r, c]             # <<<<<<<<<<<<<<
  * 
- *                 if not bval:
+ *                 # if bval: # = NUL?
  */
       __pyx_t_14 = __pyx_v_r;
       __pyx_t_15 = __pyx_v_c;
       if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_board.shape[0];
       if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_board.shape[1];
-      __pyx_t_1 = (PyObject *) *((PyObject * *) ( /* dim=1 */ ((char *) (((PyObject * *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_14 * __pyx_v_board.strides[0]) )) + __pyx_t_15)) ));
-      __Pyx_INCREF((PyObject*)__pyx_t_1);
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 260, __pyx_L1_error)
-      __Pyx_XDECREF_SET(__pyx_v_bval, ((PyObject*)__pyx_t_1));
-      __pyx_t_1 = 0;
+      __pyx_v_bval = (*((char *) ( /* dim=1 */ ((char *) (((char *) ( /* dim=0 */ (__pyx_v_board.data + __pyx_t_14 * __pyx_v_board.strides[0]) )) + __pyx_t_15)) )));
 
-      /* "scrabble/p.pyx":262
- *                 bval = board[r, c]
- * 
- *                 if not bval:             # <<<<<<<<<<<<<<
- *                     bval = None
- *                 else:
- */
-      __pyx_t_16 = (__pyx_v_bval != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_bval) != 0);
-      __pyx_t_17 = ((!__pyx_t_16) != 0);
-      if (__pyx_t_17) {
-
-        /* "scrabble/p.pyx":263
- * 
- *                 if not bval:
- *                     bval = None             # <<<<<<<<<<<<<<
- *                 else:
- *                     bval = bval.strip()
- */
-        __Pyx_INCREF(Py_None);
-        __Pyx_DECREF_SET(__pyx_v_bval, ((PyObject*)Py_None));
-
-        /* "scrabble/p.pyx":262
- *                 bval = board[r, c]
- * 
- *                 if not bval:             # <<<<<<<<<<<<<<
- *                     bval = None
- *                 else:
- */
-        goto __pyx_L7;
-      }
-
-      /* "scrabble/p.pyx":265
- *                     bval = None
- *                 else:
- *                     bval = bval.strip()             # <<<<<<<<<<<<<<
- *                     if not bval:
- *                         bval = None
- */
-      /*else*/ {
-        __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyUnicode_Type_strip, __pyx_v_bval); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 265, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 265, __pyx_L1_error)
-        __Pyx_DECREF_SET(__pyx_v_bval, ((PyObject*)__pyx_t_1));
-        __pyx_t_1 = 0;
-
-        /* "scrabble/p.pyx":266
- *                 else:
- *                     bval = bval.strip()
- *                     if not bval:             # <<<<<<<<<<<<<<
- *                         bval = None
- *                     else:
- */
-        __pyx_t_17 = (__pyx_v_bval != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_bval) != 0);
-        __pyx_t_16 = ((!__pyx_t_17) != 0);
-        if (__pyx_t_16) {
-
-          /* "scrabble/p.pyx":267
- *                     bval = bval.strip()
- *                     if not bval:
- *                         bval = None             # <<<<<<<<<<<<<<
- *                     else:
- *                         bval = bval.upper()
- */
-          __Pyx_INCREF(Py_None);
-          __Pyx_DECREF_SET(__pyx_v_bval, ((PyObject*)Py_None));
-
-          /* "scrabble/p.pyx":266
- *                 else:
- *                     bval = bval.strip()
- *                     if not bval:             # <<<<<<<<<<<<<<
- *                         bval = None
- *                     else:
- */
-          goto __pyx_L8;
-        }
-
-        /* "scrabble/p.pyx":269
- *                         bval = None
- *                     else:
- *                         bval = bval.upper()             # <<<<<<<<<<<<<<
- * 
- *                 dbval = default_board[r, c]
- */
-        /*else*/ {
-          __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_bval, __pyx_n_s_upper); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_6 = NULL;
-          if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-            __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_2);
-            if (likely(__pyx_t_6)) {
-              PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-              __Pyx_INCREF(__pyx_t_6);
-              __Pyx_INCREF(function);
-              __Pyx_DECREF_SET(__pyx_t_2, function);
-            }
-          }
-          __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-          __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 269, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_1);
-          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 269, __pyx_L1_error)
-          __Pyx_DECREF_SET(__pyx_v_bval, ((PyObject*)__pyx_t_1));
-          __pyx_t_1 = 0;
-        }
-        __pyx_L8:;
-      }
-      __pyx_L7:;
-
-      /* "scrabble/p.pyx":271
- *                         bval = bval.upper()
+      /* "scrabble/p.pyx":277
+ *                 #         bval = bval.upper()
  * 
  *                 dbval = default_board[r, c]             # <<<<<<<<<<<<<<
  * 
  *                 mult_a = 1
  */
-      __pyx_t_18 = __pyx_v_r;
-      __pyx_t_19 = __pyx_v_c;
-      if (__pyx_t_18 < 0) __pyx_t_18 += __pyx_v_default_board.shape[0];
-      if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_default_board.shape[1];
-      __pyx_t_1 = (PyObject *) *((PyObject * *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_default_board.data + __pyx_t_18 * __pyx_v_default_board.strides[0]) ) + __pyx_t_19 * __pyx_v_default_board.strides[1]) ));
+      __pyx_t_16 = __pyx_v_r;
+      __pyx_t_17 = __pyx_v_c;
+      if (__pyx_t_16 < 0) __pyx_t_16 += __pyx_v_default_board.shape[0];
+      if (__pyx_t_17 < 0) __pyx_t_17 += __pyx_v_default_board.shape[1];
+      __pyx_t_1 = (PyObject *) *((PyObject * *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_default_board.data + __pyx_t_16 * __pyx_v_default_board.strides[0]) ) + __pyx_t_17 * __pyx_v_default_board.strides[1]) ));
       __Pyx_INCREF((PyObject*)__pyx_t_1);
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 271, __pyx_L1_error)
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 277, __pyx_L1_error)
       __Pyx_XDECREF_SET(__pyx_v_dbval, ((PyObject*)__pyx_t_1));
       __pyx_t_1 = 0;
 
-      /* "scrabble/p.pyx":273
+      /* "scrabble/p.pyx":279
  *                 dbval = default_board[r, c]
  * 
  *                 mult_a = 1             # <<<<<<<<<<<<<<
@@ -5789,7 +5615,7 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  */
       __pyx_v_mult_a = 1;
 
-      /* "scrabble/p.pyx":274
+      /* "scrabble/p.pyx":280
  * 
  *                 mult_a = 1
  *                 mult_w = 0             # <<<<<<<<<<<<<<
@@ -5798,80 +5624,79 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  */
       __pyx_v_mult_w = 0;
 
-      /* "scrabble/p.pyx":276
+      /* "scrabble/p.pyx":282
  *                 mult_w = 0
  * 
  *                 if dbval:             # <<<<<<<<<<<<<<
  *                     dbval = dbval.strip()
  *                     if dbval == 'x':
  */
-      __pyx_t_16 = (__pyx_v_dbval != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_dbval) != 0);
-      if (__pyx_t_16) {
+      __pyx_t_18 = (__pyx_v_dbval != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_dbval) != 0);
+      if (__pyx_t_18) {
 
-        /* "scrabble/p.pyx":277
+        /* "scrabble/p.pyx":283
  * 
  *                 if dbval:
  *                     dbval = dbval.strip()             # <<<<<<<<<<<<<<
  *                     if dbval == 'x':
- *                         if bval is None:
+ *                         if not bval:
  */
-        __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyUnicode_Type_strip, __pyx_v_dbval); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyUnicode_Type_strip, __pyx_v_dbval); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 283, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 277, __pyx_L1_error)
+        if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 283, __pyx_L1_error)
         __Pyx_DECREF_SET(__pyx_v_dbval, ((PyObject*)__pyx_t_1));
         __pyx_t_1 = 0;
 
-        /* "scrabble/p.pyx":278
+        /* "scrabble/p.pyx":284
  *                 if dbval:
  *                     dbval = dbval.strip()
  *                     if dbval == 'x':             # <<<<<<<<<<<<<<
- *                         if bval is None:
+ *                         if not bval:
  *                             self.new_game = True
  */
-        __pyx_t_16 = (__Pyx_PyUnicode_Equals(__pyx_v_dbval, __pyx_n_u_x, Py_EQ)); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 278, __pyx_L1_error)
-        __pyx_t_17 = (__pyx_t_16 != 0);
-        if (__pyx_t_17) {
+        __pyx_t_18 = (__Pyx_PyUnicode_Equals(__pyx_v_dbval, __pyx_n_u_x, Py_EQ)); if (unlikely(__pyx_t_18 < 0)) __PYX_ERR(0, 284, __pyx_L1_error)
+        __pyx_t_19 = (__pyx_t_18 != 0);
+        if (__pyx_t_19) {
 
-          /* "scrabble/p.pyx":279
+          /* "scrabble/p.pyx":285
  *                     dbval = dbval.strip()
  *                     if dbval == 'x':
- *                         if bval is None:             # <<<<<<<<<<<<<<
+ *                         if not bval:             # <<<<<<<<<<<<<<
  *                             self.new_game = True
  *                     else:
  */
-          __pyx_t_17 = (__pyx_v_bval == ((PyObject*)Py_None));
-          __pyx_t_16 = (__pyx_t_17 != 0);
-          if (__pyx_t_16) {
+          __pyx_t_19 = ((!(__pyx_v_bval != 0)) != 0);
+          if (__pyx_t_19) {
 
-            /* "scrabble/p.pyx":280
+            /* "scrabble/p.pyx":286
  *                     if dbval == 'x':
- *                         if bval is None:
+ *                         if not bval:
  *                             self.new_game = True             # <<<<<<<<<<<<<<
  *                     else:
  *                         x = (<str>dbval)[0]
  */
             __pyx_v_self->new_game = 1;
 
-            /* "scrabble/p.pyx":279
+            /* "scrabble/p.pyx":285
  *                     dbval = dbval.strip()
  *                     if dbval == 'x':
- *                         if bval is None:             # <<<<<<<<<<<<<<
+ *                         if not bval:             # <<<<<<<<<<<<<<
  *                             self.new_game = True
  *                     else:
  */
           }
 
-          /* "scrabble/p.pyx":278
+          /* "scrabble/p.pyx":284
  *                 if dbval:
  *                     dbval = dbval.strip()
  *                     if dbval == 'x':             # <<<<<<<<<<<<<<
- *                         if bval is None:
+ *                         if not bval:
  *                             self.new_game = True
  */
-          goto __pyx_L10;
+          goto __pyx_L8;
         }
 
-        /* "scrabble/p.pyx":282
+        /* "scrabble/p.pyx":288
  *                             self.new_game = True
  *                     else:
  *                         x = (<str>dbval)[0]             # <<<<<<<<<<<<<<
@@ -5879,47 +5704,47 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  *                         if (<str>dbval)[1] == 'w':
  */
         /*else*/ {
-          __pyx_t_20 = __Pyx_GetItemInt_Unicode(__pyx_v_dbval, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_20 == (Py_UCS4)-1)) __PYX_ERR(0, 282, __pyx_L1_error)
-          __pyx_t_1 = PyUnicode_FromOrdinal(__pyx_t_20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
+          __pyx_t_20 = __Pyx_GetItemInt_Unicode(__pyx_v_dbval, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_20 == (Py_UCS4)-1)) __PYX_ERR(0, 288, __pyx_L1_error)
+          __pyx_t_1 = PyUnicode_FromOrdinal(__pyx_t_20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 288, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 282, __pyx_L1_error)
+          if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 288, __pyx_L1_error)
           __Pyx_XDECREF_SET(__pyx_v_x, ((PyObject*)__pyx_t_1));
           __pyx_t_1 = 0;
 
-          /* "scrabble/p.pyx":283
+          /* "scrabble/p.pyx":289
  *                     else:
  *                         x = (<str>dbval)[0]
  *                         mult_a = <BOOL_t>int(x)             # <<<<<<<<<<<<<<
  *                         if (<str>dbval)[1] == 'w':
  *                             mult_w = 1
  */
-          __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_v_x); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 283, __pyx_L1_error)
+          __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_v_x); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_1);
-          __pyx_t_21 = __Pyx_PyInt_As_npy_uint8(__pyx_t_1); if (unlikely((__pyx_t_21 == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 283, __pyx_L1_error)
+          __pyx_t_21 = __Pyx_PyInt_As_npy_uint8(__pyx_t_1); if (unlikely((__pyx_t_21 == ((npy_uint8)-1)) && PyErr_Occurred())) __PYX_ERR(0, 289, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __pyx_v_mult_a = ((__pyx_t_8scrabble_1p_BOOL_t)__pyx_t_21);
 
-          /* "scrabble/p.pyx":284
+          /* "scrabble/p.pyx":290
  *                         x = (<str>dbval)[0]
  *                         mult_a = <BOOL_t>int(x)
  *                         if (<str>dbval)[1] == 'w':             # <<<<<<<<<<<<<<
  *                             mult_w = 1
  * 
  */
-          __pyx_t_20 = __Pyx_GetItemInt_Unicode(__pyx_v_dbval, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_20 == (Py_UCS4)-1)) __PYX_ERR(0, 284, __pyx_L1_error)
-          __pyx_t_16 = ((__pyx_t_20 == 0x77) != 0);
-          if (__pyx_t_16) {
+          __pyx_t_20 = __Pyx_GetItemInt_Unicode(__pyx_v_dbval, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_20 == (Py_UCS4)-1)) __PYX_ERR(0, 290, __pyx_L1_error)
+          __pyx_t_19 = ((__pyx_t_20 == 0x77) != 0);
+          if (__pyx_t_19) {
 
-            /* "scrabble/p.pyx":285
+            /* "scrabble/p.pyx":291
  *                         mult_a = <BOOL_t>int(x)
  *                         if (<str>dbval)[1] == 'w':
  *                             mult_w = 1             # <<<<<<<<<<<<<<
  * 
- *                 if bval is None:
+ *                 # if bval is None:
  */
             __pyx_v_mult_w = 1;
 
-            /* "scrabble/p.pyx":284
+            /* "scrabble/p.pyx":290
  *                         x = (<str>dbval)[0]
  *                         mult_a = <BOOL_t>int(x)
  *                         if (<str>dbval)[1] == 'w':             # <<<<<<<<<<<<<<
@@ -5928,9 +5753,9 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  */
           }
         }
-        __pyx_L10:;
+        __pyx_L8:;
 
-        /* "scrabble/p.pyx":276
+        /* "scrabble/p.pyx":282
  *                 mult_w = 0
  * 
  *                 if dbval:             # <<<<<<<<<<<<<<
@@ -5939,187 +5764,141 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
  */
       }
 
-      /* "scrabble/p.pyx":287
- *                             mult_w = 1
+      /* "scrabble/p.pyx":297
  * 
- *                 if bval is None:             # <<<<<<<<<<<<<<
- *                     bval = ''
- * 
- */
-      __pyx_t_16 = (__pyx_v_bval == ((PyObject*)Py_None));
-      __pyx_t_17 = (__pyx_t_16 != 0);
-      if (__pyx_t_17) {
-
-        /* "scrabble/p.pyx":288
- * 
- *                 if bval is None:
- *                     bval = ''             # <<<<<<<<<<<<<<
- * 
- *                 node = Node(r, c, bval, mult_a, mult_w, self.new_game)
- */
-        __Pyx_INCREF(__pyx_kp_u_);
-        __Pyx_DECREF_SET(__pyx_v_bval, __pyx_kp_u_);
-
-        /* "scrabble/p.pyx":287
- *                             mult_w = 1
- * 
- *                 if bval is None:             # <<<<<<<<<<<<<<
- *                     bval = ''
- * 
- */
-      }
-
-      /* "scrabble/p.pyx":290
- *                     bval = ''
- * 
- *                 node = Node(r, c, bval, mult_a, mult_w, self.new_game)             # <<<<<<<<<<<<<<
+ *                 #node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, True if self.new_game else False)
+ *                 node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, <BOOL_t>self.new_game)             # <<<<<<<<<<<<<<
  *                 self.nodes[r, c] = node
  * 
  */
-      __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_r); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_From_npy_uint8(((__pyx_t_8scrabble_1p_BOOL_t)__pyx_v_r)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 297, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_c); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_From_npy_uint8(((__pyx_t_8scrabble_1p_BOOL_t)__pyx_v_c)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_PyInt_From_npy_uint8(__pyx_v_mult_a); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_char(__pyx_v_bval); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 297, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_3 = __Pyx_PyInt_From_npy_uint8(__pyx_v_mult_w); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_npy_uint8(__pyx_v_mult_a); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 297, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyBool_FromLong(__pyx_v_self->new_game); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_npy_uint8(__pyx_v_mult_w); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 297, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_22 = PyTuple_New(6); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_22 = __Pyx_PyInt_From_npy_uint8(((__pyx_t_8scrabble_1p_BOOL_t)__pyx_v_self->new_game)); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 297, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_22);
+      __pyx_t_23 = PyTuple_New(6); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 297, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_23);
       __Pyx_GIVEREF(__pyx_t_1);
-      PyTuple_SET_ITEM(__pyx_t_22, 0, __pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_23, 0, __pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_2);
-      PyTuple_SET_ITEM(__pyx_t_22, 1, __pyx_t_2);
-      __Pyx_INCREF(__pyx_v_bval);
-      __Pyx_GIVEREF(__pyx_v_bval);
-      PyTuple_SET_ITEM(__pyx_t_22, 2, __pyx_v_bval);
+      PyTuple_SET_ITEM(__pyx_t_23, 1, __pyx_t_2);
       __Pyx_GIVEREF(__pyx_t_6);
-      PyTuple_SET_ITEM(__pyx_t_22, 3, __pyx_t_6);
+      PyTuple_SET_ITEM(__pyx_t_23, 2, __pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3);
-      PyTuple_SET_ITEM(__pyx_t_22, 4, __pyx_t_3);
+      PyTuple_SET_ITEM(__pyx_t_23, 3, __pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_4);
-      PyTuple_SET_ITEM(__pyx_t_22, 5, __pyx_t_4);
+      PyTuple_SET_ITEM(__pyx_t_23, 4, __pyx_t_4);
+      __Pyx_GIVEREF(__pyx_t_22);
+      PyTuple_SET_ITEM(__pyx_t_23, 5, __pyx_t_22);
       __pyx_t_1 = 0;
       __pyx_t_2 = 0;
       __pyx_t_6 = 0;
       __pyx_t_3 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_8scrabble_1p_Node), __pyx_t_22, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 290, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
-      __Pyx_XDECREF_SET(__pyx_v_node, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_4));
-      __pyx_t_4 = 0;
+      __pyx_t_22 = 0;
+      __pyx_t_22 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_8scrabble_1p_Node), __pyx_t_23, NULL); if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 297, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_22);
+      __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
+      __Pyx_XDECREF_SET(__pyx_v_node, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_22));
+      __pyx_t_22 = 0;
 
-      /* "scrabble/p.pyx":291
- * 
- *                 node = Node(r, c, bval, mult_a, mult_w, self.new_game)
+      /* "scrabble/p.pyx":298
+ *                 #node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, True if self.new_game else False)
+ *                 node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, <BOOL_t>self.new_game)
  *                 self.nodes[r, c] = node             # <<<<<<<<<<<<<<
  * 
- *         for r in range(self.nodes_rl):
+ *         for r in range(self.nodes.shape[0]):
  */
-      __pyx_t_23 = __pyx_v_r;
-      __pyx_t_24 = __pyx_v_c;
-      if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_self->nodes.shape[0];
-      if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_self->nodes.shape[1];
-      __pyx_t_25 = ((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_self->nodes.data + __pyx_t_23 * __pyx_v_self->nodes.strides[0]) )) + __pyx_t_24)) ));
-      __Pyx_GOTREF(*__pyx_t_25);
-      __Pyx_INCREF(__pyx_v_node); __Pyx_DECREF(*__pyx_t_25);
-      *__pyx_t_25 = __pyx_v_node;
-      __Pyx_GIVEREF(*__pyx_t_25);
+      __pyx_t_24 = __pyx_v_r;
+      __pyx_t_25 = __pyx_v_c;
+      if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_self->nodes.shape[0];
+      if (__pyx_t_25 < 0) __pyx_t_25 += __pyx_v_self->nodes.shape[1];
+      __pyx_t_26 = ((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_self->nodes.data + __pyx_t_24 * __pyx_v_self->nodes.strides[0]) )) + __pyx_t_25)) ));
+      __Pyx_GOTREF(*__pyx_t_26);
+      __Pyx_INCREF(__pyx_v_node); __Pyx_DECREF(*__pyx_t_26);
+      *__pyx_t_26 = __pyx_v_node;
+      __Pyx_GIVEREF(*__pyx_t_26);
     }
   }
 
-  /* "scrabble/p.pyx":293
+  /* "scrabble/p.pyx":300
  *                 self.nodes[r, c] = node
  * 
- *         for r in range(self.nodes_rl):             # <<<<<<<<<<<<<<
- *             for c in range(self.nodes_cl):
+ *         for r in range(self.nodes.shape[0]):             # <<<<<<<<<<<<<<
+ *             for c in range(self.nodes.shape[1]):
  *                 node = self.nodes[r, c]
  */
-  __pyx_t_8 = __pyx_v_self->nodes_rl;
+  __pyx_t_8 = (__pyx_v_self->nodes.shape[0]);
   __pyx_t_9 = __pyx_t_8;
   for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
     __pyx_v_r = __pyx_t_10;
 
-    /* "scrabble/p.pyx":294
+    /* "scrabble/p.pyx":301
  * 
- *         for r in range(self.nodes_rl):
- *             for c in range(self.nodes_cl):             # <<<<<<<<<<<<<<
+ *         for r in range(self.nodes.shape[0]):
+ *             for c in range(self.nodes.shape[1]):             # <<<<<<<<<<<<<<
  *                 node = self.nodes[r, c]
  * 
  */
-    __pyx_t_11 = __pyx_v_self->nodes_cl;
+    __pyx_t_11 = (__pyx_v_self->nodes.shape[1]);
     __pyx_t_12 = __pyx_t_11;
     for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
       __pyx_v_c = __pyx_t_13;
 
-      /* "scrabble/p.pyx":295
- *         for r in range(self.nodes_rl):
- *             for c in range(self.nodes_cl):
+      /* "scrabble/p.pyx":302
+ *         for r in range(self.nodes.shape[0]):
+ *             for c in range(self.nodes.shape[1]):
  *                 node = self.nodes[r, c]             # <<<<<<<<<<<<<<
  * 
  *                 self._set_edge(r, c)
  */
-      __pyx_t_26 = __pyx_v_r;
-      __pyx_t_27 = __pyx_v_c;
-      if (__pyx_t_26 < 0) __pyx_t_26 += __pyx_v_self->nodes.shape[0];
-      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_self->nodes.shape[1];
-      __pyx_t_4 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_self->nodes.data + __pyx_t_26 * __pyx_v_self->nodes.strides[0]) )) + __pyx_t_27)) ));
-      __Pyx_INCREF((PyObject*)__pyx_t_4);
-      __Pyx_XDECREF_SET(__pyx_v_node, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_4));
-      __pyx_t_4 = 0;
+      __pyx_t_27 = __pyx_v_r;
+      __pyx_t_28 = __pyx_v_c;
+      if (__pyx_t_27 < 0) __pyx_t_27 += __pyx_v_self->nodes.shape[0];
+      if (__pyx_t_28 < 0) __pyx_t_28 += __pyx_v_self->nodes.shape[1];
+      __pyx_t_22 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_self->nodes.data + __pyx_t_27 * __pyx_v_self->nodes.strides[0]) )) + __pyx_t_28)) ));
+      __Pyx_INCREF((PyObject*)__pyx_t_22);
+      __Pyx_XDECREF_SET(__pyx_v_node, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_22));
+      __pyx_t_22 = 0;
 
-      /* "scrabble/p.pyx":297
+      /* "scrabble/p.pyx":304
  *                 node = self.nodes[r, c]
  * 
  *                 self._set_edge(r, c)             # <<<<<<<<<<<<<<
  * 
- *                 for d in ('up', 'down', 'left', 'right'):
+ *                 for du in range(4): # u, d, l, r
  */
       __pyx_f_8scrabble_1p_5Board__set_edge(__pyx_v_self, __pyx_v_r, __pyx_v_c);
 
-      /* "scrabble/p.pyx":299
+      /* "scrabble/p.pyx":306
  *                 self._set_edge(r, c)
  * 
- *                 for d in ('up', 'down', 'left', 'right'):             # <<<<<<<<<<<<<<
- *                     self._set_adj_words(node, d)
+ *                 for du in range(4): # u, d, l, r             # <<<<<<<<<<<<<<
+ *                     self._set_adj_words(node, du)
  * 
  */
-      __pyx_t_4 = __pyx_tuple__6; __Pyx_INCREF(__pyx_t_4); __pyx_t_28 = 0;
-      for (;;) {
-        if (__pyx_t_28 >= 4) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_22 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_28); __Pyx_INCREF(__pyx_t_22); __pyx_t_28++; if (unlikely(0 < 0)) __PYX_ERR(0, 299, __pyx_L1_error)
-        #else
-        __pyx_t_22 = PySequence_ITEM(__pyx_t_4, __pyx_t_28); __pyx_t_28++; if (unlikely(!__pyx_t_22)) __PYX_ERR(0, 299, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_22);
-        #endif
-        __Pyx_XDECREF_SET(__pyx_v_d, ((PyObject*)__pyx_t_22));
-        __pyx_t_22 = 0;
+      for (__pyx_t_29 = 0; __pyx_t_29 < 4; __pyx_t_29+=1) {
+        __pyx_v_du = __pyx_t_29;
 
-        /* "scrabble/p.pyx":300
+        /* "scrabble/p.pyx":307
  * 
- *                 for d in ('up', 'down', 'left', 'right'):
- *                     self._set_adj_words(node, d)             # <<<<<<<<<<<<<<
+ *                 for du in range(4): # u, d, l, r
+ *                     self._set_adj_words(node, du)             # <<<<<<<<<<<<<<
  * 
  *                 self._set_lets(node)
  */
-        __pyx_f_8scrabble_1p_5Board__set_adj_words(__pyx_v_self, __pyx_v_node, __pyx_v_d);
-
-        /* "scrabble/p.pyx":299
- *                 self._set_edge(r, c)
- * 
- *                 for d in ('up', 'down', 'left', 'right'):             # <<<<<<<<<<<<<<
- *                     self._set_adj_words(node, d)
- * 
- */
+        __pyx_f_8scrabble_1p_5Board__set_adj_words(__pyx_v_self, __pyx_v_node, __pyx_v_du);
       }
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "scrabble/p.pyx":302
- *                     self._set_adj_words(node, d)
+      /* "scrabble/p.pyx":309
+ *                     self._set_adj_words(node, du)
  * 
  *                 self._set_lets(node)             # <<<<<<<<<<<<<<
  * 
@@ -6129,7 +5908,7 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
     }
   }
 
-  /* "scrabble/p.pyx":304
+  /* "scrabble/p.pyx":311
  *                 self._set_lets(node)
  * 
  *         for r in range(Settings.shape[0]):             # <<<<<<<<<<<<<<
@@ -6141,37 +5920,37 @@ static int __pyx_pf_8scrabble_1p_5Board___cinit__(struct __pyx_obj_8scrabble_1p_
   for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
     __pyx_v_r = __pyx_t_10;
 
-    /* "scrabble/p.pyx":305
+    /* "scrabble/p.pyx":312
  * 
  *         for r in range(Settings.shape[0]):
  *             self._set_map(self.nodes[r], 0)             # <<<<<<<<<<<<<<
  *         for r in range(Settings.shape[1]):
  *             self._set_map(self.nodes[:, r], 1)
  */
-    __pyx_t_29.data = __pyx_v_self->nodes.data;
-    __pyx_t_29.memview = __pyx_v_self->nodes.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_29, 0);
+    __pyx_t_30.data = __pyx_v_self->nodes.data;
+    __pyx_t_30.memview = __pyx_v_self->nodes.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_30, 0);
     {
     Py_ssize_t __pyx_tmp_idx = __pyx_v_r;
         Py_ssize_t __pyx_tmp_shape = __pyx_v_self->nodes.shape[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_self->nodes.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 305, __pyx_L1_error)
-        __pyx_t_29.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 312, __pyx_L1_error)
+        __pyx_t_30.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_t_29.shape[0] = __pyx_v_self->nodes.shape[1];
-__pyx_t_29.strides[0] = __pyx_v_self->nodes.strides[1];
-    __pyx_t_29.suboffsets[0] = -1;
+__pyx_t_30.shape[0] = __pyx_v_self->nodes.shape[1];
+__pyx_t_30.strides[0] = __pyx_v_self->nodes.strides[1];
+    __pyx_t_30.suboffsets[0] = -1;
 
-__pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_29, 0);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_29, 1);
-    __pyx_t_29.memview = NULL;
-    __pyx_t_29.data = NULL;
+__pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_30, 0);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_30, 1);
+    __pyx_t_30.memview = NULL;
+    __pyx_t_30.data = NULL;
   }
 
-  /* "scrabble/p.pyx":306
+  /* "scrabble/p.pyx":313
  *         for r in range(Settings.shape[0]):
  *             self._set_map(self.nodes[r], 0)
  *         for r in range(Settings.shape[1]):             # <<<<<<<<<<<<<<
@@ -6183,19 +5962,19 @@ __pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_29, 0);
   for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
     __pyx_v_r = __pyx_t_10;
 
-    /* "scrabble/p.pyx":307
+    /* "scrabble/p.pyx":314
  *             self._set_map(self.nodes[r], 0)
  *         for r in range(Settings.shape[1]):
  *             self._set_map(self.nodes[:, r], 1)             # <<<<<<<<<<<<<<
  * 
- * 
+ *         self.nodesnv = <N[:self.nodes.shape[0], :self.nodes.shape[1]]>self.nodesn
  */
-    __pyx_t_30.data = __pyx_v_self->nodes.data;
-    __pyx_t_30.memview = __pyx_v_self->nodes.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_30, 0);
-    __pyx_t_30.shape[0] = __pyx_v_self->nodes.shape[0];
-__pyx_t_30.strides[0] = __pyx_v_self->nodes.strides[0];
-    __pyx_t_30.suboffsets[0] = -1;
+    __pyx_t_31.data = __pyx_v_self->nodes.data;
+    __pyx_t_31.memview = __pyx_v_self->nodes.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_31, 0);
+    __pyx_t_31.shape[0] = __pyx_v_self->nodes.shape[0];
+__pyx_t_31.strides[0] = __pyx_v_self->nodes.strides[0];
+    __pyx_t_31.suboffsets[0] = -1;
 
 {
     Py_ssize_t __pyx_tmp_idx = __pyx_v_r;
@@ -6203,22 +5982,98 @@ __pyx_t_30.strides[0] = __pyx_v_self->nodes.strides[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_self->nodes.strides[1];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 307, __pyx_L1_error)
-        __pyx_t_30.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 314, __pyx_L1_error)
+        __pyx_t_31.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_30, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_30, 1);
-    __pyx_t_30.memview = NULL;
-    __pyx_t_30.data = NULL;
+__pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_31, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_31, 1);
+    __pyx_t_31.memview = NULL;
+    __pyx_t_31.data = NULL;
   }
 
-  /* "scrabble/p.pyx":236
+  /* "scrabble/p.pyx":316
+ *             self._set_map(self.nodes[:, r], 1)
+ * 
+ *         self.nodesnv = <N[:self.nodes.shape[0], :self.nodes.shape[1]]>self.nodesn             # <<<<<<<<<<<<<<
+ *         #self.nodesnv = self.nodesn[:self.nodes_rl, :self.nodes_cl]
+ * 
+ */
+  __pyx_t_32 = __pyx_v_self->nodesn;
+  if (!__pyx_t_32) {
+    PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
+    __PYX_ERR(0, 316, __pyx_L1_error)
+  }
+  __pyx_t_23 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_N);
+  __pyx_t_22 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)(__pyx_v_self->nodes.shape[0])), ((Py_ssize_t)(__pyx_v_self->nodes.shape[1])));
+  if (unlikely(!__pyx_t_23 || !__pyx_t_22 || !PyBytes_AsString(__pyx_t_23))) __PYX_ERR(0, 316, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_23);
+  __Pyx_GOTREF(__pyx_t_22);
+  __pyx_t_33 = __pyx_array_new(__pyx_t_22, sizeof(__pyx_t_8scrabble_1p_N), PyBytes_AS_STRING(__pyx_t_23), (char *) "c", (char *) __pyx_t_32);
+  if (unlikely(!__pyx_t_33)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_33);
+  __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+  __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
+  __pyx_t_34 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_N(((PyObject *)__pyx_t_33), PyBUF_WRITABLE); if (unlikely(!__pyx_t_34.memview)) __PYX_ERR(0, 316, __pyx_L1_error)
+  __Pyx_DECREF(((PyObject *)__pyx_t_33)); __pyx_t_33 = 0;
+  __PYX_XDEC_MEMVIEW(&__pyx_v_self->nodesnv, 0);
+  __pyx_v_self->nodesnv = __pyx_t_34;
+  __pyx_t_34.memview = NULL;
+  __pyx_t_34.data = NULL;
+
+  /* "scrabble/p.pyx":319
+ *         #self.nodesnv = self.nodesn[:self.nodes_rl, :self.nodes_cl]
+ * 
+ *         for r in range(self.nodes.shape[0]):             # <<<<<<<<<<<<<<
+ *             for c in range(self.nodes.shape[1]):
+ *                 self.nodesnv[r, c] = self.nodes[r, c].n
+ */
+  __pyx_t_8 = (__pyx_v_self->nodes.shape[0]);
+  __pyx_t_9 = __pyx_t_8;
+  for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+    __pyx_v_r = __pyx_t_10;
+
+    /* "scrabble/p.pyx":320
+ * 
+ *         for r in range(self.nodes.shape[0]):
+ *             for c in range(self.nodes.shape[1]):             # <<<<<<<<<<<<<<
+ *                 self.nodesnv[r, c] = self.nodes[r, c].n
+ * 
+ */
+    __pyx_t_11 = (__pyx_v_self->nodes.shape[1]);
+    __pyx_t_12 = __pyx_t_11;
+    for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+      __pyx_v_c = __pyx_t_13;
+
+      /* "scrabble/p.pyx":321
+ *         for r in range(self.nodes.shape[0]):
+ *             for c in range(self.nodes.shape[1]):
+ *                 self.nodesnv[r, c] = self.nodes[r, c].n             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+      __pyx_t_35 = __pyx_v_r;
+      __pyx_t_36 = __pyx_v_c;
+      if (__pyx_t_35 < 0) __pyx_t_35 += __pyx_v_self->nodes.shape[0];
+      if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_v_self->nodes.shape[1];
+      __pyx_t_23 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_self->nodes.data + __pyx_t_35 * __pyx_v_self->nodes.strides[0]) )) + __pyx_t_36)) ));
+      __Pyx_INCREF((PyObject*)__pyx_t_23);
+      __pyx_t_37 = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_23)->n;
+      __Pyx_DECREF(((PyObject *)__pyx_t_23)); __pyx_t_23 = 0;
+      __pyx_t_38 = __pyx_v_r;
+      __pyx_t_39 = __pyx_v_c;
+      if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_v_self->nodesnv.shape[0];
+      if (__pyx_t_39 < 0) __pyx_t_39 += __pyx_v_self->nodesnv.shape[1];
+      *((__pyx_t_8scrabble_1p_N *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_self->nodesnv.data + __pyx_t_38 * __pyx_v_self->nodesnv.strides[0]) ) + __pyx_t_39 * __pyx_v_self->nodesnv.strides[1]) )) = __pyx_t_37;
+    }
+  }
+
+  /* "scrabble/p.pyx":241
  * @cython.final(True)
  * cdef class Board:
- *     def __cinit__(self, object[:, ::1] board, object[:, :] default_board):  # todo fix c contig             # <<<<<<<<<<<<<<
+ *     def __cinit__(self, char[:, ::1] board, object[:, :] default_board):  # todo fix c contig             # <<<<<<<<<<<<<<
  *         cdef:
- *             Py_ssize_t r, c
+ *             Py_ssize_t r, c, du
  */
 
   /* function exit code */
@@ -6232,15 +6087,16 @@ __pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_30, 1);
   __Pyx_XDECREF(__pyx_t_6);
   __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
   __Pyx_XDECREF(__pyx_t_22);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_29, 1);
+  __Pyx_XDECREF(__pyx_t_23);
   __PYX_XDEC_MEMVIEW(&__pyx_t_30, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_31, 1);
+  __Pyx_XDECREF(((PyObject *)__pyx_t_33));
+  __PYX_XDEC_MEMVIEW(&__pyx_t_34, 1);
   __Pyx_AddTraceback("scrabble.p.Board.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dbval);
-  __Pyx_XDECREF(__pyx_v_bval);
   __Pyx_XDECREF(__pyx_v_x);
-  __Pyx_XDECREF(__pyx_v_d);
   __Pyx_XDECREF((PyObject *)__pyx_v_node);
   __PYX_XDEC_MEMVIEW(&__pyx_v_board, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_default_board, 1);
@@ -6248,196 +6104,7 @@ __pyx_f_8scrabble_1p_5Board__set_map(__pyx_v_self, __pyx_t_30, 1);
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":311
- * 
- *     #@lru_cache(1023)  # todo reenable?
- *     cdef Node get(self, int x, int y):             # <<<<<<<<<<<<<<
- *         return <Node>self.nodes[x, y]
- * 
- */
-
-static struct __pyx_obj_8scrabble_1p_Node *__pyx_f_8scrabble_1p_5Board_get(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, int __pyx_v_x, int __pyx_v_y) {
-  struct __pyx_obj_8scrabble_1p_Node *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  Py_ssize_t __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  __Pyx_RefNannySetupContext("get", 0);
-
-  /* "scrabble/p.pyx":312
- *     #@lru_cache(1023)  # todo reenable?
- *     cdef Node get(self, int x, int y):
- *         return <Node>self.nodes[x, y]             # <<<<<<<<<<<<<<
- * 
- *     cdef Node get_by_attr(self, str attr, v):
- */
-  __Pyx_XDECREF(((PyObject *)__pyx_r));
-  __pyx_t_2 = __pyx_v_x;
-  __pyx_t_3 = __pyx_v_y;
-  if (__pyx_t_2 < 0) __pyx_t_2 += __pyx_v_self->nodes.shape[0];
-  if (__pyx_t_3 < 0) __pyx_t_3 += __pyx_v_self->nodes.shape[1];
-  __pyx_t_1 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_self->nodes.data + __pyx_t_2 * __pyx_v_self->nodes.strides[0]) )) + __pyx_t_3)) ));
-  __Pyx_INCREF((PyObject*)__pyx_t_1);
-  __Pyx_INCREF(((PyObject *)((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1)));
-  __pyx_r = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1);
-  __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "scrabble/p.pyx":311
- * 
- *     #@lru_cache(1023)  # todo reenable?
- *     cdef Node get(self, int x, int y):             # <<<<<<<<<<<<<<
- *         return <Node>self.nodes[x, y]
- * 
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "scrabble/p.pyx":315
- * 
- *     cdef Node get_by_attr(self, str attr, v):
- *         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8scrabble_1p_5Board_11get_by_attr_lambda(PyObject *__pyx_self, PyObject *__pyx_v_obj); /*proto*/
-static PyMethodDef __pyx_mdef_8scrabble_1p_5Board_11get_by_attr_lambda = {"lambda", (PyCFunction)__pyx_pw_8scrabble_1p_5Board_11get_by_attr_lambda, METH_O, 0};
-static PyObject *__pyx_pw_8scrabble_1p_5Board_11get_by_attr_lambda(PyObject *__pyx_self, PyObject *__pyx_v_obj) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("lambda (wrapper)", 0);
-  __pyx_r = __pyx_lambda_funcdef_lambda(__pyx_self, ((PyObject *)__pyx_v_obj));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__pyx_v_obj) {
-  struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *__pyx_cur_scope;
-  struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *__pyx_outer_scope;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  __Pyx_RefNannySetupContext("lambda", 0);
-  __pyx_outer_scope = (struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *) __Pyx_CyFunction_GetClosure(__pyx_self);
-  __pyx_cur_scope = __pyx_outer_scope;
-  __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_cur_scope->__pyx_v_attr)) { __Pyx_RaiseClosureNameError("attr"); __PYX_ERR(0, 315, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_cur_scope->__pyx_v_attr;
-  __Pyx_INCREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetAttr(__pyx_v_obj, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_cur_scope->__pyx_v_v)) { __Pyx_RaiseClosureNameError("v"); __PYX_ERR(0, 315, __pyx_L1_error) }
-  __pyx_t_1 = PyObject_RichCompare(__pyx_t_2, __pyx_cur_scope->__pyx_v_v, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("scrabble.p.Board.get_by_attr.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "scrabble/p.pyx":314
- *         return <Node>self.nodes[x, y]
- * 
- *     cdef Node get_by_attr(self, str attr, v):             # <<<<<<<<<<<<<<
- *         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
- * 
- */
-
-static struct __pyx_obj_8scrabble_1p_Node *__pyx_f_8scrabble_1p_5Board_get_by_attr(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, PyObject *__pyx_v_attr, PyObject *__pyx_v_v) {
-  struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *__pyx_cur_scope;
-  struct __pyx_obj_8scrabble_1p_Node *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_RefNannySetupContext("get_by_attr", 0);
-  __pyx_cur_scope = (struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *)__pyx_tp_new_8scrabble_1p___pyx_scope_struct__get_by_attr(__pyx_ptype_8scrabble_1p___pyx_scope_struct__get_by_attr, __pyx_empty_tuple, NULL);
-  if (unlikely(!__pyx_cur_scope)) {
-    __pyx_cur_scope = ((struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *)Py_None);
-    __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 314, __pyx_L1_error)
-  } else {
-    __Pyx_GOTREF(__pyx_cur_scope);
-  }
-  __pyx_cur_scope->__pyx_v_attr = __pyx_v_attr;
-  __Pyx_INCREF(__pyx_cur_scope->__pyx_v_attr);
-  __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_attr);
-  __pyx_cur_scope->__pyx_v_v = __pyx_v_v;
-  __Pyx_INCREF(__pyx_cur_scope->__pyx_v_v);
-  __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_v);
-
-  /* "scrabble/p.pyx":315
- * 
- *     cdef Node get_by_attr(self, str attr, v):
- *         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(((PyObject *)__pyx_r));
-  __pyx_t_1 = __Pyx_CyFunction_NewEx(&__pyx_mdef_8scrabble_1p_5Board_11get_by_attr_lambda, 0, __pyx_n_s_Board_get_by_attr_locals_lambda, ((PyObject*)__pyx_cur_scope), __pyx_n_s_scrabble_p, __pyx_d, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_self->nodes, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
-  __pyx_t_1 = 0;
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_filter, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_8scrabble_1p_Node))))) __PYX_ERR(0, 315, __pyx_L1_error)
-  __pyx_r = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_2);
-  __pyx_t_2 = 0;
-  goto __pyx_L0;
-
-  /* "scrabble/p.pyx":314
- *         return <Node>self.nodes[x, y]
- * 
- *     cdef Node get_by_attr(self, str attr, v):             # <<<<<<<<<<<<<<
- *         return filter(lambda obj: getattr(obj, attr) == v, self.nodes)
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("scrabble.p.Board.get_by_attr", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_DECREF(((PyObject *)__pyx_cur_scope));
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "scrabble/p.pyx":324
+/* "scrabble/p.pyx":338
  * 
  *     @cython.wraparound(False)
  *     cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c):             # <<<<<<<<<<<<<<
@@ -6462,7 +6129,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
   Py_ssize_t __pyx_t_12;
   __Pyx_RefNannySetupContext("_set_edge", 0);
 
-  /* "scrabble/p.pyx":325
+  /* "scrabble/p.pyx":339
  *     @cython.wraparound(False)
  *     cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c):
  *         cdef Node node = self.nodes[r, c]             # <<<<<<<<<<<<<<
@@ -6476,7 +6143,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
   __pyx_v_node = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":327
+  /* "scrabble/p.pyx":341
  *         cdef Node node = self.nodes[r, c]
  * 
  *         if r > 0:             # <<<<<<<<<<<<<<
@@ -6486,7 +6153,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
   __pyx_t_4 = ((__pyx_v_r > 0) != 0);
   if (__pyx_t_4) {
 
-    /* "scrabble/p.pyx":328
+    /* "scrabble/p.pyx":342
  * 
  *         if r > 0:
  *             node.up = self.nodes[r-1, c]             # <<<<<<<<<<<<<<
@@ -6503,7 +6170,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_v_node->up = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":329
+    /* "scrabble/p.pyx":343
  *         if r > 0:
  *             node.up = self.nodes[r-1, c]
  *             if node.up.n.has_val:             # <<<<<<<<<<<<<<
@@ -6513,16 +6180,16 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_t_4 = (__pyx_v_node->up->n.has_val != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":330
+      /* "scrabble/p.pyx":344
  *             node.up = self.nodes[r-1, c]
  *             if node.up.n.has_val:
  *                 node.n.has_edge = True             # <<<<<<<<<<<<<<
  * 
- *         if r < self.nodes_rl - 1:
+ *         if r < self.nodes.shape[0] - 1:
  */
       __pyx_v_node->n.has_edge = 1;
 
-      /* "scrabble/p.pyx":329
+      /* "scrabble/p.pyx":343
  *         if r > 0:
  *             node.up = self.nodes[r-1, c]
  *             if node.up.n.has_val:             # <<<<<<<<<<<<<<
@@ -6531,7 +6198,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
     }
 
-    /* "scrabble/p.pyx":327
+    /* "scrabble/p.pyx":341
  *         cdef Node node = self.nodes[r, c]
  * 
  *         if r > 0:             # <<<<<<<<<<<<<<
@@ -6540,19 +6207,19 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
   }
 
-  /* "scrabble/p.pyx":332
+  /* "scrabble/p.pyx":346
  *                 node.n.has_edge = True
  * 
- *         if r < self.nodes_rl - 1:             # <<<<<<<<<<<<<<
+ *         if r < self.nodes.shape[0] - 1:             # <<<<<<<<<<<<<<
  *             node.down = self.nodes[r+1, c]
  *             if node.down.n.has_val:
  */
-  __pyx_t_4 = ((__pyx_v_r < (__pyx_v_self->nodes_rl - 1)) != 0);
+  __pyx_t_4 = ((__pyx_v_r < ((__pyx_v_self->nodes.shape[0]) - 1)) != 0);
   if (__pyx_t_4) {
 
-    /* "scrabble/p.pyx":333
+    /* "scrabble/p.pyx":347
  * 
- *         if r < self.nodes_rl - 1:
+ *         if r < self.nodes.shape[0] - 1:
  *             node.down = self.nodes[r+1, c]             # <<<<<<<<<<<<<<
  *             if node.down.n.has_val:
  *                 node.n.has_edge = True
@@ -6567,8 +6234,8 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_v_node->down = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":334
- *         if r < self.nodes_rl - 1:
+    /* "scrabble/p.pyx":348
+ *         if r < self.nodes.shape[0] - 1:
  *             node.down = self.nodes[r+1, c]
  *             if node.down.n.has_val:             # <<<<<<<<<<<<<<
  *                 node.n.has_edge = True
@@ -6577,7 +6244,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_t_4 = (__pyx_v_node->down->n.has_val != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":335
+      /* "scrabble/p.pyx":349
  *             node.down = self.nodes[r+1, c]
  *             if node.down.n.has_val:
  *                 node.n.has_edge = True             # <<<<<<<<<<<<<<
@@ -6586,8 +6253,8 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
       __pyx_v_node->n.has_edge = 1;
 
-      /* "scrabble/p.pyx":334
- *         if r < self.nodes_rl - 1:
+      /* "scrabble/p.pyx":348
+ *         if r < self.nodes.shape[0] - 1:
  *             node.down = self.nodes[r+1, c]
  *             if node.down.n.has_val:             # <<<<<<<<<<<<<<
  *                 node.n.has_edge = True
@@ -6595,16 +6262,16 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
     }
 
-    /* "scrabble/p.pyx":332
+    /* "scrabble/p.pyx":346
  *                 node.n.has_edge = True
  * 
- *         if r < self.nodes_rl - 1:             # <<<<<<<<<<<<<<
+ *         if r < self.nodes.shape[0] - 1:             # <<<<<<<<<<<<<<
  *             node.down = self.nodes[r+1, c]
  *             if node.down.n.has_val:
  */
   }
 
-  /* "scrabble/p.pyx":337
+  /* "scrabble/p.pyx":351
  *                 node.n.has_edge = True
  * 
  *         if c > 0:             # <<<<<<<<<<<<<<
@@ -6614,7 +6281,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
   __pyx_t_4 = ((__pyx_v_c > 0) != 0);
   if (__pyx_t_4) {
 
-    /* "scrabble/p.pyx":338
+    /* "scrabble/p.pyx":352
  * 
  *         if c > 0:
  *             node.left = self.nodes[r, c-1]             # <<<<<<<<<<<<<<
@@ -6631,7 +6298,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_v_node->left = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":339
+    /* "scrabble/p.pyx":353
  *         if c > 0:
  *             node.left = self.nodes[r, c-1]
  *             if node.left.n.has_val:             # <<<<<<<<<<<<<<
@@ -6641,16 +6308,16 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_t_4 = (__pyx_v_node->left->n.has_val != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":340
+      /* "scrabble/p.pyx":354
  *             node.left = self.nodes[r, c-1]
  *             if node.left.n.has_val:
  *                 node.n.has_edge = True             # <<<<<<<<<<<<<<
  * 
- *         if c < self.nodes_cl - 1:
+ *         if c < self.nodes.shape[1] - 1:
  */
       __pyx_v_node->n.has_edge = 1;
 
-      /* "scrabble/p.pyx":339
+      /* "scrabble/p.pyx":353
  *         if c > 0:
  *             node.left = self.nodes[r, c-1]
  *             if node.left.n.has_val:             # <<<<<<<<<<<<<<
@@ -6659,7 +6326,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
     }
 
-    /* "scrabble/p.pyx":337
+    /* "scrabble/p.pyx":351
  *                 node.n.has_edge = True
  * 
  *         if c > 0:             # <<<<<<<<<<<<<<
@@ -6668,19 +6335,19 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
   }
 
-  /* "scrabble/p.pyx":342
+  /* "scrabble/p.pyx":356
  *                 node.n.has_edge = True
  * 
- *         if c < self.nodes_cl - 1:             # <<<<<<<<<<<<<<
+ *         if c < self.nodes.shape[1] - 1:             # <<<<<<<<<<<<<<
  *             node.right = self.nodes[r, c+1]
  *             if node.right.n.has_val:
  */
-  __pyx_t_4 = ((__pyx_v_c < (__pyx_v_self->nodes_cl - 1)) != 0);
+  __pyx_t_4 = ((__pyx_v_c < ((__pyx_v_self->nodes.shape[1]) - 1)) != 0);
   if (__pyx_t_4) {
 
-    /* "scrabble/p.pyx":343
+    /* "scrabble/p.pyx":357
  * 
- *         if c < self.nodes_cl - 1:
+ *         if c < self.nodes.shape[1] - 1:
  *             node.right = self.nodes[r, c+1]             # <<<<<<<<<<<<<<
  *             if node.right.n.has_val:
  *                 node.n.has_edge = True
@@ -6695,8 +6362,8 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_v_node->right = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":344
- *         if c < self.nodes_cl - 1:
+    /* "scrabble/p.pyx":358
+ *         if c < self.nodes.shape[1] - 1:
  *             node.right = self.nodes[r, c+1]
  *             if node.right.n.has_val:             # <<<<<<<<<<<<<<
  *                 node.n.has_edge = True
@@ -6705,7 +6372,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
     __pyx_t_4 = (__pyx_v_node->right->n.has_val != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":345
+      /* "scrabble/p.pyx":359
  *             node.right = self.nodes[r, c+1]
  *             if node.right.n.has_val:
  *                 node.n.has_edge = True             # <<<<<<<<<<<<<<
@@ -6714,8 +6381,8 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
       __pyx_v_node->n.has_edge = 1;
 
-      /* "scrabble/p.pyx":344
- *         if c < self.nodes_cl - 1:
+      /* "scrabble/p.pyx":358
+ *         if c < self.nodes.shape[1] - 1:
  *             node.right = self.nodes[r, c+1]
  *             if node.right.n.has_val:             # <<<<<<<<<<<<<<
  *                 node.n.has_edge = True
@@ -6723,16 +6390,16 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
  */
     }
 
-    /* "scrabble/p.pyx":342
+    /* "scrabble/p.pyx":356
  *                 node.n.has_edge = True
  * 
- *         if c < self.nodes_cl - 1:             # <<<<<<<<<<<<<<
+ *         if c < self.nodes.shape[1] - 1:             # <<<<<<<<<<<<<<
  *             node.right = self.nodes[r, c+1]
  *             if node.right.n.has_val:
  */
   }
 
-  /* "scrabble/p.pyx":324
+  /* "scrabble/p.pyx":338
  * 
  *     @cython.wraparound(False)
  *     cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c):             # <<<<<<<<<<<<<<
@@ -6745,44 +6412,42 @@ static void __pyx_f_8scrabble_1p_5Board__set_edge(struct __pyx_obj_8scrabble_1p_
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/p.pyx":348
+/* "scrabble/p.pyx":362
  * 
  * 
- *     cdef void _set_adj_words(self, Node n, str d):             # <<<<<<<<<<<<<<
+ *     cdef void _set_adj_words(self, Node n, Py_ssize_t d):             # <<<<<<<<<<<<<<
  *         cdef:
  *             Node[:] loop_nodes
  */
 
-static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_n, PyObject *__pyx_v_d) {
+static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_n, Py_ssize_t __pyx_v_d) {
   __Pyx_memviewslice __pyx_v_loop_nodes = { 0, 0, { 0 }, { 0 }, { 0 } };
   int __pyx_v_rev;
   int __pyx_v_xx;
   int __pyx_v_yy;
   Py_ssize_t __pyx_v_nl;
   Py_ssize_t __pyx_v_ni;
-  struct __pyx_obj_8scrabble_1p_Node *__pyx_v_p = 0;
-  PyObject *__pyx_v_l_s = 0;
+  __pyx_t_8scrabble_1p_N *__pyx_v_p;
+  Py_UCS4 __pyx_v_lls;
   PyObject *__pyx_v_lets_str = 0;
   __pyx_t_8scrabble_1p_STR_t __pyx_v_lets_pts;
-  __pyx_t_8scrabble_1p_uchr __pyx_v_nv;
   __Pyx_RefNannyDeclarations
   __pyx_t_8scrabble_1p_BOOL_t __pyx_t_1;
-  int __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
   int __pyx_t_3;
   __Pyx_memviewslice __pyx_t_4 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_5;
-  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
   Py_ssize_t __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
+  PyObject *__pyx_t_9 = NULL;
   Py_ssize_t __pyx_t_10;
-  PyObject *__pyx_t_11 = NULL;
-  Py_ssize_t __pyx_t_12;
-  __pyx_t_8scrabble_1p_uchr __pyx_t_13;
-  PyObject *__pyx_t_14 = NULL;
+  int __pyx_t_11;
+  __pyx_t_8scrabble_1p_uchr __pyx_t_12;
+  PyObject *__pyx_t_13 = NULL;
   __Pyx_RefNannySetupContext("_set_adj_words", 0);
 
-  /* "scrabble/p.pyx":352
+  /* "scrabble/p.pyx":366
  *             Node[:] loop_nodes
  *             #cnp.ndarray loop_nodes
  *             bint rev = False             # <<<<<<<<<<<<<<
@@ -6791,7 +6456,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabbl
  */
   __pyx_v_rev = 0;
 
-  /* "scrabble/p.pyx":353
+  /* "scrabble/p.pyx":367
  *             #cnp.ndarray loop_nodes
  *             bint rev = False
  *             int xx = n.n.letter.x             # <<<<<<<<<<<<<<
@@ -6801,7 +6466,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabbl
   __pyx_t_1 = __pyx_v_n->n.letter.x;
   __pyx_v_xx = __pyx_t_1;
 
-  /* "scrabble/p.pyx":354
+  /* "scrabble/p.pyx":368
  *             bint rev = False
  *             int xx = n.n.letter.x
  *             int yy = n.n.letter.y             # <<<<<<<<<<<<<<
@@ -6811,34 +6476,33 @@ static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabbl
   __pyx_t_1 = __pyx_v_n->n.letter.y;
   __pyx_v_yy = __pyx_t_1;
 
-  /* "scrabble/p.pyx":357
+  /* "scrabble/p.pyx":371
  * 
  * 
- *         if d == 'up':             # <<<<<<<<<<<<<<
+ *         if d == 0:             # <<<<<<<<<<<<<<
  *             loop_nodes = self.nodes[:xx, yy][::-1]
  *             rev = True
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_up, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 357, __pyx_L1_error)
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
+  switch (__pyx_v_d) {
+    case 0:
 
-    /* "scrabble/p.pyx":358
+    /* "scrabble/p.pyx":372
  * 
- *         if d == 'up':
+ *         if d == 0:
  *             loop_nodes = self.nodes[:xx, yy][::-1]             # <<<<<<<<<<<<<<
  *             rev = True
- *         elif d == 'down':
+ *         elif d == 1:
  */
-    __pyx_t_4.data = __pyx_v_self->nodes.data;
-    __pyx_t_4.memview = __pyx_v_self->nodes.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_4, 0);
-    __pyx_t_5 = -1;
+    __pyx_t_2.data = __pyx_v_self->nodes.data;
+    __pyx_t_2.memview = __pyx_v_self->nodes.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_2, 0);
+    __pyx_t_3 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_4,
+    &__pyx_t_2,
     __pyx_v_self->nodes.shape[0], __pyx_v_self->nodes.strides[0], __pyx_v_self->nodes.suboffsets[0],
     0,
     0,
-    &__pyx_t_5,
+    &__pyx_t_3,
     0,
     __pyx_v_xx,
     0,
@@ -6847,7 +6511,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabbl
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 358, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
 }
 
 {
@@ -6856,20 +6520,20 @@ static void __pyx_f_8scrabble_1p_5Board__set_adj_words(struct __pyx_obj_8scrabbl
     Py_ssize_t __pyx_tmp_stride = __pyx_v_self->nodes.strides[1];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 358, __pyx_L1_error)
-        __pyx_t_4.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 372, __pyx_L1_error)
+        __pyx_t_2.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_t_6.data = __pyx_t_4.data;
-    __pyx_t_6.memview = __pyx_t_4.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_6, 0);
-    __pyx_t_5 = -1;
+__pyx_t_4.data = __pyx_t_2.data;
+    __pyx_t_4.memview = __pyx_t_2.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_4, 0);
+    __pyx_t_3 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_6,
-    __pyx_t_4.shape[0], __pyx_t_4.strides[0], __pyx_t_4.suboffsets[0],
+    &__pyx_t_4,
+    __pyx_t_2.shape[0], __pyx_t_2.strides[0], __pyx_t_2.suboffsets[0],
     0,
     0,
-    &__pyx_t_5,
+    &__pyx_t_3,
     0,
     0,
     -1L,
@@ -6878,63 +6542,52 @@ __pyx_t_6.data = __pyx_t_4.data;
     1,
     1) < 0))
 {
-    __PYX_ERR(0, 358, __pyx_L1_error)
+    __PYX_ERR(0, 372, __pyx_L1_error)
 }
 
-__PYX_XDEC_MEMVIEW(&__pyx_t_4, 1);
+__PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
+    __pyx_t_2.memview = NULL;
+    __pyx_t_2.data = NULL;
+    __pyx_v_loop_nodes = __pyx_t_4;
     __pyx_t_4.memview = NULL;
     __pyx_t_4.data = NULL;
-    __pyx_v_loop_nodes = __pyx_t_6;
-    __pyx_t_6.memview = NULL;
-    __pyx_t_6.data = NULL;
 
-    /* "scrabble/p.pyx":359
- *         if d == 'up':
+    /* "scrabble/p.pyx":373
+ *         if d == 0:
  *             loop_nodes = self.nodes[:xx, yy][::-1]
  *             rev = True             # <<<<<<<<<<<<<<
- *         elif d == 'down':
+ *         elif d == 1:
  *             loop_nodes = self.nodes[xx+1:, yy]
  */
     __pyx_v_rev = 1;
 
-    /* "scrabble/p.pyx":357
+    /* "scrabble/p.pyx":371
  * 
  * 
- *         if d == 'up':             # <<<<<<<<<<<<<<
+ *         if d == 0:             # <<<<<<<<<<<<<<
  *             loop_nodes = self.nodes[:xx, yy][::-1]
  *             rev = True
  */
-    goto __pyx_L3;
-  }
+    break;
+    case 1:
 
-  /* "scrabble/p.pyx":360
- *             loop_nodes = self.nodes[:xx, yy][::-1]
+    /* "scrabble/p.pyx":375
  *             rev = True
- *         elif d == 'down':             # <<<<<<<<<<<<<<
- *             loop_nodes = self.nodes[xx+1:, yy]
- *         elif d == 'left':
- */
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_down, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 360, __pyx_L1_error)
-  __pyx_t_2 = (__pyx_t_3 != 0);
-  if (__pyx_t_2) {
-
-    /* "scrabble/p.pyx":361
- *             rev = True
- *         elif d == 'down':
+ *         elif d == 1:
  *             loop_nodes = self.nodes[xx+1:, yy]             # <<<<<<<<<<<<<<
- *         elif d == 'left':
+ *         elif d == 2:
  *             loop_nodes = self.nodes[xx, :yy][::-1]
  */
-    __pyx_t_4.data = __pyx_v_self->nodes.data;
-    __pyx_t_4.memview = __pyx_v_self->nodes.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_4, 0);
-    __pyx_t_5 = -1;
+    __pyx_t_2.data = __pyx_v_self->nodes.data;
+    __pyx_t_2.memview = __pyx_v_self->nodes.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_2, 0);
+    __pyx_t_3 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_4,
+    &__pyx_t_2,
     __pyx_v_self->nodes.shape[0], __pyx_v_self->nodes.strides[0], __pyx_v_self->nodes.suboffsets[0],
     0,
     0,
-    &__pyx_t_5,
+    &__pyx_t_3,
     (__pyx_v_xx + 1),
     0,
     0,
@@ -6943,7 +6596,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_t_4, 1);
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 361, __pyx_L1_error)
+    __PYX_ERR(0, 375, __pyx_L1_error)
 }
 
 {
@@ -6952,62 +6605,51 @@ __PYX_XDEC_MEMVIEW(&__pyx_t_4, 1);
     Py_ssize_t __pyx_tmp_stride = __pyx_v_self->nodes.strides[1];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 361, __pyx_L1_error)
-        __pyx_t_4.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 375, __pyx_L1_error)
+        __pyx_t_2.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_v_loop_nodes = __pyx_t_4;
-    __pyx_t_4.memview = NULL;
-    __pyx_t_4.data = NULL;
+__pyx_v_loop_nodes = __pyx_t_2;
+    __pyx_t_2.memview = NULL;
+    __pyx_t_2.data = NULL;
 
-    /* "scrabble/p.pyx":360
+    /* "scrabble/p.pyx":374
  *             loop_nodes = self.nodes[:xx, yy][::-1]
  *             rev = True
- *         elif d == 'down':             # <<<<<<<<<<<<<<
+ *         elif d == 1:             # <<<<<<<<<<<<<<
  *             loop_nodes = self.nodes[xx+1:, yy]
- *         elif d == 'left':
+ *         elif d == 2:
  */
-    goto __pyx_L3;
-  }
+    break;
+    case 2:
 
-  /* "scrabble/p.pyx":362
- *         elif d == 'down':
+    /* "scrabble/p.pyx":377
  *             loop_nodes = self.nodes[xx+1:, yy]
- *         elif d == 'left':             # <<<<<<<<<<<<<<
- *             loop_nodes = self.nodes[xx, :yy][::-1]
- *             rev = True
- */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_left, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 362, __pyx_L1_error)
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
-
-    /* "scrabble/p.pyx":363
- *             loop_nodes = self.nodes[xx+1:, yy]
- *         elif d == 'left':
+ *         elif d == 2:
  *             loop_nodes = self.nodes[xx, :yy][::-1]             # <<<<<<<<<<<<<<
  *             rev = True
- *         elif d == 'right':
+ *         elif d == 3:
  */
-    __pyx_t_7.data = __pyx_v_self->nodes.data;
-    __pyx_t_7.memview = __pyx_v_self->nodes.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_7, 0);
+    __pyx_t_5.data = __pyx_v_self->nodes.data;
+    __pyx_t_5.memview = __pyx_v_self->nodes.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_5, 0);
     {
     Py_ssize_t __pyx_tmp_idx = __pyx_v_xx;
         Py_ssize_t __pyx_tmp_shape = __pyx_v_self->nodes.shape[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_self->nodes.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 363, __pyx_L1_error)
-        __pyx_t_7.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 377, __pyx_L1_error)
+        __pyx_t_5.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_t_5 = -1;
+__pyx_t_3 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_7,
+    &__pyx_t_5,
     __pyx_v_self->nodes.shape[1], __pyx_v_self->nodes.strides[1], __pyx_v_self->nodes.suboffsets[1],
     1,
     0,
-    &__pyx_t_5,
+    &__pyx_t_3,
     0,
     __pyx_v_yy,
     0,
@@ -7016,19 +6658,19 @@ __pyx_t_5 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 363, __pyx_L1_error)
+    __PYX_ERR(0, 377, __pyx_L1_error)
 }
 
-__pyx_t_6.data = __pyx_t_7.data;
-    __pyx_t_6.memview = __pyx_t_7.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_6, 0);
-    __pyx_t_5 = -1;
+__pyx_t_4.data = __pyx_t_5.data;
+    __pyx_t_4.memview = __pyx_t_5.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_4, 0);
+    __pyx_t_3 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_6,
-    __pyx_t_7.shape[0], __pyx_t_7.strides[0], __pyx_t_7.suboffsets[0],
+    &__pyx_t_4,
+    __pyx_t_5.shape[0], __pyx_t_5.strides[0], __pyx_t_5.suboffsets[0],
     0,
     0,
-    &__pyx_t_5,
+    &__pyx_t_3,
     0,
     0,
     -1L,
@@ -7037,73 +6679,62 @@ __pyx_t_6.data = __pyx_t_7.data;
     1,
     1) < 0))
 {
-    __PYX_ERR(0, 363, __pyx_L1_error)
+    __PYX_ERR(0, 377, __pyx_L1_error)
 }
 
-__PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __pyx_t_7.memview = NULL;
-    __pyx_t_7.data = NULL;
-    __pyx_v_loop_nodes = __pyx_t_6;
-    __pyx_t_6.memview = NULL;
-    __pyx_t_6.data = NULL;
+__PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+    __pyx_t_5.memview = NULL;
+    __pyx_t_5.data = NULL;
+    __pyx_v_loop_nodes = __pyx_t_4;
+    __pyx_t_4.memview = NULL;
+    __pyx_t_4.data = NULL;
 
-    /* "scrabble/p.pyx":364
- *         elif d == 'left':
+    /* "scrabble/p.pyx":378
+ *         elif d == 2:
  *             loop_nodes = self.nodes[xx, :yy][::-1]
  *             rev = True             # <<<<<<<<<<<<<<
- *         elif d == 'right':
+ *         elif d == 3:
  *             loop_nodes = self.nodes[xx, yy+1:]
  */
     __pyx_v_rev = 1;
 
-    /* "scrabble/p.pyx":362
- *         elif d == 'down':
+    /* "scrabble/p.pyx":376
+ *         elif d == 1:
  *             loop_nodes = self.nodes[xx+1:, yy]
- *         elif d == 'left':             # <<<<<<<<<<<<<<
+ *         elif d == 2:             # <<<<<<<<<<<<<<
  *             loop_nodes = self.nodes[xx, :yy][::-1]
  *             rev = True
  */
-    goto __pyx_L3;
-  }
+    break;
+    case 3:
 
-  /* "scrabble/p.pyx":365
- *             loop_nodes = self.nodes[xx, :yy][::-1]
+    /* "scrabble/p.pyx":380
  *             rev = True
- *         elif d == 'right':             # <<<<<<<<<<<<<<
- *             loop_nodes = self.nodes[xx, yy+1:]
- *         else:
- */
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_right, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __pyx_t_2 = (__pyx_t_3 != 0);
-  if (__pyx_t_2) {
-
-    /* "scrabble/p.pyx":366
- *             rev = True
- *         elif d == 'right':
+ *         elif d == 3:
  *             loop_nodes = self.nodes[xx, yy+1:]             # <<<<<<<<<<<<<<
  *         else:
  *             return
  */
-    __pyx_t_7.data = __pyx_v_self->nodes.data;
-    __pyx_t_7.memview = __pyx_v_self->nodes.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_7, 0);
+    __pyx_t_5.data = __pyx_v_self->nodes.data;
+    __pyx_t_5.memview = __pyx_v_self->nodes.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_5, 0);
     {
     Py_ssize_t __pyx_tmp_idx = __pyx_v_xx;
         Py_ssize_t __pyx_tmp_shape = __pyx_v_self->nodes.shape[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_self->nodes.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 366, __pyx_L1_error)
-        __pyx_t_7.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 380, __pyx_L1_error)
+        __pyx_t_5.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_t_5 = -1;
+__pyx_t_3 = -1;
     if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_7,
+    &__pyx_t_5,
     __pyx_v_self->nodes.shape[1], __pyx_v_self->nodes.strides[1], __pyx_v_self->nodes.suboffsets[1],
     1,
     0,
-    &__pyx_t_5,
+    &__pyx_t_3,
     (__pyx_v_yy + 1),
     0,
     0,
@@ -7112,230 +6743,218 @@ __pyx_t_5 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 366, __pyx_L1_error)
+    __PYX_ERR(0, 380, __pyx_L1_error)
 }
 
-__pyx_v_loop_nodes = __pyx_t_7;
-    __pyx_t_7.memview = NULL;
-    __pyx_t_7.data = NULL;
+__pyx_v_loop_nodes = __pyx_t_5;
+    __pyx_t_5.memview = NULL;
+    __pyx_t_5.data = NULL;
 
-    /* "scrabble/p.pyx":365
+    /* "scrabble/p.pyx":379
  *             loop_nodes = self.nodes[xx, :yy][::-1]
  *             rev = True
- *         elif d == 'right':             # <<<<<<<<<<<<<<
+ *         elif d == 3:             # <<<<<<<<<<<<<<
  *             loop_nodes = self.nodes[xx, yy+1:]
  *         else:
  */
-    goto __pyx_L3;
-  }
+    break;
+    default:
 
-  /* "scrabble/p.pyx":368
+    /* "scrabble/p.pyx":382
  *             loop_nodes = self.nodes[xx, yy+1:]
  *         else:
  *             return             # <<<<<<<<<<<<<<
  * 
  *         cdef:
  */
-  /*else*/ {
     goto __pyx_L0;
+    break;
   }
-  __pyx_L3:;
 
-  /* "scrabble/p.pyx":371
+  /* "scrabble/p.pyx":385
  * 
  *         cdef:
  *             Py_ssize_t nl = loop_nodes.shape[0]             # <<<<<<<<<<<<<<
  *             Py_ssize_t ni
- *             Node p
+ *             N* p
  */
   __pyx_v_nl = (__pyx_v_loop_nodes.shape[0]);
 
-  /* "scrabble/p.pyx":375
- *             Node p
- *             str l_s
+  /* "scrabble/p.pyx":390
+ *             #str l_s
+ *             Py_UCS4 lls
  *             str lets_str = ''             # <<<<<<<<<<<<<<
  *             STR_t lets_pts = 0
- *             uchr nv
+ *             #uchr nv
  */
   __Pyx_INCREF(__pyx_kp_u_);
   __pyx_v_lets_str = __pyx_kp_u_;
 
-  /* "scrabble/p.pyx":376
- *             str l_s
+  /* "scrabble/p.pyx":391
+ *             Py_UCS4 lls
  *             str lets_str = ''
  *             STR_t lets_pts = 0             # <<<<<<<<<<<<<<
- *             uchr nv
+ *             #uchr nv
  * 
  */
   __pyx_v_lets_pts = 0;
 
-  /* "scrabble/p.pyx":379
- *             uchr nv
+  /* "scrabble/p.pyx":394
+ *             #uchr nv
  * 
  *         for ni in range(nl):             # <<<<<<<<<<<<<<
- *             p = loop_nodes[ni]
- *             if not p.n.has_val:
+ *             p = &loop_nodes[ni].n
+ *             if not p.has_val:
  */
-  __pyx_t_8 = __pyx_v_nl;
-  __pyx_t_9 = __pyx_t_8;
-  for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
-    __pyx_v_ni = __pyx_t_10;
+  __pyx_t_6 = __pyx_v_nl;
+  __pyx_t_7 = __pyx_t_6;
+  for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
+    __pyx_v_ni = __pyx_t_8;
 
-    /* "scrabble/p.pyx":380
+    /* "scrabble/p.pyx":395
  * 
  *         for ni in range(nl):
- *             p = loop_nodes[ni]             # <<<<<<<<<<<<<<
- *             if not p.n.has_val:
+ *             p = &loop_nodes[ni].n             # <<<<<<<<<<<<<<
+ *             if not p.has_val:
  *                 break
  */
-    __pyx_t_12 = __pyx_v_ni;
-    if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_loop_nodes.shape[0];
-    __pyx_t_11 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_loop_nodes.data + __pyx_t_12 * __pyx_v_loop_nodes.strides[0]) ));
-    __Pyx_INCREF((PyObject*)__pyx_t_11);
-    __Pyx_XDECREF_SET(__pyx_v_p, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_11));
-    __pyx_t_11 = 0;
+    __pyx_t_10 = __pyx_v_ni;
+    if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_loop_nodes.shape[0];
+    __pyx_t_9 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_loop_nodes.data + __pyx_t_10 * __pyx_v_loop_nodes.strides[0]) ));
+    __Pyx_INCREF((PyObject*)__pyx_t_9);
+    __pyx_v_p = (&((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_9)->n);
+    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
 
-    /* "scrabble/p.pyx":381
+    /* "scrabble/p.pyx":396
  *         for ni in range(nl):
- *             p = loop_nodes[ni]
- *             if not p.n.has_val:             # <<<<<<<<<<<<<<
+ *             p = &loop_nodes[ni].n
+ *             if not p.has_val:             # <<<<<<<<<<<<<<
  *                 break
  *             else:
  */
-    __pyx_t_2 = ((!(__pyx_v_p->n.has_val != 0)) != 0);
-    if (__pyx_t_2) {
+    __pyx_t_11 = ((!(__pyx_v_p->has_val != 0)) != 0);
+    if (__pyx_t_11) {
 
-      /* "scrabble/p.pyx":382
- *             p = loop_nodes[ni]
- *             if not p.n.has_val:
+      /* "scrabble/p.pyx":397
+ *             p = &loop_nodes[ni].n
+ *             if not p.has_val:
  *                 break             # <<<<<<<<<<<<<<
  *             else:
- *                 lets_pts += p.n.pts  # <STR_t>
+ *                 lets_pts += p.pts
  */
-      goto __pyx_L5_break;
+      goto __pyx_L4_break;
 
-      /* "scrabble/p.pyx":381
+      /* "scrabble/p.pyx":396
  *         for ni in range(nl):
- *             p = loop_nodes[ni]
- *             if not p.n.has_val:             # <<<<<<<<<<<<<<
+ *             p = &loop_nodes[ni].n
+ *             if not p.has_val:             # <<<<<<<<<<<<<<
  *                 break
  *             else:
  */
     }
 
-    /* "scrabble/p.pyx":384
+    /* "scrabble/p.pyx":399
  *                 break
  *             else:
- *                 lets_pts += p.n.pts  # <STR_t>             # <<<<<<<<<<<<<<
+ *                 lets_pts += p.pts             # <<<<<<<<<<<<<<
  * 
- *                 nv = p.n.letter.value
+ *                 #nv = p.letter.value
  */
     /*else*/ {
-      __pyx_v_lets_pts = (__pyx_v_lets_pts + __pyx_v_p->n.pts);
+      __pyx_v_lets_pts = (__pyx_v_lets_pts + __pyx_v_p->pts);
 
-      /* "scrabble/p.pyx":386
- *                 lets_pts += p.n.pts  # <STR_t>
- * 
- *                 nv = p.n.letter.value             # <<<<<<<<<<<<<<
- *                 l_s = chr(nv)
+      /* "scrabble/p.pyx":403
+ *                 #nv = p.letter.value
+ *                 #l_s = <str>chr(<int>nv)
+ *                 lls = p.letter.value             # <<<<<<<<<<<<<<
  *                 if rev:
+ *                     #lets_str = <str>lls + lets_str
  */
-      __pyx_t_13 = __pyx_v_p->n.letter.value;
-      __pyx_v_nv = __pyx_t_13;
+      __pyx_t_12 = __pyx_v_p->letter.value;
+      __pyx_v_lls = __pyx_t_12;
 
-      /* "scrabble/p.pyx":387
- * 
- *                 nv = p.n.letter.value
- *                 l_s = chr(nv)             # <<<<<<<<<<<<<<
- *                 if rev:
- *                     lets_str = <str>l_s + lets_str
- */
-      __pyx_t_11 = __Pyx_PyInt_From_unsigned_char(__pyx_v_nv); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 387, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_11); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 387, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_14);
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_14))||((__pyx_t_14) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_14)->tp_name), 0))) __PYX_ERR(0, 387, __pyx_L1_error)
-      __Pyx_XDECREF_SET(__pyx_v_l_s, ((PyObject*)__pyx_t_14));
-      __pyx_t_14 = 0;
-
-      /* "scrabble/p.pyx":388
- *                 nv = p.n.letter.value
- *                 l_s = chr(nv)
+      /* "scrabble/p.pyx":404
+ *                 #l_s = <str>chr(<int>nv)
+ *                 lls = p.letter.value
  *                 if rev:             # <<<<<<<<<<<<<<
- *                     lets_str = <str>l_s + lets_str
- *                 else:
+ *                     #lets_str = <str>lls + lets_str
+ *                     lets_str = lls + lets_str
  */
-      __pyx_t_2 = (__pyx_v_rev != 0);
-      if (__pyx_t_2) {
+      __pyx_t_11 = (__pyx_v_rev != 0);
+      if (__pyx_t_11) {
 
-        /* "scrabble/p.pyx":389
- *                 l_s = chr(nv)
+        /* "scrabble/p.pyx":406
  *                 if rev:
- *                     lets_str = <str>l_s + lets_str             # <<<<<<<<<<<<<<
+ *                     #lets_str = <str>lls + lets_str
+ *                     lets_str = lls + lets_str             # <<<<<<<<<<<<<<
  *                 else:
- *                     lets_str += l_s
+ *                     lets_str += lls
  */
-        __pyx_t_14 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_l_s, __pyx_v_lets_str); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 389, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_14);
-        __Pyx_DECREF_SET(__pyx_v_lets_str, ((PyObject*)__pyx_t_14));
-        __pyx_t_14 = 0;
+        __pyx_t_9 = PyUnicode_FromOrdinal(__pyx_v_lls); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 406, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_13 = __Pyx_PyUnicode_ConcatSafe(__pyx_t_9, __pyx_v_lets_str); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 406, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __Pyx_DECREF_SET(__pyx_v_lets_str, ((PyObject*)__pyx_t_13));
+        __pyx_t_13 = 0;
 
-        /* "scrabble/p.pyx":388
- *                 nv = p.n.letter.value
- *                 l_s = chr(nv)
+        /* "scrabble/p.pyx":404
+ *                 #l_s = <str>chr(<int>nv)
+ *                 lls = p.letter.value
  *                 if rev:             # <<<<<<<<<<<<<<
- *                     lets_str = <str>l_s + lets_str
- *                 else:
+ *                     #lets_str = <str>lls + lets_str
+ *                     lets_str = lls + lets_str
  */
-        goto __pyx_L7;
+        goto __pyx_L6;
       }
 
-      /* "scrabble/p.pyx":391
- *                     lets_str = <str>l_s + lets_str
+      /* "scrabble/p.pyx":408
+ *                     lets_str = lls + lets_str
  *                 else:
- *                     lets_str += l_s             # <<<<<<<<<<<<<<
+ *                     lets_str += lls             # <<<<<<<<<<<<<<
  * 
  *         if lets_str:
  */
       /*else*/ {
-        __pyx_t_14 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_lets_str, __pyx_v_l_s); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 391, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_14);
-        __Pyx_DECREF_SET(__pyx_v_lets_str, ((PyObject*)__pyx_t_14));
-        __pyx_t_14 = 0;
+        __pyx_t_13 = PyUnicode_FromOrdinal(__pyx_v_lls); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 408, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_13);
+        __pyx_t_9 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_lets_str, __pyx_t_13); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 408, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_9);
+        __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+        __Pyx_DECREF_SET(__pyx_v_lets_str, ((PyObject*)__pyx_t_9));
+        __pyx_t_9 = 0;
       }
-      __pyx_L7:;
+      __pyx_L6:;
     }
   }
-  __pyx_L5_break:;
+  __pyx_L4_break:;
 
-  /* "scrabble/p.pyx":393
- *                     lets_str += l_s
+  /* "scrabble/p.pyx":410
+ *                     lets_str += lls
  * 
  *         if lets_str:             # <<<<<<<<<<<<<<
- *             if d == 'up':
+ *             if d == 0:
  *                 n.up_word = lets_str
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_IS_TRUE(__pyx_v_lets_str) != 0);
-  if (__pyx_t_2) {
+  __pyx_t_11 = (__pyx_v_lets_str != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_lets_str) != 0);
+  if (__pyx_t_11) {
 
-    /* "scrabble/p.pyx":394
+    /* "scrabble/p.pyx":411
  * 
  *         if lets_str:
- *             if d == 'up':             # <<<<<<<<<<<<<<
+ *             if d == 0:             # <<<<<<<<<<<<<<
  *                 n.up_word = lets_str
  *                 n.up_pts = lets_pts
  */
-    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_up, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 394, __pyx_L1_error)
-    __pyx_t_3 = (__pyx_t_2 != 0);
-    if (__pyx_t_3) {
+    switch (__pyx_v_d) {
+      case 0:
 
-      /* "scrabble/p.pyx":395
+      /* "scrabble/p.pyx":412
  *         if lets_str:
- *             if d == 'up':
+ *             if d == 0:
  *                 n.up_word = lets_str             # <<<<<<<<<<<<<<
  *                 n.up_pts = lets_pts
- *             elif d == 'down':
+ *             elif d == 1:
  */
       __Pyx_INCREF(__pyx_v_lets_str);
       __Pyx_GIVEREF(__pyx_v_lets_str);
@@ -7343,42 +6962,31 @@ __pyx_v_loop_nodes = __pyx_t_7;
       __Pyx_DECREF(__pyx_v_n->up_word);
       __pyx_v_n->up_word = __pyx_v_lets_str;
 
-      /* "scrabble/p.pyx":396
- *             if d == 'up':
+      /* "scrabble/p.pyx":413
+ *             if d == 0:
  *                 n.up_word = lets_str
  *                 n.up_pts = lets_pts             # <<<<<<<<<<<<<<
- *             elif d == 'down':
+ *             elif d == 1:
  *                 n.down_word = lets_str
  */
       __pyx_v_n->up_pts = __pyx_v_lets_pts;
 
-      /* "scrabble/p.pyx":394
+      /* "scrabble/p.pyx":411
  * 
  *         if lets_str:
- *             if d == 'up':             # <<<<<<<<<<<<<<
+ *             if d == 0:             # <<<<<<<<<<<<<<
  *                 n.up_word = lets_str
  *                 n.up_pts = lets_pts
  */
-      goto __pyx_L9;
-    }
+      break;
+      case 1:
 
-    /* "scrabble/p.pyx":397
- *                 n.up_word = lets_str
+      /* "scrabble/p.pyx":415
  *                 n.up_pts = lets_pts
- *             elif d == 'down':             # <<<<<<<<<<<<<<
- *                 n.down_word = lets_str
- *                 n.down_pts = lets_pts
- */
-    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_down, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 397, __pyx_L1_error)
-    __pyx_t_2 = (__pyx_t_3 != 0);
-    if (__pyx_t_2) {
-
-      /* "scrabble/p.pyx":398
- *                 n.up_pts = lets_pts
- *             elif d == 'down':
+ *             elif d == 1:
  *                 n.down_word = lets_str             # <<<<<<<<<<<<<<
  *                 n.down_pts = lets_pts
- *             elif d == 'left':
+ *             elif d == 2:
  */
       __Pyx_INCREF(__pyx_v_lets_str);
       __Pyx_GIVEREF(__pyx_v_lets_str);
@@ -7386,42 +6994,31 @@ __pyx_v_loop_nodes = __pyx_t_7;
       __Pyx_DECREF(__pyx_v_n->down_word);
       __pyx_v_n->down_word = __pyx_v_lets_str;
 
-      /* "scrabble/p.pyx":399
- *             elif d == 'down':
+      /* "scrabble/p.pyx":416
+ *             elif d == 1:
  *                 n.down_word = lets_str
  *                 n.down_pts = lets_pts             # <<<<<<<<<<<<<<
- *             elif d == 'left':
+ *             elif d == 2:
  *                 n.left_word = lets_str
  */
       __pyx_v_n->down_pts = __pyx_v_lets_pts;
 
-      /* "scrabble/p.pyx":397
+      /* "scrabble/p.pyx":414
  *                 n.up_word = lets_str
  *                 n.up_pts = lets_pts
- *             elif d == 'down':             # <<<<<<<<<<<<<<
+ *             elif d == 1:             # <<<<<<<<<<<<<<
  *                 n.down_word = lets_str
  *                 n.down_pts = lets_pts
  */
-      goto __pyx_L9;
-    }
+      break;
+      case 2:
 
-    /* "scrabble/p.pyx":400
- *                 n.down_word = lets_str
+      /* "scrabble/p.pyx":418
  *                 n.down_pts = lets_pts
- *             elif d == 'left':             # <<<<<<<<<<<<<<
- *                 n.left_word = lets_str
- *                 n.left_pts = lets_pts
- */
-    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_left, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 400, __pyx_L1_error)
-    __pyx_t_3 = (__pyx_t_2 != 0);
-    if (__pyx_t_3) {
-
-      /* "scrabble/p.pyx":401
- *                 n.down_pts = lets_pts
- *             elif d == 'left':
+ *             elif d == 2:
  *                 n.left_word = lets_str             # <<<<<<<<<<<<<<
  *                 n.left_pts = lets_pts
- *             elif d == 'right':
+ *             elif d == 3:
  */
       __Pyx_INCREF(__pyx_v_lets_str);
       __Pyx_GIVEREF(__pyx_v_lets_str);
@@ -7429,39 +7026,28 @@ __pyx_v_loop_nodes = __pyx_t_7;
       __Pyx_DECREF(__pyx_v_n->left_word);
       __pyx_v_n->left_word = __pyx_v_lets_str;
 
-      /* "scrabble/p.pyx":402
- *             elif d == 'left':
+      /* "scrabble/p.pyx":419
+ *             elif d == 2:
  *                 n.left_word = lets_str
  *                 n.left_pts = lets_pts             # <<<<<<<<<<<<<<
- *             elif d == 'right':
+ *             elif d == 3:
  *                 n.right_word = lets_str
  */
       __pyx_v_n->left_pts = __pyx_v_lets_pts;
 
-      /* "scrabble/p.pyx":400
+      /* "scrabble/p.pyx":417
  *                 n.down_word = lets_str
  *                 n.down_pts = lets_pts
- *             elif d == 'left':             # <<<<<<<<<<<<<<
+ *             elif d == 2:             # <<<<<<<<<<<<<<
  *                 n.left_word = lets_str
  *                 n.left_pts = lets_pts
  */
-      goto __pyx_L9;
-    }
+      break;
+      case 3:
 
-    /* "scrabble/p.pyx":403
- *                 n.left_word = lets_str
+      /* "scrabble/p.pyx":421
  *                 n.left_pts = lets_pts
- *             elif d == 'right':             # <<<<<<<<<<<<<<
- *                 n.right_word = lets_str
- *                 n.right_pts = lets_pts
- */
-    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_d, __pyx_n_u_right, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 403, __pyx_L1_error)
-    __pyx_t_2 = (__pyx_t_3 != 0);
-    if (__pyx_t_2) {
-
-      /* "scrabble/p.pyx":404
- *                 n.left_pts = lets_pts
- *             elif d == 'right':
+ *             elif d == 3:
  *                 n.right_word = lets_str             # <<<<<<<<<<<<<<
  *                 n.right_pts = lets_pts
  * 
@@ -7472,8 +7058,8 @@ __pyx_v_loop_nodes = __pyx_t_7;
       __Pyx_DECREF(__pyx_v_n->right_word);
       __pyx_v_n->right_word = __pyx_v_lets_str;
 
-      /* "scrabble/p.pyx":405
- *             elif d == 'right':
+      /* "scrabble/p.pyx":422
+ *             elif d == 3:
  *                 n.right_word = lets_str
  *                 n.right_pts = lets_pts             # <<<<<<<<<<<<<<
  * 
@@ -7481,29 +7067,30 @@ __pyx_v_loop_nodes = __pyx_t_7;
  */
       __pyx_v_n->right_pts = __pyx_v_lets_pts;
 
-      /* "scrabble/p.pyx":403
+      /* "scrabble/p.pyx":420
  *                 n.left_word = lets_str
  *                 n.left_pts = lets_pts
- *             elif d == 'right':             # <<<<<<<<<<<<<<
+ *             elif d == 3:             # <<<<<<<<<<<<<<
  *                 n.right_word = lets_str
  *                 n.right_pts = lets_pts
  */
+      break;
+      default: break;
     }
-    __pyx_L9:;
 
-    /* "scrabble/p.pyx":393
- *                     lets_str += l_s
+    /* "scrabble/p.pyx":410
+ *                     lets_str += lls
  * 
  *         if lets_str:             # <<<<<<<<<<<<<<
- *             if d == 'up':
+ *             if d == 0:
  *                 n.up_word = lets_str
  */
   }
 
-  /* "scrabble/p.pyx":348
+  /* "scrabble/p.pyx":362
  * 
  * 
- *     cdef void _set_adj_words(self, Node n, str d):             # <<<<<<<<<<<<<<
+ *     cdef void _set_adj_words(self, Node n, Py_ssize_t d):             # <<<<<<<<<<<<<<
  *         cdef:
  *             Node[:] loop_nodes
  */
@@ -7511,21 +7098,19 @@ __pyx_v_loop_nodes = __pyx_t_7;
   /* function exit code */
   goto __pyx_L0;
   __pyx_L1_error:;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_4, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_14);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_13);
   __Pyx_WriteUnraisable("scrabble.p.Board._set_adj_words", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_loop_nodes, 1);
-  __Pyx_XDECREF((PyObject *)__pyx_v_p);
-  __Pyx_XDECREF(__pyx_v_l_s);
   __Pyx_XDECREF(__pyx_v_lets_str);
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/p.pyx":409
+/* "scrabble/p.pyx":426
  * 
  *     # move to checknodes?
  *     cdef void _set_lets(self, Node n):             # <<<<<<<<<<<<<<
@@ -7534,7 +7119,7 @@ __pyx_v_loop_nodes = __pyx_t_7;
  */
 
 static void __pyx_f_8scrabble_1p_5Board__set_lets(struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_n) {
-  Py_ssize_t __pyx_v_i_s;
+  __pyx_t_8scrabble_1p_uchr __pyx_v_i_s;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -7545,16 +7130,16 @@ static void __pyx_f_8scrabble_1p_5Board__set_lets(struct __pyx_obj_8scrabble_1p_
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
   Py_ssize_t __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
+  size_t __pyx_t_10;
   Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
+  size_t __pyx_t_12;
   Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
+  size_t __pyx_t_14;
   Py_ssize_t __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
+  size_t __pyx_t_16;
   __Pyx_RefNannySetupContext("_set_lets", 0);
 
-  /* "scrabble/p.pyx":410
+  /* "scrabble/p.pyx":427
  *     # move to checknodes?
  *     cdef void _set_lets(self, Node n):
  *         if n.n.has_val:             # <<<<<<<<<<<<<<
@@ -7564,7 +7149,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_lets(struct __pyx_obj_8scrabble_1p_
   __pyx_t_1 = (__pyx_v_n->n.has_val != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":411
+    /* "scrabble/p.pyx":428
  *     cdef void _set_lets(self, Node n):
  *         if n.n.has_val:
  *             n.vlet_view[:, n.n.letter.value] = True             # <<<<<<<<<<<<<<
@@ -7584,12 +7169,12 @@ __pyx_t_2.strides[0] = __pyx_v_n->vlet_view.strides[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_n->vlet_view.strides[1];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 411, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 428, __pyx_L1_error)
         __pyx_t_2.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
 {
-        int __pyx_temp_scalar = 1;
+        __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 1;
         {
             Py_ssize_t __pyx_temp_extent_0 = __pyx_t_2.shape[0];
             Py_ssize_t __pyx_temp_stride_0 = __pyx_t_2.strides[0];
@@ -7597,7 +7182,7 @@ __pyx_t_2.strides[0] = __pyx_v_n->vlet_view.strides[0];
             Py_ssize_t __pyx_temp_idx_0;
             __pyx_temp_pointer_0 = __pyx_t_2.data;
             for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
-              *((int *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
+              *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
               __pyx_temp_pointer_0 += __pyx_temp_stride_0;
             }
         }
@@ -7606,7 +7191,7 @@ __pyx_t_2.strides[0] = __pyx_v_n->vlet_view.strides[0];
     __pyx_t_2.memview = NULL;
     __pyx_t_2.data = NULL;
 
-    /* "scrabble/p.pyx":412
+    /* "scrabble/p.pyx":429
  *         if n.n.has_val:
  *             n.vlet_view[:, n.n.letter.value] = True
  *             return             # <<<<<<<<<<<<<<
@@ -7615,7 +7200,7 @@ __pyx_t_2.strides[0] = __pyx_v_n->vlet_view.strides[0];
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":410
+    /* "scrabble/p.pyx":427
  *     # move to checknodes?
  *     cdef void _set_lets(self, Node n):
  *         if n.n.has_val:             # <<<<<<<<<<<<<<
@@ -7624,7 +7209,7 @@ __pyx_t_2.strides[0] = __pyx_v_n->vlet_view.strides[0];
  */
   }
 
-  /* "scrabble/p.pyx":414
+  /* "scrabble/p.pyx":431
  *             return
  * 
  *         if not n.n.has_edge:             # <<<<<<<<<<<<<<
@@ -7634,7 +7219,7 @@ __pyx_t_2.strides[0] = __pyx_v_n->vlet_view.strides[0];
   __pyx_t_1 = ((!(__pyx_v_n->n.has_edge != 0)) != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":415
+    /* "scrabble/p.pyx":432
  * 
  *         if not n.n.has_edge:
  *             n.vlet_view[:, L_ST:L_EN] = True             # <<<<<<<<<<<<<<
@@ -7663,11 +7248,11 @@ __pyx_t_4 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 415, __pyx_L1_error)
+    __PYX_ERR(0, 432, __pyx_L1_error)
 }
 
 {
-        int __pyx_temp_scalar = 1;
+        __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 1;
         {
             Py_ssize_t __pyx_temp_extent_0 = __pyx_t_3.shape[0];
             Py_ssize_t __pyx_temp_stride_0 = __pyx_t_3.strides[0];
@@ -7681,7 +7266,7 @@ __pyx_t_4 = -1;
             for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
               __pyx_temp_pointer_1 = __pyx_temp_pointer_0;
               for (__pyx_temp_idx_1 = 0; __pyx_temp_idx_1 < __pyx_temp_extent_1; __pyx_temp_idx_1++) {
-                *((int *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
+                *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
                 __pyx_temp_pointer_1 += __pyx_temp_stride_1;
               }
               __pyx_temp_pointer_0 += __pyx_temp_stride_0;
@@ -7692,16 +7277,16 @@ __pyx_t_4 = -1;
     __pyx_t_3.memview = NULL;
     __pyx_t_3.data = NULL;
 
-    /* "scrabble/p.pyx":416
+    /* "scrabble/p.pyx":433
  *         if not n.n.has_edge:
  *             n.vlet_view[:, L_ST:L_EN] = True
  *             return             # <<<<<<<<<<<<<<
  * 
- *         cdef Py_ssize_t i_s = L_ST
+ *         #cdef Py_ssize_t i_s = L_ST
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":414
+    /* "scrabble/p.pyx":431
  *             return
  * 
  *         if not n.n.has_edge:             # <<<<<<<<<<<<<<
@@ -7710,17 +7295,17 @@ __pyx_t_4 = -1;
  */
   }
 
-  /* "scrabble/p.pyx":418
- *             return
+  /* "scrabble/p.pyx":436
  * 
- *         cdef Py_ssize_t i_s = L_ST             # <<<<<<<<<<<<<<
+ *         #cdef Py_ssize_t i_s = L_ST
+ *         cdef uchr i_s = L_ST             # <<<<<<<<<<<<<<
  * 
  *         while i_s < L_EN:
  */
   __pyx_v_i_s = 65;
 
-  /* "scrabble/p.pyx":420
- *         cdef Py_ssize_t i_s = L_ST
+  /* "scrabble/p.pyx":438
+ *         cdef uchr i_s = L_ST
  * 
  *         while i_s < L_EN:             # <<<<<<<<<<<<<<
  *             # - rows
@@ -7730,7 +7315,7 @@ __pyx_t_4 = -1;
     __pyx_t_1 = ((__pyx_v_i_s < 91) != 0);
     if (!__pyx_t_1) break;
 
-    /* "scrabble/p.pyx":422
+    /* "scrabble/p.pyx":440
  *         while i_s < L_EN:
  *             # - rows
  *             if self._check_adj_words(i_s, n.up, n.down, n.up_word, n.down_word):             # <<<<<<<<<<<<<<
@@ -7752,7 +7337,7 @@ __pyx_t_4 = -1;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     if (__pyx_t_1) {
 
-      /* "scrabble/p.pyx":423
+      /* "scrabble/p.pyx":441
  *             # - rows
  *             if self._check_adj_words(i_s, n.up, n.down, n.up_word, n.down_word):
  *                 n.vlet_view[0, i_s] = True             # <<<<<<<<<<<<<<
@@ -7762,10 +7347,9 @@ __pyx_t_4 = -1;
       __pyx_t_9 = 0;
       __pyx_t_10 = __pyx_v_i_s;
       if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_n->vlet_view.shape[0];
-      if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_n->vlet_view.shape[1];
-      *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_n->vlet_view.data + __pyx_t_9 * __pyx_v_n->vlet_view.strides[0]) ) + __pyx_t_10 * __pyx_v_n->vlet_view.strides[1]) )) = 1;
+      *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_n->vlet_view.data + __pyx_t_9 * __pyx_v_n->vlet_view.strides[0]) ) + __pyx_t_10 * __pyx_v_n->vlet_view.strides[1]) )) = 1;
 
-      /* "scrabble/p.pyx":424
+      /* "scrabble/p.pyx":442
  *             if self._check_adj_words(i_s, n.up, n.down, n.up_word, n.down_word):
  *                 n.vlet_view[0, i_s] = True
  *                 n.plet_view[0, i_s] = n.up_pts + n.down_pts             # <<<<<<<<<<<<<<
@@ -7775,10 +7359,9 @@ __pyx_t_4 = -1;
       __pyx_t_11 = 0;
       __pyx_t_12 = __pyx_v_i_s;
       if (__pyx_t_11 < 0) __pyx_t_11 += __pyx_v_n->plet_view.shape[0];
-      if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_n->plet_view.shape[1];
       *((long *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_n->plet_view.data + __pyx_t_11 * __pyx_v_n->plet_view.strides[0]) ) + __pyx_t_12 * __pyx_v_n->plet_view.strides[1]) )) = (__pyx_v_n->up_pts + __pyx_v_n->down_pts);
 
-      /* "scrabble/p.pyx":422
+      /* "scrabble/p.pyx":440
  *         while i_s < L_EN:
  *             # - rows
  *             if self._check_adj_words(i_s, n.up, n.down, n.up_word, n.down_word):             # <<<<<<<<<<<<<<
@@ -7787,7 +7370,7 @@ __pyx_t_4 = -1;
  */
     }
 
-    /* "scrabble/p.pyx":427
+    /* "scrabble/p.pyx":445
  * 
  *             # - cols
  *             if self._check_adj_words(i_s, n.left, n.right, n.left_word, n.right_word):             # <<<<<<<<<<<<<<
@@ -7809,7 +7392,7 @@ __pyx_t_4 = -1;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (__pyx_t_1) {
 
-      /* "scrabble/p.pyx":428
+      /* "scrabble/p.pyx":446
  *             # - cols
  *             if self._check_adj_words(i_s, n.left, n.right, n.left_word, n.right_word):
  *                 n.vlet_view[1, i_s] = True             # <<<<<<<<<<<<<<
@@ -7819,10 +7402,9 @@ __pyx_t_4 = -1;
       __pyx_t_13 = 1;
       __pyx_t_14 = __pyx_v_i_s;
       if (__pyx_t_13 < 0) __pyx_t_13 += __pyx_v_n->vlet_view.shape[0];
-      if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_n->vlet_view.shape[1];
-      *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_n->vlet_view.data + __pyx_t_13 * __pyx_v_n->vlet_view.strides[0]) ) + __pyx_t_14 * __pyx_v_n->vlet_view.strides[1]) )) = 1;
+      *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_n->vlet_view.data + __pyx_t_13 * __pyx_v_n->vlet_view.strides[0]) ) + __pyx_t_14 * __pyx_v_n->vlet_view.strides[1]) )) = 1;
 
-      /* "scrabble/p.pyx":429
+      /* "scrabble/p.pyx":447
  *             if self._check_adj_words(i_s, n.left, n.right, n.left_word, n.right_word):
  *                 n.vlet_view[1, i_s] = True
  *                 n.plet_view[1, i_s] = n.left_pts + n.right_pts             # <<<<<<<<<<<<<<
@@ -7832,10 +7414,9 @@ __pyx_t_4 = -1;
       __pyx_t_15 = 1;
       __pyx_t_16 = __pyx_v_i_s;
       if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_n->plet_view.shape[0];
-      if (__pyx_t_16 < 0) __pyx_t_16 += __pyx_v_n->plet_view.shape[1];
       *((long *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_n->plet_view.data + __pyx_t_15 * __pyx_v_n->plet_view.strides[0]) ) + __pyx_t_16 * __pyx_v_n->plet_view.strides[1]) )) = (__pyx_v_n->left_pts + __pyx_v_n->right_pts);
 
-      /* "scrabble/p.pyx":427
+      /* "scrabble/p.pyx":445
  * 
  *             # - cols
  *             if self._check_adj_words(i_s, n.left, n.right, n.left_word, n.right_word):             # <<<<<<<<<<<<<<
@@ -7844,7 +7425,7 @@ __pyx_t_4 = -1;
  */
     }
 
-    /* "scrabble/p.pyx":431
+    /* "scrabble/p.pyx":449
  *                 n.plet_view[1, i_s] = n.left_pts + n.right_pts
  * 
  *             i_s += 1             # <<<<<<<<<<<<<<
@@ -7854,7 +7435,7 @@ __pyx_t_4 = -1;
     __pyx_v_i_s = (__pyx_v_i_s + 1);
   }
 
-  /* "scrabble/p.pyx":409
+  /* "scrabble/p.pyx":426
  * 
  *     # move to checknodes?
  *     cdef void _set_lets(self, Node n):             # <<<<<<<<<<<<<<
@@ -7876,15 +7457,15 @@ __pyx_t_4 = -1;
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/p.pyx":434
+/* "scrabble/p.pyx":452
  * 
  * 
- *     cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w):             # <<<<<<<<<<<<<<
+ *     cdef bint _check_adj_words(self, uchr i, Node bef, Node aft, str bef_w, str aft_w):             # <<<<<<<<<<<<<<
  *         cdef str new_word
  * 
  */
 
-static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __pyx_t_8scrabble_1p_BOOL_t __pyx_v_i, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_bef, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_aft, PyObject *__pyx_v_bef_w, PyObject *__pyx_v_aft_w) {
+static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __pyx_obj_8scrabble_1p_Board *__pyx_v_self, __pyx_t_8scrabble_1p_uchr __pyx_v_i, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_bef, struct __pyx_obj_8scrabble_1p_Node *__pyx_v_aft, PyObject *__pyx_v_bef_w, PyObject *__pyx_v_aft_w) {
   PyObject *__pyx_v_new_word = 0;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7895,7 +7476,7 @@ static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __p
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("_check_adj_words", 0);
 
-  /* "scrabble/p.pyx":437
+  /* "scrabble/p.pyx":455
  *         cdef str new_word
  * 
  *         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):             # <<<<<<<<<<<<<<
@@ -7927,17 +7508,17 @@ static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __p
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":438
+    /* "scrabble/p.pyx":456
  * 
  *         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):
  *             return True             # <<<<<<<<<<<<<<
  * 
- *         new_word = <str>bef_w + <str>chr(i) + aft_w
+ *         #new_word = <str>bef_w + <str>chr(i) + aft_w
  */
     __pyx_r = 1;
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":437
+    /* "scrabble/p.pyx":455
  *         cdef str new_word
  * 
  *         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):             # <<<<<<<<<<<<<<
@@ -7946,42 +7527,42 @@ static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __p
  */
   }
 
-  /* "scrabble/p.pyx":440
- *             return True
+  /* "scrabble/p.pyx":459
  * 
- *         new_word = <str>bef_w + <str>chr(i) + aft_w             # <<<<<<<<<<<<<<
+ *         #new_word = <str>bef_w + <str>chr(i) + aft_w
+ *         new_word = <str>bef_w + <str>chr(i) + <str>aft_w             # <<<<<<<<<<<<<<
  *         #new_word = ''.join(chr(ns.value) for ns in new_let_list)
  * 
  */
-  __pyx_t_4 = __Pyx_PyInt_From_npy_uint8(__pyx_v_i); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 440, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_unsigned_char(__pyx_v_i); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 440, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_chr, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_bef_w, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 440, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_bef_w, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyUnicode_ConcatSafe(__pyx_t_4, __pyx_v_aft_w); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 440, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyUnicode_ConcatSafe(__pyx_t_4, __pyx_v_aft_w); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_new_word = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "scrabble/p.pyx":445
+  /* "scrabble/p.pyx":464
  *         #lo.x(new_word)
  * 
  *         return new_word in Settings.words             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_new_word, __pyx_v_8scrabble_1p_Settings->words, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 445, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_new_word, __pyx_v_8scrabble_1p_Settings->words, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 464, __pyx_L1_error)
   __pyx_r = __pyx_t_1;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":434
+  /* "scrabble/p.pyx":452
  * 
  * 
- *     cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w):             # <<<<<<<<<<<<<<
+ *     cdef bint _check_adj_words(self, uchr i, Node bef, Node aft, str bef_w, str aft_w):             # <<<<<<<<<<<<<<
  *         cdef str new_word
  * 
  */
@@ -7998,7 +7579,7 @@ static int __pyx_f_8scrabble_1p_5Board__check_adj_words(CYTHON_UNUSED struct __p
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":448
+/* "scrabble/p.pyx":467
  * 
  * 
  *     cdef void _set_map(self, Node[:] nodes, bint is_col):             # <<<<<<<<<<<<<<
@@ -8016,7 +7597,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_
   int __pyx_v_has_edge;
   int __pyx_v_has_blanks;
   struct __pyx_obj_8scrabble_1p_Node *__pyx_v_no = 0;
-  int __pyx_v_valid_lengths[15][15];
+  __pyx_t_8scrabble_1p_BOOL_t __pyx_v_valid_lengths[15][15];
   __Pyx_memviewslice __pyx_v_vlen_view = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannyDeclarations
   struct __pyx_array_obj *__pyx_t_1 = NULL;
@@ -8048,7 +7629,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_
   __Pyx_memviewslice __pyx_t_27 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("_set_map", 0);
 
-  /* "scrabble/p.pyx":451
+  /* "scrabble/p.pyx":470
  *         cdef:
  *             Py_ssize_t t, l, e, ai1
  *             Py_ssize_t nlen = nodes.shape[0]             # <<<<<<<<<<<<<<
@@ -8057,7 +7638,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_
  */
   __pyx_v_nlen = (__pyx_v_nodes.shape[0]);
 
-  /* "scrabble/p.pyx":452
+  /* "scrabble/p.pyx":471
  *             Py_ssize_t t, l, e, ai1
  *             Py_ssize_t nlen = nodes.shape[0]
  *             Py_ssize_t max_swl = Settings.shape[is_col]             # <<<<<<<<<<<<<<
@@ -8066,38 +7647,38 @@ static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_
  */
   __pyx_v_max_swl = (__pyx_v_8scrabble_1p_Settings->shape[__pyx_v_is_col]);
 
-  /* "scrabble/p.pyx":462
- *             bint[:, :] vlen_view
+  /* "scrabble/p.pyx":479
  * 
- *         vlen_view = valid_lengths             # <<<<<<<<<<<<<<
+ *             BOOL_t valid_lengths[MAX_NODES][MAX_NODES]
+ *             BOOL_t[:, :] vlen_view = valid_lengths             # <<<<<<<<<<<<<<
  * 
- *         vlen_view[:, :] = True
+ *         #vlen_view = valid_lengths
  */
-  __pyx_t_3 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_int);
+  __pyx_t_3 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t);
   __pyx_t_2 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)15), ((Py_ssize_t)15));
-  if (unlikely(!__pyx_t_3 || !__pyx_t_2 || !PyBytes_AsString(__pyx_t_3))) __PYX_ERR(0, 462, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3 || !__pyx_t_2 || !PyBytes_AsString(__pyx_t_3))) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __pyx_array_new(__pyx_t_2, sizeof(int), PyBytes_AS_STRING(__pyx_t_3), (char *) "c", (char *) __pyx_v_valid_lengths);
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 462, __pyx_L1_error)
+  __pyx_t_1 = __pyx_array_new(__pyx_t_2, sizeof(__pyx_t_8scrabble_1p_BOOL_t), PyBytes_AS_STRING(__pyx_t_3), (char *) "c", (char *) __pyx_v_valid_lengths);
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(((PyObject *)__pyx_t_1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 462, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(((PyObject *)__pyx_t_1), PyBUF_WRITABLE); if (unlikely(!__pyx_t_4.memview)) __PYX_ERR(0, 479, __pyx_L1_error)
   __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
   __pyx_v_vlen_view = __pyx_t_4;
   __pyx_t_4.memview = NULL;
   __pyx_t_4.data = NULL;
 
-  /* "scrabble/p.pyx":464
- *         vlen_view = valid_lengths
+  /* "scrabble/p.pyx":483
+ *         #vlen_view = valid_lengths
  * 
  *         vlen_view[:, :] = True             # <<<<<<<<<<<<<<
  * 
  *         # disable one letter words
  */
   {
-      int __pyx_temp_scalar = 1;
+      __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 1;
       {
           Py_ssize_t __pyx_temp_extent_0 = __pyx_v_vlen_view.shape[0];
           Py_ssize_t __pyx_temp_stride_0 = __pyx_v_vlen_view.strides[0];
@@ -8111,7 +7692,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_
           for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
             __pyx_temp_pointer_1 = __pyx_temp_pointer_0;
             for (__pyx_temp_idx_1 = 0; __pyx_temp_idx_1 < __pyx_temp_extent_1; __pyx_temp_idx_1++) {
-              *((int *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
+              *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
               __pyx_temp_pointer_1 += __pyx_temp_stride_1;
             }
             __pyx_temp_pointer_0 += __pyx_temp_stride_0;
@@ -8119,7 +7700,7 @@ static void __pyx_f_8scrabble_1p_5Board__set_map(CYTHON_UNUSED struct __pyx_obj_
       }
   }
 
-  /* "scrabble/p.pyx":467
+  /* "scrabble/p.pyx":486
  * 
  *         # disable one letter words
  *         vlen_view[:, 0] = False             # <<<<<<<<<<<<<<
@@ -8139,12 +7720,12 @@ __pyx_t_5.strides[0] = __pyx_v_vlen_view.strides[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_vlen_view.strides[1];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 467, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 486, __pyx_L1_error)
         __pyx_t_5.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
 {
-      int __pyx_temp_scalar = 0;
+      __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
       {
           Py_ssize_t __pyx_temp_extent_0 = __pyx_t_5.shape[0];
           Py_ssize_t __pyx_temp_stride_0 = __pyx_t_5.strides[0];
@@ -8152,7 +7733,7 @@ __pyx_t_5.strides[0] = __pyx_v_vlen_view.strides[0];
           Py_ssize_t __pyx_temp_idx_0;
           __pyx_temp_pointer_0 = __pyx_t_5.data;
           for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
-            *((int *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
+            *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
             __pyx_temp_pointer_0 += __pyx_temp_stride_0;
           }
       }
@@ -8161,7 +7742,7 @@ __pyx_t_5.strides[0] = __pyx_v_vlen_view.strides[0];
   __pyx_t_5.memview = NULL;
   __pyx_t_5.data = NULL;
 
-  /* "scrabble/p.pyx":470
+  /* "scrabble/p.pyx":489
  * 
  *         # disable last node
  *         vlen_view[nlen - 1, :] = False             # <<<<<<<<<<<<<<
@@ -8177,7 +7758,7 @@ __pyx_t_5.strides[0] = __pyx_v_vlen_view.strides[0];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_vlen_view.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 470, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 489, __pyx_L1_error)
         __pyx_t_6.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
@@ -8186,7 +7767,7 @@ __pyx_t_6.strides[0] = __pyx_v_vlen_view.strides[1];
     __pyx_t_6.suboffsets[0] = -1;
 
 {
-      int __pyx_temp_scalar = 0;
+      __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
       {
           Py_ssize_t __pyx_temp_extent_0 = __pyx_t_6.shape[0];
           Py_ssize_t __pyx_temp_stride_0 = __pyx_t_6.strides[0];
@@ -8194,7 +7775,7 @@ __pyx_t_6.strides[0] = __pyx_v_vlen_view.strides[1];
           Py_ssize_t __pyx_temp_idx_0;
           __pyx_temp_pointer_0 = __pyx_t_6.data;
           for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
-            *((int *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
+            *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
             __pyx_temp_pointer_0 += __pyx_temp_stride_0;
           }
       }
@@ -8203,7 +7784,7 @@ __pyx_t_6.strides[0] = __pyx_v_vlen_view.strides[1];
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "scrabble/p.pyx":473
+  /* "scrabble/p.pyx":492
  * 
  *         # disable < max word length
  *         if max_swl < nlen:             # <<<<<<<<<<<<<<
@@ -8213,7 +7794,7 @@ __pyx_t_6.strides[0] = __pyx_v_vlen_view.strides[1];
   __pyx_t_7 = ((__pyx_v_max_swl < __pyx_v_nlen) != 0);
   if (__pyx_t_7) {
 
-    /* "scrabble/p.pyx":474
+    /* "scrabble/p.pyx":493
  *         # disable < max word length
  *         if max_swl < nlen:
  *             vlen_view[:, max_swl:] = False             # <<<<<<<<<<<<<<
@@ -8242,11 +7823,11 @@ __pyx_t_8 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 474, __pyx_L1_error)
+    __PYX_ERR(0, 493, __pyx_L1_error)
 }
 
 {
-        int __pyx_temp_scalar = 0;
+        __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
         {
             Py_ssize_t __pyx_temp_extent_0 = __pyx_t_4.shape[0];
             Py_ssize_t __pyx_temp_stride_0 = __pyx_t_4.strides[0];
@@ -8260,7 +7841,7 @@ __pyx_t_8 = -1;
             for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
               __pyx_temp_pointer_1 = __pyx_temp_pointer_0;
               for (__pyx_temp_idx_1 = 0; __pyx_temp_idx_1 < __pyx_temp_extent_1; __pyx_temp_idx_1++) {
-                *((int *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
+                *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_1) = __pyx_temp_scalar;
                 __pyx_temp_pointer_1 += __pyx_temp_stride_1;
               }
               __pyx_temp_pointer_0 += __pyx_temp_stride_0;
@@ -8271,7 +7852,7 @@ __pyx_t_8 = -1;
     __pyx_t_4.memview = NULL;
     __pyx_t_4.data = NULL;
 
-    /* "scrabble/p.pyx":473
+    /* "scrabble/p.pyx":492
  * 
  *         # disable < max word length
  *         if max_swl < nlen:             # <<<<<<<<<<<<<<
@@ -8280,7 +7861,7 @@ __pyx_t_8 = -1;
  */
   }
 
-  /* "scrabble/p.pyx":479
+  /* "scrabble/p.pyx":498
  * 
  *         # - iterate through each node
  *         for t in range(nlen - 1):             # <<<<<<<<<<<<<<
@@ -8292,7 +7873,7 @@ __pyx_t_8 = -1;
   for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
     __pyx_v_t = __pyx_t_11;
 
-    /* "scrabble/p.pyx":482
+    /* "scrabble/p.pyx":501
  *             #lo.i(f'=={t}')
  * 
  *             if t != 0:             # <<<<<<<<<<<<<<
@@ -8302,7 +7883,7 @@ __pyx_t_8 = -1;
     __pyx_t_7 = ((__pyx_v_t != 0) != 0);
     if (__pyx_t_7) {
 
-      /* "scrabble/p.pyx":484
+      /* "scrabble/p.pyx":503
  *             if t != 0:
  *                 # disable for nodes that are too long
  *                 vlen_view[t, nlen-t:] = False             # <<<<<<<<<<<<<<
@@ -8318,7 +7899,7 @@ __pyx_t_8 = -1;
     Py_ssize_t __pyx_tmp_stride = __pyx_v_vlen_view.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 484, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 503, __pyx_L1_error)
         __pyx_t_12.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
@@ -8337,11 +7918,11 @@ __pyx_t_8 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 484, __pyx_L1_error)
+    __PYX_ERR(0, 503, __pyx_L1_error)
 }
 
 {
-          int __pyx_temp_scalar = 0;
+          __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
           {
               Py_ssize_t __pyx_temp_extent_0 = __pyx_t_12.shape[0];
               Py_ssize_t __pyx_temp_stride_0 = __pyx_t_12.strides[0];
@@ -8349,7 +7930,7 @@ __pyx_t_8 = -1;
               Py_ssize_t __pyx_temp_idx_0;
               __pyx_temp_pointer_0 = __pyx_t_12.data;
               for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
-                *((int *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
+                *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
                 __pyx_temp_pointer_0 += __pyx_temp_stride_0;
               }
           }
@@ -8358,7 +7939,7 @@ __pyx_t_8 = -1;
       __pyx_t_12.memview = NULL;
       __pyx_t_12.data = NULL;
 
-      /* "scrabble/p.pyx":487
+      /* "scrabble/p.pyx":506
  * 
  *                 # if prev node has a val, disable for all lengths
  *                 no = nodes[t - 1]             # <<<<<<<<<<<<<<
@@ -8372,7 +7953,7 @@ __pyx_t_8 = -1;
       __Pyx_XDECREF_SET(__pyx_v_no, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_3));
       __pyx_t_3 = 0;
 
-      /* "scrabble/p.pyx":488
+      /* "scrabble/p.pyx":507
  *                 # if prev node has a val, disable for all lengths
  *                 no = nodes[t - 1]
  *                 if no.n.has_val:             # <<<<<<<<<<<<<<
@@ -8382,7 +7963,7 @@ __pyx_t_8 = -1;
       __pyx_t_7 = (__pyx_v_no->n.has_val != 0);
       if (__pyx_t_7) {
 
-        /* "scrabble/p.pyx":489
+        /* "scrabble/p.pyx":508
  *                 no = nodes[t - 1]
  *                 if no.n.has_val:
  *                     vlen_view[t, :] = False             # <<<<<<<<<<<<<<
@@ -8398,7 +7979,7 @@ __pyx_t_8 = -1;
     Py_ssize_t __pyx_tmp_stride = __pyx_v_vlen_view.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 489, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 508, __pyx_L1_error)
         __pyx_t_14.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
@@ -8407,7 +7988,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
     __pyx_t_14.suboffsets[0] = -1;
 
 {
-            int __pyx_temp_scalar = 0;
+            __pyx_t_8scrabble_1p_BOOL_t __pyx_temp_scalar = 0;
             {
                 Py_ssize_t __pyx_temp_extent_0 = __pyx_t_14.shape[0];
                 Py_ssize_t __pyx_temp_stride_0 = __pyx_t_14.strides[0];
@@ -8415,7 +7996,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
                 Py_ssize_t __pyx_temp_idx_0;
                 __pyx_temp_pointer_0 = __pyx_t_14.data;
                 for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
-                  *((int *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
+                  *((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
                   __pyx_temp_pointer_0 += __pyx_temp_stride_0;
                 }
             }
@@ -8424,7 +8005,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_t_14.memview = NULL;
         __pyx_t_14.data = NULL;
 
-        /* "scrabble/p.pyx":490
+        /* "scrabble/p.pyx":509
  *                 if no.n.has_val:
  *                     vlen_view[t, :] = False
  *                     continue             # <<<<<<<<<<<<<<
@@ -8433,7 +8014,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
         goto __pyx_L4_continue;
 
-        /* "scrabble/p.pyx":488
+        /* "scrabble/p.pyx":507
  *                 # if prev node has a val, disable for all lengths
  *                 no = nodes[t - 1]
  *                 if no.n.has_val:             # <<<<<<<<<<<<<<
@@ -8442,7 +8023,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
       }
 
-      /* "scrabble/p.pyx":482
+      /* "scrabble/p.pyx":501
  *             #lo.i(f'=={t}')
  * 
  *             if t != 0:             # <<<<<<<<<<<<<<
@@ -8451,7 +8032,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
     }
 
-    /* "scrabble/p.pyx":493
+    /* "scrabble/p.pyx":512
  * 
  *             # for all possible wls...
  *             for l in range(max_swl - t):             # <<<<<<<<<<<<<<
@@ -8463,7 +8044,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_l = __pyx_t_17;
 
-      /* "scrabble/p.pyx":496
+      /* "scrabble/p.pyx":515
  *                 # for each valid wl, if last node has a val, disable for that wl
  *                 #lo.v(l)
  *                 ai1 = t + l + 1             # <<<<<<<<<<<<<<
@@ -8472,7 +8053,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
       __pyx_v_ai1 = ((__pyx_v_t + __pyx_v_l) + 1);
 
-      /* "scrabble/p.pyx":497
+      /* "scrabble/p.pyx":516
  *                 #lo.v(l)
  *                 ai1 = t + l + 1
  *                 if ai1 < nlen:             # <<<<<<<<<<<<<<
@@ -8482,7 +8063,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
       __pyx_t_7 = ((__pyx_v_ai1 < __pyx_v_nlen) != 0);
       if (__pyx_t_7) {
 
-        /* "scrabble/p.pyx":498
+        /* "scrabble/p.pyx":517
  *                 ai1 = t + l + 1
  *                 if ai1 < nlen:
  *                     no = nodes[ai1]             # <<<<<<<<<<<<<<
@@ -8496,7 +8077,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __Pyx_XDECREF_SET(__pyx_v_no, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_3));
         __pyx_t_3 = 0;
 
-        /* "scrabble/p.pyx":500
+        /* "scrabble/p.pyx":519
  *                     no = nodes[ai1]
  *                     #lo.d(no)
  *                     if no.n.has_val:             # <<<<<<<<<<<<<<
@@ -8506,7 +8087,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_t_7 = (__pyx_v_no->n.has_val != 0);
         if (__pyx_t_7) {
 
-          /* "scrabble/p.pyx":502
+          /* "scrabble/p.pyx":521
  *                     if no.n.has_val:
  *                         #lo.d(f'810: {t} {l}')
  *                         vlen_view[t, l] = False             # <<<<<<<<<<<<<<
@@ -8517,9 +8098,9 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
           __pyx_t_20 = __pyx_v_l;
           if (__pyx_t_19 < 0) __pyx_t_19 += __pyx_v_vlen_view.shape[0];
           if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_vlen_view.shape[1];
-          *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_vlen_view.data + __pyx_t_19 * __pyx_v_vlen_view.strides[0]) ) + __pyx_t_20 * __pyx_v_vlen_view.strides[1]) )) = 0;
+          *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_vlen_view.data + __pyx_t_19 * __pyx_v_vlen_view.strides[0]) ) + __pyx_t_20 * __pyx_v_vlen_view.strides[1]) )) = 0;
 
-          /* "scrabble/p.pyx":504
+          /* "scrabble/p.pyx":523
  *                         vlen_view[t, l] = False
  *                         #lo.e(f'{vlen_view.base[t]}')
  *                         continue             # <<<<<<<<<<<<<<
@@ -8528,7 +8109,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
           goto __pyx_L8_continue;
 
-          /* "scrabble/p.pyx":500
+          /* "scrabble/p.pyx":519
  *                     no = nodes[ai1]
  *                     #lo.d(no)
  *                     if no.n.has_val:             # <<<<<<<<<<<<<<
@@ -8537,7 +8118,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
         }
 
-        /* "scrabble/p.pyx":497
+        /* "scrabble/p.pyx":516
  *                 #lo.v(l)
  *                 ai1 = t + l + 1
  *                 if ai1 < nlen:             # <<<<<<<<<<<<<<
@@ -8546,7 +8127,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
       }
 
-      /* "scrabble/p.pyx":506
+      /* "scrabble/p.pyx":525
  *                         continue
  * 
  *                 has_edge = False             # <<<<<<<<<<<<<<
@@ -8555,7 +8136,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
       __pyx_v_has_edge = 0;
 
-      /* "scrabble/p.pyx":507
+      /* "scrabble/p.pyx":526
  * 
  *                 has_edge = False
  *                 has_blanks = False             # <<<<<<<<<<<<<<
@@ -8564,7 +8145,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
       __pyx_v_has_blanks = 0;
 
-      /* "scrabble/p.pyx":516
+      /* "scrabble/p.pyx":535
  *                 #for nc in nodes[]
  *                 #for e in range(t, ai1):
  *                 e = t             # <<<<<<<<<<<<<<
@@ -8573,7 +8154,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
       __pyx_v_e = __pyx_v_t;
 
-      /* "scrabble/p.pyx":517
+      /* "scrabble/p.pyx":536
  *                 #for e in range(t, ai1):
  *                 e = t
  *                 while e < ai1:             # <<<<<<<<<<<<<<
@@ -8584,7 +8165,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_t_7 = ((__pyx_v_e < __pyx_v_ai1) != 0);
         if (!__pyx_t_7) break;
 
-        /* "scrabble/p.pyx":518
+        /* "scrabble/p.pyx":537
  *                 e = t
  *                 while e < ai1:
  *                     no = nodes[e]             # <<<<<<<<<<<<<<
@@ -8598,7 +8179,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __Pyx_XDECREF_SET(__pyx_v_no, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_3));
         __pyx_t_3 = 0;
 
-        /* "scrabble/p.pyx":519
+        /* "scrabble/p.pyx":538
  *                 while e < ai1:
  *                     no = nodes[e]
  *                     if no.n.has_edge:             # <<<<<<<<<<<<<<
@@ -8608,7 +8189,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_t_7 = (__pyx_v_no->n.has_edge != 0);
         if (__pyx_t_7) {
 
-          /* "scrabble/p.pyx":520
+          /* "scrabble/p.pyx":539
  *                     no = nodes[e]
  *                     if no.n.has_edge:
  *                         has_edge = True             # <<<<<<<<<<<<<<
@@ -8617,7 +8198,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
           __pyx_v_has_edge = 1;
 
-          /* "scrabble/p.pyx":519
+          /* "scrabble/p.pyx":538
  *                 while e < ai1:
  *                     no = nodes[e]
  *                     if no.n.has_edge:             # <<<<<<<<<<<<<<
@@ -8626,7 +8207,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
         }
 
-        /* "scrabble/p.pyx":521
+        /* "scrabble/p.pyx":540
  *                     if no.n.has_edge:
  *                         has_edge = True
  *                     if not no.n.has_val:             # <<<<<<<<<<<<<<
@@ -8636,7 +8217,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_t_7 = ((!(__pyx_v_no->n.has_val != 0)) != 0);
         if (__pyx_t_7) {
 
-          /* "scrabble/p.pyx":522
+          /* "scrabble/p.pyx":541
  *                         has_edge = True
  *                     if not no.n.has_val:
  *                         has_blanks = True             # <<<<<<<<<<<<<<
@@ -8645,7 +8226,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
           __pyx_v_has_blanks = 1;
 
-          /* "scrabble/p.pyx":521
+          /* "scrabble/p.pyx":540
  *                     if no.n.has_edge:
  *                         has_edge = True
  *                     if not no.n.has_val:             # <<<<<<<<<<<<<<
@@ -8654,7 +8235,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
         }
 
-        /* "scrabble/p.pyx":524
+        /* "scrabble/p.pyx":543
  *                         has_blanks = True
  * 
  *                     if has_edge and has_blanks:             # <<<<<<<<<<<<<<
@@ -8672,7 +8253,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_L17_bool_binop_done:;
         if (__pyx_t_7) {
 
-          /* "scrabble/p.pyx":526
+          /* "scrabble/p.pyx":545
  *                     if has_edge and has_blanks:
  *                         #lo.w('break')
  *                         break             # <<<<<<<<<<<<<<
@@ -8681,7 +8262,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
           goto __pyx_L13_break;
 
-          /* "scrabble/p.pyx":524
+          /* "scrabble/p.pyx":543
  *                         has_blanks = True
  * 
  *                     if has_edge and has_blanks:             # <<<<<<<<<<<<<<
@@ -8690,7 +8271,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
  */
         }
 
-        /* "scrabble/p.pyx":528
+        /* "scrabble/p.pyx":547
  *                         break
  * 
  *                     e += 1             # <<<<<<<<<<<<<<
@@ -8701,7 +8282,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
       }
       __pyx_L13_break:;
 
-      /* "scrabble/p.pyx":532
+      /* "scrabble/p.pyx":551
  *                 #lo.w(has_blanks)
  *                 #lo.w(has_edge)
  *                 if not has_edge or not has_blanks:             # <<<<<<<<<<<<<<
@@ -8719,7 +8300,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
       __pyx_L20_bool_binop_done:;
       if (__pyx_t_7) {
 
-        /* "scrabble/p.pyx":534
+        /* "scrabble/p.pyx":553
  *                 if not has_edge or not has_blanks:
  *                     #lo.v('set f')
  *                     vlen_view[t, l] = False             # <<<<<<<<<<<<<<
@@ -8730,9 +8311,9 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
         __pyx_t_24 = __pyx_v_l;
         if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_vlen_view.shape[0];
         if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_vlen_view.shape[1];
-        *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_vlen_view.data + __pyx_t_23 * __pyx_v_vlen_view.strides[0]) ) + __pyx_t_24 * __pyx_v_vlen_view.strides[1]) )) = 0;
+        *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_vlen_view.data + __pyx_t_23 * __pyx_v_vlen_view.strides[0]) ) + __pyx_t_24 * __pyx_v_vlen_view.strides[1]) )) = 0;
 
-        /* "scrabble/p.pyx":532
+        /* "scrabble/p.pyx":551
  *                 #lo.w(has_blanks)
  *                 #lo.w(has_edge)
  *                 if not has_edge or not has_blanks:             # <<<<<<<<<<<<<<
@@ -8745,7 +8326,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
     __pyx_L4_continue:;
   }
 
-  /* "scrabble/p.pyx":540
+  /* "scrabble/p.pyx":559
  *         #lo.s(f'\n{vlen_view.base}')
  * 
  *         for t in range(nlen):             # <<<<<<<<<<<<<<
@@ -8757,7 +8338,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
   for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
     __pyx_v_t = __pyx_t_11;
 
-    /* "scrabble/p.pyx":541
+    /* "scrabble/p.pyx":560
  * 
  *         for t in range(nlen):
  *             nodes[t].vlen_view[is_col, :nlen] = vlen_view[t, :nlen]             # <<<<<<<<<<<<<<
@@ -8773,7 +8354,7 @@ __pyx_t_14.strides[0] = __pyx_v_vlen_view.strides[1];
     Py_ssize_t __pyx_tmp_stride = __pyx_v_vlen_view.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 541, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 560, __pyx_L1_error)
         __pyx_t_25.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
@@ -8792,7 +8373,7 @@ __pyx_t_8 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 541, __pyx_L1_error)
+    __PYX_ERR(0, 560, __pyx_L1_error)
 }
 
 __pyx_t_26 = __pyx_v_t;
@@ -8808,7 +8389,7 @@ __pyx_t_26 = __pyx_v_t;
     Py_ssize_t __pyx_tmp_stride = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_3)->vlen_view.strides[0];
         if (__pyx_tmp_idx < 0)
             __pyx_tmp_idx += __pyx_tmp_shape;
-        if ((0)) __PYX_ERR(0, 541, __pyx_L1_error)
+        if ((0)) __PYX_ERR(0, 560, __pyx_L1_error)
         __pyx_t_27.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
@@ -8827,11 +8408,11 @@ __pyx_t_8 = -1;
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 541, __pyx_L1_error)
+    __PYX_ERR(0, 560, __pyx_L1_error)
 }
 
 __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
-    if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_25, __pyx_t_27, 1, 1, 0) < 0)) __PYX_ERR(0, 541, __pyx_L1_error)
+    if (unlikely(__pyx_memoryview_copy_contents(__pyx_t_25, __pyx_t_27, 1, 1, 0) < 0)) __PYX_ERR(0, 560, __pyx_L1_error)
     __PYX_XDEC_MEMVIEW(&__pyx_t_27, 1);
     __pyx_t_27.memview = NULL;
     __pyx_t_27.data = NULL;
@@ -8840,7 +8421,7 @@ __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
     __pyx_t_25.data = NULL;
   }
 
-  /* "scrabble/p.pyx":448
+  /* "scrabble/p.pyx":467
  * 
  * 
  *     cdef void _set_map(self, Node[:] nodes, bint is_col):             # <<<<<<<<<<<<<<
@@ -8868,11 +8449,11 @@ __Pyx_DECREF(((PyObject *)__pyx_t_3)); __pyx_t_3 = 0;
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/p.pyx":544
+/* "scrabble/p.pyx":563
  * 
  * 
  *     def __str__(self) -> str:             # <<<<<<<<<<<<<<
- *         return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, self.words.len)
+ *         return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes.shape[0], self.nodes.shape[1], self.words.len)
  * 
  */
 
@@ -8902,21 +8483,21 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
   PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("__str__", 0);
 
-  /* "scrabble/p.pyx":545
+  /* "scrabble/p.pyx":564
  * 
  *     def __str__(self) -> str:
- *         return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, self.words.len)             # <<<<<<<<<<<<<<
+ *         return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes.shape[0], self.nodes.shape[1], self.words.len)             # <<<<<<<<<<<<<<
  * 
  *     # def __reduce__(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Board_size_d_x_d_words, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Board_size_d_x_d_words, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_self->nodes_rl); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __pyx_t_3 = PyInt_FromSsize_t((__pyx_v_self->nodes.shape[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_self->nodes_cl); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t((__pyx_v_self->nodes.shape[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_self->words.len); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_self->words.len); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 564, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -8933,7 +8514,7 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_6, __pyx_t_3, __pyx_t_4, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 545, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 564, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8944,7 +8525,7 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[4] = {__pyx_t_6, __pyx_t_3, __pyx_t_4, __pyx_t_5};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 545, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 564, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8953,7 +8534,7 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
   } else
   #endif
   {
-    __pyx_t_8 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 545, __pyx_L1_error)
+    __pyx_t_8 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 564, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -8967,7 +8548,7 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 545, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 564, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
@@ -8976,11 +8557,11 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":544
+  /* "scrabble/p.pyx":563
  * 
  * 
  *     def __str__(self) -> str:             # <<<<<<<<<<<<<<
- *         return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes_rl, self.nodes_cl, self.words.len)
+ *         return '<Board: size {:d}x{:d} | words: {}>'.format(self.nodes.shape[0], self.nodes.shape[1], self.words.len)
  * 
  */
 
@@ -9001,15 +8582,15 @@ static PyObject *__pyx_pf_8scrabble_1p_5Board_2__str__(struct __pyx_obj_8scrabbl
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":562
+/* "scrabble/p.pyx":581
  * # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
  * @cython.wraparound(False)
- * cdef STRU_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil:             # <<<<<<<<<<<<<<
+ * cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil:             # <<<<<<<<<<<<<<
  *     cdef:
  *         Py_ssize_t i
  */
 
-static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabble_1p_Letter_List __pyx_v_lets_info, __pyx_t_8scrabble_1p_N *__pyx_v_nodes, int __pyx_v_is_col, Py_ssize_t __pyx_v_start) {
+static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabble_1p_Letter_List __pyx_v_lets_info, __Pyx_memviewslice __pyx_v_nodes, int __pyx_v_is_col, Py_ssize_t __pyx_v_start) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_lcnt;
   __pyx_t_8scrabble_1p_N __pyx_v_nd;
@@ -9025,12 +8606,13 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
   Py_ssize_t __pyx_t_1;
   Py_ssize_t __pyx_t_2;
   Py_ssize_t __pyx_t_3;
-  __pyx_t_8scrabble_1p_uchr __pyx_t_4;
-  int __pyx_t_5;
+  Py_ssize_t __pyx_t_4;
+  __pyx_t_8scrabble_1p_uchr __pyx_t_5;
   int __pyx_t_6;
-  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_7;
+  int __pyx_t_7;
+  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_8;
 
-  /* "scrabble/p.pyx":565
+  /* "scrabble/p.pyx":584
  *     cdef:
  *         Py_ssize_t i
  *         Py_ssize_t lcnt = 0             # <<<<<<<<<<<<<<
@@ -9039,7 +8621,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   __pyx_v_lcnt = 0;
 
-  /* "scrabble/p.pyx":571
+  /* "scrabble/p.pyx":590
  *         BOOL_t lpts
  *         #BOOL_t bl = Settings.blanks
  *         STRU_t pts = 0  # todo: is sizet needed or better?             # <<<<<<<<<<<<<<
@@ -9048,7 +8630,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   __pyx_v_pts = 0;
 
-  /* "scrabble/p.pyx":573
+  /* "scrabble/p.pyx":592
  *         STRU_t pts = 0  # todo: is sizet needed or better?
  *         STRU_t extra_pts
  *         STRU_t tot_extra_pts = 0             # <<<<<<<<<<<<<<
@@ -9057,7 +8639,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   __pyx_v_tot_extra_pts = 0;
 
-  /* "scrabble/p.pyx":575
+  /* "scrabble/p.pyx":594
  *         STRU_t tot_extra_pts = 0
  *         STRU_t tot_pts
  *         uchr word_mult = 1             # <<<<<<<<<<<<<<
@@ -9066,7 +8648,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   __pyx_v_word_mult = 1;
 
-  /* "scrabble/p.pyx":579
+  /* "scrabble/p.pyx":598
  *     # TODO HANDLE BLANKS
  * 
  *     for i in range(lets_info.len):             # <<<<<<<<<<<<<<
@@ -9078,16 +8660,17 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "scrabble/p.pyx":580
+    /* "scrabble/p.pyx":599
  * 
  *     for i in range(lets_info.len):
  *         nd = nodes[i + start]             # <<<<<<<<<<<<<<
  *         le = lets_info.l[i]
  *         nv = le.value
  */
-    __pyx_v_nd = (__pyx_v_nodes[(__pyx_v_i + __pyx_v_start)]);
+    __pyx_t_4 = (__pyx_v_i + __pyx_v_start);
+    __pyx_v_nd = (*((__pyx_t_8scrabble_1p_N *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_4 * __pyx_v_nodes.strides[0]) )));
 
-    /* "scrabble/p.pyx":581
+    /* "scrabble/p.pyx":600
  *     for i in range(lets_info.len):
  *         nd = nodes[i + start]
  *         le = lets_info.l[i]             # <<<<<<<<<<<<<<
@@ -9096,27 +8679,27 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
     __pyx_v_le = (__pyx_v_lets_info.l[__pyx_v_i]);
 
-    /* "scrabble/p.pyx":582
+    /* "scrabble/p.pyx":601
  *         nd = nodes[i + start]
  *         le = lets_info.l[i]
  *         nv = le.value             # <<<<<<<<<<<<<<
  * 
  *         if le.from_rack:
  */
-    __pyx_t_4 = __pyx_v_le.value;
-    __pyx_v_nv = __pyx_t_4;
+    __pyx_t_5 = __pyx_v_le.value;
+    __pyx_v_nv = __pyx_t_5;
 
-    /* "scrabble/p.pyx":584
+    /* "scrabble/p.pyx":603
  *         nv = le.value
  * 
  *         if le.from_rack:             # <<<<<<<<<<<<<<
  *             lcnt += 1
  * 
  */
-    __pyx_t_5 = (__pyx_v_le.from_rack != 0);
-    if (__pyx_t_5) {
+    __pyx_t_6 = (__pyx_v_le.from_rack != 0);
+    if (__pyx_t_6) {
 
-      /* "scrabble/p.pyx":585
+      /* "scrabble/p.pyx":604
  * 
  *         if le.from_rack:
  *             lcnt += 1             # <<<<<<<<<<<<<<
@@ -9125,7 +8708,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
       __pyx_v_lcnt = (__pyx_v_lcnt + 1);
 
-      /* "scrabble/p.pyx":584
+      /* "scrabble/p.pyx":603
  *         nv = le.value
  * 
  *         if le.from_rack:             # <<<<<<<<<<<<<<
@@ -9134,25 +8717,25 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
     }
 
-    /* "scrabble/p.pyx":588
+    /* "scrabble/p.pyx":607
  * 
  *         # le.from_rack
  *         if not nd.has_val and nd.mult_w:             # <<<<<<<<<<<<<<
  *             word_mult *= nd.mult_a
  * 
  */
-    __pyx_t_6 = ((!(__pyx_v_nd.has_val != 0)) != 0);
-    if (__pyx_t_6) {
+    __pyx_t_7 = ((!(__pyx_v_nd.has_val != 0)) != 0);
+    if (__pyx_t_7) {
     } else {
-      __pyx_t_5 = __pyx_t_6;
+      __pyx_t_6 = __pyx_t_7;
       goto __pyx_L7_bool_binop_done;
     }
-    __pyx_t_6 = (__pyx_v_nd.mult_w != 0);
-    __pyx_t_5 = __pyx_t_6;
+    __pyx_t_7 = (__pyx_v_nd.mult_w != 0);
+    __pyx_t_6 = __pyx_t_7;
     __pyx_L7_bool_binop_done:;
-    if (__pyx_t_5) {
+    if (__pyx_t_6) {
 
-      /* "scrabble/p.pyx":589
+      /* "scrabble/p.pyx":608
  *         # le.from_rack
  *         if not nd.has_val and nd.mult_w:
  *             word_mult *= nd.mult_a             # <<<<<<<<<<<<<<
@@ -9161,7 +8744,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
       __pyx_v_word_mult = (__pyx_v_word_mult * __pyx_v_nd.mult_a);
 
-      /* "scrabble/p.pyx":588
+      /* "scrabble/p.pyx":607
  * 
  *         # le.from_rack
  *         if not nd.has_val and nd.mult_w:             # <<<<<<<<<<<<<<
@@ -9170,17 +8753,17 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
     }
 
-    /* "scrabble/p.pyx":591
+    /* "scrabble/p.pyx":610
  *             word_mult *= nd.mult_a
  * 
  *         lpts = le.pts             # <<<<<<<<<<<<<<
  *         pts += lpts
  * 
  */
-    __pyx_t_7 = __pyx_v_le.pts;
-    __pyx_v_lpts = __pyx_t_7;
+    __pyx_t_8 = __pyx_v_le.pts;
+    __pyx_v_lpts = __pyx_t_8;
 
-    /* "scrabble/p.pyx":592
+    /* "scrabble/p.pyx":611
  * 
  *         lpts = le.pts
  *         pts += lpts             # <<<<<<<<<<<<<<
@@ -9189,7 +8772,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
     __pyx_v_pts = (__pyx_v_pts + __pyx_v_lpts);
 
-    /* "scrabble/p.pyx":595
+    /* "scrabble/p.pyx":614
  * 
  *         # make sure this isnt counting has_val and upper words
  *         extra_pts = nd.pts_lets[is_col][nv]             # <<<<<<<<<<<<<<
@@ -9198,17 +8781,17 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
     __pyx_v_extra_pts = ((__pyx_v_nd.pts_lets[__pyx_v_is_col])[__pyx_v_nv]);
 
-    /* "scrabble/p.pyx":596
+    /* "scrabble/p.pyx":615
  *         # make sure this isnt counting has_val and upper words
  *         extra_pts = nd.pts_lets[is_col][nv]
  *         if extra_pts > 0:             # <<<<<<<<<<<<<<
  *             extra_pts += lpts
  *             if nd.mult_w:
  */
-    __pyx_t_5 = ((__pyx_v_extra_pts > 0) != 0);
-    if (__pyx_t_5) {
+    __pyx_t_6 = ((__pyx_v_extra_pts > 0) != 0);
+    if (__pyx_t_6) {
 
-      /* "scrabble/p.pyx":597
+      /* "scrabble/p.pyx":616
  *         extra_pts = nd.pts_lets[is_col][nv]
  *         if extra_pts > 0:
  *             extra_pts += lpts             # <<<<<<<<<<<<<<
@@ -9217,17 +8800,17 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
       __pyx_v_extra_pts = (__pyx_v_extra_pts + __pyx_v_lpts);
 
-      /* "scrabble/p.pyx":598
+      /* "scrabble/p.pyx":617
  *         if extra_pts > 0:
  *             extra_pts += lpts
  *             if nd.mult_w:             # <<<<<<<<<<<<<<
  *                 extra_pts *= nd.mult_a
  *             tot_extra_pts += extra_pts
  */
-      __pyx_t_5 = (__pyx_v_nd.mult_w != 0);
-      if (__pyx_t_5) {
+      __pyx_t_6 = (__pyx_v_nd.mult_w != 0);
+      if (__pyx_t_6) {
 
-        /* "scrabble/p.pyx":599
+        /* "scrabble/p.pyx":618
  *             extra_pts += lpts
  *             if nd.mult_w:
  *                 extra_pts *= nd.mult_a             # <<<<<<<<<<<<<<
@@ -9236,7 +8819,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
         __pyx_v_extra_pts = (__pyx_v_extra_pts * __pyx_v_nd.mult_a);
 
-        /* "scrabble/p.pyx":598
+        /* "scrabble/p.pyx":617
  *         if extra_pts > 0:
  *             extra_pts += lpts
  *             if nd.mult_w:             # <<<<<<<<<<<<<<
@@ -9245,7 +8828,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
       }
 
-      /* "scrabble/p.pyx":600
+      /* "scrabble/p.pyx":619
  *             if nd.mult_w:
  *                 extra_pts *= nd.mult_a
  *             tot_extra_pts += extra_pts             # <<<<<<<<<<<<<<
@@ -9254,7 +8837,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
       __pyx_v_tot_extra_pts = (__pyx_v_tot_extra_pts + __pyx_v_extra_pts);
 
-      /* "scrabble/p.pyx":596
+      /* "scrabble/p.pyx":615
  *         # make sure this isnt counting has_val and upper words
  *         extra_pts = nd.pts_lets[is_col][nv]
  *         if extra_pts > 0:             # <<<<<<<<<<<<<<
@@ -9264,7 +8847,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
     }
   }
 
-  /* "scrabble/p.pyx":602
+  /* "scrabble/p.pyx":621
  *             tot_extra_pts += extra_pts
  * 
  *     pts *= word_mult             # <<<<<<<<<<<<<<
@@ -9273,17 +8856,17 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   __pyx_v_pts = (__pyx_v_pts * __pyx_v_word_mult);
 
-  /* "scrabble/p.pyx":604
+  /* "scrabble/p.pyx":623
  *     pts *= word_mult
  * 
  *     if lcnt == 7:             # <<<<<<<<<<<<<<
  *         pts += 35
  * 
  */
-  __pyx_t_5 = ((__pyx_v_lcnt == 7) != 0);
-  if (__pyx_t_5) {
+  __pyx_t_6 = ((__pyx_v_lcnt == 7) != 0);
+  if (__pyx_t_6) {
 
-    /* "scrabble/p.pyx":605
+    /* "scrabble/p.pyx":624
  * 
  *     if lcnt == 7:
  *         pts += 35             # <<<<<<<<<<<<<<
@@ -9292,7 +8875,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
     __pyx_v_pts = (__pyx_v_pts + 35);
 
-    /* "scrabble/p.pyx":604
+    /* "scrabble/p.pyx":623
  *     pts *= word_mult
  * 
  *     if lcnt == 7:             # <<<<<<<<<<<<<<
@@ -9301,7 +8884,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   }
 
-  /* "scrabble/p.pyx":607
+  /* "scrabble/p.pyx":626
  *         pts += 35
  * 
  *     tot_pts = pts + tot_extra_pts             # <<<<<<<<<<<<<<
@@ -9310,7 +8893,7 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
  */
   __pyx_v_tot_pts = (__pyx_v_pts + __pyx_v_tot_extra_pts);
 
-  /* "scrabble/p.pyx":609
+  /* "scrabble/p.pyx":628
  *     tot_pts = pts + tot_extra_pts
  * 
  *     return tot_pts             # <<<<<<<<<<<<<<
@@ -9320,10 +8903,10 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
   __pyx_r = __pyx_v_tot_pts;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":562
+  /* "scrabble/p.pyx":581
  * # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
  * @cython.wraparound(False)
- * cdef STRU_t calc_pts(Letter_List lets_info, N nodes[MAX_NODES], bint is_col, Py_ssize_t start) nogil:             # <<<<<<<<<<<<<<
+ * cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil:             # <<<<<<<<<<<<<<
  *     cdef:
  *         Py_ssize_t i
  */
@@ -9333,15 +8916,15 @@ static __pyx_t_8scrabble_1p_STRU_t __pyx_f_8scrabble_1p_calc_pts(__pyx_t_8scrabb
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":616
+/* "scrabble/p.pyx":635
  * 
  * @cython.wraparound(False)
- * cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil:             # <<<<<<<<<<<<<<
+ * cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) nogil:             # <<<<<<<<<<<<<<
  * #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil:
  *     cdef Py_ssize_t i
  */
 
-static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_ssize_t __pyx_v_wl, __pyx_t_8scrabble_1p_N *__pyx_v_nodes, Py_ssize_t __pyx_v_start, int __pyx_v_is_col) {
+static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_ssize_t __pyx_v_wl, __Pyx_memviewslice __pyx_v_nodes, Py_ssize_t __pyx_v_start, int __pyx_v_is_col) {
   Py_ssize_t __pyx_v_i;
   __pyx_t_8scrabble_1p_STR_t __pyx_v_nv;
   int __pyx_r;
@@ -9349,9 +8932,10 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
   Py_ssize_t __pyx_t_2;
   Py_ssize_t __pyx_t_3;
   Py_ssize_t __pyx_t_4;
-  int __pyx_t_5;
+  Py_ssize_t __pyx_t_5;
+  int __pyx_t_6;
 
-  /* "scrabble/p.pyx":621
+  /* "scrabble/p.pyx":640
  *     cdef STR_t nv
  * 
  *     for i in range(wl):             # <<<<<<<<<<<<<<
@@ -9363,7 +8947,7 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "scrabble/p.pyx":622
+    /* "scrabble/p.pyx":641
  * 
  *     for i in range(wl):
  *         nv = word[i]             # <<<<<<<<<<<<<<
@@ -9373,17 +8957,18 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_t_4 = __pyx_v_i;
     __pyx_v_nv = (*((__pyx_t_8scrabble_1p_STR_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_STR_t *) __pyx_v_word.data) + __pyx_t_4)) )));
 
-    /* "scrabble/p.pyx":624
+    /* "scrabble/p.pyx":643
  *         nv = word[i]
  *         # mismatch in nv?
  *         if not nodes[i + start].valid_lets[is_col][nv]:             # <<<<<<<<<<<<<<
  *             return False
  * 
  */
-    __pyx_t_5 = ((!((((__pyx_v_nodes[(__pyx_v_i + __pyx_v_start)]).valid_lets[__pyx_v_is_col])[__pyx_v_nv]) != 0)) != 0);
-    if (__pyx_t_5) {
+    __pyx_t_5 = (__pyx_v_i + __pyx_v_start);
+    __pyx_t_6 = ((!((((*((__pyx_t_8scrabble_1p_N *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_5 * __pyx_v_nodes.strides[0]) ))).valid_lets[__pyx_v_is_col])[__pyx_v_nv]) != 0)) != 0);
+    if (__pyx_t_6) {
 
-      /* "scrabble/p.pyx":625
+      /* "scrabble/p.pyx":644
  *         # mismatch in nv?
  *         if not nodes[i + start].valid_lets[is_col][nv]:
  *             return False             # <<<<<<<<<<<<<<
@@ -9393,7 +8978,7 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
       __pyx_r = 0;
       goto __pyx_L0;
 
-      /* "scrabble/p.pyx":624
+      /* "scrabble/p.pyx":643
  *         nv = word[i]
  *         # mismatch in nv?
  *         if not nodes[i + start].valid_lets[is_col][nv]:             # <<<<<<<<<<<<<<
@@ -9403,7 +8988,7 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
     }
   }
 
-  /* "scrabble/p.pyx":627
+  /* "scrabble/p.pyx":646
  *             return False
  * 
  *     return True             # <<<<<<<<<<<<<<
@@ -9413,10 +8998,10 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":616
+  /* "scrabble/p.pyx":635
  * 
  * @cython.wraparound(False)
- * cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, bint is_col) nogil:             # <<<<<<<<<<<<<<
+ * cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) nogil:             # <<<<<<<<<<<<<<
  * #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil:
  *     cdef Py_ssize_t i
  */
@@ -9426,7 +9011,7 @@ static int __pyx_f_8scrabble_1p_lets_match(__Pyx_memviewslice __pyx_v_word, Py_s
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":648
+/* "scrabble/p.pyx":667
  * # todo combine this with below?
  * @cython.wraparound(False)
  * cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil:  # or memview for nvals?             # <<<<<<<<<<<<<<
@@ -9450,7 +9035,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
   Py_ssize_t __pyx_t_6;
   __pyx_t_8scrabble_1p_STR_t __pyx_t_7;
 
-  /* "scrabble/p.pyx":653
+  /* "scrabble/p.pyx":672
  *         BOOL_t nval
  *         Py_ssize_t i
  *         Py_ssize_t r = 0             # <<<<<<<<<<<<<<
@@ -9459,7 +9044,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
  */
   __pyx_v_r = 0;
 
-  /* "scrabble/p.pyx":659
+  /* "scrabble/p.pyx":678
  * 
  * 
  *     while r < MAX_ORD:             # <<<<<<<<<<<<<<
@@ -9470,7 +9055,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_t_1 = ((__pyx_v_r < 0x7F) != 0);
     if (!__pyx_t_1) break;
 
-    /* "scrabble/p.pyx":660
+    /* "scrabble/p.pyx":679
  * 
  *     while r < MAX_ORD:
  *         rack[r] = base_rack[r]             # <<<<<<<<<<<<<<
@@ -9480,7 +9065,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_t_2 = __pyx_v_r;
     (__pyx_v_rack[__pyx_v_r]) = (*((int *) ( /* dim=0 */ (__pyx_v_base_rack.data + __pyx_t_2 * __pyx_v_base_rack.strides[0]) )));
 
-    /* "scrabble/p.pyx":661
+    /* "scrabble/p.pyx":680
  *     while r < MAX_ORD:
  *         rack[r] = base_rack[r]
  *         r += 1             # <<<<<<<<<<<<<<
@@ -9490,7 +9075,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_v_r = (__pyx_v_r + 1);
   }
 
-  /* "scrabble/p.pyx":663
+  /* "scrabble/p.pyx":682
  *         r += 1
  * 
  *     for i in range(wl):             # <<<<<<<<<<<<<<
@@ -9502,7 +9087,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "scrabble/p.pyx":664
+    /* "scrabble/p.pyx":683
  * 
  *     for i in range(wl):
  *         nval = nvals[i + start]             # <<<<<<<<<<<<<<
@@ -9511,7 +9096,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
  */
     __pyx_v_nval = (__pyx_v_nvals[(__pyx_v_i + __pyx_v_start)]);
 
-    /* "scrabble/p.pyx":667
+    /* "scrabble/p.pyx":686
  * 
  *         # todo remove
  *         if nval:             # <<<<<<<<<<<<<<
@@ -9521,7 +9106,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_t_1 = (__pyx_v_nval != 0);
     if (__pyx_t_1) {
 
-      /* "scrabble/p.pyx":668
+      /* "scrabble/p.pyx":687
  *         # todo remove
  *         if nval:
  *             continue             # <<<<<<<<<<<<<<
@@ -9530,7 +9115,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
  */
       goto __pyx_L5_continue;
 
-      /* "scrabble/p.pyx":667
+      /* "scrabble/p.pyx":686
  * 
  *         # todo remove
  *         if nval:             # <<<<<<<<<<<<<<
@@ -9539,7 +9124,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
  */
     }
 
-    /* "scrabble/p.pyx":670
+    /* "scrabble/p.pyx":689
  *             continue
  * 
  *         let = word[i]             # <<<<<<<<<<<<<<
@@ -9549,7 +9134,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_t_6 = __pyx_v_i;
     __pyx_v_let = (*((__pyx_t_8scrabble_1p_STR_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_STR_t *) __pyx_v_word.data) + __pyx_t_6)) )));
 
-    /* "scrabble/p.pyx":671
+    /* "scrabble/p.pyx":690
  * 
  *         let = word[i]
  *         num = rack[let]             # <<<<<<<<<<<<<<
@@ -9558,7 +9143,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
  */
     __pyx_v_num = (__pyx_v_rack[__pyx_v_let]);
 
-    /* "scrabble/p.pyx":673
+    /* "scrabble/p.pyx":692
  *         num = rack[let]
  * 
  *         if not num:             # <<<<<<<<<<<<<<
@@ -9568,7 +9153,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_t_1 = ((!(__pyx_v_num != 0)) != 0);
     if (__pyx_t_1) {
 
-      /* "scrabble/p.pyx":674
+      /* "scrabble/p.pyx":693
  * 
  *         if not num:
  *             if blanks > 0:             # <<<<<<<<<<<<<<
@@ -9578,7 +9163,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
       __pyx_t_1 = ((__pyx_v_blanks > 0) != 0);
       if (__pyx_t_1) {
 
-        /* "scrabble/p.pyx":675
+        /* "scrabble/p.pyx":694
  *         if not num:
  *             if blanks > 0:
  *                 blanks -= 1             # <<<<<<<<<<<<<<
@@ -9587,7 +9172,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
  */
         __pyx_v_blanks = (__pyx_v_blanks - 1);
 
-        /* "scrabble/p.pyx":674
+        /* "scrabble/p.pyx":693
  * 
  *         if not num:
  *             if blanks > 0:             # <<<<<<<<<<<<<<
@@ -9597,7 +9182,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
         goto __pyx_L9;
       }
 
-      /* "scrabble/p.pyx":677
+      /* "scrabble/p.pyx":696
  *                 blanks -= 1
  *             else:
  *                 return False             # <<<<<<<<<<<<<<
@@ -9610,7 +9195,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
       }
       __pyx_L9:;
 
-      /* "scrabble/p.pyx":673
+      /* "scrabble/p.pyx":692
  *         num = rack[let]
  * 
  *         if not num:             # <<<<<<<<<<<<<<
@@ -9620,7 +9205,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
       goto __pyx_L8;
     }
 
-    /* "scrabble/p.pyx":679
+    /* "scrabble/p.pyx":698
  *                 return False
  *         else:
  *             rack[let] -= 1             # <<<<<<<<<<<<<<
@@ -9635,7 +9220,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
     __pyx_L5_continue:;
   }
 
-  /* "scrabble/p.pyx":686
+  /* "scrabble/p.pyx":705
  *     #     return
  * 
  *     return True             # <<<<<<<<<<<<<<
@@ -9645,7 +9230,7 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
   __pyx_r = 1;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":648
+  /* "scrabble/p.pyx":667
  * # todo combine this with below?
  * @cython.wraparound(False)
  * cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil:  # or memview for nvals?             # <<<<<<<<<<<<<<
@@ -9658,15 +9243,15 @@ static int __pyx_f_8scrabble_1p_rack_check(__Pyx_memviewslice __pyx_v_word, Py_s
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":690
+/* "scrabble/p.pyx":709
  * 
  * @cython.wraparound(False)
- * cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil:             # <<<<<<<<<<<<<<
+ * cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int[:] base_rack) nogil:             # <<<<<<<<<<<<<<
  *     cdef:
  *         Py_ssize_t i
  */
 
-static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_memviewslice __pyx_v_word, Py_ssize_t __pyx_v_wl, __pyx_t_8scrabble_1p_N *__pyx_v_nodes, Py_ssize_t __pyx_v_start, __Pyx_memviewslice __pyx_v_base_rack) {
+static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_memviewslice __pyx_v_word, Py_ssize_t __pyx_v_wl, __Pyx_memviewslice __pyx_v_nodes, Py_ssize_t __pyx_v_start, __Pyx_memviewslice __pyx_v_base_rack) {
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_r;
   __pyx_t_8scrabble_1p_STR_t __pyx_v_let;
@@ -9682,12 +9267,13 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
   int __pyx_t_2;
   Py_ssize_t __pyx_t_3;
   Py_ssize_t __pyx_t_4;
-  __pyx_t_8scrabble_1p_Letter __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
-  __pyx_t_8scrabble_1p_STR_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
+  Py_ssize_t __pyx_t_5;
+  __pyx_t_8scrabble_1p_Letter __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  __pyx_t_8scrabble_1p_STR_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
 
-  /* "scrabble/p.pyx":693
+  /* "scrabble/p.pyx":712
  *     cdef:
  *         Py_ssize_t i
  *         Py_ssize_t r = 0             # <<<<<<<<<<<<<<
@@ -9696,7 +9282,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
   __pyx_v_r = 0;
 
-  /* "scrabble/p.pyx":702
+  /* "scrabble/p.pyx":721
  * 
  *         Letter le
  *         BOOL_t[::1] spts = Settings.points             # <<<<<<<<<<<<<<
@@ -9709,7 +9295,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/p.pyx":706
+  /* "scrabble/p.pyx":725
  *         N n
  * 
  *     lets_info.len = wl             # <<<<<<<<<<<<<<
@@ -9718,7 +9304,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
   __pyx_v_lets_info.len = __pyx_v_wl;
 
-  /* "scrabble/p.pyx":708
+  /* "scrabble/p.pyx":727
  *     lets_info.len = wl
  * 
  *     while r < MAX_ORD:             # <<<<<<<<<<<<<<
@@ -9729,7 +9315,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
     __pyx_t_2 = ((__pyx_v_r < 0x7F) != 0);
     if (!__pyx_t_2) break;
 
-    /* "scrabble/p.pyx":709
+    /* "scrabble/p.pyx":728
  * 
  *     while r < MAX_ORD:
  *         rack[r] = base_rack[r]             # <<<<<<<<<<<<<<
@@ -9739,7 +9325,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
     __pyx_t_3 = __pyx_v_r;
     (__pyx_v_rack[__pyx_v_r]) = (*((int *) ( /* dim=0 */ (__pyx_v_base_rack.data + __pyx_t_3 * __pyx_v_base_rack.strides[0]) )));
 
-    /* "scrabble/p.pyx":710
+    /* "scrabble/p.pyx":729
  *     while r < MAX_ORD:
  *         rack[r] = base_rack[r]
  *         r += 1             # <<<<<<<<<<<<<<
@@ -9749,7 +9335,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
     __pyx_v_r = (__pyx_v_r + 1);
   }
 
-  /* "scrabble/p.pyx":712
+  /* "scrabble/p.pyx":731
  *         r += 1
  * 
  *     for i in range(MAX_NODES):             # <<<<<<<<<<<<<<
@@ -9759,7 +9345,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
   for (__pyx_t_4 = 0; __pyx_t_4 < 15; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "scrabble/p.pyx":713
+    /* "scrabble/p.pyx":732
  * 
  *     for i in range(MAX_NODES):
  *         if i >= wl:             # <<<<<<<<<<<<<<
@@ -9769,7 +9355,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
     __pyx_t_2 = ((__pyx_v_i >= __pyx_v_wl) != 0);
     if (__pyx_t_2) {
 
-      /* "scrabble/p.pyx":714
+      /* "scrabble/p.pyx":733
  *     for i in range(MAX_NODES):
  *         if i >= wl:
  *             le.x = le.y = le.pts = le.is_blank = le.from_rack = le.value = 0             # <<<<<<<<<<<<<<
@@ -9783,7 +9369,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
       __pyx_v_le.from_rack = 0;
       __pyx_v_le.value = 0;
 
-      /* "scrabble/p.pyx":715
+      /* "scrabble/p.pyx":734
  *         if i >= wl:
  *             le.x = le.y = le.pts = le.is_blank = le.from_rack = le.value = 0
  *             lets_info.l[i] = le             # <<<<<<<<<<<<<<
@@ -9792,7 +9378,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
       (__pyx_v_lets_info.l[__pyx_v_i]) = __pyx_v_le;
 
-      /* "scrabble/p.pyx":713
+      /* "scrabble/p.pyx":732
  * 
  *     for i in range(MAX_NODES):
  *         if i >= wl:             # <<<<<<<<<<<<<<
@@ -9802,7 +9388,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
       goto __pyx_L7;
     }
 
-    /* "scrabble/p.pyx":717
+    /* "scrabble/p.pyx":736
  *             lets_info.l[i] = le
  *         else:
  *             n = nodes[i + start]             # <<<<<<<<<<<<<<
@@ -9810,19 +9396,20 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  * 
  */
     /*else*/ {
-      __pyx_v_n = (__pyx_v_nodes[(__pyx_v_i + __pyx_v_start)]);
+      __pyx_t_5 = (__pyx_v_i + __pyx_v_start);
+      __pyx_v_n = (*((__pyx_t_8scrabble_1p_N *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_5 * __pyx_v_nodes.strides[0]) )));
 
-      /* "scrabble/p.pyx":718
+      /* "scrabble/p.pyx":737
  *         else:
  *             n = nodes[i + start]
  *             le = n.letter             # <<<<<<<<<<<<<<
  * 
  *             if n.has_val:
  */
-      __pyx_t_5 = __pyx_v_n.letter;
-      __pyx_v_le = __pyx_t_5;
+      __pyx_t_6 = __pyx_v_n.letter;
+      __pyx_v_le = __pyx_t_6;
 
-      /* "scrabble/p.pyx":720
+      /* "scrabble/p.pyx":739
  *             le = n.letter
  * 
  *             if n.has_val:             # <<<<<<<<<<<<<<
@@ -9832,7 +9419,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
       __pyx_t_2 = (__pyx_v_n.has_val != 0);
       if (__pyx_t_2) {
 
-        /* "scrabble/p.pyx":721
+        /* "scrabble/p.pyx":740
  * 
  *             if n.has_val:
  *                 lets_info.l[i] = le             # <<<<<<<<<<<<<<
@@ -9841,7 +9428,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
         (__pyx_v_lets_info.l[__pyx_v_i]) = __pyx_v_le;
 
-        /* "scrabble/p.pyx":722
+        /* "scrabble/p.pyx":741
  *             if n.has_val:
  *                 lets_info.l[i] = le
  *                 continue             # <<<<<<<<<<<<<<
@@ -9850,7 +9437,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
         goto __pyx_L5_continue;
 
-        /* "scrabble/p.pyx":720
+        /* "scrabble/p.pyx":739
  *             le = n.letter
  * 
  *             if n.has_val:             # <<<<<<<<<<<<<<
@@ -9859,7 +9446,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
       }
 
-      /* "scrabble/p.pyx":724
+      /* "scrabble/p.pyx":743
  *                 continue
  * 
  *             le.from_rack = True             # <<<<<<<<<<<<<<
@@ -9868,17 +9455,17 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
       __pyx_v_le.from_rack = 1;
 
-      /* "scrabble/p.pyx":726
+      /* "scrabble/p.pyx":745
  *             le.from_rack = True
  * 
  *             let = word[i]             # <<<<<<<<<<<<<<
  *             le.value = let
  *             num = rack[let]
  */
-      __pyx_t_6 = __pyx_v_i;
-      __pyx_v_let = (*((__pyx_t_8scrabble_1p_STR_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_STR_t *) __pyx_v_word.data) + __pyx_t_6)) )));
+      __pyx_t_7 = __pyx_v_i;
+      __pyx_v_let = (*((__pyx_t_8scrabble_1p_STR_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_STR_t *) __pyx_v_word.data) + __pyx_t_7)) )));
 
-      /* "scrabble/p.pyx":727
+      /* "scrabble/p.pyx":746
  * 
  *             let = word[i]
  *             le.value = let             # <<<<<<<<<<<<<<
@@ -9887,7 +9474,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
       __pyx_v_le.value = __pyx_v_let;
 
-      /* "scrabble/p.pyx":728
+      /* "scrabble/p.pyx":747
  *             let = word[i]
  *             le.value = let
  *             num = rack[let]             # <<<<<<<<<<<<<<
@@ -9896,7 +9483,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
       __pyx_v_num = (__pyx_v_rack[__pyx_v_let]);
 
-      /* "scrabble/p.pyx":730
+      /* "scrabble/p.pyx":749
  *             num = rack[let]
  * 
  *             if not num:             # <<<<<<<<<<<<<<
@@ -9906,7 +9493,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
       __pyx_t_2 = ((!(__pyx_v_num != 0)) != 0);
       if (__pyx_t_2) {
 
-        /* "scrabble/p.pyx":731
+        /* "scrabble/p.pyx":750
  * 
  *             if not num:
  *                 le.is_blank = True             # <<<<<<<<<<<<<<
@@ -9915,7 +9502,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
         __pyx_v_le.is_blank = 1;
 
-        /* "scrabble/p.pyx":730
+        /* "scrabble/p.pyx":749
  *             num = rack[let]
  * 
  *             if not num:             # <<<<<<<<<<<<<<
@@ -9925,7 +9512,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
         goto __pyx_L9;
       }
 
-      /* "scrabble/p.pyx":733
+      /* "scrabble/p.pyx":752
  *                 le.is_blank = True
  *             else:
  *                 rack[let] -= 1             # <<<<<<<<<<<<<<
@@ -9933,20 +9520,20 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  *                 if not n.mult_w:
  */
       /*else*/ {
-        __pyx_t_7 = __pyx_v_let;
-        (__pyx_v_rack[__pyx_t_7]) = ((__pyx_v_rack[__pyx_t_7]) - 1);
+        __pyx_t_8 = __pyx_v_let;
+        (__pyx_v_rack[__pyx_t_8]) = ((__pyx_v_rack[__pyx_t_8]) - 1);
 
-        /* "scrabble/p.pyx":734
+        /* "scrabble/p.pyx":753
  *             else:
  *                 rack[let] -= 1
  *                 lepts = spts[let]             # <<<<<<<<<<<<<<
  *                 if not n.mult_w:
  *                     lepts *= n.mult_a
  */
-        __pyx_t_8 = __pyx_v_let;
-        __pyx_v_lepts = (*((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_spts.data) + __pyx_t_8)) )));
+        __pyx_t_9 = __pyx_v_let;
+        __pyx_v_lepts = (*((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_spts.data) + __pyx_t_9)) )));
 
-        /* "scrabble/p.pyx":735
+        /* "scrabble/p.pyx":754
  *                 rack[let] -= 1
  *                 lepts = spts[let]
  *                 if not n.mult_w:             # <<<<<<<<<<<<<<
@@ -9956,7 +9543,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
         __pyx_t_2 = ((!(__pyx_v_n.mult_w != 0)) != 0);
         if (__pyx_t_2) {
 
-          /* "scrabble/p.pyx":736
+          /* "scrabble/p.pyx":755
  *                 lepts = spts[let]
  *                 if not n.mult_w:
  *                     lepts *= n.mult_a             # <<<<<<<<<<<<<<
@@ -9965,7 +9552,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
           __pyx_v_lepts = (__pyx_v_lepts * __pyx_v_n.mult_a);
 
-          /* "scrabble/p.pyx":735
+          /* "scrabble/p.pyx":754
  *                 rack[let] -= 1
  *                 lepts = spts[let]
  *                 if not n.mult_w:             # <<<<<<<<<<<<<<
@@ -9974,7 +9561,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
  */
         }
 
-        /* "scrabble/p.pyx":738
+        /* "scrabble/p.pyx":757
  *                     lepts *= n.mult_a
  * 
  *                 le.pts = lepts             # <<<<<<<<<<<<<<
@@ -9985,7 +9572,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
       }
       __pyx_L9:;
 
-      /* "scrabble/p.pyx":740
+      /* "scrabble/p.pyx":759
  *                 le.pts = lepts
  * 
  *             lets_info.l[i] = le             # <<<<<<<<<<<<<<
@@ -9998,7 +9585,7 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
     __pyx_L5_continue:;
   }
 
-  /* "scrabble/p.pyx":742
+  /* "scrabble/p.pyx":761
  *             lets_info.l[i] = le
  * 
  *     return lets_info             # <<<<<<<<<<<<<<
@@ -10008,10 +9595,10 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
   __pyx_r = __pyx_v_lets_info;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":690
+  /* "scrabble/p.pyx":709
  * 
  * @cython.wraparound(False)
- * cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N nodes[MAX_NODES], Py_ssize_t start, int[:] base_rack) nogil:             # <<<<<<<<<<<<<<
+ * cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int[:] base_rack) nogil:             # <<<<<<<<<<<<<<
  *     cdef:
  *         Py_ssize_t i
  */
@@ -10022,15 +9609,15 @@ static __pyx_t_8scrabble_1p_Letter_List __pyx_f_8scrabble_1p_rack_match(__Pyx_me
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":753
+/* "scrabble/p.pyx":772
  * # cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
  * @cython.wraparound(False)
- * cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:             # <<<<<<<<<<<<<<
+ * cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:             # <<<<<<<<<<<<<<
  *     cdef:
  *         Py_ssize_t t
  */
 
-static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nodes, __Pyx_memviewslice __pyx_v_sw, __Pyx_memviewslice __pyx_v_swlens, int __pyx_v_is_col) {
+static void __pyx_f_8scrabble_1p_parse_nodes(__Pyx_memviewslice __pyx_v_nodes, __Pyx_memviewslice __pyx_v_sw, __Pyx_memviewslice __pyx_v_swlens, int __pyx_v_is_col) {
   Py_ssize_t __pyx_v_t;
   Py_ssize_t __pyx_v_nlen;
   __pyx_t_8scrabble_1p_N __pyx_v_n;
@@ -10051,16 +9638,19 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
   Py_ssize_t __pyx_t_1;
   Py_ssize_t __pyx_t_2;
   Py_ssize_t __pyx_t_3;
-  int __pyx_t_4;
-  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_5;
-  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_7;
-  __Pyx_memviewslice __pyx_t_8 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_4;
+  int __pyx_t_5;
+  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_6;
+  __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_8;
   Py_ssize_t __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
+  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_11;
+  Py_ssize_t __pyx_t_12;
+  Py_ssize_t __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
 
-  /* "scrabble/p.pyx":756
+  /* "scrabble/p.pyx":775
  *     cdef:
  *         Py_ssize_t t
  *         Py_ssize_t nlen = Settings.shape[is_col]             # <<<<<<<<<<<<<<
@@ -10069,7 +9659,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
   __pyx_v_nlen = (__pyx_v_8scrabble_1p_Settings->shape[__pyx_v_is_col]);
 
-  /* "scrabble/p.pyx":758
+  /* "scrabble/p.pyx":777
  *         Py_ssize_t nlen = Settings.shape[is_col]
  *         N n
  *         bint bhas_edge = False             # <<<<<<<<<<<<<<
@@ -10078,7 +9668,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
   __pyx_v_bhas_edge = 0;
 
-  /* "scrabble/p.pyx":761
+  /* "scrabble/p.pyx":780
  * 
  *     # - check if empty
  *     for t in range(nlen):             # <<<<<<<<<<<<<<
@@ -10090,26 +9680,27 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_t = __pyx_t_3;
 
-    /* "scrabble/p.pyx":762
+    /* "scrabble/p.pyx":781
  *     # - check if empty
  *     for t in range(nlen):
  *         n = nodes[t]             # <<<<<<<<<<<<<<
  *         if n.has_edge:
  *             bhas_edge = True
  */
-    __pyx_v_n = (__pyx_v_nodes[__pyx_v_t]);
+    __pyx_t_4 = __pyx_v_t;
+    __pyx_v_n = (*((__pyx_t_8scrabble_1p_N *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_4 * __pyx_v_nodes.strides[0]) )));
 
-    /* "scrabble/p.pyx":763
+    /* "scrabble/p.pyx":782
  *     for t in range(nlen):
  *         n = nodes[t]
  *         if n.has_edge:             # <<<<<<<<<<<<<<
  *             bhas_edge = True
  *             break
  */
-    __pyx_t_4 = (__pyx_v_n.has_edge != 0);
-    if (__pyx_t_4) {
+    __pyx_t_5 = (__pyx_v_n.has_edge != 0);
+    if (__pyx_t_5) {
 
-      /* "scrabble/p.pyx":764
+      /* "scrabble/p.pyx":783
  *         n = nodes[t]
  *         if n.has_edge:
  *             bhas_edge = True             # <<<<<<<<<<<<<<
@@ -10118,7 +9709,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
       __pyx_v_bhas_edge = 1;
 
-      /* "scrabble/p.pyx":765
+      /* "scrabble/p.pyx":784
  *         if n.has_edge:
  *             bhas_edge = True
  *             break             # <<<<<<<<<<<<<<
@@ -10127,7 +9718,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
       goto __pyx_L4_break;
 
-      /* "scrabble/p.pyx":763
+      /* "scrabble/p.pyx":782
  *     for t in range(nlen):
  *         n = nodes[t]
  *         if n.has_edge:             # <<<<<<<<<<<<<<
@@ -10138,17 +9729,17 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
   }
   __pyx_L4_break:;
 
-  /* "scrabble/p.pyx":767
+  /* "scrabble/p.pyx":786
  *             break
  * 
  *     if not bhas_edge:             # <<<<<<<<<<<<<<
  *         #if lo.is_enabled('i'):
  *         #loi('-> [empty]')
  */
-  __pyx_t_4 = ((!(__pyx_v_bhas_edge != 0)) != 0);
-  if (__pyx_t_4) {
+  __pyx_t_5 = ((!(__pyx_v_bhas_edge != 0)) != 0);
+  if (__pyx_t_5) {
 
-    /* "scrabble/p.pyx":770
+    /* "scrabble/p.pyx":789
  *         #if lo.is_enabled('i'):
  *         #loi('-> [empty]')
  *         return             # <<<<<<<<<<<<<<
@@ -10157,7 +9748,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":767
+    /* "scrabble/p.pyx":786
  *             break
  * 
  *     if not bhas_edge:             # <<<<<<<<<<<<<<
@@ -10166,30 +9757,30 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
   }
 
-  /* "scrabble/p.pyx":777
+  /* "scrabble/p.pyx":796
  *         Py_ssize_t s, wl, wl1, sn
  *         STR_t[::1] ww
  *         BOOL_t blanks = Settings.blanks             # <<<<<<<<<<<<<<
  *         int[:] base_rack = Settings.rack_v
  *         #Letter_List* lets_info
  */
-  __pyx_t_5 = __pyx_v_8scrabble_1p_Settings->blanks;
-  __pyx_v_blanks = __pyx_t_5;
+  __pyx_t_6 = __pyx_v_8scrabble_1p_Settings->blanks;
+  __pyx_v_blanks = __pyx_t_6;
 
-  /* "scrabble/p.pyx":778
+  /* "scrabble/p.pyx":797
  *         STR_t[::1] ww
  *         BOOL_t blanks = Settings.blanks
  *         int[:] base_rack = Settings.rack_v             # <<<<<<<<<<<<<<
  *         #Letter_List* lets_info
  *         Letter_List lets_info
  */
-  __pyx_t_6 = __pyx_v_8scrabble_1p_Settings->rack_v;
-  __PYX_INC_MEMVIEW(&__pyx_t_6, 0);
-  __pyx_v_base_rack = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
+  __pyx_t_7 = __pyx_v_8scrabble_1p_Settings->rack_v;
+  __PYX_INC_MEMVIEW(&__pyx_t_7, 0);
+  __pyx_v_base_rack = __pyx_t_7;
+  __pyx_t_7.memview = NULL;
+  __pyx_t_7.data = NULL;
 
-  /* "scrabble/p.pyx":784
+  /* "scrabble/p.pyx":803
  * 
  *         WordDict wd
  *         SIZE_t orig_len = Settings.node_board.words.len             # <<<<<<<<<<<<<<
@@ -10199,7 +9790,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
   __pyx_t_1 = __pyx_v_8scrabble_1p_Settings->node_board->words.len;
   __pyx_v_orig_len = __pyx_t_1;
 
-  /* "scrabble/p.pyx":787
+  /* "scrabble/p.pyx":806
  * 
  * 
  *     for i in range(nlen):             # <<<<<<<<<<<<<<
@@ -10211,27 +9802,28 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "scrabble/p.pyx":788
+    /* "scrabble/p.pyx":807
  * 
  *     for i in range(nlen):
  *         n = nodes[i]             # <<<<<<<<<<<<<<
  *         nvals[i] = n.has_val
  * 
  */
-    __pyx_v_n = (__pyx_v_nodes[__pyx_v_i]);
+    __pyx_t_8 = __pyx_v_i;
+    __pyx_v_n = (*((__pyx_t_8scrabble_1p_N *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_8 * __pyx_v_nodes.strides[0]) )));
 
-    /* "scrabble/p.pyx":789
+    /* "scrabble/p.pyx":808
  *     for i in range(nlen):
  *         n = nodes[i]
  *         nvals[i] = n.has_val             # <<<<<<<<<<<<<<
  * 
  *     for s in range(sw.shape[0]):
  */
-    __pyx_t_4 = __pyx_v_n.has_val;
-    (__pyx_v_nvals[__pyx_v_i]) = __pyx_t_4;
+    __pyx_t_5 = __pyx_v_n.has_val;
+    (__pyx_v_nvals[__pyx_v_i]) = __pyx_t_5;
   }
 
-  /* "scrabble/p.pyx":791
+  /* "scrabble/p.pyx":810
  *         nvals[i] = n.has_val
  * 
  *     for s in range(sw.shape[0]):             # <<<<<<<<<<<<<<
@@ -10243,27 +9835,27 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_s = __pyx_t_3;
 
-    /* "scrabble/p.pyx":793
+    /* "scrabble/p.pyx":812
  *     for s in range(sw.shape[0]):
  *         # is there a problem with the conversion here
  *         wl = swlens[s]             # <<<<<<<<<<<<<<
  *         if wl > nlen:
  *             continue
  */
-    __pyx_t_7 = __pyx_v_s;
-    __pyx_v_wl = (*((__pyx_t_8scrabble_1p_SIZE_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_SIZE_t *) __pyx_v_swlens.data) + __pyx_t_7)) )));
+    __pyx_t_9 = __pyx_v_s;
+    __pyx_v_wl = (*((__pyx_t_8scrabble_1p_SIZE_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_SIZE_t *) __pyx_v_swlens.data) + __pyx_t_9)) )));
 
-    /* "scrabble/p.pyx":794
+    /* "scrabble/p.pyx":813
  *         # is there a problem with the conversion here
  *         wl = swlens[s]
  *         if wl > nlen:             # <<<<<<<<<<<<<<
  *             continue
  * 
  */
-    __pyx_t_4 = ((__pyx_v_wl > __pyx_v_nlen) != 0);
-    if (__pyx_t_4) {
+    __pyx_t_5 = ((__pyx_v_wl > __pyx_v_nlen) != 0);
+    if (__pyx_t_5) {
 
-      /* "scrabble/p.pyx":795
+      /* "scrabble/p.pyx":814
  *         wl = swlens[s]
  *         if wl > nlen:
  *             continue             # <<<<<<<<<<<<<<
@@ -10272,7 +9864,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
       goto __pyx_L9_continue;
 
-      /* "scrabble/p.pyx":794
+      /* "scrabble/p.pyx":813
  *         # is there a problem with the conversion here
  *         wl = swlens[s]
  *         if wl > nlen:             # <<<<<<<<<<<<<<
@@ -10281,7 +9873,7 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
     }
 
-    /* "scrabble/p.pyx":797
+    /* "scrabble/p.pyx":816
  *             continue
  * 
  *         wl1 =  wl - 1             # <<<<<<<<<<<<<<
@@ -10290,55 +9882,56 @@ static void __pyx_f_8scrabble_1p_parse_nodes(__pyx_t_8scrabble_1p_N *__pyx_v_nod
  */
     __pyx_v_wl1 = (__pyx_v_wl - 1);
 
-    /* "scrabble/p.pyx":799
+    /* "scrabble/p.pyx":818
  *         wl1 =  wl - 1
  * 
  *         ww = sw[s]             # <<<<<<<<<<<<<<
  *         #lo.d(sw.base.view(f'<U{sw.shape[1]}')[s, 0])
  * 
  */
-    __pyx_t_8.data = __pyx_v_sw.data;
-    __pyx_t_8.memview = __pyx_v_sw.memview;
-    __PYX_INC_MEMVIEW(&__pyx_t_8, 0);
+    __pyx_t_10.data = __pyx_v_sw.data;
+    __pyx_t_10.memview = __pyx_v_sw.memview;
+    __PYX_INC_MEMVIEW(&__pyx_t_10, 0);
     {
     Py_ssize_t __pyx_tmp_idx = __pyx_v_s;
     Py_ssize_t __pyx_tmp_stride = __pyx_v_sw.strides[0];
-        if ((0)) __PYX_ERR(0, 799, __pyx_L1_error)
-        __pyx_t_8.data += __pyx_tmp_idx * __pyx_tmp_stride;
+        if ((0)) __PYX_ERR(0, 818, __pyx_L1_error)
+        __pyx_t_10.data += __pyx_tmp_idx * __pyx_tmp_stride;
 }
 
-__pyx_t_8.shape[0] = __pyx_v_sw.shape[1];
-__pyx_t_8.strides[0] = __pyx_v_sw.strides[1];
-    __pyx_t_8.suboffsets[0] = -1;
+__pyx_t_10.shape[0] = __pyx_v_sw.shape[1];
+__pyx_t_10.strides[0] = __pyx_v_sw.strides[1];
+    __pyx_t_10.suboffsets[0] = -1;
 
 __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
-    __pyx_v_ww = __pyx_t_8;
-    __pyx_t_8.memview = NULL;
-    __pyx_t_8.data = NULL;
+    __pyx_v_ww = __pyx_t_10;
+    __pyx_t_10.memview = NULL;
+    __pyx_t_10.data = NULL;
 
-    /* "scrabble/p.pyx":803
+    /* "scrabble/p.pyx":822
  * 
  *         #for i in prange(nlen - wl + 1, nogil=True):
  *         for sn in range(nlen):             # <<<<<<<<<<<<<<
  *             # - is the word a valid length?
  *             if nodes[sn].valid_lengths[is_col][wl1] is False:
  */
-    __pyx_t_9 = __pyx_v_nlen;
-    __pyx_t_10 = __pyx_t_9;
-    for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
-      __pyx_v_sn = __pyx_t_11;
+    __pyx_t_11 = __pyx_v_nlen;
+    __pyx_t_12 = __pyx_t_11;
+    for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+      __pyx_v_sn = __pyx_t_13;
 
-      /* "scrabble/p.pyx":805
+      /* "scrabble/p.pyx":824
  *         for sn in range(nlen):
  *             # - is the word a valid length?
  *             if nodes[sn].valid_lengths[is_col][wl1] is False:             # <<<<<<<<<<<<<<
  *                 #lo.e('not valid')
  *                 continue
  */
-      __pyx_t_4 = (((((__pyx_v_nodes[__pyx_v_sn]).valid_lengths[__pyx_v_is_col])[__pyx_v_wl1]) == 0) != 0);
-      if (__pyx_t_4) {
+      __pyx_t_14 = __pyx_v_sn;
+      __pyx_t_5 = (((((*((__pyx_t_8scrabble_1p_N *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_14 * __pyx_v_nodes.strides[0]) ))).valid_lengths[__pyx_v_is_col])[__pyx_v_wl1]) == 0) != 0);
+      if (__pyx_t_5) {
 
-        /* "scrabble/p.pyx":807
+        /* "scrabble/p.pyx":826
  *             if nodes[sn].valid_lengths[is_col][wl1] is False:
  *                 #lo.e('not valid')
  *                 continue             # <<<<<<<<<<<<<<
@@ -10347,7 +9940,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
         goto __pyx_L12_continue;
 
-        /* "scrabble/p.pyx":805
+        /* "scrabble/p.pyx":824
  *         for sn in range(nlen):
  *             # - is the word a valid length?
  *             if nodes[sn].valid_lengths[is_col][wl1] is False:             # <<<<<<<<<<<<<<
@@ -10356,17 +9949,17 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       }
 
-      /* "scrabble/p.pyx":810
+      /* "scrabble/p.pyx":829
  * 
  *             # - do the letters match the board?
  *             if lets_match(ww, wl, nodes, sn, is_col) is False:             # <<<<<<<<<<<<<<
  *                 #lo.e('dont match')
  *                 continue
  */
-      __pyx_t_4 = ((__pyx_f_8scrabble_1p_lets_match(__pyx_v_ww, __pyx_v_wl, __pyx_v_nodes, __pyx_v_sn, __pyx_v_is_col) == 0) != 0);
-      if (__pyx_t_4) {
+      __pyx_t_5 = ((__pyx_f_8scrabble_1p_lets_match(__pyx_v_ww, __pyx_v_wl, __pyx_v_nodes, __pyx_v_sn, __pyx_v_is_col) == 0) != 0);
+      if (__pyx_t_5) {
 
-        /* "scrabble/p.pyx":812
+        /* "scrabble/p.pyx":831
  *             if lets_match(ww, wl, nodes, sn, is_col) is False:
  *                 #lo.e('dont match')
  *                 continue             # <<<<<<<<<<<<<<
@@ -10375,7 +9968,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
         goto __pyx_L12_continue;
 
-        /* "scrabble/p.pyx":810
+        /* "scrabble/p.pyx":829
  * 
  *             # - do the letters match the board?
  *             if lets_match(ww, wl, nodes, sn, is_col) is False:             # <<<<<<<<<<<<<<
@@ -10384,17 +9977,17 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       }
 
-      /* "scrabble/p.pyx":815
+      /* "scrabble/p.pyx":834
  * 
  *             # - do we have enough in the rack?
  *             if rack_check(ww, wl, nvals, sn, blanks, base_rack) is False:             # <<<<<<<<<<<<<<
  *                 #lo.e('not enough rack')
  *                 continue
  */
-      __pyx_t_4 = ((__pyx_f_8scrabble_1p_rack_check(__pyx_v_ww, __pyx_v_wl, __pyx_v_nvals, __pyx_v_sn, __pyx_v_blanks, __pyx_v_base_rack) == 0) != 0);
-      if (__pyx_t_4) {
+      __pyx_t_5 = ((__pyx_f_8scrabble_1p_rack_check(__pyx_v_ww, __pyx_v_wl, __pyx_v_nvals, __pyx_v_sn, __pyx_v_blanks, __pyx_v_base_rack) == 0) != 0);
+      if (__pyx_t_5) {
 
-        /* "scrabble/p.pyx":817
+        /* "scrabble/p.pyx":836
  *             if rack_check(ww, wl, nvals, sn, blanks, base_rack) is False:
  *                 #lo.e('not enough rack')
  *                 continue             # <<<<<<<<<<<<<<
@@ -10403,7 +9996,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
         goto __pyx_L12_continue;
 
-        /* "scrabble/p.pyx":815
+        /* "scrabble/p.pyx":834
  * 
  *             # - do we have enough in the rack?
  *             if rack_check(ww, wl, nvals, sn, blanks, base_rack) is False:             # <<<<<<<<<<<<<<
@@ -10412,7 +10005,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       }
 
-      /* "scrabble/p.pyx":819
+      /* "scrabble/p.pyx":838
  *                 continue
  * 
  *             lets_info = rack_match(ww, wl, nodes, sn, base_rack)             # <<<<<<<<<<<<<<
@@ -10421,7 +10014,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       __pyx_v_lets_info = __pyx_f_8scrabble_1p_rack_match(__pyx_v_ww, __pyx_v_wl, __pyx_v_nodes, __pyx_v_sn, __pyx_v_base_rack);
 
-      /* "scrabble/p.pyx":820
+      /* "scrabble/p.pyx":839
  * 
  *             lets_info = rack_match(ww, wl, nodes, sn, base_rack)
  *             tot_pts = calc_pts(lets_info, nodes, is_col, sn)             # <<<<<<<<<<<<<<
@@ -10430,7 +10023,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       __pyx_v_tot_pts = __pyx_f_8scrabble_1p_calc_pts(__pyx_v_lets_info, __pyx_v_nodes, __pyx_v_is_col, __pyx_v_sn);
 
-      /* "scrabble/p.pyx":822
+      /* "scrabble/p.pyx":841
  *             tot_pts = calc_pts(lets_info, nodes, is_col, sn)
  * 
  *             wd.is_col = is_col             # <<<<<<<<<<<<<<
@@ -10439,7 +10032,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       __pyx_v_wd.is_col = __pyx_v_is_col;
 
-      /* "scrabble/p.pyx":823
+      /* "scrabble/p.pyx":842
  * 
  *             wd.is_col = is_col
  *             wd.pts = tot_pts             # <<<<<<<<<<<<<<
@@ -10448,7 +10041,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       __pyx_v_wd.pts = __pyx_v_tot_pts;
 
-      /* "scrabble/p.pyx":824
+      /* "scrabble/p.pyx":843
  *             wd.is_col = is_col
  *             wd.pts = tot_pts
  *             wd.letters = lets_info             # <<<<<<<<<<<<<<
@@ -10457,7 +10050,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       __pyx_v_wd.letters = __pyx_v_lets_info;
 
-      /* "scrabble/p.pyx":825
+      /* "scrabble/p.pyx":844
  *             wd.pts = tot_pts
  *             wd.letters = lets_info
  *             sol(wd, wd.word)             # <<<<<<<<<<<<<<
@@ -10466,7 +10059,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       __pyx_f_8scrabble_1p_sol(__pyx_v_wd, __pyx_v_wd.word);
 
-      /* "scrabble/p.pyx":827
+      /* "scrabble/p.pyx":846
  *             sol(wd, wd.word)
  * 
  *             Settings.node_board.words.l[orig_len] = wd             # <<<<<<<<<<<<<<
@@ -10475,7 +10068,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
       (__pyx_v_8scrabble_1p_Settings->node_board->words.l[__pyx_v_orig_len]) = __pyx_v_wd;
 
-      /* "scrabble/p.pyx":828
+      /* "scrabble/p.pyx":847
  * 
  *             Settings.node_board.words.l[orig_len] = wd
  *             orig_len += 1             # <<<<<<<<<<<<<<
@@ -10488,7 +10081,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
     __pyx_L9_continue:;
   }
 
-  /* "scrabble/p.pyx":831
+  /* "scrabble/p.pyx":850
  *             #loe(Settings.node_board.words.l[orig_len].word)
  * 
  *     Settings.node_board.words.len = orig_len             # <<<<<<<<<<<<<<
@@ -10497,10 +10090,10 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
  */
   __pyx_v_8scrabble_1p_Settings->node_board->words.len = __pyx_v_orig_len;
 
-  /* "scrabble/p.pyx":753
+  /* "scrabble/p.pyx":772
  * # cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
  * @cython.wraparound(False)
- * cdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:             # <<<<<<<<<<<<<<
+ * cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil:             # <<<<<<<<<<<<<<
  *     cdef:
  *         Py_ssize_t t
  */
@@ -10508,15 +10101,15 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
   /* function exit code */
   goto __pyx_L0;
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 0);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_8, 0);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 0);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 0);
   __Pyx_WriteUnraisable("scrabble.p.parse_nodes", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 1);
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_ww, 0);
   __PYX_XDEC_MEMVIEW(&__pyx_v_base_rack, 0);
 }
 
-/* "scrabble/p.pyx":834
+/* "scrabble/p.pyx":853
  * 
  * 
  * def _unused(): pass             # <<<<<<<<<<<<<<
@@ -10551,7 +10144,7 @@ static PyObject *__pyx_pf_8scrabble_1p__unused(CYTHON_UNUSED PyObject *__pyx_sel
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":852
+/* "scrabble/p.pyx":871
  * 
  * 
  * cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:             # <<<<<<<<<<<<<<
@@ -10601,7 +10194,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
   Py_ssize_t __pyx_t_13;
   Py_ssize_t __pyx_t_14;
 
-  /* "scrabble/p.pyx":855
+  /* "scrabble/p.pyx":874
  *     cdef:
  *         Py_ssize_t i
  *         Py_ssize_t rown, colt = 0, colb = 0             # <<<<<<<<<<<<<<
@@ -10611,7 +10204,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
   __pyx_v_colt = 0;
   __pyx_v_colb = 0;
 
-  /* "scrabble/p.pyx":858
+  /* "scrabble/p.pyx":877
  * 
  *         # todo fix small 10.
  *         int smalltens = 9361             # <<<<<<<<<<<<<<
@@ -10620,7 +10213,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_smalltens = 0x2491;
 
-  /* "scrabble/p.pyx":861
+  /* "scrabble/p.pyx":880
  *         Py_UNICODE smallten_char
  * 
  *         Py_UNICODE u_dash = '\u2500'             # <<<<<<<<<<<<<<
@@ -10629,7 +10222,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_dash = 0x2500;
 
-  /* "scrabble/p.pyx":863
+  /* "scrabble/p.pyx":882
  *         Py_UNICODE u_dash = '\u2500'
  * 
  *         Py_UNICODE u_bx_ul = '\u250c'             # <<<<<<<<<<<<<<
@@ -10638,7 +10231,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_bx_ul = 0x250C;
 
-  /* "scrabble/p.pyx":864
+  /* "scrabble/p.pyx":883
  * 
  *         Py_UNICODE u_bx_ul = '\u250c'
  *         Py_UNICODE u_bx_ur = '\u2510'             # <<<<<<<<<<<<<<
@@ -10647,7 +10240,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_bx_ur = 0x2510;
 
-  /* "scrabble/p.pyx":865
+  /* "scrabble/p.pyx":884
  *         Py_UNICODE u_bx_ul = '\u250c'
  *         Py_UNICODE u_bx_ur = '\u2510'
  *         Py_UNICODE u_bx_bl = '\u2514'             # <<<<<<<<<<<<<<
@@ -10656,7 +10249,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_bx_bl = 0x2514;
 
-  /* "scrabble/p.pyx":866
+  /* "scrabble/p.pyx":885
  *         Py_UNICODE u_bx_ur = '\u2510'
  *         Py_UNICODE u_bx_bl = '\u2514'
  *         Py_UNICODE u_bx_br = '\u2518'             # <<<<<<<<<<<<<<
@@ -10665,7 +10258,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_bx_br = 0x2518;
 
-  /* "scrabble/p.pyx":868
+  /* "scrabble/p.pyx":887
  *         Py_UNICODE u_bx_br = '\u2518'
  * 
  *         Py_UNICODE u_sep_hor_le = '\u2524'             # <<<<<<<<<<<<<<
@@ -10674,7 +10267,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_sep_hor_le = 0x2524;
 
-  /* "scrabble/p.pyx":869
+  /* "scrabble/p.pyx":888
  * 
  *         Py_UNICODE u_sep_hor_le = '\u2524'
  *         Py_UNICODE u_sep_hor_ri = '\u251C'             # <<<<<<<<<<<<<<
@@ -10683,7 +10276,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_sep_hor_ri = 0x251C;
 
-  /* "scrabble/p.pyx":870
+  /* "scrabble/p.pyx":889
  *         Py_UNICODE u_sep_hor_le = '\u2524'
  *         Py_UNICODE u_sep_hor_ri = '\u251C'
  *         Py_UNICODE u_sep_ver_up = '\u2534'             # <<<<<<<<<<<<<<
@@ -10692,7 +10285,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_sep_ver_up = 0x2534;
 
-  /* "scrabble/p.pyx":871
+  /* "scrabble/p.pyx":890
  *         Py_UNICODE u_sep_hor_ri = '\u251C'
  *         Py_UNICODE u_sep_ver_up = '\u2534'
  *         Py_UNICODE u_sep_ver_dn = '\u252C'             # <<<<<<<<<<<<<<
@@ -10701,7 +10294,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_u_sep_ver_dn = 0x252C;
 
-  /* "scrabble/p.pyx":873
+  /* "scrabble/p.pyx":892
  *         Py_UNICODE u_sep_ver_dn = '\u252C'
  * 
  *         char* board_hl = b'\x1b[33m'  # yellow             # <<<<<<<<<<<<<<
@@ -10710,7 +10303,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_board_hl = ((char *)"\033[33m");
 
-  /* "scrabble/p.pyx":874
+  /* "scrabble/p.pyx":893
  * 
  *         char* board_hl = b'\x1b[33m'  # yellow
  *         char* board_cl = b'\x1b[0m'             # <<<<<<<<<<<<<<
@@ -10719,7 +10312,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_board_cl = ((char *)"\033[0m");
 
-  /* "scrabble/p.pyx":878
+  /* "scrabble/p.pyx":897
  * 
  *     # - col nums
  *     printf('\n      ')             # <<<<<<<<<<<<<<
@@ -10728,7 +10321,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   (void)(printf(((char const *)"\n      ")));
 
-  /* "scrabble/p.pyx":879
+  /* "scrabble/p.pyx":898
  *     # - col nums
  *     printf('\n      ')
  *     for i in range(nodes.shape[0]):             # <<<<<<<<<<<<<<
@@ -10740,7 +10333,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "scrabble/p.pyx":880
+    /* "scrabble/p.pyx":899
  *     printf('\n      ')
  *     for i in range(nodes.shape[0]):
  *         if i < 10 or i > 20:             # <<<<<<<<<<<<<<
@@ -10758,7 +10351,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":881
+      /* "scrabble/p.pyx":900
  *     for i in range(nodes.shape[0]):
  *         if i < 10 or i > 20:
  *             printf('%zu', i)             # <<<<<<<<<<<<<<
@@ -10767,7 +10360,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
       (void)(printf(((char const *)"%zu"), __pyx_v_i));
 
-      /* "scrabble/p.pyx":880
+      /* "scrabble/p.pyx":899
  *     printf('\n      ')
  *     for i in range(nodes.shape[0]):
  *         if i < 10 or i > 20:             # <<<<<<<<<<<<<<
@@ -10777,7 +10370,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       goto __pyx_L5;
     }
 
-    /* "scrabble/p.pyx":883
+    /* "scrabble/p.pyx":902
  *             printf('%zu', i)
  *         else:
  *             smallten_char = smalltens + (i - 10)             # <<<<<<<<<<<<<<
@@ -10787,7 +10380,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     /*else*/ {
       __pyx_v_smallten_char = (__pyx_v_smalltens + (__pyx_v_i - 10));
 
-      /* "scrabble/p.pyx":884
+      /* "scrabble/p.pyx":903
  *         else:
  *             smallten_char = smalltens + (i - 10)
  *             printf('%lc', smallten_char)             # <<<<<<<<<<<<<<
@@ -10798,7 +10391,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     }
     __pyx_L5:;
 
-    /* "scrabble/p.pyx":885
+    /* "scrabble/p.pyx":904
  *             smallten_char = smalltens + (i - 10)
  *             printf('%lc', smallten_char)
  *         if i != nodes.shape[0] - 1:             # <<<<<<<<<<<<<<
@@ -10808,7 +10401,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_4 = ((__pyx_v_i != ((__pyx_v_nodes.shape[0]) - 1)) != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":886
+      /* "scrabble/p.pyx":905
  *             printf('%lc', smallten_char)
  *         if i != nodes.shape[0] - 1:
  *             printf(' ')             # <<<<<<<<<<<<<<
@@ -10817,7 +10410,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
       (void)(printf(((char const *)" ")));
 
-      /* "scrabble/p.pyx":885
+      /* "scrabble/p.pyx":904
  *             smallten_char = smalltens + (i - 10)
  *             printf('%lc', smallten_char)
  *         if i != nodes.shape[0] - 1:             # <<<<<<<<<<<<<<
@@ -10827,7 +10420,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     }
   }
 
-  /* "scrabble/p.pyx":887
+  /* "scrabble/p.pyx":906
  *         if i != nodes.shape[0] - 1:
  *             printf(' ')
  *     printf('\n')             # <<<<<<<<<<<<<<
@@ -10836,7 +10429,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   (void)(printf(((char const *)"\n")));
 
-  /* "scrabble/p.pyx":890
+  /* "scrabble/p.pyx":909
  * 
  *     # - col seps top
  *     printf('   %lc%lc', u_bx_ul, u_dash)             # <<<<<<<<<<<<<<
@@ -10845,7 +10438,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   (void)(printf(((char const *)"   %lc%lc"), __pyx_v_u_bx_ul, __pyx_v_u_dash));
 
-  /* "scrabble/p.pyx":891
+  /* "scrabble/p.pyx":910
  *     # - col seps top
  *     printf('   %lc%lc', u_bx_ul, u_dash)
  *     while colt < nodes.shape[1]:             # <<<<<<<<<<<<<<
@@ -10856,7 +10449,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_4 = ((__pyx_v_colt < (__pyx_v_nodes.shape[1])) != 0);
     if (!__pyx_t_4) break;
 
-    /* "scrabble/p.pyx":892
+    /* "scrabble/p.pyx":911
  *     printf('   %lc%lc', u_bx_ul, u_dash)
  *     while colt < nodes.shape[1]:
  *         printf('%lc%lc', u_dash, u_sep_ver_up)             # <<<<<<<<<<<<<<
@@ -10865,7 +10458,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
     (void)(printf(((char const *)"%lc%lc"), __pyx_v_u_dash, __pyx_v_u_sep_ver_up));
 
-    /* "scrabble/p.pyx":893
+    /* "scrabble/p.pyx":912
  *     while colt < nodes.shape[1]:
  *         printf('%lc%lc', u_dash, u_sep_ver_up)
  *         colt += 1             # <<<<<<<<<<<<<<
@@ -10875,7 +10468,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_v_colt = (__pyx_v_colt + 1);
   }
 
-  /* "scrabble/p.pyx":894
+  /* "scrabble/p.pyx":913
  *         printf('%lc%lc', u_dash, u_sep_ver_up)
  *         colt += 1
  *     printf('%lc%lc%lc\n', u_dash, u_dash, u_bx_ur)             # <<<<<<<<<<<<<<
@@ -10884,7 +10477,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   (void)(printf(((char const *)"%lc%lc%lc\n"), __pyx_v_u_dash, __pyx_v_u_dash, __pyx_v_u_bx_ur));
 
-  /* "scrabble/p.pyx":902
+  /* "scrabble/p.pyx":921
  *         uchr nval, bval
  *         Py_ssize_t l
  *         Py_ssize_t r = 0, c             # <<<<<<<<<<<<<<
@@ -10893,7 +10486,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   __pyx_v_r = 0;
 
-  /* "scrabble/p.pyx":907
+  /* "scrabble/p.pyx":926
  * 
  *     #best_map_v[:, :] = 0
  *     while r < MAX_NODES:             # <<<<<<<<<<<<<<
@@ -10904,7 +10497,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_4 = ((__pyx_v_r < 15) != 0);
     if (!__pyx_t_4) break;
 
-    /* "scrabble/p.pyx":908
+    /* "scrabble/p.pyx":927
  *     #best_map_v[:, :] = 0
  *     while r < MAX_NODES:
  *         c = 0             # <<<<<<<<<<<<<<
@@ -10913,7 +10506,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
     __pyx_v_c = 0;
 
-    /* "scrabble/p.pyx":909
+    /* "scrabble/p.pyx":928
  *     while r < MAX_NODES:
  *         c = 0
  *         while c < MAX_NODES:             # <<<<<<<<<<<<<<
@@ -10924,7 +10517,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       __pyx_t_4 = ((__pyx_v_c < 15) != 0);
       if (!__pyx_t_4) break;
 
-      /* "scrabble/p.pyx":910
+      /* "scrabble/p.pyx":929
  *         c = 0
  *         while c < MAX_NODES:
  *             best_map[r][c] = 0             # <<<<<<<<<<<<<<
@@ -10933,7 +10526,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
       ((__pyx_v_best_map[__pyx_v_r])[__pyx_v_c]) = 0;
 
-      /* "scrabble/p.pyx":911
+      /* "scrabble/p.pyx":930
  *         while c < MAX_NODES:
  *             best_map[r][c] = 0
  *             c += 1             # <<<<<<<<<<<<<<
@@ -10943,7 +10536,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       __pyx_v_c = (__pyx_v_c + 1);
     }
 
-    /* "scrabble/p.pyx":912
+    /* "scrabble/p.pyx":931
  *             best_map[r][c] = 0
  *             c += 1
  *         r += 1             # <<<<<<<<<<<<<<
@@ -10953,7 +10546,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_v_r = (__pyx_v_r + 1);
   }
 
-  /* "scrabble/p.pyx":914
+  /* "scrabble/p.pyx":933
  *         r += 1
  * 
  *     for l in range(lets.len):             # <<<<<<<<<<<<<<
@@ -10965,7 +10558,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_l = __pyx_t_3;
 
-    /* "scrabble/p.pyx":915
+    /* "scrabble/p.pyx":934
  * 
  *     for l in range(lets.len):
  *         letter = lets.l[l]             # <<<<<<<<<<<<<<
@@ -10974,7 +10567,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
     __pyx_v_letter = (__pyx_v_lets.l[__pyx_v_l]);
 
-    /* "scrabble/p.pyx":916
+    /* "scrabble/p.pyx":935
  *     for l in range(lets.len):
  *         letter = lets.l[l]
  *         x = letter.x             # <<<<<<<<<<<<<<
@@ -10984,7 +10577,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_6 = __pyx_v_letter.x;
     __pyx_v_x = __pyx_t_6;
 
-    /* "scrabble/p.pyx":917
+    /* "scrabble/p.pyx":936
  *         letter = lets.l[l]
  *         x = letter.x
  *         y = letter.y             # <<<<<<<<<<<<<<
@@ -10994,7 +10587,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_6 = __pyx_v_letter.y;
     __pyx_v_y = __pyx_t_6;
 
-    /* "scrabble/p.pyx":918
+    /* "scrabble/p.pyx":937
  *         x = letter.x
  *         y = letter.y
  *         nval = nodes[x, y]             # <<<<<<<<<<<<<<
@@ -11005,7 +10598,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_8 = __pyx_v_y;
     __pyx_v_nval = (*((__pyx_t_8scrabble_1p_uchr *) ( /* dim=1 */ ((char *) (((__pyx_t_8scrabble_1p_uchr *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_7 * __pyx_v_nodes.strides[0]) )) + __pyx_t_8)) )));
 
-    /* "scrabble/p.pyx":919
+    /* "scrabble/p.pyx":938
  *         y = letter.y
  *         nval = nodes[x, y]
  *         if not nval:             # <<<<<<<<<<<<<<
@@ -11015,7 +10608,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_4 = ((!(__pyx_v_nval != 0)) != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":920
+      /* "scrabble/p.pyx":939
  *         nval = nodes[x, y]
  *         if not nval:
  *             best_map[x][y] = letter.value             # <<<<<<<<<<<<<<
@@ -11025,7 +10618,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       __pyx_t_9 = __pyx_v_letter.value;
       ((__pyx_v_best_map[__pyx_v_x])[__pyx_v_y]) = __pyx_t_9;
 
-      /* "scrabble/p.pyx":919
+      /* "scrabble/p.pyx":938
  *         y = letter.y
  *         nval = nodes[x, y]
  *         if not nval:             # <<<<<<<<<<<<<<
@@ -11035,7 +10628,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     }
   }
 
-  /* "scrabble/p.pyx":923
+  /* "scrabble/p.pyx":942
  * 
  *     # - rows
  *     for rown in range(nodes.shape[0]):             # <<<<<<<<<<<<<<
@@ -11047,7 +10640,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_rown = __pyx_t_3;
 
-    /* "scrabble/p.pyx":924
+    /* "scrabble/p.pyx":943
  *     # - rows
  *     for rown in range(nodes.shape[0]):
  *         printf('%2zu %lc  ', rown, u_sep_hor_le)             # <<<<<<<<<<<<<<
@@ -11056,7 +10649,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
     (void)(printf(((char const *)"%2zu %lc  "), __pyx_v_rown, __pyx_v_u_sep_hor_le));
 
-    /* "scrabble/p.pyx":925
+    /* "scrabble/p.pyx":944
  *     for rown in range(nodes.shape[0]):
  *         printf('%2zu %lc  ', rown, u_sep_hor_le)
  *         for i in range(nodes.shape[1]):             # <<<<<<<<<<<<<<
@@ -11068,7 +10661,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
       __pyx_v_i = __pyx_t_12;
 
-      /* "scrabble/p.pyx":926
+      /* "scrabble/p.pyx":945
  *         printf('%2zu %lc  ', rown, u_sep_hor_le)
  *         for i in range(nodes.shape[1]):
  *             nval = nodes[rown, i]             # <<<<<<<<<<<<<<
@@ -11081,7 +10674,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_nodes.shape[1];
       __pyx_v_nval = (*((__pyx_t_8scrabble_1p_uchr *) ( /* dim=1 */ ((char *) (((__pyx_t_8scrabble_1p_uchr *) ( /* dim=0 */ (__pyx_v_nodes.data + __pyx_t_13 * __pyx_v_nodes.strides[0]) )) + __pyx_t_14)) )));
 
-      /* "scrabble/p.pyx":927
+      /* "scrabble/p.pyx":946
  *         for i in range(nodes.shape[1]):
  *             nval = nodes[rown, i]
  *             if not nval:             # <<<<<<<<<<<<<<
@@ -11091,7 +10684,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       __pyx_t_4 = ((!(__pyx_v_nval != 0)) != 0);
       if (__pyx_t_4) {
 
-        /* "scrabble/p.pyx":928
+        /* "scrabble/p.pyx":947
  *             nval = nodes[rown, i]
  *             if not nval:
  *                 bval = best_map[rown][i]             # <<<<<<<<<<<<<<
@@ -11100,7 +10693,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
         __pyx_v_bval = ((__pyx_v_best_map[__pyx_v_rown])[__pyx_v_i]);
 
-        /* "scrabble/p.pyx":929
+        /* "scrabble/p.pyx":948
  *             if not nval:
  *                 bval = best_map[rown][i]
  *                 if bval:             # <<<<<<<<<<<<<<
@@ -11110,7 +10703,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
         __pyx_t_4 = (__pyx_v_bval != 0);
         if (__pyx_t_4) {
 
-          /* "scrabble/p.pyx":930
+          /* "scrabble/p.pyx":949
  *                 bval = best_map[rown][i]
  *                 if bval:
  *                     printf('%s%c%s', board_hl, bval, board_cl)             # <<<<<<<<<<<<<<
@@ -11119,7 +10712,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
           (void)(printf(((char const *)"%s%c%s"), __pyx_v_board_hl, __pyx_v_bval, __pyx_v_board_cl));
 
-          /* "scrabble/p.pyx":929
+          /* "scrabble/p.pyx":948
  *             if not nval:
  *                 bval = best_map[rown][i]
  *                 if bval:             # <<<<<<<<<<<<<<
@@ -11129,7 +10722,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
           goto __pyx_L23;
         }
 
-        /* "scrabble/p.pyx":932
+        /* "scrabble/p.pyx":951
  *                     printf('%s%c%s', board_hl, bval, board_cl)
  *                 else:
  *                     printf(' ')             # <<<<<<<<<<<<<<
@@ -11141,7 +10734,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
         }
         __pyx_L23:;
 
-        /* "scrabble/p.pyx":927
+        /* "scrabble/p.pyx":946
  *         for i in range(nodes.shape[1]):
  *             nval = nodes[rown, i]
  *             if not nval:             # <<<<<<<<<<<<<<
@@ -11151,7 +10744,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
         goto __pyx_L22;
       }
 
-      /* "scrabble/p.pyx":934
+      /* "scrabble/p.pyx":953
  *                     printf(' ')
  *             else:
  *                 printf('%c', nval)             # <<<<<<<<<<<<<<
@@ -11163,7 +10756,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       }
       __pyx_L22:;
 
-      /* "scrabble/p.pyx":936
+      /* "scrabble/p.pyx":955
  *                 printf('%c', nval)
  * 
  *             if i != nodes.shape[1] - 1:             # <<<<<<<<<<<<<<
@@ -11173,7 +10766,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       __pyx_t_4 = ((__pyx_v_i != ((__pyx_v_nodes.shape[1]) - 1)) != 0);
       if (__pyx_t_4) {
 
-        /* "scrabble/p.pyx":937
+        /* "scrabble/p.pyx":956
  * 
  *             if i != nodes.shape[1] - 1:
  *                 printf(' ')             # <<<<<<<<<<<<<<
@@ -11182,7 +10775,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
         (void)(printf(((char const *)" ")));
 
-        /* "scrabble/p.pyx":936
+        /* "scrabble/p.pyx":955
  *                 printf('%c', nval)
  * 
  *             if i != nodes.shape[1] - 1:             # <<<<<<<<<<<<<<
@@ -11192,7 +10785,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
       }
     }
 
-    /* "scrabble/p.pyx":939
+    /* "scrabble/p.pyx":958
  *                 printf(' ')
  * 
  *         printf('  %lc\n', u_sep_hor_ri)             # <<<<<<<<<<<<<<
@@ -11202,7 +10795,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     (void)(printf(((char const *)"  %lc\n"), __pyx_v_u_sep_hor_ri));
   }
 
-  /* "scrabble/p.pyx":942
+  /* "scrabble/p.pyx":961
  * 
  *     # - col seps bottom
  *     printf('   %lc%lc', u_bx_bl, u_dash)             # <<<<<<<<<<<<<<
@@ -11211,7 +10804,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   (void)(printf(((char const *)"   %lc%lc"), __pyx_v_u_bx_bl, __pyx_v_u_dash));
 
-  /* "scrabble/p.pyx":943
+  /* "scrabble/p.pyx":962
  *     # - col seps bottom
  *     printf('   %lc%lc', u_bx_bl, u_dash)
  *     while colb < nodes.shape[1]:             # <<<<<<<<<<<<<<
@@ -11222,7 +10815,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_t_4 = ((__pyx_v_colb < (__pyx_v_nodes.shape[1])) != 0);
     if (!__pyx_t_4) break;
 
-    /* "scrabble/p.pyx":944
+    /* "scrabble/p.pyx":963
  *     printf('   %lc%lc', u_bx_bl, u_dash)
  *     while colb < nodes.shape[1]:
  *         printf('%lc%lc', u_dash, u_sep_ver_dn)             # <<<<<<<<<<<<<<
@@ -11231,7 +10824,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
     (void)(printf(((char const *)"%lc%lc"), __pyx_v_u_dash, __pyx_v_u_sep_ver_dn));
 
-    /* "scrabble/p.pyx":945
+    /* "scrabble/p.pyx":964
  *     while colb < nodes.shape[1]:
  *         printf('%lc%lc', u_dash, u_sep_ver_dn)
  *         colb += 1             # <<<<<<<<<<<<<<
@@ -11241,7 +10834,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
     __pyx_v_colb = (__pyx_v_colb + 1);
   }
 
-  /* "scrabble/p.pyx":946
+  /* "scrabble/p.pyx":965
  *         printf('%lc%lc', u_dash, u_sep_ver_dn)
  *         colb += 1
  *     printf('%lc%lc%lc\n', u_dash, u_dash, u_bx_br)             # <<<<<<<<<<<<<<
@@ -11250,7 +10843,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
  */
   (void)(printf(((char const *)"%lc%lc%lc\n"), __pyx_v_u_dash, __pyx_v_u_dash, __pyx_v_u_bx_br));
 
-  /* "scrabble/p.pyx":852
+  /* "scrabble/p.pyx":871
  * 
  * 
  * cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:             # <<<<<<<<<<<<<<
@@ -11261,7 +10854,7 @@ static void __pyx_f_8scrabble_1p_print_board(__Pyx_memviewslice __pyx_v_nodes, _
   /* function exit code */
 }
 
-/* "scrabble/p.pyx":949
+/* "scrabble/p.pyx":968
  * 
  * 
  * cdef int mycmp(c_void pa, c_void pb) nogil:             # <<<<<<<<<<<<<<
@@ -11276,7 +10869,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
   __pyx_t_8scrabble_1p_STRU_t __pyx_t_1;
   int __pyx_t_2;
 
-  /* "scrabble/p.pyx":950
+  /* "scrabble/p.pyx":969
  * 
  * cdef int mycmp(c_void pa, c_void pb) nogil:
  *     cdef STRU_t a = (<WordDict *>pa).pts             # <<<<<<<<<<<<<<
@@ -11286,7 +10879,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
   __pyx_t_1 = ((__pyx_t_8scrabble_1p_WordDict *)__pyx_v_pa)->pts;
   __pyx_v_a = __pyx_t_1;
 
-  /* "scrabble/p.pyx":951
+  /* "scrabble/p.pyx":970
  * cdef int mycmp(c_void pa, c_void pb) nogil:
  *     cdef STRU_t a = (<WordDict *>pa).pts
  *     cdef STRU_t b = (<WordDict *>pb).pts             # <<<<<<<<<<<<<<
@@ -11296,7 +10889,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
   __pyx_t_1 = ((__pyx_t_8scrabble_1p_WordDict *)__pyx_v_pb)->pts;
   __pyx_v_b = __pyx_t_1;
 
-  /* "scrabble/p.pyx":952
+  /* "scrabble/p.pyx":971
  *     cdef STRU_t a = (<WordDict *>pa).pts
  *     cdef STRU_t b = (<WordDict *>pb).pts
  *     if a < b: return 1             # <<<<<<<<<<<<<<
@@ -11309,7 +10902,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
     goto __pyx_L0;
   }
 
-  /* "scrabble/p.pyx":953
+  /* "scrabble/p.pyx":972
  *     cdef STRU_t b = (<WordDict *>pb).pts
  *     if a < b: return 1
  *     if a > b: return -1             # <<<<<<<<<<<<<<
@@ -11322,7 +10915,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
     goto __pyx_L0;
   }
 
-  /* "scrabble/p.pyx":954
+  /* "scrabble/p.pyx":973
  *     if a < b: return 1
  *     if a > b: return -1
  *     return 0             # <<<<<<<<<<<<<<
@@ -11332,7 +10925,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":949
+  /* "scrabble/p.pyx":968
  * 
  * 
  * cdef int mycmp(c_void pa, c_void pb) nogil:             # <<<<<<<<<<<<<<
@@ -11345,7 +10938,7 @@ static int __pyx_f_8scrabble_1p_mycmp(__pyx_t_8scrabble_1p_c_void __pyx_v_pa, __
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":958
+/* "scrabble/p.pyx":977
  * 
  * #[:]
  * cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) nogil:             # <<<<<<<<<<<<<<
@@ -11361,7 +10954,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   __pyx_t_8scrabble_1p_WordDict *__pyx_t_2;
   Py_ssize_t __pyx_t_3;
 
-  /* "scrabble/p.pyx":961
+  /* "scrabble/p.pyx":980
  *     # todo mark blanks
  * 
  *     if words.len == 0:             # <<<<<<<<<<<<<<
@@ -11371,7 +10964,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   __pyx_t_1 = ((__pyx_v_words.len == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":962
+    /* "scrabble/p.pyx":981
  * 
  *     if words.len == 0:
  *         printf('\nNo solution.\n')             # <<<<<<<<<<<<<<
@@ -11380,7 +10973,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
     (void)(printf(((char const *)"\nNo solution.\n")));
 
-    /* "scrabble/p.pyx":963
+    /* "scrabble/p.pyx":982
  *     if words.len == 0:
  *         printf('\nNo solution.\n')
  *         return             # <<<<<<<<<<<<<<
@@ -11389,7 +10982,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":961
+    /* "scrabble/p.pyx":980
  *     # todo mark blanks
  * 
  *     if words.len == 0:             # <<<<<<<<<<<<<<
@@ -11398,7 +10991,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
   }
 
-  /* "scrabble/p.pyx":968
+  /* "scrabble/p.pyx":987
  *         WordDict* best
  *         Py_ssize_t cut_num
  *         WordDict* word_list = words.l             # <<<<<<<<<<<<<<
@@ -11408,7 +11001,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   __pyx_t_2 = __pyx_v_words.l;
   __pyx_v_word_list = __pyx_t_2;
 
-  /* "scrabble/p.pyx":970
+  /* "scrabble/p.pyx":989
  *         WordDict* word_list = words.l
  * 
  *     qsort(word_list, words.len, sizeof(WordDict), &mycmp)             # <<<<<<<<<<<<<<
@@ -11417,7 +11010,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
   qsort(__pyx_v_word_list, __pyx_v_words.len, (sizeof(__pyx_t_8scrabble_1p_WordDict)), (&__pyx_f_8scrabble_1p_mycmp));
 
-  /* "scrabble/p.pyx":972
+  /* "scrabble/p.pyx":991
  *     qsort(word_list, words.len, sizeof(WordDict), &mycmp)
  * 
  *     if can_log('s'):             # <<<<<<<<<<<<<<
@@ -11427,7 +11020,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   __pyx_t_1 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":973
+    /* "scrabble/p.pyx":992
  * 
  *     if can_log('s'):
  *         if Settings.num_results == 0:             # <<<<<<<<<<<<<<
@@ -11437,7 +11030,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
     __pyx_t_1 = ((__pyx_v_8scrabble_1p_Settings->num_results == 0) != 0);
     if (__pyx_t_1) {
 
-      /* "scrabble/p.pyx":974
+      /* "scrabble/p.pyx":993
  *     if can_log('s'):
  *         if Settings.num_results == 0:
  *             cut_num = words.len             # <<<<<<<<<<<<<<
@@ -11447,7 +11040,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
       __pyx_t_3 = __pyx_v_words.len;
       __pyx_v_cut_num = __pyx_t_3;
 
-      /* "scrabble/p.pyx":973
+      /* "scrabble/p.pyx":992
  * 
  *     if can_log('s'):
  *         if Settings.num_results == 0:             # <<<<<<<<<<<<<<
@@ -11457,7 +11050,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
       goto __pyx_L5;
     }
 
-    /* "scrabble/p.pyx":976
+    /* "scrabble/p.pyx":995
  *             cut_num = words.len
  *         else:
  *             cut_num = Settings.num_results if Settings.num_results < words.len else words.len             # <<<<<<<<<<<<<<
@@ -11474,7 +11067,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
     }
     __pyx_L5:;
 
-    /* "scrabble/p.pyx":978
+    /* "scrabble/p.pyx":997
  *             cut_num = Settings.num_results if Settings.num_results < words.len else words.len
  * 
  *         printf('\n')             # <<<<<<<<<<<<<<
@@ -11483,7 +11076,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
     (void)(printf(((char const *)"\n")));
 
-    /* "scrabble/p.pyx":981
+    /* "scrabble/p.pyx":1000
  *         #los('-- Results (%i / %i) --\n', cut_num, words.len)
  *         #los('-- Results ({} / {}) --\n'.format(cut_num, words.len))
  *         clos('-- Results (%zu / %zu) --\n', cut_num, words.len)             # <<<<<<<<<<<<<<
@@ -11492,7 +11085,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
     __pyx_f_8scrabble_6logger_clos(((__pyx_t_8scrabble_6logger_cchrp)"-- Results (%zu / %zu) --\n"), __pyx_v_cut_num, __pyx_v_words.len);
 
-    /* "scrabble/p.pyx":982
+    /* "scrabble/p.pyx":1001
  *         #los('-- Results ({} / {}) --\n'.format(cut_num, words.len))
  *         clos('-- Results (%zu / %zu) --\n', cut_num, words.len)
  *         cut_num -= 1             # <<<<<<<<<<<<<<
@@ -11501,7 +11094,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
     __pyx_v_cut_num = (__pyx_v_cut_num - 1);
 
-    /* "scrabble/p.pyx":983
+    /* "scrabble/p.pyx":1002
  *         clos('-- Results (%zu / %zu) --\n', cut_num, words.len)
  *         cut_num -= 1
  *         while cut_num >= 0:             # <<<<<<<<<<<<<<
@@ -11512,7 +11105,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
       __pyx_t_1 = ((__pyx_v_cut_num >= 0) != 0);
       if (!__pyx_t_1) break;
 
-      /* "scrabble/p.pyx":989
+      /* "scrabble/p.pyx":1008
  *             #    log.KS_BLK_L, log.KS_RES, log.KS_GRN_L, word_list[cut_num].word, log.KS_RES
  *             # )
  *             clos('%s', word_list[cut_num].word)             # <<<<<<<<<<<<<<
@@ -11521,7 +11114,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
       __pyx_f_8scrabble_6logger_clos(((__pyx_t_8scrabble_6logger_cchrp)"%s"), (__pyx_v_word_list[__pyx_v_cut_num]).word);
 
-      /* "scrabble/p.pyx":990
+      /* "scrabble/p.pyx":1009
  *             # )
  *             clos('%s', word_list[cut_num].word)
  *             cut_num -= 1             # <<<<<<<<<<<<<<
@@ -11531,7 +11124,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
       __pyx_v_cut_num = (__pyx_v_cut_num - 1);
     }
 
-    /* "scrabble/p.pyx":972
+    /* "scrabble/p.pyx":991
  *     qsort(word_list, words.len, sizeof(WordDict), &mycmp)
  * 
  *     if can_log('s'):             # <<<<<<<<<<<<<<
@@ -11540,7 +11133,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
   }
 
-  /* "scrabble/p.pyx":992
+  /* "scrabble/p.pyx":1011
  *             cut_num -= 1
  * 
  *     best = &word_list[0]             # <<<<<<<<<<<<<<
@@ -11549,7 +11142,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
   __pyx_v_best = (&(__pyx_v_word_list[0]));
 
-  /* "scrabble/p.pyx":994
+  /* "scrabble/p.pyx":1013
  *     best = &word_list[0]
  * 
  *     if no_words:  # todo: print xs instead?             # <<<<<<<<<<<<<<
@@ -11559,7 +11152,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   __pyx_t_1 = (__pyx_v_no_words != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/p.pyx":996
+    /* "scrabble/p.pyx":1015
  *     if no_words:  # todo: print xs instead?
  *         #printf('\n<solution hidden> (len: %zu)\n', best.letters.len)
  *         printf('\n<solution hidden> (len: %i)\n', 12)             # <<<<<<<<<<<<<<
@@ -11568,7 +11161,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
     (void)(printf(((char const *)"\n<solution hidden> (len: %i)\n"), 12));
 
-    /* "scrabble/p.pyx":994
+    /* "scrabble/p.pyx":1013
  *     best = &word_list[0]
  * 
  *     if no_words:  # todo: print xs instead?             # <<<<<<<<<<<<<<
@@ -11578,7 +11171,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
     goto __pyx_L8;
   }
 
-  /* "scrabble/p.pyx":999
+  /* "scrabble/p.pyx":1018
  * 
  *     else:
  *         print_board(nodes, best.letters)             # <<<<<<<<<<<<<<
@@ -11590,7 +11183,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   }
   __pyx_L8:;
 
-  /* "scrabble/p.pyx":1002
+  /* "scrabble/p.pyx":1021
  * 
  * 
  *     printf('\nPoints: %i\n', best.pts)             # <<<<<<<<<<<<<<
@@ -11599,7 +11192,7 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
  */
   (void)(printf(((char const *)"\nPoints: %i\n"), __pyx_v_best->pts));
 
-  /* "scrabble/p.pyx":958
+  /* "scrabble/p.pyx":977
  * 
  * #[:]
  * cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) nogil:             # <<<<<<<<<<<<<<
@@ -11611,16 +11204,16 @@ static void __pyx_f_8scrabble_1p_show_solution(__Pyx_memviewslice __pyx_v_nodes,
   __pyx_L0:;
 }
 
-/* "scrabble/p.pyx":1006
+/* "scrabble/p.pyx":1025
  * 
  * @cython.final(True)
- * cpdef object loadfile(tuple paths, bint is_file = True):             # <<<<<<<<<<<<<<
+ * cpdef object checkfile(tuple paths, bint is_file = True):             # <<<<<<<<<<<<<<
  *     cdef object filepath = Path(*paths)
  *     if not filepath.exists():
  */
 
-static PyObject *__pyx_pw_8scrabble_1p_3loadfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_8scrabble_1p_loadfile *__pyx_optional_args) {
+static PyObject *__pyx_pw_8scrabble_1p_3checkfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_8scrabble_1p_checkfile(PyObject *__pyx_v_paths, CYTHON_UNUSED int __pyx_skip_dispatch, struct __pyx_opt_args_8scrabble_1p_checkfile *__pyx_optional_args) {
   int __pyx_v_is_file = ((int)1);
   PyObject *__pyx_v_filepath = 0;
   PyObject *__pyx_r = NULL;
@@ -11632,37 +11225,37 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
   int __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
   PyObject *__pyx_t_7 = NULL;
-  __Pyx_RefNannySetupContext("loadfile", 0);
+  __Pyx_RefNannySetupContext("checkfile", 0);
   if (__pyx_optional_args) {
     if (__pyx_optional_args->__pyx_n > 0) {
       __pyx_v_is_file = __pyx_optional_args->is_file;
     }
   }
 
-  /* "scrabble/p.pyx":1007
+  /* "scrabble/p.pyx":1026
  * @cython.final(True)
- * cpdef object loadfile(tuple paths, bint is_file = True):
+ * cpdef object checkfile(tuple paths, bint is_file = True):
  *     cdef object filepath = Path(*paths)             # <<<<<<<<<<<<<<
  *     if not filepath.exists():
  *         loc('Could not find file: {}'.format(filepath.absolute()))
  */
   if (unlikely(__pyx_v_paths == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 1007, __pyx_L1_error)
+    __PYX_ERR(0, 1026, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_v_8scrabble_1p_Path, __pyx_v_paths, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1007, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_v_8scrabble_1p_Path, __pyx_v_paths, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1026, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_filepath = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1008
- * cpdef object loadfile(tuple paths, bint is_file = True):
+  /* "scrabble/p.pyx":1027
+ * cpdef object checkfile(tuple paths, bint is_file = True):
  *     cdef object filepath = Path(*paths)
  *     if not filepath.exists():             # <<<<<<<<<<<<<<
  *         loc('Could not find file: {}'.format(filepath.absolute()))
  *         sys.exit(1)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_exists); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1008, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_exists); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1027, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11676,24 +11269,24 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1008, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1027, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1008, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1027, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_5 = ((!__pyx_t_4) != 0);
   if (__pyx_t_5) {
 
-    /* "scrabble/p.pyx":1009
+    /* "scrabble/p.pyx":1028
  *     cdef object filepath = Path(*paths)
  *     if not filepath.exists():
  *         loc('Could not find file: {}'.format(filepath.absolute()))             # <<<<<<<<<<<<<<
  *         sys.exit(1)
  *     if is_file:
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Could_not_find_file, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1009, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Could_not_find_file, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1028, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_absolute); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1009, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_absolute); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1028, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -11707,7 +11300,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
     }
     __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1009, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1028, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_6 = NULL;
@@ -11723,20 +11316,20 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
     __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1009, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1028, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_f_8scrabble_6logger_loc(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1010
+    /* "scrabble/p.pyx":1029
  *     if not filepath.exists():
  *         loc('Could not find file: {}'.format(filepath.absolute()))
  *         sys.exit(1)             # <<<<<<<<<<<<<<
  *     if is_file:
  *         if not filepath.is_file():
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1010, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1029, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11750,13 +11343,13 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_int_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_int_1);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1010, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1029, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1008
- * cpdef object loadfile(tuple paths, bint is_file = True):
+    /* "scrabble/p.pyx":1027
+ * cpdef object checkfile(tuple paths, bint is_file = True):
  *     cdef object filepath = Path(*paths)
  *     if not filepath.exists():             # <<<<<<<<<<<<<<
  *         loc('Could not find file: {}'.format(filepath.absolute()))
@@ -11764,7 +11357,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
  */
   }
 
-  /* "scrabble/p.pyx":1011
+  /* "scrabble/p.pyx":1030
  *         loc('Could not find file: {}'.format(filepath.absolute()))
  *         sys.exit(1)
  *     if is_file:             # <<<<<<<<<<<<<<
@@ -11774,14 +11367,14 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
   __pyx_t_5 = (__pyx_v_is_file != 0);
   if (__pyx_t_5) {
 
-    /* "scrabble/p.pyx":1012
+    /* "scrabble/p.pyx":1031
  *         sys.exit(1)
  *     if is_file:
  *         if not filepath.is_file():             # <<<<<<<<<<<<<<
  *             loc('Path exists but is not a file: {}'.format(filepath.absolute()))
  *             sys.exit(1)
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_is_file); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1012, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_is_file); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1031, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11795,24 +11388,24 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1012, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1031, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 1012, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 1031, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_4 = ((!__pyx_t_5) != 0);
     if (__pyx_t_4) {
 
-      /* "scrabble/p.pyx":1013
+      /* "scrabble/p.pyx":1032
  *     if is_file:
  *         if not filepath.is_file():
  *             loc('Path exists but is not a file: {}'.format(filepath.absolute()))             # <<<<<<<<<<<<<<
  *             sys.exit(1)
  *     else:
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Path_exists_but_is_not_a_file, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1013, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Path_exists_but_is_not_a_file, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1032, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_absolute); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1013, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_absolute); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1032, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -11826,7 +11419,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
       }
       __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1013, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1032, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_6 = NULL;
@@ -11842,20 +11435,20 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
       __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1013, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1032, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_f_8scrabble_6logger_loc(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "scrabble/p.pyx":1014
+      /* "scrabble/p.pyx":1033
  *         if not filepath.is_file():
  *             loc('Path exists but is not a file: {}'.format(filepath.absolute()))
  *             sys.exit(1)             # <<<<<<<<<<<<<<
  *     else:
  *         if not filepath.is_dir():
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1014, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1033, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11869,12 +11462,12 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
       }
       __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_int_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_int_1);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1014, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1033, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "scrabble/p.pyx":1012
+      /* "scrabble/p.pyx":1031
  *         sys.exit(1)
  *     if is_file:
  *         if not filepath.is_file():             # <<<<<<<<<<<<<<
@@ -11883,7 +11476,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
  */
     }
 
-    /* "scrabble/p.pyx":1011
+    /* "scrabble/p.pyx":1030
  *         loc('Could not find file: {}'.format(filepath.absolute()))
  *         sys.exit(1)
  *     if is_file:             # <<<<<<<<<<<<<<
@@ -11893,7 +11486,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
     goto __pyx_L4;
   }
 
-  /* "scrabble/p.pyx":1016
+  /* "scrabble/p.pyx":1035
  *             sys.exit(1)
  *     else:
  *         if not filepath.is_dir():             # <<<<<<<<<<<<<<
@@ -11901,7 +11494,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
  *             sys.exit(1)
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_is_dir); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1016, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_is_dir); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1035, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11915,24 +11508,24 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1016, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1035, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1016, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1035, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_5 = ((!__pyx_t_4) != 0);
     if (__pyx_t_5) {
 
-      /* "scrabble/p.pyx":1017
+      /* "scrabble/p.pyx":1036
  *     else:
  *         if not filepath.is_dir():
  *             loc('Path exists but is not a directory: {}'.format(filepath.absolute()))             # <<<<<<<<<<<<<<
  *             sys.exit(1)
  * 
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Path_exists_but_is_not_a_directo, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1017, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Path_exists_but_is_not_a_directo, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1036, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_absolute); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1017, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_filepath, __pyx_n_s_absolute); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1036, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -11946,7 +11539,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
       }
       __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1017, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1036, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_6 = NULL;
@@ -11962,20 +11555,20 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
       __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1017, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1036, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_f_8scrabble_6logger_loc(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "scrabble/p.pyx":1018
+      /* "scrabble/p.pyx":1037
  *         if not filepath.is_dir():
  *             loc('Path exists but is not a directory: {}'.format(filepath.absolute()))
  *             sys.exit(1)             # <<<<<<<<<<<<<<
  * 
  *     return filepath
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1018, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1037, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -11989,12 +11582,12 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
       }
       __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_int_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_int_1);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1018, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1037, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "scrabble/p.pyx":1016
+      /* "scrabble/p.pyx":1035
  *             sys.exit(1)
  *     else:
  *         if not filepath.is_dir():             # <<<<<<<<<<<<<<
@@ -12005,7 +11598,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
   }
   __pyx_L4:;
 
-  /* "scrabble/p.pyx":1020
+  /* "scrabble/p.pyx":1039
  *             sys.exit(1)
  * 
  *     return filepath             # <<<<<<<<<<<<<<
@@ -12017,10 +11610,10 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
   __pyx_r = __pyx_v_filepath;
   goto __pyx_L0;
 
-  /* "scrabble/p.pyx":1006
+  /* "scrabble/p.pyx":1025
  * 
  * @cython.final(True)
- * cpdef object loadfile(tuple paths, bint is_file = True):             # <<<<<<<<<<<<<<
+ * cpdef object checkfile(tuple paths, bint is_file = True):             # <<<<<<<<<<<<<<
  *     cdef object filepath = Path(*paths)
  *     if not filepath.exists():
  */
@@ -12032,7 +11625,7 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("scrabble.p.loadfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("scrabble.p.checkfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_filepath);
@@ -12042,14 +11635,14 @@ static PyObject *__pyx_f_8scrabble_1p_loadfile(PyObject *__pyx_v_paths, CYTHON_U
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8scrabble_1p_3loadfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_8scrabble_1p_2loadfile[] = "loadfile(tuple paths, bool is_file=True)";
-static PyObject *__pyx_pw_8scrabble_1p_3loadfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8scrabble_1p_3checkfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_8scrabble_1p_2checkfile[] = "checkfile(tuple paths, bool is_file=True)";
+static PyObject *__pyx_pw_8scrabble_1p_3checkfile(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_paths = 0;
   int __pyx_v_is_file;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("loadfile (wrapper)", 0);
+  __Pyx_RefNannySetupContext("checkfile (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_paths,&__pyx_n_s_is_file,0};
     PyObject* values[2] = {0,0};
@@ -12077,7 +11670,7 @@ static PyObject *__pyx_pw_8scrabble_1p_3loadfile(PyObject *__pyx_self, PyObject 
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "loadfile") < 0)) __PYX_ERR(0, 1006, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "checkfile") < 0)) __PYX_ERR(0, 1025, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -12090,21 +11683,21 @@ static PyObject *__pyx_pw_8scrabble_1p_3loadfile(PyObject *__pyx_self, PyObject 
     }
     __pyx_v_paths = ((PyObject*)values[0]);
     if (values[1]) {
-      __pyx_v_is_file = __Pyx_PyObject_IsTrue(values[1]); if (unlikely((__pyx_v_is_file == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1006, __pyx_L3_error)
+      __pyx_v_is_file = __Pyx_PyObject_IsTrue(values[1]); if (unlikely((__pyx_v_is_file == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1025, __pyx_L3_error)
     } else {
       __pyx_v_is_file = ((int)1);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("loadfile", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1006, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("checkfile", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1025, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("scrabble.p.loadfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("scrabble.p.checkfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_paths), (&PyTuple_Type), 0, "paths", 1))) __PYX_ERR(0, 1006, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8scrabble_1p_2loadfile(__pyx_self, __pyx_v_paths, __pyx_v_is_file);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_paths), (&PyTuple_Type), 0, "paths", 1))) __PYX_ERR(0, 1025, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8scrabble_1p_2checkfile(__pyx_self, __pyx_v_paths, __pyx_v_is_file);
 
   /* function exit code */
   goto __pyx_L0;
@@ -12115,16 +11708,16 @@ static PyObject *__pyx_pw_8scrabble_1p_3loadfile(PyObject *__pyx_self, PyObject 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8scrabble_1p_2loadfile(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_paths, int __pyx_v_is_file) {
+static PyObject *__pyx_pf_8scrabble_1p_2checkfile(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_paths, int __pyx_v_is_file) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  struct __pyx_opt_args_8scrabble_1p_loadfile __pyx_t_2;
-  __Pyx_RefNannySetupContext("loadfile", 0);
+  struct __pyx_opt_args_8scrabble_1p_checkfile __pyx_t_2;
+  __Pyx_RefNannySetupContext("checkfile", 0);
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_2.__pyx_n = 1;
   __pyx_t_2.is_file = __pyx_v_is_file;
-  __pyx_t_1 = __pyx_f_8scrabble_1p_loadfile(__pyx_v_paths, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1006, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_1p_checkfile(__pyx_v_paths, 0, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1025, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -12133,7 +11726,7 @@ static PyObject *__pyx_pf_8scrabble_1p_2loadfile(CYTHON_UNUSED PyObject *__pyx_s
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("scrabble.p.loadfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("scrabble.p.checkfile", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -12141,10 +11734,10 @@ static PyObject *__pyx_pf_8scrabble_1p_2loadfile(CYTHON_UNUSED PyObject *__pyx_s
   return __pyx_r;
 }
 
-/* "scrabble/p.pyx":1029
- * # @cython.linetrace(True)
+/* "scrabble/p.pyx":1049
  * #cpdef void solve(str dictionary):
- * cdef void solve(str dictionary):             # <<<<<<<<<<<<<<
+ * @cython.wraparound(False)
+ * cdef void solve(str dictionary) except *:             # <<<<<<<<<<<<<<
  *     cdef:
  *         #list wordlist
  */
@@ -12158,16 +11751,12 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   PyObject *__pyx_v_s_words = 0;
   PyObject *__pyx_v_words = 0;
   PyObject *__pyx_v_search_words = 0;
-  Py_ssize_t __pyx_v_swl;
+  __pyx_t_8scrabble_1p_INT_32 __pyx_v_swl;
   PyObject *__pyx_v_sws = 0;
   Py_ssize_t __pyx_v_swi;
   __Pyx_memviewslice __pyx_v_sw = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_swlens = { 0, 0, { 0 }, { 0 }, { 0 } };
   struct __pyx_obj_8scrabble_1p_Board *__pyx_v_full = 0;
-  __pyx_t_8scrabble_1p_N __pyx_v_ns_r[15];
-  __pyx_t_8scrabble_1p_N __pyx_v_ns_c[15];
-  Py_ssize_t __pyx_v_ni;
-  struct __pyx_obj_8scrabble_1p_Node *__pyx_v_no = 0;
   Py_ssize_t __pyx_v_ir;
   Py_ssize_t __pyx_v_ic;
   PyObject *__pyx_v_search_rows = 0;
@@ -12193,25 +11782,21 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   Py_ssize_t __pyx_t_17;
   Py_ssize_t __pyx_t_18;
   Py_UCS4 __pyx_t_19;
-  Py_ssize_t __pyx_t_20;
-  Py_ssize_t __pyx_t_21;
-  __pyx_t_8scrabble_1p_N __pyx_t_22;
-  Py_ssize_t __pyx_t_23;
-  Py_ssize_t __pyx_t_24;
+  __Pyx_memviewslice __pyx_t_20 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("solve", 0);
 
-  /* "scrabble/p.pyx":1042
+  /* "scrabble/p.pyx":1062
  *         #object l
  * 
- *     wordlist_load = loadfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()             # <<<<<<<<<<<<<<
+ *     wordlist_load = checkfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()             # <<<<<<<<<<<<<<
  *     if not wordlist_load:
  *         return
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_WORDS_DIR); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1042, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_WORDS_DIR); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1062, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_dictionary, __pyx_kp_u_txt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1042, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_dictionary, __pyx_kp_u_txt); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1062, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1042, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1062, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
@@ -12219,10 +11804,10 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_3);
   __pyx_t_2 = 0;
   __pyx_t_3 = 0;
-  __pyx_t_3 = __pyx_f_8scrabble_1p_loadfile(((PyObject*)__pyx_t_4), 0, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1042, __pyx_L1_error)
+  __pyx_t_3 = __pyx_f_8scrabble_1p_checkfile(((PyObject*)__pyx_t_4), 0, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1062, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_read_text); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1042, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_read_text); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1062, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -12237,16 +11822,16 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1042, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1062, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1042, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1062, __pyx_L1_error)
   __pyx_v_wordlist_load = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1043
+  /* "scrabble/p.pyx":1063
  * 
- *     wordlist_load = loadfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
+ *     wordlist_load = checkfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
  *     if not wordlist_load:             # <<<<<<<<<<<<<<
  *         return
  * 
@@ -12255,8 +11840,8 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __pyx_t_6 = ((!__pyx_t_5) != 0);
   if (__pyx_t_6) {
 
-    /* "scrabble/p.pyx":1044
- *     wordlist_load = loadfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
+    /* "scrabble/p.pyx":1064
+ *     wordlist_load = checkfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
  *     if not wordlist_load:
  *         return             # <<<<<<<<<<<<<<
  * 
@@ -12264,16 +11849,16 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":1043
+    /* "scrabble/p.pyx":1063
  * 
- *     wordlist_load = loadfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
+ *     wordlist_load = checkfile((_s.WORDS_DIR, <str>dictionary + '.txt')).read_text()
  *     if not wordlist_load:             # <<<<<<<<<<<<<<
  *         return
  * 
  */
   }
 
-  /* "scrabble/p.pyx":1046
+  /* "scrabble/p.pyx":1066
  *         return
  * 
  *     mnlen = Settings.shape[0] if Settings.shape[0] > Settings.shape[1] else Settings.shape[1]             # <<<<<<<<<<<<<<
@@ -12287,19 +11872,19 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   }
   __pyx_v_mnlen = __pyx_t_7;
 
-  /* "scrabble/p.pyx":1049
+  /* "scrabble/p.pyx":1069
  * 
  *     #s_words = {w for w in wordlist_load.splitlines() if len(w) <= mnlen}
  *     s_words = set()             # <<<<<<<<<<<<<<
  * 
  *     # todo why does this check for none?
  */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1049, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1069, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_s_words = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1052
+  /* "scrabble/p.pyx":1072
  * 
  *     # todo why does this check for none?
  *     for w in wordlist_load.splitlines():             # <<<<<<<<<<<<<<
@@ -12308,25 +11893,25 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
   if (unlikely(__pyx_v_wordlist_load == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "splitlines");
-    __PYX_ERR(0, 1052, __pyx_L1_error)
+    __PYX_ERR(0, 1072, __pyx_L1_error)
   }
-  __pyx_t_1 = PyUnicode_Splitlines(__pyx_v_wordlist_load, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1052, __pyx_L1_error)
+  __pyx_t_1 = PyUnicode_Splitlines(__pyx_v_wordlist_load, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1072, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_4 = __pyx_t_1; __Pyx_INCREF(__pyx_t_4); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
     if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_4)) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_1 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_7); __Pyx_INCREF(__pyx_t_1); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1052, __pyx_L1_error)
+    __pyx_t_1 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_7); __Pyx_INCREF(__pyx_t_1); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1072, __pyx_L1_error)
     #else
-    __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1052, __pyx_L1_error)
+    __pyx_t_1 = PySequence_ITEM(__pyx_t_4, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1072, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     #endif
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1052, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1072, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_w, ((PyObject*)__pyx_t_1));
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1053
+    /* "scrabble/p.pyx":1073
  *     # todo why does this check for none?
  *     for w in wordlist_load.splitlines():
  *         wl = len(<str>w)             # <<<<<<<<<<<<<<
@@ -12335,12 +11920,12 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     if (unlikely(__pyx_v_w == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 1053, __pyx_L1_error)
+      __PYX_ERR(0, 1073, __pyx_L1_error)
     }
-    __pyx_t_8 = __Pyx_PyUnicode_GET_LENGTH(((PyObject*)__pyx_v_w)); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1053, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyUnicode_GET_LENGTH(((PyObject*)__pyx_v_w)); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1073, __pyx_L1_error)
     __pyx_v_wl = __pyx_t_8;
 
-    /* "scrabble/p.pyx":1054
+    /* "scrabble/p.pyx":1074
  *     for w in wordlist_load.splitlines():
  *         wl = len(<str>w)
  *         if wl <= mnlen:             # <<<<<<<<<<<<<<
@@ -12350,16 +11935,16 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     __pyx_t_6 = ((__pyx_v_wl <= __pyx_v_mnlen) != 0);
     if (__pyx_t_6) {
 
-      /* "scrabble/p.pyx":1055
+      /* "scrabble/p.pyx":1075
  *         wl = len(<str>w)
  *         if wl <= mnlen:
  *             s_words.add(w)             # <<<<<<<<<<<<<<
  * 
  *     if not s_words:
  */
-      __pyx_t_9 = PySet_Add(__pyx_v_s_words, __pyx_v_w); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 1055, __pyx_L1_error)
+      __pyx_t_9 = PySet_Add(__pyx_v_s_words, __pyx_v_w); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 1075, __pyx_L1_error)
 
-      /* "scrabble/p.pyx":1054
+      /* "scrabble/p.pyx":1074
  *     for w in wordlist_load.splitlines():
  *         wl = len(<str>w)
  *         if wl <= mnlen:             # <<<<<<<<<<<<<<
@@ -12368,7 +11953,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     }
 
-    /* "scrabble/p.pyx":1052
+    /* "scrabble/p.pyx":1072
  * 
  *     # todo why does this check for none?
  *     for w in wordlist_load.splitlines():             # <<<<<<<<<<<<<<
@@ -12378,7 +11963,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "scrabble/p.pyx":1057
+  /* "scrabble/p.pyx":1077
  *             s_words.add(w)
  * 
  *     if not s_words:             # <<<<<<<<<<<<<<
@@ -12389,7 +11974,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __pyx_t_5 = ((!__pyx_t_6) != 0);
   if (__pyx_t_5) {
 
-    /* "scrabble/p.pyx":1058
+    /* "scrabble/p.pyx":1078
  * 
  *     if not s_words:
  *         return             # <<<<<<<<<<<<<<
@@ -12398,7 +11983,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":1057
+    /* "scrabble/p.pyx":1077
  *             s_words.add(w)
  * 
  *     if not s_words:             # <<<<<<<<<<<<<<
@@ -12407,19 +11992,19 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
   }
 
-  /* "scrabble/p.pyx":1060
+  /* "scrabble/p.pyx":1080
  *         return
  * 
  *     words = frozenset(s_words)             # <<<<<<<<<<<<<<
  * 
  *     blanks = Settings.rack[bl]
  */
-  __pyx_t_4 = __Pyx_PyFrozenSet_New(__pyx_v_s_words); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1060, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFrozenSet_New(__pyx_v_s_words); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1080, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_v_words = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "scrabble/p.pyx":1062
+  /* "scrabble/p.pyx":1082
  *     words = frozenset(s_words)
  * 
  *     blanks = Settings.rack[bl]             # <<<<<<<<<<<<<<
@@ -12428,21 +12013,21 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
   __pyx_v_blanks = (__pyx_v_8scrabble_1p_Settings->rack[63]);
 
-  /* "scrabble/p.pyx":1064
+  /* "scrabble/p.pyx":1084
  *     blanks = Settings.rack[bl]
  * 
  *     if _s.SEARCH_WORDS is None:             # <<<<<<<<<<<<<<
  *         if blanks > 0:
  *             search_words = words
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1064, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1084, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = (__pyx_t_4 == Py_None);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_6 = (__pyx_t_5 != 0);
   if (__pyx_t_6) {
 
-    /* "scrabble/p.pyx":1065
+    /* "scrabble/p.pyx":1085
  * 
  *     if _s.SEARCH_WORDS is None:
  *         if blanks > 0:             # <<<<<<<<<<<<<<
@@ -12452,7 +12037,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     __pyx_t_6 = ((__pyx_v_blanks > 0) != 0);
     if (__pyx_t_6) {
 
-      /* "scrabble/p.pyx":1066
+      /* "scrabble/p.pyx":1086
  *     if _s.SEARCH_WORDS is None:
  *         if blanks > 0:
  *             search_words = words             # <<<<<<<<<<<<<<
@@ -12462,7 +12047,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
       __Pyx_INCREF(__pyx_v_words);
       __pyx_v_search_words = __pyx_v_words;
 
-      /* "scrabble/p.pyx":1065
+      /* "scrabble/p.pyx":1085
  * 
  *     if _s.SEARCH_WORDS is None:
  *         if blanks > 0:             # <<<<<<<<<<<<<<
@@ -12472,7 +12057,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
       goto __pyx_L9;
     }
 
-    /* "scrabble/p.pyx":1085
+    /* "scrabble/p.pyx":1105
  *             #search_words = frozenset(s_search_words)
  * 
  *             search_words = words             # <<<<<<<<<<<<<<
@@ -12485,7 +12070,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     }
     __pyx_L9:;
 
-    /* "scrabble/p.pyx":1064
+    /* "scrabble/p.pyx":1084
  *     blanks = Settings.rack[bl]
  * 
  *     if _s.SEARCH_WORDS is None:             # <<<<<<<<<<<<<<
@@ -12495,65 +12080,65 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     goto __pyx_L8;
   }
 
-  /* "scrabble/p.pyx":1089
+  /* "scrabble/p.pyx":1109
  *             #lo.e(len(search_words))
  * 
  *     elif isinstance(_s.SEARCH_WORDS, tuple):             # <<<<<<<<<<<<<<
  *         search_words = frozenset(list(s_words)[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
  *     elif isinstance(_s.SEARCH_WORDS, set):
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1089, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_6 = PyTuple_Check(__pyx_t_4); 
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_5 = (__pyx_t_6 != 0);
   if (__pyx_t_5) {
 
-    /* "scrabble/p.pyx":1090
+    /* "scrabble/p.pyx":1110
  * 
  *     elif isinstance(_s.SEARCH_WORDS, tuple):
  *         search_words = frozenset(list(s_words)[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])             # <<<<<<<<<<<<<<
  *     elif isinstance(_s.SEARCH_WORDS, set):
  *         search_words = frozenset(_s.SEARCH_WORDS)
  */
-    __pyx_t_4 = PySequence_List(__pyx_v_s_words); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_4 = PySequence_List(__pyx_v_s_words); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_5 = (__pyx_t_3 == Py_None);
     if (__pyx_t_5) {
       __pyx_t_7 = 0;
     } else {
-      __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1090, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1110, __pyx_L1_error)
       __pyx_t_7 = __pyx_t_8;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_5 = (__pyx_t_1 == Py_None);
     if (__pyx_t_5) {
       __pyx_t_8 = PY_SSIZE_T_MAX;
     } else {
-      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1090, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1110, __pyx_L1_error)
       __pyx_t_8 = __pyx_t_10;
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyList_GetSlice(__pyx_t_4, __pyx_t_7, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyList_GetSlice(__pyx_t_4, __pyx_t_7, __pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyFrozenSet_New(__pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1090, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyFrozenSet_New(__pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_search_words = ((PyObject*)__pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "scrabble/p.pyx":1089
+    /* "scrabble/p.pyx":1109
  *             #lo.e(len(search_words))
  * 
  *     elif isinstance(_s.SEARCH_WORDS, tuple):             # <<<<<<<<<<<<<<
@@ -12563,36 +12148,36 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     goto __pyx_L8;
   }
 
-  /* "scrabble/p.pyx":1091
+  /* "scrabble/p.pyx":1111
  *     elif isinstance(_s.SEARCH_WORDS, tuple):
  *         search_words = frozenset(list(s_words)[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
  *     elif isinstance(_s.SEARCH_WORDS, set):             # <<<<<<<<<<<<<<
  *         search_words = frozenset(_s.SEARCH_WORDS)
  *     else:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1091, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_5 = PySet_Check(__pyx_t_4); 
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_6 = (__pyx_t_5 != 0);
   if (__pyx_t_6) {
 
-    /* "scrabble/p.pyx":1092
+    /* "scrabble/p.pyx":1112
  *         search_words = frozenset(list(s_words)[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
  *     elif isinstance(_s.SEARCH_WORDS, set):
  *         search_words = frozenset(_s.SEARCH_WORDS)             # <<<<<<<<<<<<<<
  *     else:
  *         search_words = frozenset()  # why necessary?
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1092, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1112, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1092, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1112, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_search_words = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1091
+    /* "scrabble/p.pyx":1111
  *     elif isinstance(_s.SEARCH_WORDS, tuple):
  *         search_words = frozenset(list(s_words)[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]])
  *     elif isinstance(_s.SEARCH_WORDS, set):             # <<<<<<<<<<<<<<
@@ -12602,7 +12187,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     goto __pyx_L8;
   }
 
-  /* "scrabble/p.pyx":1094
+  /* "scrabble/p.pyx":1114
  *         search_words = frozenset(_s.SEARCH_WORDS)
  *     else:
  *         search_words = frozenset()  # why necessary?             # <<<<<<<<<<<<<<
@@ -12610,21 +12195,21 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  *         sys.exit(1)
  */
   /*else*/ {
-    __pyx_t_1 = __Pyx_PyFrozenSet_New(((PyObject *)NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1094, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFrozenSet_New(((PyObject *)NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_search_words = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1095
+    /* "scrabble/p.pyx":1115
  *     else:
  *         search_words = frozenset()  # why necessary?
  *         loc('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))             # <<<<<<<<<<<<<<
  *         sys.exit(1)
  * 
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Incompatible_search_words_type, __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1095, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Incompatible_search_words_type, __pyx_n_s_format); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1095, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_WORDS); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_2 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -12639,20 +12224,20 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, ((PyObject *)Py_TYPE(__pyx_t_3))) : __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)Py_TYPE(__pyx_t_3)));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1095, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1115, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_f_8scrabble_6logger_loc(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1096
+    /* "scrabble/p.pyx":1116
  *         search_words = frozenset()  # why necessary?
  *         loc('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
  *         sys.exit(1)             # <<<<<<<<<<<<<<
  * 
- *     cdef Py_ssize_t swl = len(search_words)
+ *     cdef INT_32 swl = len(search_words)
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1096, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1116, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -12666,26 +12251,26 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_int_1) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_int_1);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1096, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1116, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
   __pyx_L8:;
 
-  /* "scrabble/p.pyx":1098
+  /* "scrabble/p.pyx":1118
  *         sys.exit(1)
  * 
- *     cdef Py_ssize_t swl = len(search_words)             # <<<<<<<<<<<<<<
+ *     cdef INT_32 swl = len(search_words)             # <<<<<<<<<<<<<<
  *     if swl == 0:
  *         loc('No search words')
  */
-  __pyx_t_8 = PySet_GET_SIZE(__pyx_v_search_words); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1098, __pyx_L1_error)
+  __pyx_t_8 = PySet_GET_SIZE(__pyx_v_search_words); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1118, __pyx_L1_error)
   __pyx_v_swl = __pyx_t_8;
 
-  /* "scrabble/p.pyx":1099
+  /* "scrabble/p.pyx":1119
  * 
- *     cdef Py_ssize_t swl = len(search_words)
+ *     cdef INT_32 swl = len(search_words)
  *     if swl == 0:             # <<<<<<<<<<<<<<
  *         loc('No search words')
  *         sys.exit(1)
@@ -12693,8 +12278,8 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __pyx_t_6 = ((__pyx_v_swl == 0) != 0);
   if (__pyx_t_6) {
 
-    /* "scrabble/p.pyx":1100
- *     cdef Py_ssize_t swl = len(search_words)
+    /* "scrabble/p.pyx":1120
+ *     cdef INT_32 swl = len(search_words)
  *     if swl == 0:
  *         loc('No search words')             # <<<<<<<<<<<<<<
  *         sys.exit(1)
@@ -12702,14 +12287,14 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     __pyx_f_8scrabble_6logger_loc(__pyx_kp_u_No_search_words);
 
-    /* "scrabble/p.pyx":1101
+    /* "scrabble/p.pyx":1121
  *     if swl == 0:
  *         loc('No search words')
  *         sys.exit(1)             # <<<<<<<<<<<<<<
  * 
  *     Settings.blanks = blanks
  */
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1101, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_sys, __pyx_n_s_exit); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
@@ -12723,21 +12308,21 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     }
     __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_int_1) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_int_1);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1101, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1099
+    /* "scrabble/p.pyx":1119
  * 
- *     cdef Py_ssize_t swl = len(search_words)
+ *     cdef INT_32 swl = len(search_words)
  *     if swl == 0:             # <<<<<<<<<<<<<<
  *         loc('No search words')
  *         sys.exit(1)
  */
   }
 
-  /* "scrabble/p.pyx":1103
+  /* "scrabble/p.pyx":1123
  *         sys.exit(1)
  * 
  *     Settings.blanks = blanks             # <<<<<<<<<<<<<<
@@ -12746,7 +12331,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
   __pyx_v_8scrabble_1p_Settings->blanks = __pyx_v_blanks;
 
-  /* "scrabble/p.pyx":1112
+  /* "scrabble/p.pyx":1132
  * 
  *     #cdef set bwords = {s for s in words}
  *     Settings.words = words             # <<<<<<<<<<<<<<
@@ -12759,16 +12344,16 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __Pyx_DECREF(__pyx_v_8scrabble_1p_Settings->words);
   __pyx_v_8scrabble_1p_Settings->words = __pyx_v_words;
 
-  /* "scrabble/p.pyx":1131
+  /* "scrabble/p.pyx":1151
  *     # print(xx.dtype)
  * 
  *     cdef STR_t[:, ::1] sw = np.array(list(search_words)).view(STR).reshape(swl, -1)             # <<<<<<<<<<<<<<
  * 
  *     #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, np.uint8)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_11 = PySequence_List(__pyx_v_search_words); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_11 = PySequence_List(__pyx_v_search_words); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_t_12 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -12783,10 +12368,10 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __pyx_t_3 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_12, __pyx_t_11) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_view); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_view); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = NULL;
@@ -12801,13 +12386,13 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   }
   __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, ((PyObject *)__pyx_v_8scrabble_1p_STR)) : __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)__pyx_v_8scrabble_1p_STR));
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_reshape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_reshape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_swl); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_npy_uint32(__pyx_v_swl); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_3 = NULL;
   __pyx_t_13 = 0;
@@ -12824,7 +12409,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_t_4, __pyx_int_neg_1};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1131, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1151, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -12833,14 +12418,14 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
     PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_t_4, __pyx_int_neg_1};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1131, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1151, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else
   #endif
   {
-    __pyx_t_11 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1131, __pyx_L1_error)
+    __pyx_t_11 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     if (__pyx_t_3) {
       __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -12851,25 +12436,25 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     __Pyx_GIVEREF(__pyx_int_neg_1);
     PyTuple_SET_ITEM(__pyx_t_11, 1+__pyx_t_13, __pyx_int_neg_1);
     __pyx_t_4 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1131, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_11, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_nn___pyx_t_8scrabble_1p_STR_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_nn___pyx_t_8scrabble_1p_STR_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 1151, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_sw = __pyx_t_14;
   __pyx_t_14.memview = NULL;
   __pyx_t_14.data = NULL;
 
-  /* "scrabble/p.pyx":1134
+  /* "scrabble/p.pyx":1154
  * 
  *     #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, np.uint8)
  *     cdef SIZE_t[::1] swlens = npe(swl, SIZE)             # <<<<<<<<<<<<<<
  * 
  *     for swi, sws in enumerate(search_words):
  */
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_swl); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1134, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_From_npy_uint32(__pyx_v_swl); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_8scrabble_1p_npe);
   __pyx_t_11 = __pyx_v_8scrabble_1p_npe; __pyx_t_4 = NULL;
@@ -12887,7 +12472,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_11)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, ((PyObject *)__pyx_v_8scrabble_1p_SIZE)};
-    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1134, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1154, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -12896,14 +12481,14 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_11)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_2, ((PyObject *)__pyx_v_8scrabble_1p_SIZE)};
-    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1134, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1154, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else
   #endif
   {
-    __pyx_t_3 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1134, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1154, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -12914,18 +12499,18 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     __Pyx_GIVEREF(((PyObject *)__pyx_v_8scrabble_1p_SIZE));
     PyTuple_SET_ITEM(__pyx_t_3, 1+__pyx_t_13, ((PyObject *)__pyx_v_8scrabble_1p_SIZE));
     __pyx_t_2 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1134, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1154, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_SIZE_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 1134, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_SIZE_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 1154, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_swlens = __pyx_t_15;
   __pyx_t_15.memview = NULL;
   __pyx_t_15.data = NULL;
 
-  /* "scrabble/p.pyx":1136
+  /* "scrabble/p.pyx":1156
  *     cdef SIZE_t[::1] swlens = npe(swl, SIZE)
  * 
  *     for swi, sws in enumerate(search_words):             # <<<<<<<<<<<<<<
@@ -12934,7 +12519,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
   __pyx_t_8 = 0;
   __pyx_t_7 = 0;
-  __pyx_t_11 = __Pyx_set_iterator(__pyx_v_search_words, 0, (&__pyx_t_10), (&__pyx_t_13)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1136, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_set_iterator(__pyx_v_search_words, 0, (&__pyx_t_10), (&__pyx_t_13)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_1);
   __pyx_t_1 = __pyx_t_11;
@@ -12942,15 +12527,15 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   while (1) {
     __pyx_t_16 = __Pyx_set_iter_next(__pyx_t_1, __pyx_t_10, &__pyx_t_7, &__pyx_t_11, __pyx_t_13);
     if (unlikely(__pyx_t_16 == 0)) break;
-    if (unlikely(__pyx_t_16 == -1)) __PYX_ERR(0, 1136, __pyx_L1_error)
+    if (unlikely(__pyx_t_16 == -1)) __PYX_ERR(0, 1156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_11)->tp_name), 0))) __PYX_ERR(0, 1136, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_11)->tp_name), 0))) __PYX_ERR(0, 1156, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_sws, ((PyObject*)__pyx_t_11));
     __pyx_t_11 = 0;
     __pyx_v_swi = __pyx_t_8;
     __pyx_t_8 = (__pyx_t_8 + 1);
 
-    /* "scrabble/p.pyx":1138
+    /* "scrabble/p.pyx":1158
  *     for swi, sws in enumerate(search_words):
  *         #sw[swi] = sws.encode('utf8')
  *         swlens[swi] = len(sws)             # <<<<<<<<<<<<<<
@@ -12959,27 +12544,26 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     if (unlikely(__pyx_v_sws == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      __PYX_ERR(0, 1138, __pyx_L1_error)
+      __PYX_ERR(0, 1158, __pyx_L1_error)
     }
-    __pyx_t_17 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_sws); if (unlikely(__pyx_t_17 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1138, __pyx_L1_error)
+    __pyx_t_17 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_sws); if (unlikely(__pyx_t_17 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1158, __pyx_L1_error)
     __pyx_t_18 = __pyx_v_swi;
-    if (__pyx_t_18 < 0) __pyx_t_18 += __pyx_v_swlens.shape[0];
     *((__pyx_t_8scrabble_1p_SIZE_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_SIZE_t *) __pyx_v_swlens.data) + __pyx_t_18)) )) = __pyx_t_17;
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1143
+  /* "scrabble/p.pyx":1163
  *     #Settings.search_words_l = swl
  * 
  *     cdef Board full = Board(Settings.board, Settings.default_board)             # <<<<<<<<<<<<<<
  *     Settings.node_board = full
  * 
  */
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_8scrabble_1p_Settings->board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1143, __pyx_L1_error)
+  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_8scrabble_1p_Settings->board, 2, (PyObject *(*)(char *)) __pyx_memview_get_char, (int (*)(char *, PyObject *)) __pyx_memview_set_char, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1163, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_11 = __pyx_memoryview_fromslice(__pyx_v_8scrabble_1p_Settings->default_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1143, __pyx_L1_error)
+  __pyx_t_11 = __pyx_memoryview_fromslice(__pyx_v_8scrabble_1p_Settings->default_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1163, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1143, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1163, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
@@ -12987,13 +12571,13 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_11);
   __pyx_t_1 = 0;
   __pyx_t_11 = 0;
-  __pyx_t_11 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_8scrabble_1p_Board), __pyx_t_3, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1143, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_8scrabble_1p_Board), __pyx_t_3, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1163, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_full = ((struct __pyx_obj_8scrabble_1p_Board *)__pyx_t_11);
   __pyx_t_11 = 0;
 
-  /* "scrabble/p.pyx":1144
+  /* "scrabble/p.pyx":1164
  * 
  *     cdef Board full = Board(Settings.board, Settings.default_board)
  *     Settings.node_board = full             # <<<<<<<<<<<<<<
@@ -13006,7 +12590,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __Pyx_DECREF(((PyObject *)__pyx_v_8scrabble_1p_Settings->node_board));
   __pyx_v_8scrabble_1p_Settings->node_board = __pyx_v_full;
 
-  /* "scrabble/p.pyx":1161
+  /* "scrabble/p.pyx":1178
  *     cdef bint is_col
  * 
  *     los('Solving...\n')             # <<<<<<<<<<<<<<
@@ -13015,7 +12599,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
   __pyx_f_8scrabble_6logger_los(__pyx_kp_u_Solving);
 
-  /* "scrabble/p.pyx":1163
+  /* "scrabble/p.pyx":1180
  *     los('Solving...\n')
  * 
  *     if full.new_game:             # <<<<<<<<<<<<<<
@@ -13025,7 +12609,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __pyx_t_6 = (__pyx_v_full->new_game != 0);
   if (__pyx_t_6) {
 
-    /* "scrabble/p.pyx":1164
+    /* "scrabble/p.pyx":1181
  * 
  *     if full.new_game:
  *         los(' = Fresh game = ')             # <<<<<<<<<<<<<<
@@ -13034,7 +12618,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     __pyx_f_8scrabble_6logger_los(__pyx_kp_u_Fresh_game);
 
-    /* "scrabble/p.pyx":1163
+    /* "scrabble/p.pyx":1180
  *     los('Solving...\n')
  * 
  *     if full.new_game:             # <<<<<<<<<<<<<<
@@ -13044,7 +12628,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     goto __pyx_L13;
   }
 
-  /* "scrabble/p.pyx":1171
+  /* "scrabble/p.pyx":1188
  * 
  *     else:
  *         if _s.SEARCH_NODES is None:             # <<<<<<<<<<<<<<
@@ -13052,50 +12636,50 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  *             search_cols = list(range(Settings.shape[1]))
  */
   /*else*/ {
-    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1171, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1188, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __pyx_t_6 = (__pyx_t_11 == Py_None);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     __pyx_t_5 = (__pyx_t_6 != 0);
     if (__pyx_t_5) {
 
-      /* "scrabble/p.pyx":1172
+      /* "scrabble/p.pyx":1189
  *     else:
  *         if _s.SEARCH_NODES is None:
  *             search_rows = list(range(Settings.shape[0]))             # <<<<<<<<<<<<<<
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):
  */
-      __pyx_t_11 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[0])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1172, __pyx_L1_error)
+      __pyx_t_11 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[0])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_11); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1172, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_11); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __pyx_t_11 = PySequence_List(__pyx_t_3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1172, __pyx_L1_error)
+      __pyx_t_11 = PySequence_List(__pyx_t_3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_search_rows = ((PyObject*)__pyx_t_11);
       __pyx_t_11 = 0;
 
-      /* "scrabble/p.pyx":1173
+      /* "scrabble/p.pyx":1190
  *         if _s.SEARCH_NODES is None:
  *             search_rows = list(range(Settings.shape[0]))
  *             search_cols = list(range(Settings.shape[1]))             # <<<<<<<<<<<<<<
  *             if can_log('s'):
  *                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
  */
-      __pyx_t_11 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[1])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1173, __pyx_L1_error)
+      __pyx_t_11 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[1])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_11); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1173, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_11); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __pyx_t_11 = PySequence_List(__pyx_t_3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1173, __pyx_L1_error)
+      __pyx_t_11 = PySequence_List(__pyx_t_3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_search_cols = ((PyObject*)__pyx_t_11);
       __pyx_t_11 = 0;
 
-      /* "scrabble/p.pyx":1174
+      /* "scrabble/p.pyx":1191
  *             search_rows = list(range(Settings.shape[0]))
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):             # <<<<<<<<<<<<<<
@@ -13105,18 +12689,18 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
       __pyx_t_5 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
       if (__pyx_t_5) {
 
-        /* "scrabble/p.pyx":1175
+        /* "scrabble/p.pyx":1192
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):
  *                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-        __pyx_t_11 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[0])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1175, __pyx_L1_error)
+        __pyx_t_11 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[0])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1192, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_3 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[1])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1175, __pyx_L1_error)
+        __pyx_t_3 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[1])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1192, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1175, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1192, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GIVEREF(__pyx_t_11);
         PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_11);
@@ -13124,13 +12708,13 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
         PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_3);
         __pyx_t_11 = 0;
         __pyx_t_3 = 0;
-        __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_Checking_all_lines_2i_x_2i, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1175, __pyx_L1_error)
+        __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_Checking_all_lines_2i_x_2i, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1192, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_f_8scrabble_6logger_los(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "scrabble/p.pyx":1174
+        /* "scrabble/p.pyx":1191
  *             search_rows = list(range(Settings.shape[0]))
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):             # <<<<<<<<<<<<<<
@@ -13139,7 +12723,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
       }
 
-      /* "scrabble/p.pyx":1171
+      /* "scrabble/p.pyx":1188
  * 
  *     else:
  *         if _s.SEARCH_NODES is None:             # <<<<<<<<<<<<<<
@@ -13149,7 +12733,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
       goto __pyx_L14;
     }
 
-    /* "scrabble/p.pyx":1178
+    /* "scrabble/p.pyx":1195
  * 
  *         else:
  *             search_rows = _s.SEARCH_NODES[0]             # <<<<<<<<<<<<<<
@@ -13157,32 +12741,32 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  *             if can_log('s'):
  */
     /*else*/ {
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1178, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1178, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1195, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1178, __pyx_L1_error)
+      if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1195, __pyx_L1_error)
       __pyx_v_search_rows = ((PyObject*)__pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "scrabble/p.pyx":1179
+      /* "scrabble/p.pyx":1196
  *         else:
  *             search_rows = _s.SEARCH_NODES[0]
  *             search_cols = _s.SEARCH_NODES[1]             # <<<<<<<<<<<<<<
  *             if can_log('s'):
  *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1179, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1179, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (!(likely(PyList_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 1179, __pyx_L1_error)
+      if (!(likely(PyList_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 1196, __pyx_L1_error)
       __pyx_v_search_cols = ((PyObject*)__pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "scrabble/p.pyx":1180
+      /* "scrabble/p.pyx":1197
  *             search_rows = _s.SEARCH_NODES[0]
  *             search_cols = _s.SEARCH_NODES[1]
  *             if can_log('s'):             # <<<<<<<<<<<<<<
@@ -13192,14 +12776,14 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
       __pyx_t_5 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
       if (__pyx_t_5) {
 
-        /* "scrabble/p.pyx":1181
+        /* "scrabble/p.pyx":1198
  *             search_cols = _s.SEARCH_NODES[1]
  *             if can_log('s'):
  *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')             # <<<<<<<<<<<<<<
  * 
  *         is_col = False
  */
-        __pyx_t_3 = PyTuple_New(5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1181, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_New(5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __pyx_t_8 = 0;
         __pyx_t_19 = 127;
@@ -13207,35 +12791,35 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
         __pyx_t_8 += 23;
         __Pyx_GIVEREF(__pyx_kp_u_Checking_custom_lines);
         PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_u_Checking_custom_lines);
-        __pyx_t_1 = __Pyx_PyObject_FormatSimple(__pyx_v_search_rows, __pyx_empty_unicode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1181, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_FormatSimple(__pyx_v_search_rows, __pyx_empty_unicode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_t_19 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_1) > __pyx_t_19) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_1) : __pyx_t_19;
         __pyx_t_8 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1);
         __Pyx_GIVEREF(__pyx_t_1);
         PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_1);
         __pyx_t_1 = 0;
-        __Pyx_INCREF(__pyx_kp_u__7);
+        __Pyx_INCREF(__pyx_kp_u__6);
         __pyx_t_8 += 2;
-        __Pyx_GIVEREF(__pyx_kp_u__7);
-        PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_kp_u__7);
-        __pyx_t_1 = __Pyx_PyObject_FormatSimple(__pyx_v_search_cols, __pyx_empty_unicode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1181, __pyx_L1_error)
+        __Pyx_GIVEREF(__pyx_kp_u__6);
+        PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_kp_u__6);
+        __pyx_t_1 = __Pyx_PyObject_FormatSimple(__pyx_v_search_cols, __pyx_empty_unicode); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_t_19 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_1) > __pyx_t_19) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_1) : __pyx_t_19;
         __pyx_t_8 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_1);
         __Pyx_GIVEREF(__pyx_t_1);
         PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_t_1);
         __pyx_t_1 = 0;
-        __Pyx_INCREF(__pyx_kp_u__8);
+        __Pyx_INCREF(__pyx_kp_u__7);
         __pyx_t_8 += 4;
-        __Pyx_GIVEREF(__pyx_kp_u__8);
-        PyTuple_SET_ITEM(__pyx_t_3, 4, __pyx_kp_u__8);
-        __pyx_t_1 = __Pyx_PyUnicode_Join(__pyx_t_3, 5, __pyx_t_8, __pyx_t_19); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1181, __pyx_L1_error)
+        __Pyx_GIVEREF(__pyx_kp_u__7);
+        PyTuple_SET_ITEM(__pyx_t_3, 4, __pyx_kp_u__7);
+        __pyx_t_1 = __Pyx_PyUnicode_Join(__pyx_t_3, 5, __pyx_t_8, __pyx_t_19); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1198, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_f_8scrabble_6logger_los(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "scrabble/p.pyx":1180
+        /* "scrabble/p.pyx":1197
  *             search_rows = _s.SEARCH_NODES[0]
  *             search_cols = _s.SEARCH_NODES[1]
  *             if can_log('s'):             # <<<<<<<<<<<<<<
@@ -13246,7 +12830,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     }
     __pyx_L14:;
 
-    /* "scrabble/p.pyx":1183
+    /* "scrabble/p.pyx":1200
  *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
  * 
  *         is_col = False             # <<<<<<<<<<<<<<
@@ -13255,7 +12839,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     __pyx_v_is_col = 0;
 
-    /* "scrabble/p.pyx":1184
+    /* "scrabble/p.pyx":1201
  * 
  *         is_col = False
  *         for ir in search_rows:             # <<<<<<<<<<<<<<
@@ -13264,70 +12848,48 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     if (unlikely(__pyx_v_search_rows == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 1184, __pyx_L1_error)
+      __PYX_ERR(0, 1201, __pyx_L1_error)
     }
     __pyx_t_1 = __pyx_v_search_rows; __Pyx_INCREF(__pyx_t_1); __pyx_t_8 = 0;
     for (;;) {
       if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_1)) break;
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 1184, __pyx_L1_error)
+      __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 1201, __pyx_L1_error)
       #else
-      __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1184, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       #endif
-      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1184, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_ir = __pyx_t_10;
 
-      /* "scrabble/p.pyx":1187
- *             #sing_nodes = nodes[i]
- * 
- *             for ni in range(Settings.shape[0]):             # <<<<<<<<<<<<<<
- *                 no = full.nodes[ir, ni]
- *                 ns_r[ni] = no.n
- */
-      __pyx_t_10 = (__pyx_v_8scrabble_1p_Settings->shape[0]);
-      __pyx_t_7 = __pyx_t_10;
-      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_7; __pyx_t_17+=1) {
-        __pyx_v_ni = __pyx_t_17;
-
-        /* "scrabble/p.pyx":1188
- * 
- *             for ni in range(Settings.shape[0]):
- *                 no = full.nodes[ir, ni]             # <<<<<<<<<<<<<<
- *                 ns_r[ni] = no.n
- * 
- */
-        __pyx_t_20 = __pyx_v_ir;
-        __pyx_t_21 = __pyx_v_ni;
-        if (__pyx_t_20 < 0) __pyx_t_20 += __pyx_v_full->nodes.shape[0];
-        if (__pyx_t_21 < 0) __pyx_t_21 += __pyx_v_full->nodes.shape[1];
-        __pyx_t_3 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_full->nodes.data + __pyx_t_20 * __pyx_v_full->nodes.strides[0]) )) + __pyx_t_21)) ));
-        __Pyx_INCREF((PyObject*)__pyx_t_3);
-        __Pyx_XDECREF_SET(__pyx_v_no, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_3));
-        __pyx_t_3 = 0;
-
-        /* "scrabble/p.pyx":1189
- *             for ni in range(Settings.shape[0]):
- *                 no = full.nodes[ir, ni]
- *                 ns_r[ni] = no.n             # <<<<<<<<<<<<<<
- * 
- *             #ns_rv = ns_r
- */
-        __pyx_t_22 = __pyx_v_no->n;
-        (__pyx_v_ns_r[__pyx_v_ni]) = __pyx_t_22;
-      }
-
-      /* "scrabble/p.pyx":1194
+      /* "scrabble/p.pyx":1209
  * 
  *             #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
- *             parse_nodes(ns_r, sw, swlens, is_col)             # <<<<<<<<<<<<<<
+ *             parse_nodes(full.nodesnv[ir], sw, swlens, is_col)             # <<<<<<<<<<<<<<
  * 
  *         is_col = True
  */
-      __pyx_f_8scrabble_1p_parse_nodes(__pyx_v_ns_r, __pyx_v_sw, __pyx_v_swlens, __pyx_v_is_col);
+      __pyx_t_20.data = __pyx_v_full->nodesnv.data;
+      __pyx_t_20.memview = __pyx_v_full->nodesnv.memview;
+      __PYX_INC_MEMVIEW(&__pyx_t_20, 0);
+      {
+    Py_ssize_t __pyx_tmp_idx = __pyx_v_ir;
+    Py_ssize_t __pyx_tmp_stride = __pyx_v_full->nodesnv.strides[0];
+        if ((0)) __PYX_ERR(0, 1209, __pyx_L1_error)
+        __pyx_t_20.data += __pyx_tmp_idx * __pyx_tmp_stride;
+}
 
-      /* "scrabble/p.pyx":1184
+__pyx_t_20.shape[0] = __pyx_v_full->nodesnv.shape[1];
+__pyx_t_20.strides[0] = __pyx_v_full->nodesnv.strides[1];
+    __pyx_t_20.suboffsets[0] = -1;
+
+__pyx_f_8scrabble_1p_parse_nodes(__pyx_t_20, __pyx_v_sw, __pyx_v_swlens, __pyx_v_is_col);
+      __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
+      __pyx_t_20.memview = NULL;
+      __pyx_t_20.data = NULL;
+
+      /* "scrabble/p.pyx":1201
  * 
  *         is_col = False
  *         for ir in search_rows:             # <<<<<<<<<<<<<<
@@ -13337,8 +12899,8 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1196
- *             parse_nodes(ns_r, sw, swlens, is_col)
+    /* "scrabble/p.pyx":1211
+ *             parse_nodes(full.nodesnv[ir], sw, swlens, is_col)
  * 
  *         is_col = True             # <<<<<<<<<<<<<<
  *         for ic in search_cols:
@@ -13346,7 +12908,7 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     __pyx_v_is_col = 1;
 
-    /* "scrabble/p.pyx":1197
+    /* "scrabble/p.pyx":1212
  * 
  *         is_col = True
  *         for ic in search_cols:             # <<<<<<<<<<<<<<
@@ -13355,70 +12917,48 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
     if (unlikely(__pyx_v_search_cols == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 1197, __pyx_L1_error)
+      __PYX_ERR(0, 1212, __pyx_L1_error)
     }
     __pyx_t_1 = __pyx_v_search_cols; __Pyx_INCREF(__pyx_t_1); __pyx_t_8 = 0;
     for (;;) {
       if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_1)) break;
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-      __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 1197, __pyx_L1_error)
+      __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 1212, __pyx_L1_error)
       #else
-      __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1197, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1212, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       #endif
-      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1197, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1212, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_ic = __pyx_t_10;
 
-      /* "scrabble/p.pyx":1202
- *             #sing_nodes = np.asarray(nodes.T[i], Node, 'C')
+      /* "scrabble/p.pyx":1221
+ *             #     ns_c[ni] = no.n
  * 
- *             for ni in range(Settings.shape[1]):             # <<<<<<<<<<<<<<
- *                 no = full.nodes[ni, ic]
- *                 ns_c[ni] = no.n
- */
-      __pyx_t_10 = (__pyx_v_8scrabble_1p_Settings->shape[1]);
-      __pyx_t_7 = __pyx_t_10;
-      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_7; __pyx_t_17+=1) {
-        __pyx_v_ni = __pyx_t_17;
-
-        /* "scrabble/p.pyx":1203
- * 
- *             for ni in range(Settings.shape[1]):
- *                 no = full.nodes[ni, ic]             # <<<<<<<<<<<<<<
- *                 ns_c[ni] = no.n
- * 
- */
-        __pyx_t_23 = __pyx_v_ni;
-        __pyx_t_24 = __pyx_v_ic;
-        if (__pyx_t_23 < 0) __pyx_t_23 += __pyx_v_full->nodes.shape[0];
-        if (__pyx_t_24 < 0) __pyx_t_24 += __pyx_v_full->nodes.shape[1];
-        __pyx_t_3 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_full->nodes.data + __pyx_t_23 * __pyx_v_full->nodes.strides[0]) )) + __pyx_t_24)) ));
-        __Pyx_INCREF((PyObject*)__pyx_t_3);
-        __Pyx_XDECREF_SET(__pyx_v_no, ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_3));
-        __pyx_t_3 = 0;
-
-        /* "scrabble/p.pyx":1204
- *             for ni in range(Settings.shape[1]):
- *                 no = full.nodes[ni, ic]
- *                 ns_c[ni] = no.n             # <<<<<<<<<<<<<<
- * 
- *             #ns_cv = ns_c
- */
-        __pyx_t_22 = __pyx_v_no->n;
-        (__pyx_v_ns_c[__pyx_v_ni]) = __pyx_t_22;
-      }
-
-      /* "scrabble/p.pyx":1208
- *             #ns_cv = ns_c
- * 
- *             parse_nodes(ns_c, sw, swlens, is_col)             # <<<<<<<<<<<<<<
+ *             parse_nodes(full.nodesnv[:, ic], sw, swlens, is_col)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-      __pyx_f_8scrabble_1p_parse_nodes(__pyx_v_ns_c, __pyx_v_sw, __pyx_v_swlens, __pyx_v_is_col);
+      __pyx_t_20.data = __pyx_v_full->nodesnv.data;
+      __pyx_t_20.memview = __pyx_v_full->nodesnv.memview;
+      __PYX_INC_MEMVIEW(&__pyx_t_20, 0);
+      __pyx_t_20.shape[0] = __pyx_v_full->nodesnv.shape[0];
+__pyx_t_20.strides[0] = __pyx_v_full->nodesnv.strides[0];
+    __pyx_t_20.suboffsets[0] = -1;
 
-      /* "scrabble/p.pyx":1197
+{
+    Py_ssize_t __pyx_tmp_idx = __pyx_v_ic;
+    Py_ssize_t __pyx_tmp_stride = __pyx_v_full->nodesnv.strides[1];
+        if ((0)) __PYX_ERR(0, 1221, __pyx_L1_error)
+        __pyx_t_20.data += __pyx_tmp_idx * __pyx_tmp_stride;
+}
+
+__pyx_f_8scrabble_1p_parse_nodes(__pyx_t_20, __pyx_v_sw, __pyx_v_swlens, __pyx_v_is_col);
+      __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
+      __pyx_t_20.memview = NULL;
+      __pyx_t_20.data = NULL;
+
+      /* "scrabble/p.pyx":1212
  * 
  *         is_col = True
  *         for ic in search_cols:             # <<<<<<<<<<<<<<
@@ -13430,10 +12970,10 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   }
   __pyx_L13:;
 
-  /* "scrabble/p.pyx":1029
- * # @cython.linetrace(True)
+  /* "scrabble/p.pyx":1049
  * #cpdef void solve(str dictionary):
- * cdef void solve(str dictionary):             # <<<<<<<<<<<<<<
+ * @cython.wraparound(False)
+ * cdef void solve(str dictionary) except *:             # <<<<<<<<<<<<<<
  *     cdef:
  *         #list wordlist
  */
@@ -13449,7 +12989,8 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __Pyx_XDECREF(__pyx_t_12);
   __PYX_XDEC_MEMVIEW(&__pyx_t_14, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_15, 1);
-  __Pyx_WriteUnraisable("scrabble.p.solve", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
+  __Pyx_AddTraceback("scrabble.p.solve", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_wordlist_load);
   __Pyx_XDECREF(__pyx_v_w);
@@ -13460,13 +13001,12 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   __PYX_XDEC_MEMVIEW(&__pyx_v_sw, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_swlens, 1);
   __Pyx_XDECREF((PyObject *)__pyx_v_full);
-  __Pyx_XDECREF((PyObject *)__pyx_v_no);
   __Pyx_XDECREF(__pyx_v_search_rows);
   __Pyx_XDECREF(__pyx_v_search_cols);
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/p.pyx":1219
+/* "scrabble/p.pyx":1232
  * # ):
  * @cython.wraparound(False)
  * cdef void cmain(             # <<<<<<<<<<<<<<
@@ -13475,16 +13015,16 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
  */
 
 static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__pyx_v_dictionary, int __pyx_v_no_words, PyObject *__pyx_v_exclude_letters, int __pyx_v_num_results, PyObject *__pyx_v_log_level) {
-  PyObject *__pyx_v_points = 0;
-  PyObject *__pyx_v_pdboard = 0;
+  PyObject *__pyx_v_this_board_dir = 0;
   __Pyx_memviewslice __pyx_v_board = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_default_board = { 0, 0, { 0 }, { 0 }, { 0 } };
   PyObject *__pyx_v_rack = 0;
+  __Pyx_memviewslice __pyx_v_default_board = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_v_points = 0;
   int __pyx_v_board_size;
   PyObject *__pyx_v_board_name = 0;
-  PyObject *__pyx_v_this_board_dir = 0;
+  Py_UCS4 __pyx_v_log_lvl_ch;
   PyObject *__pyx_v_el = 0;
-  PyObject *__pyx_v_l = 0;
+  Py_UCS4 __pyx_v_l;
   Py_ssize_t __pyx_v_li;
   __Pyx_memviewslice __pyx_v_cl_points = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_cl_amts = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -13502,27 +13042,27 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   PyObject *__pyx_t_3 = NULL;
   int __pyx_t_4;
   int __pyx_t_5;
-  int __pyx_t_6;
-  struct __pyx_opt_args_8scrabble_1p_loadfile __pyx_t_7;
+  Py_UCS4 __pyx_t_6;
+  struct __pyx_opt_args_8scrabble_1p_checkfile __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
-  Py_ssize_t __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
+  PyObject *__pyx_t_9 = NULL;
+  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_11;
   Py_ssize_t __pyx_t_12;
-  long __pyx_t_13;
-  __Pyx_memviewslice __pyx_t_14 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  PyObject *__pyx_t_15 = NULL;
-  __Pyx_memviewslice __pyx_t_16 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  PyObject *__pyx_t_17 = NULL;
-  PyObject *__pyx_t_18 = NULL;
-  Py_ssize_t *__pyx_t_19;
-  __Pyx_memviewslice __pyx_t_20 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_21;
-  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_22[2];
+  Py_ssize_t __pyx_t_13;
+  int __pyx_t_14;
+  __Pyx_memviewslice __pyx_t_15 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_16 = NULL;
+  Py_ssize_t *__pyx_t_17;
+  __Pyx_memviewslice __pyx_t_18 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_19;
+  long __pyx_t_20;
+  __pyx_t_8scrabble_1p_BOOL_t __pyx_t_21[2];
+  Py_ssize_t __pyx_t_22;
   Py_ssize_t __pyx_t_23;
-  Py_ssize_t __pyx_t_24;
-  struct __pyx_array_obj *__pyx_t_25 = NULL;
-  __Pyx_memviewslice __pyx_t_26 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  struct __pyx_array_obj *__pyx_t_24 = NULL;
+  __Pyx_memviewslice __pyx_t_25 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_26;
   Py_ssize_t __pyx_t_27;
   Py_ssize_t __pyx_t_28;
   Py_ssize_t __pyx_t_29;
@@ -13531,14 +13071,14 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   __Pyx_RefNannySetupContext("cmain", 0);
   __Pyx_INCREF(__pyx_v_log_level);
 
-  /* "scrabble/p.pyx":1234
+  /* "scrabble/p.pyx":1247
  *         object board_name
  * 
- *     log_level = log_level.upper()             # <<<<<<<<<<<<<<
- *     if log_level != lo.logger.getEffectiveLevel():
- *         lo.set_level(log_level)
+ *     log_level = log_level.lower()             # <<<<<<<<<<<<<<
+ *     if log_level == 'spam': log_level = 'x'
+ *     cdef Py_UCS4 log_lvl_ch = (<str>log_level)[0]
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_log_level, __pyx_n_s_upper); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1234, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_log_level, __pyx_n_s_lower); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -13552,294 +13092,275 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1234, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1234, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_DECREF_SET(__pyx_v_log_level, ((PyObject*)__pyx_t_1));
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1235
+  /* "scrabble/p.pyx":1248
  * 
- *     log_level = log_level.upper()
- *     if log_level != lo.logger.getEffectiveLevel():             # <<<<<<<<<<<<<<
- *         lo.set_level(log_level)
+ *     log_level = log_level.lower()
+ *     if log_level == 'spam': log_level = 'x'             # <<<<<<<<<<<<<<
+ *     cdef Py_UCS4 log_lvl_ch = (<str>log_level)[0]
+ *     log.lo_lvl = log.lvl_alias[log_lvl_ch]
+ */
+  __pyx_t_4 = (__Pyx_PyUnicode_Equals(__pyx_v_log_level, __pyx_n_u_spam, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1248, __pyx_L1_error)
+  __pyx_t_5 = (__pyx_t_4 != 0);
+  if (__pyx_t_5) {
+    __Pyx_INCREF(__pyx_n_u_x);
+    __Pyx_DECREF_SET(__pyx_v_log_level, __pyx_n_u_x);
+  }
+
+  /* "scrabble/p.pyx":1249
+ *     log_level = log_level.lower()
+ *     if log_level == 'spam': log_level = 'x'
+ *     cdef Py_UCS4 log_lvl_ch = (<str>log_level)[0]             # <<<<<<<<<<<<<<
+ *     log.lo_lvl = log.lvl_alias[log_lvl_ch]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_lo, __pyx_n_s_logger); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1235, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_getEffectiveLevel); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1235, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1235, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_4 = (__Pyx_PyUnicode_Equals(__pyx_v_log_level, __pyx_t_1, Py_NE)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1235, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_6 = __Pyx_GetItemInt_Unicode(__pyx_v_log_level, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_6 == (Py_UCS4)-1)) __PYX_ERR(0, 1249, __pyx_L1_error)
+  __pyx_v_log_lvl_ch = __pyx_t_6;
+
+  /* "scrabble/p.pyx":1250
+ *     if log_level == 'spam': log_level = 'x'
+ *     cdef Py_UCS4 log_lvl_ch = (<str>log_level)[0]
+ *     log.lo_lvl = log.lvl_alias[log_lvl_ch]             # <<<<<<<<<<<<<<
+ * 
+ *     # todo individ check so can just pass rack
+ */
+  __pyx_v_8scrabble_6logger_lo_lvl = (__pyx_v_8scrabble_6logger_lvl_alias[__pyx_v_log_lvl_ch]);
+
+  /* "scrabble/p.pyx":1253
+ * 
+ *     # todo individ check so can just pass rack
+ *     if filename is not None:             # <<<<<<<<<<<<<<
+ *         this_board_dir = checkfile((_s.BOARD_DIR, filename), is_file=False)
+ *         #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
+ */
+  __pyx_t_5 = (__pyx_v_filename != ((PyObject*)Py_None));
+  __pyx_t_4 = (__pyx_t_5 != 0);
   if (__pyx_t_4) {
 
-    /* "scrabble/p.pyx":1236
- *     log_level = log_level.upper()
- *     if log_level != lo.logger.getEffectiveLevel():
- *         lo.set_level(log_level)             # <<<<<<<<<<<<<<
- * 
- *     log.lo_lvl = lo.get_level(log_level)
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_lo, __pyx_n_s_set_level); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1236, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_v_log_level) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_log_level);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1236, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "scrabble/p.pyx":1235
- * 
- *     log_level = log_level.upper()
- *     if log_level != lo.logger.getEffectiveLevel():             # <<<<<<<<<<<<<<
- *         lo.set_level(log_level)
- * 
- */
-  }
-
-  /* "scrabble/p.pyx":1238
- *         lo.set_level(log_level)
- * 
- *     log.lo_lvl = lo.get_level(log_level)             # <<<<<<<<<<<<<<
- * 
- *     cdef object this_board_dir
- */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_lo, __pyx_n_s_get_level); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1238, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_v_log_level) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_log_level);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1238, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1238, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_8scrabble_6logger_lo_lvl = __pyx_t_5;
-
-  /* "scrabble/p.pyx":1241
- * 
- *     cdef object this_board_dir
- *     if filename is not None:             # <<<<<<<<<<<<<<
- *         this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)
- *         pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))
- */
-  __pyx_t_4 = (__pyx_v_filename != ((PyObject*)Py_None));
-  __pyx_t_6 = (__pyx_t_4 != 0);
-  if (__pyx_t_6) {
-
-    /* "scrabble/p.pyx":1242
- *     cdef object this_board_dir
+    /* "scrabble/p.pyx":1254
+ *     # todo individ check so can just pass rack
  *     if filename is not None:
- *         this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)             # <<<<<<<<<<<<<<
- *         pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))
- *         rack = pd.read_pickle(loadfile((this_board_dir, _s.LETTERS_FILENAME)))
+ *         this_board_dir = checkfile((_s.BOARD_DIR, filename), is_file=False)             # <<<<<<<<<<<<<<
+ *         #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
+ *         board = pickle.load(checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb'))
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_BOARD_DIR); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1242, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_BOARD_DIR); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1242, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1254, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
     __Pyx_INCREF(__pyx_v_filename);
     __Pyx_GIVEREF(__pyx_v_filename);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_filename);
+    PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_filename);
     __pyx_t_1 = 0;
     __pyx_t_7.__pyx_n = 1;
     __pyx_t_7.is_file = 0;
-    __pyx_t_1 = __pyx_f_8scrabble_1p_loadfile(((PyObject*)__pyx_t_3), 0, &__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1242, __pyx_L1_error)
+    __pyx_t_1 = __pyx_f_8scrabble_1p_checkfile(((PyObject*)__pyx_t_2), 0, &__pyx_t_7); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1254, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_this_board_dir = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1243
- *     if filename is not None:
- *         this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)
- *         pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))             # <<<<<<<<<<<<<<
- *         rack = pd.read_pickle(loadfile((this_board_dir, _s.LETTERS_FILENAME)))
+    /* "scrabble/p.pyx":1256
+ *         this_board_dir = checkfile((_s.BOARD_DIR, filename), is_file=False)
+ *         #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
+ *         board = pickle.load(checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb'))             # <<<<<<<<<<<<<<
+ *         rack = pickle.load(checkfile((this_board_dir, _s.LETTERS_FILENAME)).open('rb'))
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pd, __pyx_n_s_read_pickle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1243, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_BOARD_FILENAME); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1243, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pickle, __pyx_n_s_load); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1243, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_BOARD_FILENAME); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1256, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_INCREF(__pyx_v_this_board_dir);
     __Pyx_GIVEREF(__pyx_v_this_board_dir);
-    PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_this_board_dir);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_2);
-    __pyx_t_2 = 0;
-    __pyx_t_2 = __pyx_f_8scrabble_1p_loadfile(((PyObject*)__pyx_t_8), 0, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1243, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_v_this_board_dir);
+    __Pyx_GIVEREF(__pyx_t_8);
+    PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_8);
+    __pyx_t_8 = 0;
+    __pyx_t_8 = __pyx_f_8scrabble_1p_checkfile(((PyObject*)__pyx_t_9), 0, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1256, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_open); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1256, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_9);
       if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
         __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __Pyx_DECREF_SET(__pyx_t_9, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+    __pyx_t_3 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_8, __pyx_n_u_rb) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_n_u_rb);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1243, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1256, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_2);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+        __Pyx_INCREF(__pyx_t_9);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_2, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_9, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_pdboard = __pyx_t_1;
-    __pyx_t_1 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1256, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_char(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 1256, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_board = __pyx_t_10;
+    __pyx_t_10.memview = NULL;
+    __pyx_t_10.data = NULL;
 
-    /* "scrabble/p.pyx":1244
- *         this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)
- *         pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))
- *         rack = pd.read_pickle(loadfile((this_board_dir, _s.LETTERS_FILENAME)))             # <<<<<<<<<<<<<<
+    /* "scrabble/p.pyx":1257
+ *         #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
+ *         board = pickle.load(checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb'))
+ *         rack = pickle.load(checkfile((this_board_dir, _s.LETTERS_FILENAME)).open('rb'))             # <<<<<<<<<<<<<<
  * 
  *     else:
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pd, __pyx_n_s_read_pickle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1244, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_LETTERS_FILENAME); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1244, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pickle, __pyx_n_s_load); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1257, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1244, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_LETTERS_FILENAME); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1257, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_INCREF(__pyx_v_this_board_dir);
     __Pyx_GIVEREF(__pyx_v_this_board_dir);
     PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_this_board_dir);
-    __Pyx_GIVEREF(__pyx_t_2);
-    PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_2);
-    __pyx_t_2 = 0;
-    __pyx_t_2 = __pyx_f_8scrabble_1p_loadfile(((PyObject*)__pyx_t_8), 0, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1244, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_GIVEREF(__pyx_t_9);
+    PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_9);
+    __pyx_t_9 = 0;
+    __pyx_t_9 = __pyx_f_8scrabble_1p_checkfile(((PyObject*)__pyx_t_8), 0, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_8);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_open); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __Pyx_DECREF_SET(__pyx_t_8, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+    __pyx_t_3 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_9, __pyx_n_u_rb) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_n_u_rb);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+        __Pyx_INCREF(__pyx_t_8);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_2, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1244, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1244, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1257, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1257, __pyx_L1_error)
     __pyx_v_rack = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1241
+    /* "scrabble/p.pyx":1253
  * 
- *     cdef object this_board_dir
+ *     # todo individ check so can just pass rack
  *     if filename is not None:             # <<<<<<<<<<<<<<
- *         this_board_dir = loadfile((_s.BOARD_DIR, filename), is_file=False)
- *         pdboard = pd.read_pickle(loadfile((this_board_dir, _s.BOARD_FILENAME)))
+ *         this_board_dir = checkfile((_s.BOARD_DIR, filename), is_file=False)
+ *         #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
  */
     goto __pyx_L4;
   }
 
-  /* "scrabble/p.pyx":1247
+  /* "scrabble/p.pyx":1260
  * 
  *     else:
- *         pdboard = pd.DataFrame(_s.BOARD)             # <<<<<<<<<<<<<<
+ *         board = np.array(_s.BOARD)             # <<<<<<<<<<<<<<
  *         rack = _s.LETTERS
  * 
  */
   /*else*/ {
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pd, __pyx_n_s_DataFrame); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1247, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_BOARD); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1247, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1260, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_BOARD); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1260, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
       if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
         __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __Pyx_DECREF_SET(__pyx_t_2, function);
       }
     }
-    __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+    __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1247, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_pdboard = __pyx_t_1;
-    __pyx_t_1 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1260, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_char(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 1260, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_board = __pyx_t_10;
+    __pyx_t_10.memview = NULL;
+    __pyx_t_10.data = NULL;
 
-    /* "scrabble/p.pyx":1248
+    /* "scrabble/p.pyx":1261
  *     else:
- *         pdboard = pd.DataFrame(_s.BOARD)
+ *         board = np.array(_s.BOARD)
  *         rack = _s.LETTERS             # <<<<<<<<<<<<<<
  * 
  *     if not rack:
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_LETTERS); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1248, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_LETTERS); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1261, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1248, __pyx_L1_error)
+    if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1261, __pyx_L1_error)
     __pyx_v_rack = ((PyObject*)__pyx_t_1);
     __pyx_t_1 = 0;
   }
   __pyx_L4:;
 
-  /* "scrabble/p.pyx":1250
+  /* "scrabble/p.pyx":1263
  *         rack = _s.LETTERS
  * 
  *     if not rack:             # <<<<<<<<<<<<<<
  *         loc('Rack is empty')
  *         return
  */
-  __pyx_t_6 = (__pyx_v_rack != Py_None)&&(PyList_GET_SIZE(__pyx_v_rack) != 0);
-  __pyx_t_4 = ((!__pyx_t_6) != 0);
-  if (__pyx_t_4) {
+  __pyx_t_4 = (__pyx_v_rack != Py_None)&&(PyList_GET_SIZE(__pyx_v_rack) != 0);
+  __pyx_t_5 = ((!__pyx_t_4) != 0);
+  if (__pyx_t_5) {
 
-    /* "scrabble/p.pyx":1251
+    /* "scrabble/p.pyx":1264
  * 
  *     if not rack:
  *         loc('Rack is empty')             # <<<<<<<<<<<<<<
@@ -13848,16 +13369,16 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  */
     __pyx_f_8scrabble_6logger_loc(__pyx_kp_u_Rack_is_empty);
 
-    /* "scrabble/p.pyx":1252
+    /* "scrabble/p.pyx":1265
  *     if not rack:
  *         loc('Rack is empty')
  *         return             # <<<<<<<<<<<<<<
  * 
- *     cdef str el
+ * 
  */
     goto __pyx_L0;
 
-    /* "scrabble/p.pyx":1250
+    /* "scrabble/p.pyx":1263
  *         rack = _s.LETTERS
  * 
  *     if not rack:             # <<<<<<<<<<<<<<
@@ -13866,7 +13387,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  */
   }
 
-  /* "scrabble/p.pyx":1255
+  /* "scrabble/p.pyx":1269
  * 
  *     cdef str el
  *     for el in exclude_letters:             # <<<<<<<<<<<<<<
@@ -13875,33 +13396,33 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  */
   if (unlikely(__pyx_v_exclude_letters == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 1255, __pyx_L1_error)
+    __PYX_ERR(0, 1269, __pyx_L1_error)
   }
-  __pyx_t_1 = __pyx_v_exclude_letters; __Pyx_INCREF(__pyx_t_1); __pyx_t_9 = 0;
+  __pyx_t_1 = __pyx_v_exclude_letters; __Pyx_INCREF(__pyx_t_1); __pyx_t_11 = 0;
   for (;;) {
-    if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_1)) break;
+    if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_1)) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_9); __Pyx_INCREF(__pyx_t_3); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 1255, __pyx_L1_error)
+    __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_11); __Pyx_INCREF(__pyx_t_2); __pyx_t_11++; if (unlikely(0 < 0)) __PYX_ERR(0, 1269, __pyx_L1_error)
     #else
-    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1255, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1269, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     #endif
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 1255, __pyx_L1_error)
-    __Pyx_XDECREF_SET(__pyx_v_el, ((PyObject*)__pyx_t_3));
-    __pyx_t_3 = 0;
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1269, __pyx_L1_error)
+    __Pyx_XDECREF_SET(__pyx_v_el, ((PyObject*)__pyx_t_2));
+    __pyx_t_2 = 0;
 
-    /* "scrabble/p.pyx":1256
+    /* "scrabble/p.pyx":1270
  *     cdef str el
  *     for el in exclude_letters:
  *         rack.remove(el)             # <<<<<<<<<<<<<<
  * 
- *     # todo change this so theyre actually just single letters
+ *     Settings.rack_l = rack
  */
-    __pyx_t_3 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_remove, __pyx_v_rack, __pyx_v_el); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1256, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_2 = __Pyx_CallUnboundCMethod1(&__pyx_umethod_PyList_Type_remove, __pyx_v_rack, __pyx_v_el); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1270, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "scrabble/p.pyx":1255
+    /* "scrabble/p.pyx":1269
  * 
  *     cdef str el
  *     for el in exclude_letters:             # <<<<<<<<<<<<<<
@@ -13911,88 +13432,8 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1261
- *     cdef str l # py unci
- *     cdef Py_ssize_t li
- *     for li in range(len(rack)):             # <<<<<<<<<<<<<<
- *         l = str((<list>rack)[li])
- *         if len(l) == 1:
- */
-  if (unlikely(__pyx_v_rack == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 1261, __pyx_L1_error)
-  }
-  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_rack); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1261, __pyx_L1_error)
-  __pyx_t_10 = __pyx_t_9;
-  for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
-    __pyx_v_li = __pyx_t_11;
-
-    /* "scrabble/p.pyx":1262
- *     cdef Py_ssize_t li
- *     for li in range(len(rack)):
- *         l = str((<list>rack)[li])             # <<<<<<<<<<<<<<
- *         if len(l) == 1:
- *             Settings.rack[<Py_ssize_t>ord(l)] += 1
- */
-    if (unlikely(__pyx_v_rack == Py_None)) {
-      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 1262, __pyx_L1_error)
-    }
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), PyList_GET_ITEM(((PyObject*)__pyx_v_rack), __pyx_v_li)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1262, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_XDECREF_SET(__pyx_v_l, ((PyObject*)__pyx_t_1));
-    __pyx_t_1 = 0;
-
-    /* "scrabble/p.pyx":1263
- *     for li in range(len(rack)):
- *         l = str((<list>rack)[li])
- *         if len(l) == 1:             # <<<<<<<<<<<<<<
- *             Settings.rack[<Py_ssize_t>ord(l)] += 1
- *         else:
- */
-    __pyx_t_12 = __Pyx_PyUnicode_GET_LENGTH(__pyx_v_l); if (unlikely(__pyx_t_12 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1263, __pyx_L1_error)
-    __pyx_t_4 = ((__pyx_t_12 == 1) != 0);
-    if (__pyx_t_4) {
-
-      /* "scrabble/p.pyx":1264
- *         l = str((<list>rack)[li])
- *         if len(l) == 1:
- *             Settings.rack[<Py_ssize_t>ord(l)] += 1             # <<<<<<<<<<<<<<
- *         else:
- *             loe('Rack letter is not valid: "%s"' % l)
- */
-      __pyx_t_13 = __Pyx_PyObject_Ord(__pyx_v_l); if (unlikely(__pyx_t_13 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 1264, __pyx_L1_error)
-      __pyx_t_12 = ((Py_ssize_t)__pyx_t_13);
-      (__pyx_v_8scrabble_1p_Settings->rack[__pyx_t_12]) = ((__pyx_v_8scrabble_1p_Settings->rack[__pyx_t_12]) + 1);
-
-      /* "scrabble/p.pyx":1263
- *     for li in range(len(rack)):
- *         l = str((<list>rack)[li])
- *         if len(l) == 1:             # <<<<<<<<<<<<<<
- *             Settings.rack[<Py_ssize_t>ord(l)] += 1
- *         else:
- */
-      goto __pyx_L10;
-    }
-
-    /* "scrabble/p.pyx":1266
- *             Settings.rack[<Py_ssize_t>ord(l)] += 1
- *         else:
- *             loe('Rack letter is not valid: "%s"' % l)             # <<<<<<<<<<<<<<
- * 
- *     #rack_b.sort()
- */
-    /*else*/ {
-      __pyx_t_1 = PyUnicode_Format(__pyx_kp_u_Rack_letter_is_not_valid_s, __pyx_v_l); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1266, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __pyx_f_8scrabble_6logger_loe(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    }
-    __pyx_L10:;
-  }
-
-  /* "scrabble/p.pyx":1270
- *     #rack_b.sort()
+  /* "scrabble/p.pyx":1272
+ *         rack.remove(el)
  * 
  *     Settings.rack_l = rack             # <<<<<<<<<<<<<<
  *     Settings.rack_s = len(rack)
@@ -14004,31 +13445,223 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   __Pyx_DECREF(__pyx_v_8scrabble_1p_Settings->rack_l);
   __pyx_v_8scrabble_1p_Settings->rack_l = __pyx_v_rack;
 
-  /* "scrabble/p.pyx":1271
+  /* "scrabble/p.pyx":1273
  * 
  *     Settings.rack_l = rack
  *     Settings.rack_s = len(rack)             # <<<<<<<<<<<<<<
  * 
- *     board = pdboard.to_numpy(np.object_)  # type: np.ndarray
+ *     cdef Py_UCS4 l
  */
   if (unlikely(__pyx_v_rack == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 1271, __pyx_L1_error)
+    __PYX_ERR(0, 1273, __pyx_L1_error)
   }
-  __pyx_t_9 = PyList_GET_SIZE(__pyx_v_rack); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1271, __pyx_L1_error)
-  __pyx_v_8scrabble_1p_Settings->rack_s = __pyx_t_9;
+  __pyx_t_11 = PyList_GET_SIZE(__pyx_v_rack); if (unlikely(__pyx_t_11 == ((Py_ssize_t)-1))) __PYX_ERR(0, 1273, __pyx_L1_error)
+  __pyx_v_8scrabble_1p_Settings->rack_s = __pyx_t_11;
 
-  /* "scrabble/p.pyx":1273
- *     Settings.rack_s = len(rack)
- * 
- *     board = pdboard.to_numpy(np.object_)  # type: np.ndarray             # <<<<<<<<<<<<<<
+  /* "scrabble/p.pyx":1277
+ *     cdef Py_UCS4 l
+ *     cdef Py_ssize_t li
+ *     for li in range(Settings.rack_s):             # <<<<<<<<<<<<<<
+ *         #todo check less than 7 letters
+ *         l = (<list>rack)[li]
+ */
+  __pyx_t_11 = __pyx_v_8scrabble_1p_Settings->rack_s;
+  __pyx_t_12 = __pyx_t_11;
+  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
+    __pyx_v_li = __pyx_t_13;
+
+    /* "scrabble/p.pyx":1279
+ *     for li in range(Settings.rack_s):
+ *         #todo check less than 7 letters
+ *         l = (<list>rack)[li]             # <<<<<<<<<<<<<<
+ *         if len(l) == 1:
+ *             Settings.rack[l] += 1
+ */
+    if (unlikely(__pyx_v_rack == Py_None)) {
+      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+      __PYX_ERR(0, 1279, __pyx_L1_error)
+    }
+    __pyx_t_6 = __Pyx_PyObject_AsPy_UCS4(PyList_GET_ITEM(((PyObject*)__pyx_v_rack), __pyx_v_li)); if (unlikely((__pyx_t_6 == (Py_UCS4)-1) && PyErr_Occurred())) __PYX_ERR(0, 1279, __pyx_L1_error)
+    __pyx_v_l = __pyx_t_6;
+
+    /* "scrabble/p.pyx":1280
+ *         #todo check less than 7 letters
+ *         l = (<list>rack)[li]
+ *         if len(l) == 1:             # <<<<<<<<<<<<<<
+ *             Settings.rack[l] += 1
+ *         else:
+ */
+    __pyx_t_5 = ((1 == 1) != 0);
+    if (__pyx_t_5) {
+
+      /* "scrabble/p.pyx":1281
+ *         l = (<list>rack)[li]
+ *         if len(l) == 1:
+ *             Settings.rack[l] += 1             # <<<<<<<<<<<<<<
+ *         else:
+ *             loe('Rack letter is not valid: "%s"' % l)
+ */
+      __pyx_t_6 = __pyx_v_l;
+      (__pyx_v_8scrabble_1p_Settings->rack[__pyx_t_6]) = ((__pyx_v_8scrabble_1p_Settings->rack[__pyx_t_6]) + 1);
+
+      /* "scrabble/p.pyx":1280
+ *         #todo check less than 7 letters
+ *         l = (<list>rack)[li]
+ *         if len(l) == 1:             # <<<<<<<<<<<<<<
+ *             Settings.rack[l] += 1
+ *         else:
+ */
+      goto __pyx_L10;
+    }
+
+    /* "scrabble/p.pyx":1283
+ *             Settings.rack[l] += 1
+ *         else:
+ *             loe('Rack letter is not valid: "%s"' % l)             # <<<<<<<<<<<<<<
  * 
  *     board_size = board.size
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_pdboard, __pyx_n_s_to_numpy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1273, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_object); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1273, __pyx_L1_error)
+    /*else*/ {
+      __pyx_t_1 = PyUnicode_FromOrdinal(__pyx_v_l); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1283, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_2 = PyUnicode_Format(__pyx_kp_u_Rack_letter_is_not_valid_s, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1283, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_f_8scrabble_6logger_loe(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    }
+    __pyx_L10:;
+  }
+
+  /* "scrabble/p.pyx":1285
+ *             loe('Rack letter is not valid: "%s"' % l)
+ * 
+ *     board_size = board.size             # <<<<<<<<<<<<<<
+ *     if board_size == MAX_NODES * MAX_NODES:
+ *         board_name = _s.DEF_BOARD_BIG
+ */
+  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_char, (int (*)(char *, PyObject *)) __pyx_memview_set_char, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1285, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1285, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_14 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_14 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1285, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_board_size = __pyx_t_14;
+
+  /* "scrabble/p.pyx":1286
+ * 
+ *     board_size = board.size
+ *     if board_size == MAX_NODES * MAX_NODES:             # <<<<<<<<<<<<<<
+ *         board_name = _s.DEF_BOARD_BIG
+ *     elif board_size == 11 * 11:
+ */
+  switch (__pyx_v_board_size) {
+    case 0xE1:
+
+    /* "scrabble/p.pyx":1287
+ *     board_size = board.size
+ *     if board_size == MAX_NODES * MAX_NODES:
+ *         board_name = _s.DEF_BOARD_BIG             # <<<<<<<<<<<<<<
+ *     elif board_size == 11 * 11:
+ *         board_name = _s.DEF_BOARD_SMALL
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DEF_BOARD_BIG); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1287, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_v_board_name = __pyx_t_1;
+    __pyx_t_1 = 0;
+
+    /* "scrabble/p.pyx":1286
+ * 
+ *     board_size = board.size
+ *     if board_size == MAX_NODES * MAX_NODES:             # <<<<<<<<<<<<<<
+ *         board_name = _s.DEF_BOARD_BIG
+ *     elif board_size == 11 * 11:
+ */
+    break;
+    case 0x79:
+
+    /* "scrabble/p.pyx":1289
+ *         board_name = _s.DEF_BOARD_BIG
+ *     elif board_size == 11 * 11:
+ *         board_name = _s.DEF_BOARD_SMALL             # <<<<<<<<<<<<<<
+ *     else:
+ *         loc('Board size ({}) has no match'.format(board_size))
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DEF_BOARD_SMALL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1289, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_v_board_name = __pyx_t_1;
+    __pyx_t_1 = 0;
+
+    /* "scrabble/p.pyx":1288
+ *     if board_size == MAX_NODES * MAX_NODES:
+ *         board_name = _s.DEF_BOARD_BIG
+ *     elif board_size == 11 * 11:             # <<<<<<<<<<<<<<
+ *         board_name = _s.DEF_BOARD_SMALL
+ *     else:
+ */
+    break;
+    default:
+
+    /* "scrabble/p.pyx":1291
+ *         board_name = _s.DEF_BOARD_SMALL
+ *     else:
+ *         loc('Board size ({}) has no match'.format(board_size))             # <<<<<<<<<<<<<<
+ *         return
+ * 
+ */
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Board_size_has_no_match, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1291, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_board_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1291, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+        __Pyx_INCREF(__pyx_t_8);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_2, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1291, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_f_8scrabble_6logger_loc(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "scrabble/p.pyx":1292
+ *     else:
+ *         loc('Board size ({}) has no match'.format(board_size))
+ *         return             # <<<<<<<<<<<<<<
+ * 
+ *     default_board = pd.read_pickle(checkfile((board_name,))).to_numpy(np.object_) # .to_numpy('|S2')
+ */
+    goto __pyx_L0;
+    break;
+  }
+
+  /* "scrabble/p.pyx":1294
+ *         return
+ * 
+ *     default_board = pd.read_pickle(checkfile((board_name,))).to_numpy(np.object_) # .to_numpy('|S2')             # <<<<<<<<<<<<<<
+ * 
+ *     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
+ */
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pd, __pyx_n_s_read_pickle); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_INCREF(__pyx_v_board_name);
+  __Pyx_GIVEREF(__pyx_v_board_name);
+  PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_board_name);
+  __pyx_t_9 = __pyx_f_8scrabble_1p_checkfile(((PyObject*)__pyx_t_8), 0, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __pyx_t_8 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
     __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_3);
@@ -14039,453 +13672,250 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
       __Pyx_DECREF_SET(__pyx_t_3, function);
     }
   }
-  __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+  __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_9);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1273, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 1273, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_board = __pyx_t_14;
-  __pyx_t_14.memview = NULL;
-  __pyx_t_14.data = NULL;
-
-  /* "scrabble/p.pyx":1275
- *     board = pdboard.to_numpy(np.object_)  # type: np.ndarray
- * 
- *     board_size = board.size             # <<<<<<<<<<<<<<
- *     if board_size == MAX_NODES * MAX_NODES:
- *         board_name = _s.DEF_BOARD_BIG
- */
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1275, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1275, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_to_numpy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1294, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1275, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_object); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_9 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_9)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_9);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_9, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_board_size = __pyx_t_5;
+  __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dsds_object(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 1294, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_default_board = __pyx_t_15;
+  __pyx_t_15.memview = NULL;
+  __pyx_t_15.data = NULL;
 
-  /* "scrabble/p.pyx":1276
+  /* "scrabble/p.pyx":1296
+ *     default_board = pd.read_pickle(checkfile((board_name,))).to_numpy(np.object_) # .to_numpy('|S2')
  * 
- *     board_size = board.size
- *     if board_size == MAX_NODES * MAX_NODES:             # <<<<<<<<<<<<<<
- *         board_name = _s.DEF_BOARD_BIG
- *     elif board_size == 11 * 11:
+ *     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]             # <<<<<<<<<<<<<<
+ * 
+ *     if can_log('s'):
  */
-  switch (__pyx_v_board_size) {
-    case 0xE1:
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_json, __pyx_n_s_load); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_POINTS_DIR); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_dictionary, __pyx_kp_u_json); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_GIVEREF(__pyx_t_9);
+  PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_9);
+  __Pyx_GIVEREF(__pyx_t_8);
+  PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_t_8);
+  __pyx_t_9 = 0;
+  __pyx_t_8 = 0;
+  __pyx_t_8 = __pyx_f_8scrabble_1p_checkfile(((PyObject*)__pyx_t_16), 0, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_open); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_8 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_16))) {
+    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_16);
+    if (likely(__pyx_t_8)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_16);
+      __Pyx_INCREF(__pyx_t_8);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_16, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_16, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_16, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (!(likely(PyDict_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1296, __pyx_L1_error)
+  __pyx_v_points = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1277
- *     board_size = board.size
- *     if board_size == MAX_NODES * MAX_NODES:
- *         board_name = _s.DEF_BOARD_BIG             # <<<<<<<<<<<<<<
- *     elif board_size == 11 * 11:
- *         board_name = _s.DEF_BOARD_SMALL
+  /* "scrabble/p.pyx":1298
+ *     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
+ * 
+ *     if can_log('s'):             # <<<<<<<<<<<<<<
+ *         los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?
+ *         if can_log('v'):
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DEF_BOARD_BIG); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1277, __pyx_L1_error)
+  __pyx_t_5 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
+  if (__pyx_t_5) {
+
+    /* "scrabble/p.pyx":1299
+ * 
+ *     if can_log('s'):
+ *         los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?             # <<<<<<<<<<<<<<
+ *         if can_log('v'):
+ *             #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
+ */
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Game_Board, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1299, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_v_board_name = __pyx_t_3;
-    __pyx_t_3 = 0;
-
-    /* "scrabble/p.pyx":1276
- * 
- *     board_size = board.size
- *     if board_size == MAX_NODES * MAX_NODES:             # <<<<<<<<<<<<<<
- *         board_name = _s.DEF_BOARD_BIG
- *     elif board_size == 11 * 11:
- */
-    break;
-    case 0x79:
-
-    /* "scrabble/p.pyx":1279
- *         board_name = _s.DEF_BOARD_BIG
- *     elif board_size == 11 * 11:
- *         board_name = _s.DEF_BOARD_SMALL             # <<<<<<<<<<<<<<
- *     else:
- *         loc('Board size ({}) has no match'.format(board_size))
- */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DEF_BOARD_SMALL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1279, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_v_board_name = __pyx_t_3;
-    __pyx_t_3 = 0;
-
-    /* "scrabble/p.pyx":1278
- *     if board_size == MAX_NODES * MAX_NODES:
- *         board_name = _s.DEF_BOARD_BIG
- *     elif board_size == 11 * 11:             # <<<<<<<<<<<<<<
- *         board_name = _s.DEF_BOARD_SMALL
- *     else:
- */
-    break;
-    default:
-
-    /* "scrabble/p.pyx":1281
- *         board_name = _s.DEF_BOARD_SMALL
- *     else:
- *         loc('Board size ({}) has no match'.format(board_size))             # <<<<<<<<<<<<<<
- *         return
- * 
- */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Board_size_has_no_match, __pyx_n_s_format); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1281, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_board_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1281, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_16 = __pyx_memoryview_fromslice(__pyx_v_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_char, (int (*)(char *, PyObject *)) __pyx_memview_set_char, 0);; if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1299, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_16);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_16, __pyx_n_s_base); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1299, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+    __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_astype); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1299, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_16);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_1);
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_16))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_16);
       if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_16);
         __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_1, function);
+        __Pyx_DECREF_SET(__pyx_t_16, function);
       }
     }
-    __pyx_t_3 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_8, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2);
+    __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_16, __pyx_t_8, __pyx_kp_u_U1) : __Pyx_PyObject_CallOneArg(__pyx_t_16, __pyx_kp_u_U1);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1299, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+    __pyx_t_16 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_16)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_16);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_16, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+    __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1281, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1299, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_f_8scrabble_6logger_los(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_f_8scrabble_6logger_loc(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "scrabble/p.pyx":1282
+    /* "scrabble/p.pyx":1300
+ *     if can_log('s'):
+ *         los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?
+ *         if can_log('v'):             # <<<<<<<<<<<<<<
+ *             #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
+ *             lov('Default:\n{}'.format(default_board))
+ */
+    __pyx_t_5 = (__pyx_f_8scrabble_6logger_can_log(0x76) != 0);
+    if (__pyx_t_5) {
+
+      /* "scrabble/p.pyx":1302
+ *         if can_log('v'):
+ *             #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
+ *             lov('Default:\n{}'.format(default_board))             # <<<<<<<<<<<<<<
+ *         los('Rack:\n{}\n'.format(rack))
  *     else:
- *         loc('Board size ({}) has no match'.format(board_size))
- *         return             # <<<<<<<<<<<<<<
- * 
- *     default_board = pd.read_pickle(loadfile((board_name,))).to_numpy(np.object_)
  */
-    goto __pyx_L0;
-    break;
-  }
-
-  /* "scrabble/p.pyx":1284
- *         return
- * 
- *     default_board = pd.read_pickle(loadfile((board_name,))).to_numpy(np.object_)             # <<<<<<<<<<<<<<
- * 
- *     points = json.load(loadfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pd, __pyx_n_s_read_pickle); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_INCREF(__pyx_v_board_name);
-  __Pyx_GIVEREF(__pyx_v_board_name);
-  PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_board_name);
-  __pyx_t_15 = __pyx_f_8scrabble_1p_loadfile(((PyObject*)__pyx_t_8), 0, NULL); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_15);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_8)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_8);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_8, __pyx_t_15) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_15);
-  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_to_numpy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_object); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_15 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_15)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_15);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_15, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_dsds_object(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 1284, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_default_board = __pyx_t_16;
-  __pyx_t_16.memview = NULL;
-  __pyx_t_16.data = NULL;
-
-  /* "scrabble/p.pyx":1286
- *     default_board = pd.read_pickle(loadfile((board_name,))).to_numpy(np.object_)
- * 
- *     points = json.load(loadfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]             # <<<<<<<<<<<<<<
- * 
- *     if lo.is_enabled('s'):
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_json, __pyx_n_s_load); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_POINTS_DIR); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_15);
-  __pyx_t_8 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_dictionary, __pyx_kp_u_json); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_17 = PyTuple_New(2); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_17);
-  __Pyx_GIVEREF(__pyx_t_15);
-  PyTuple_SET_ITEM(__pyx_t_17, 0, __pyx_t_15);
-  __Pyx_GIVEREF(__pyx_t_8);
-  PyTuple_SET_ITEM(__pyx_t_17, 1, __pyx_t_8);
-  __pyx_t_15 = 0;
-  __pyx_t_8 = 0;
-  __pyx_t_8 = __pyx_f_8scrabble_1p_loadfile(((PyObject*)__pyx_t_17), 0, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-  __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_open); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_17);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_17))) {
-    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_17);
-    if (likely(__pyx_t_8)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_17);
-      __Pyx_INCREF(__pyx_t_8);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_17, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_17);
-  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-  __pyx_t_17 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_17)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_17);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_17, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(PyDict_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 1286, __pyx_L1_error)
-  __pyx_v_points = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
-
-  /* "scrabble/p.pyx":1288
- *     points = json.load(loadfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
- * 
- *     if lo.is_enabled('s'):             # <<<<<<<<<<<<<<
- *         los('Game Board:\n{}'.format(pdboard))
- *         if lo.is_enabled('v'):
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_lo, __pyx_n_s_is_enabled); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_1)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_1);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_n_u_s) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_n_u_s);
-  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1288, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__pyx_t_4) {
-
-    /* "scrabble/p.pyx":1289
- * 
- *     if lo.is_enabled('s'):
- *         los('Game Board:\n{}'.format(pdboard))             # <<<<<<<<<<<<<<
- *         if lo.is_enabled('v'):
- *             lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
- */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Game_Board, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1289, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_1)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_1);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
-      }
-    }
-    __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_v_pdboard) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_pdboard);
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1289, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_f_8scrabble_6logger_los(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "scrabble/p.pyx":1290
- *     if lo.is_enabled('s'):
- *         los('Game Board:\n{}'.format(pdboard))
- *         if lo.is_enabled('v'):             # <<<<<<<<<<<<<<
- *             lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
- *         los('Rack:\n{}'.format(rack))
- */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_lo, __pyx_n_s_is_enabled); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1290, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_1)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_1);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
-      }
-    }
-    __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_n_u_v) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_n_u_v);
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1290, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 1290, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (__pyx_t_4) {
-
-      /* "scrabble/p.pyx":1291
- *         los('Game Board:\n{}'.format(pdboard))
- *         if lo.is_enabled('v'):
- *             lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))             # <<<<<<<<<<<<<<
- *         los('Rack:\n{}'.format(rack))
- *         printf('\n')
- */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_lo, __pyx_n_s_v); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1291, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_17 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Default, __pyx_n_s_format); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 1291, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_17);
-      __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_pd, __pyx_n_s_read_pickle); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1291, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_15);
-      __pyx_t_18 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_15))) {
-        __pyx_t_18 = PyMethod_GET_SELF(__pyx_t_15);
-        if (likely(__pyx_t_18)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_15);
-          __Pyx_INCREF(__pyx_t_18);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_15, function);
-        }
-      }
-      __pyx_t_8 = (__pyx_t_18) ? __Pyx_PyObject_Call2Args(__pyx_t_15, __pyx_t_18, __pyx_v_board_name) : __Pyx_PyObject_CallOneArg(__pyx_t_15, __pyx_v_board_name);
-      __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
-      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1291, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-      __pyx_t_15 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_17))) {
-        __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_17);
-        if (likely(__pyx_t_15)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_17);
-          __Pyx_INCREF(__pyx_t_15);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_17, function);
-        }
-      }
-      __pyx_t_1 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_17, __pyx_t_15, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_17, __pyx_t_8);
-      __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1291, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-      __pyx_t_17 = NULL;
-      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-        __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_2);
-        if (likely(__pyx_t_17)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-          __Pyx_INCREF(__pyx_t_17);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_2, function);
-        }
-      }
-      __pyx_t_3 = (__pyx_t_17) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_17, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1);
-      __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1291, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Default, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1302, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-      /* "scrabble/p.pyx":1290
- *     if lo.is_enabled('s'):
- *         los('Game Board:\n{}'.format(pdboard))
- *         if lo.is_enabled('v'):             # <<<<<<<<<<<<<<
- *             lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
- *         los('Rack:\n{}'.format(rack))
- */
-    }
-
-    /* "scrabble/p.pyx":1292
- *         if lo.is_enabled('v'):
- *             lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
- *         los('Rack:\n{}'.format(rack))             # <<<<<<<<<<<<<<
- *         printf('\n')
- *     else:
- */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Rack, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1292, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_1)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_1);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_default_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_object, (int (*)(char *, PyObject *)) __pyx_memview_set_object, 1);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1302, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_16 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+        __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_3);
+        if (likely(__pyx_t_16)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+          __Pyx_INCREF(__pyx_t_16);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_3, function);
+        }
       }
-    }
-    __pyx_t_3 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, __pyx_v_rack) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_rack);
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1292, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_f_8scrabble_6logger_los(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_1 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_16, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+      __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1302, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_f_8scrabble_6logger_lov(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1293
- *             lo.v('Default:\n{}'.format(pd.read_pickle(board_name)))
- *         los('Rack:\n{}'.format(rack))
- *         printf('\n')             # <<<<<<<<<<<<<<
+      /* "scrabble/p.pyx":1300
+ *     if can_log('s'):
+ *         los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?
+ *         if can_log('v'):             # <<<<<<<<<<<<<<
+ *             #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
+ *             lov('Default:\n{}'.format(default_board))
+ */
+    }
+
+    /* "scrabble/p.pyx":1303
+ *             #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
+ *             lov('Default:\n{}'.format(default_board))
+ *         los('Rack:\n{}\n'.format(rack))             # <<<<<<<<<<<<<<
  *     else:
  *         printf('Running...\n')
  */
-    (void)(printf(((char const *)"\n")));
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Rack, __pyx_n_s_format); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1303, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_2)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_2);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_v_rack) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_rack);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1303, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_f_8scrabble_6logger_los(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1288
- *     points = json.load(loadfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
+    /* "scrabble/p.pyx":1298
+ *     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
  * 
- *     if lo.is_enabled('s'):             # <<<<<<<<<<<<<<
- *         los('Game Board:\n{}'.format(pdboard))
- *         if lo.is_enabled('v'):
+ *     if can_log('s'):             # <<<<<<<<<<<<<<
+ *         los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?
+ *         if can_log('v'):
  */
     goto __pyx_L11;
   }
 
-  /* "scrabble/p.pyx":1295
- *         printf('\n')
+  /* "scrabble/p.pyx":1305
+ *         los('Rack:\n{}\n'.format(rack))
  *     else:
  *         printf('Running...\n')             # <<<<<<<<<<<<<<
  * 
@@ -14496,7 +13926,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   }
   __pyx_L11:;
 
-  /* "scrabble/p.pyx":1297
+  /* "scrabble/p.pyx":1307
  *         printf('Running...\n')
  * 
  *     Settings.default_board = default_board  # todo put back?             # <<<<<<<<<<<<<<
@@ -14507,7 +13937,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   __PYX_INC_MEMVIEW(&__pyx_v_default_board, 0);
   __pyx_v_8scrabble_1p_Settings->default_board = __pyx_v_default_board;
 
-  /* "scrabble/p.pyx":1298
+  /* "scrabble/p.pyx":1308
  * 
  *     Settings.default_board = default_board  # todo put back?
  *     Settings.board = board             # <<<<<<<<<<<<<<
@@ -14518,17 +13948,17 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   __PYX_INC_MEMVIEW(&__pyx_v_board, 0);
   __pyx_v_8scrabble_1p_Settings->board = __pyx_v_board;
 
-  /* "scrabble/p.pyx":1299
+  /* "scrabble/p.pyx":1309
  *     Settings.default_board = default_board  # todo put back?
  *     Settings.board = board
  *     Settings.shape = board.shape             # <<<<<<<<<<<<<<
  * 
  *     #cdef dict cpoints = {}
  */
-  __pyx_t_19 = __pyx_v_board.shape;
-  memcpy(&(__pyx_v_8scrabble_1p_Settings->shape[0]), __pyx_t_19, sizeof(__pyx_v_8scrabble_1p_Settings->shape[0]) * (2 - 0));
+  __pyx_t_17 = __pyx_v_board.shape;
+  memcpy(&(__pyx_v_8scrabble_1p_Settings->shape[0]), __pyx_t_17, sizeof(__pyx_v_8scrabble_1p_Settings->shape[0]) * (2 - 0));
 
-  /* "scrabble/p.pyx":1302
+  /* "scrabble/p.pyx":1312
  * 
  *     #cdef dict cpoints = {}
  *     cdef BOOL_t[::1] cl_points = npz(MAX_ORD, BOOL)             # <<<<<<<<<<<<<<
@@ -14536,58 +13966,58 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  *     #cdef lpts_t lpt
  */
   __Pyx_INCREF(__pyx_v_8scrabble_1p_npz);
-  __pyx_t_2 = __pyx_v_8scrabble_1p_npz; __pyx_t_1 = NULL;
-  __pyx_t_5 = 0;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_1)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_1);
+  __pyx_t_3 = __pyx_v_8scrabble_1p_npz; __pyx_t_2 = NULL;
+  __pyx_t_14 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_2);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-      __pyx_t_5 = 1;
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_14 = 1;
     }
   }
   #if CYTHON_FAST_PYCALL
-  if (PyFunction_Check(__pyx_t_2)) {
-    PyObject *__pyx_temp[3] = {__pyx_t_1, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
-    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1302, __pyx_L1_error)
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GOTREF(__pyx_t_3);
+  if (PyFunction_Check(__pyx_t_3)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_14, 2+__pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1312, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   #if CYTHON_FAST_PYCCALL
-  if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-    PyObject *__pyx_temp[3] = {__pyx_t_1, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
-    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1302, __pyx_L1_error)
-    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GOTREF(__pyx_t_3);
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_2, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_14, 2+__pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1312, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_17 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 1302, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_17);
-    if (__pyx_t_1) {
-      __Pyx_GIVEREF(__pyx_t_1); PyTuple_SET_ITEM(__pyx_t_17, 0, __pyx_t_1); __pyx_t_1 = NULL;
+    __pyx_t_16 = PyTuple_New(2+__pyx_t_14); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1312, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_16);
+    if (__pyx_t_2) {
+      __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_2); __pyx_t_2 = NULL;
     }
     __Pyx_INCREF(__pyx_int_127);
     __Pyx_GIVEREF(__pyx_int_127);
-    PyTuple_SET_ITEM(__pyx_t_17, 0+__pyx_t_5, __pyx_int_127);
+    PyTuple_SET_ITEM(__pyx_t_16, 0+__pyx_t_14, __pyx_int_127);
     __Pyx_INCREF(((PyObject *)__pyx_v_8scrabble_1p_BOOL));
     __Pyx_GIVEREF(((PyObject *)__pyx_v_8scrabble_1p_BOOL));
-    PyTuple_SET_ITEM(__pyx_t_17, 1+__pyx_t_5, ((PyObject *)__pyx_v_8scrabble_1p_BOOL));
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_17, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1302, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
+    PyTuple_SET_ITEM(__pyx_t_16, 1+__pyx_t_14, ((PyObject *)__pyx_v_8scrabble_1p_BOOL));
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_16, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1312, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_20 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_20.memview)) __PYX_ERR(0, 1302, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_cl_points = __pyx_t_20;
-  __pyx_t_20.memview = NULL;
-  __pyx_t_20.data = NULL;
+  __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 1312, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_cl_points = __pyx_t_18;
+  __pyx_t_18.memview = NULL;
+  __pyx_t_18.data = NULL;
 
-  /* "scrabble/p.pyx":1303
+  /* "scrabble/p.pyx":1313
  *     #cdef dict cpoints = {}
  *     cdef BOOL_t[::1] cl_points = npz(MAX_ORD, BOOL)
  *     cdef BOOL_t[::1] cl_amts = npz(MAX_ORD, BOOL)             # <<<<<<<<<<<<<<
@@ -14595,130 +14025,130 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  *     cdef str k
  */
   __Pyx_INCREF(__pyx_v_8scrabble_1p_npz);
-  __pyx_t_2 = __pyx_v_8scrabble_1p_npz; __pyx_t_17 = NULL;
-  __pyx_t_5 = 0;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_17)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_17);
+  __pyx_t_3 = __pyx_v_8scrabble_1p_npz; __pyx_t_16 = NULL;
+  __pyx_t_14 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_16);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-      __pyx_t_5 = 1;
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+      __pyx_t_14 = 1;
     }
   }
   #if CYTHON_FAST_PYCALL
-  if (PyFunction_Check(__pyx_t_2)) {
-    PyObject *__pyx_temp[3] = {__pyx_t_17, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
-    __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1303, __pyx_L1_error)
-    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
-    __Pyx_GOTREF(__pyx_t_3);
+  if (PyFunction_Check(__pyx_t_3)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_16, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_14, 2+__pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1313, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   #if CYTHON_FAST_PYCCALL
-  if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-    PyObject *__pyx_temp[3] = {__pyx_t_17, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
-    __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_5, 2+__pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1303, __pyx_L1_error)
-    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
-    __Pyx_GOTREF(__pyx_t_3);
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_16, __pyx_int_127, ((PyObject *)__pyx_v_8scrabble_1p_BOOL)};
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_14, 2+__pyx_t_14); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1313, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
   } else
   #endif
   {
-    __pyx_t_1 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1303, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (__pyx_t_17) {
-      __Pyx_GIVEREF(__pyx_t_17); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_17); __pyx_t_17 = NULL;
+    __pyx_t_2 = PyTuple_New(2+__pyx_t_14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1313, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    if (__pyx_t_16) {
+      __Pyx_GIVEREF(__pyx_t_16); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_16); __pyx_t_16 = NULL;
     }
     __Pyx_INCREF(__pyx_int_127);
     __Pyx_GIVEREF(__pyx_int_127);
-    PyTuple_SET_ITEM(__pyx_t_1, 0+__pyx_t_5, __pyx_int_127);
+    PyTuple_SET_ITEM(__pyx_t_2, 0+__pyx_t_14, __pyx_int_127);
     __Pyx_INCREF(((PyObject *)__pyx_v_8scrabble_1p_BOOL));
     __Pyx_GIVEREF(((PyObject *)__pyx_v_8scrabble_1p_BOOL));
-    PyTuple_SET_ITEM(__pyx_t_1, 1+__pyx_t_5, ((PyObject *)__pyx_v_8scrabble_1p_BOOL));
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1303, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    PyTuple_SET_ITEM(__pyx_t_2, 1+__pyx_t_14, ((PyObject *)__pyx_v_8scrabble_1p_BOOL));
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1313, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_20 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_20.memview)) __PYX_ERR(0, 1303, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_cl_amts = __pyx_t_20;
-  __pyx_t_20.memview = NULL;
-  __pyx_t_20.data = NULL;
+  __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_dc_nn___pyx_t_8scrabble_1p_BOOL_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 1313, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_cl_amts = __pyx_t_18;
+  __pyx_t_18.memview = NULL;
+  __pyx_t_18.data = NULL;
 
-  /* "scrabble/p.pyx":1310
+  /* "scrabble/p.pyx":1320
  *     cdef SIZE_t ok
  * 
  *     for k, v in points.items():             # <<<<<<<<<<<<<<
  *         ok = ord(k)
  *         vv = v  # type: list
  */
-  __pyx_t_9 = 0;
+  __pyx_t_11 = 0;
   if (unlikely(__pyx_v_points == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
-    __PYX_ERR(0, 1310, __pyx_L1_error)
+    __PYX_ERR(0, 1320, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_dict_iterator(__pyx_v_points, 1, __pyx_n_s_items, (&__pyx_t_10), (&__pyx_t_5)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1310, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __pyx_t_3 = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __pyx_t_3 = __Pyx_dict_iterator(__pyx_v_points, 1, __pyx_n_s_items, (&__pyx_t_12), (&__pyx_t_14)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1320, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_1);
+  __pyx_t_1 = __pyx_t_3;
+  __pyx_t_3 = 0;
   while (1) {
-    __pyx_t_21 = __Pyx_dict_iter_next(__pyx_t_3, __pyx_t_10, &__pyx_t_9, &__pyx_t_2, &__pyx_t_1, NULL, __pyx_t_5);
-    if (unlikely(__pyx_t_21 == 0)) break;
-    if (unlikely(__pyx_t_21 == -1)) __PYX_ERR(0, 1310, __pyx_L1_error)
+    __pyx_t_19 = __Pyx_dict_iter_next(__pyx_t_1, __pyx_t_12, &__pyx_t_11, &__pyx_t_3, &__pyx_t_2, NULL, __pyx_t_14);
+    if (unlikely(__pyx_t_19 == 0)) break;
+    if (unlikely(__pyx_t_19 == -1)) __PYX_ERR(0, 1320, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GOTREF(__pyx_t_1);
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1310, __pyx_L1_error)
-    if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 1310, __pyx_L1_error)
-    __Pyx_XDECREF_SET(__pyx_v_k, ((PyObject*)__pyx_t_2));
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 1320, __pyx_L1_error)
+    if (!(likely(PyList_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1320, __pyx_L1_error)
+    __Pyx_XDECREF_SET(__pyx_v_k, ((PyObject*)__pyx_t_3));
+    __pyx_t_3 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_v, ((PyObject*)__pyx_t_2));
     __pyx_t_2 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_v, ((PyObject*)__pyx_t_1));
-    __pyx_t_1 = 0;
 
-    /* "scrabble/p.pyx":1311
+    /* "scrabble/p.pyx":1321
  * 
  *     for k, v in points.items():
  *         ok = ord(k)             # <<<<<<<<<<<<<<
  *         vv = v  # type: list
  *         cl_amts[ok] = vv[0]
  */
-    __pyx_t_13 = __Pyx_PyObject_Ord(__pyx_v_k); if (unlikely(__pyx_t_13 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 1311, __pyx_L1_error)
-    __pyx_v_ok = __pyx_t_13;
+    __pyx_t_20 = __Pyx_PyObject_Ord(__pyx_v_k); if (unlikely(__pyx_t_20 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 1321, __pyx_L1_error)
+    __pyx_v_ok = __pyx_t_20;
 
-    /* "scrabble/p.pyx":1312
+    /* "scrabble/p.pyx":1322
  *     for k, v in points.items():
  *         ok = ord(k)
  *         vv = v  # type: list             # <<<<<<<<<<<<<<
  *         cl_amts[ok] = vv[0]
  *         cl_points[ok] = vv[1]
  */
-    if (unlikely(__Pyx_carray_from_py___pyx_t_8scrabble_1p_BOOL_t(__pyx_v_v, __pyx_t_22, 2) < 0)) __PYX_ERR(0, 1312, __pyx_L1_error)
-    memcpy(&(__pyx_v_vv[0]), __pyx_t_22, sizeof(__pyx_v_vv[0]) * (2));
+    if (unlikely(__Pyx_carray_from_py___pyx_t_8scrabble_1p_BOOL_t(__pyx_v_v, __pyx_t_21, 2) < 0)) __PYX_ERR(0, 1322, __pyx_L1_error)
+    memcpy(&(__pyx_v_vv[0]), __pyx_t_21, sizeof(__pyx_v_vv[0]) * (2));
 
-    /* "scrabble/p.pyx":1313
+    /* "scrabble/p.pyx":1323
  *         ok = ord(k)
  *         vv = v  # type: list
  *         cl_amts[ok] = vv[0]             # <<<<<<<<<<<<<<
  *         cl_points[ok] = vv[1]
  * 
  */
-    __pyx_t_23 = __pyx_v_ok;
-    *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_cl_amts.data) + __pyx_t_23)) )) = (__pyx_v_vv[0]);
+    __pyx_t_22 = __pyx_v_ok;
+    *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_cl_amts.data) + __pyx_t_22)) )) = (__pyx_v_vv[0]);
 
-    /* "scrabble/p.pyx":1314
+    /* "scrabble/p.pyx":1324
  *         vv = v  # type: list
  *         cl_amts[ok] = vv[0]
  *         cl_points[ok] = vv[1]             # <<<<<<<<<<<<<<
  * 
  *     Settings.points = cl_points
  */
-    __pyx_t_24 = __pyx_v_ok;
-    *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_cl_points.data) + __pyx_t_24)) )) = (__pyx_v_vv[1]);
+    __pyx_t_23 = __pyx_v_ok;
+    *((__pyx_t_8scrabble_1p_BOOL_t *) ( /* dim=0 */ ((char *) (((__pyx_t_8scrabble_1p_BOOL_t *) __pyx_v_cl_points.data) + __pyx_t_23)) )) = (__pyx_v_vv[1]);
   }
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":1316
+  /* "scrabble/p.pyx":1326
  *         cl_points[ok] = vv[1]
  * 
  *     Settings.points = cl_points             # <<<<<<<<<<<<<<
@@ -14729,7 +14159,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   __PYX_INC_MEMVIEW(&__pyx_v_cl_points, 0);
   __pyx_v_8scrabble_1p_Settings->points = __pyx_v_cl_points;
 
-  /* "scrabble/p.pyx":1317
+  /* "scrabble/p.pyx":1327
  * 
  *     Settings.points = cl_points
  *     Settings.amts = cl_amts             # <<<<<<<<<<<<<<
@@ -14740,7 +14170,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   __PYX_INC_MEMVIEW(&__pyx_v_cl_amts, 0);
   __pyx_v_8scrabble_1p_Settings->amts = __pyx_v_cl_amts;
 
-  /* "scrabble/p.pyx":1319
+  /* "scrabble/p.pyx":1329
  *     Settings.amts = cl_amts
  * 
  *     Settings.num_results = num_results             # <<<<<<<<<<<<<<
@@ -14749,63 +14179,63 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  */
   __pyx_v_8scrabble_1p_Settings->num_results = __pyx_v_num_results;
 
-  /* "scrabble/p.pyx":1324
+  /* "scrabble/p.pyx":1334
  * 
  * 
  *     solve(dictionary)             # <<<<<<<<<<<<<<
  * 
  *     cdef uchr solved_board[MAX_NODES][MAX_NODES]
  */
-  __pyx_f_8scrabble_1p_solve(__pyx_v_dictionary);
+  __pyx_f_8scrabble_1p_solve(__pyx_v_dictionary); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1334, __pyx_L1_error)
 
-  /* "scrabble/p.pyx":1327
+  /* "scrabble/p.pyx":1337
  * 
  *     cdef uchr solved_board[MAX_NODES][MAX_NODES]
  *     cdef uchr[:, ::1] solved_board_v = solved_board             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t r, c
  * 
  */
-  __pyx_t_1 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_uchr);
-  __pyx_t_3 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)15), ((Py_ssize_t)15));
-  if (unlikely(!__pyx_t_1 || !__pyx_t_3 || !PyBytes_AsString(__pyx_t_1))) __PYX_ERR(0, 1327, __pyx_L1_error)
+  __pyx_t_2 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_uchr);
+  __pyx_t_1 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)15), ((Py_ssize_t)15));
+  if (unlikely(!__pyx_t_2 || !__pyx_t_1 || !PyBytes_AsString(__pyx_t_2))) __PYX_ERR(0, 1337, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_25 = __pyx_array_new(__pyx_t_3, sizeof(__pyx_t_8scrabble_1p_uchr), PyBytes_AS_STRING(__pyx_t_1), (char *) "c", (char *) __pyx_v_solved_board);
-  if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 1327, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_25);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_24 = __pyx_array_new(__pyx_t_1, sizeof(__pyx_t_8scrabble_1p_uchr), PyBytes_AS_STRING(__pyx_t_2), (char *) "c", (char *) __pyx_v_solved_board);
+  if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 1337, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_24);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_26 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_nn___pyx_t_8scrabble_1p_uchr(((PyObject *)__pyx_t_25), PyBUF_WRITABLE); if (unlikely(!__pyx_t_26.memview)) __PYX_ERR(0, 1327, __pyx_L1_error)
-  __Pyx_DECREF(((PyObject *)__pyx_t_25)); __pyx_t_25 = 0;
-  __pyx_v_solved_board_v = __pyx_t_26;
-  __pyx_t_26.memview = NULL;
-  __pyx_t_26.data = NULL;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_25 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_nn___pyx_t_8scrabble_1p_uchr(((PyObject *)__pyx_t_24), PyBUF_WRITABLE); if (unlikely(!__pyx_t_25.memview)) __PYX_ERR(0, 1337, __pyx_L1_error)
+  __Pyx_DECREF(((PyObject *)__pyx_t_24)); __pyx_t_24 = 0;
+  __pyx_v_solved_board_v = __pyx_t_25;
+  __pyx_t_25.memview = NULL;
+  __pyx_t_25.data = NULL;
 
-  /* "scrabble/p.pyx":1330
+  /* "scrabble/p.pyx":1340
  *     cdef Py_ssize_t r, c
  * 
  *     for r in range(board.shape[0]):             # <<<<<<<<<<<<<<
  *         for c in range(board.shape[1]):
  *             solved_board[r][c] = Settings.node_board.nodes[r, c].n.letter.value
  */
-  __pyx_t_10 = (__pyx_v_board.shape[0]);
-  __pyx_t_9 = __pyx_t_10;
-  for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_9; __pyx_t_11+=1) {
-    __pyx_v_r = __pyx_t_11;
+  __pyx_t_12 = (__pyx_v_board.shape[0]);
+  __pyx_t_11 = __pyx_t_12;
+  for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_11; __pyx_t_13+=1) {
+    __pyx_v_r = __pyx_t_13;
 
-    /* "scrabble/p.pyx":1331
+    /* "scrabble/p.pyx":1341
  * 
  *     for r in range(board.shape[0]):
  *         for c in range(board.shape[1]):             # <<<<<<<<<<<<<<
  *             solved_board[r][c] = Settings.node_board.nodes[r, c].n.letter.value
  * 
  */
-    __pyx_t_12 = (__pyx_v_board.shape[1]);
-    __pyx_t_27 = __pyx_t_12;
+    __pyx_t_26 = (__pyx_v_board.shape[1]);
+    __pyx_t_27 = __pyx_t_26;
     for (__pyx_t_28 = 0; __pyx_t_28 < __pyx_t_27; __pyx_t_28+=1) {
       __pyx_v_c = __pyx_t_28;
 
-      /* "scrabble/p.pyx":1332
+      /* "scrabble/p.pyx":1342
  *     for r in range(board.shape[0]):
  *         for c in range(board.shape[1]):
  *             solved_board[r][c] = Settings.node_board.nodes[r, c].n.letter.value             # <<<<<<<<<<<<<<
@@ -14814,31 +14244,31 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
  */
       __pyx_t_29 = __pyx_v_r;
       __pyx_t_30 = __pyx_v_c;
-      __pyx_t_1 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_8scrabble_1p_Settings->node_board->nodes.data + __pyx_t_29 * __pyx_v_8scrabble_1p_Settings->node_board->nodes.strides[0]) )) + __pyx_t_30)) ));
-      __Pyx_INCREF((PyObject*)__pyx_t_1);
-      __pyx_t_31 = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_1)->n.letter.value;
-      __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
+      __pyx_t_2 = (PyObject *) *((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=1 */ ((char *) (((struct __pyx_obj_8scrabble_1p_Node * *) ( /* dim=0 */ (__pyx_v_8scrabble_1p_Settings->node_board->nodes.data + __pyx_t_29 * __pyx_v_8scrabble_1p_Settings->node_board->nodes.strides[0]) )) + __pyx_t_30)) ));
+      __Pyx_INCREF((PyObject*)__pyx_t_2);
+      __pyx_t_31 = ((struct __pyx_obj_8scrabble_1p_Node *)__pyx_t_2)->n.letter.value;
+      __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
       ((__pyx_v_solved_board[__pyx_v_r])[__pyx_v_c]) = __pyx_t_31;
     }
   }
 
-  /* "scrabble/p.pyx":1335
+  /* "scrabble/p.pyx":1345
  * 
  *     show_solution(
  *         solved_board_v[:board.shape[0], :board.shape[1]], Settings.node_board.words, no_words             # <<<<<<<<<<<<<<
  *     )
  * 
  */
-  __pyx_t_26.data = __pyx_v_solved_board_v.data;
-  __pyx_t_26.memview = __pyx_v_solved_board_v.memview;
-  __PYX_INC_MEMVIEW(&__pyx_t_26, 0);
-  __pyx_t_5 = -1;
+  __pyx_t_25.data = __pyx_v_solved_board_v.data;
+  __pyx_t_25.memview = __pyx_v_solved_board_v.memview;
+  __PYX_INC_MEMVIEW(&__pyx_t_25, 0);
+  __pyx_t_14 = -1;
   if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_26,
+    &__pyx_t_25,
     __pyx_v_solved_board_v.shape[0], __pyx_v_solved_board_v.strides[0], __pyx_v_solved_board_v.suboffsets[0],
     0,
     0,
-    &__pyx_t_5,
+    &__pyx_t_14,
     0,
     (__pyx_v_board.shape[0]),
     0,
@@ -14847,15 +14277,15 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 1335, __pyx_L1_error)
+    __PYX_ERR(0, 1345, __pyx_L1_error)
 }
 
 if (unlikely(__pyx_memoryview_slice_memviewslice(
-    &__pyx_t_26,
+    &__pyx_t_25,
     __pyx_v_solved_board_v.shape[1], __pyx_v_solved_board_v.strides[1], __pyx_v_solved_board_v.suboffsets[1],
     1,
     1,
-    &__pyx_t_5,
+    &__pyx_t_14,
     0,
     (__pyx_v_board.shape[1]),
     0,
@@ -14864,23 +14294,23 @@ if (unlikely(__pyx_memoryview_slice_memviewslice(
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 1335, __pyx_L1_error)
+    __PYX_ERR(0, 1345, __pyx_L1_error)
 }
 
-__pyx_f_8scrabble_1p_show_solution(__pyx_t_26, __pyx_v_8scrabble_1p_Settings->node_board->words, __pyx_v_no_words);
+__pyx_f_8scrabble_1p_show_solution(__pyx_t_25, __pyx_v_8scrabble_1p_Settings->node_board->words, __pyx_v_no_words);
 
-  /* "scrabble/p.pyx":1334
+  /* "scrabble/p.pyx":1344
  *             solved_board[r][c] = Settings.node_board.nodes[r, c].n.letter.value
  * 
  *     show_solution(             # <<<<<<<<<<<<<<
  *         solved_board_v[:board.shape[0], :board.shape[1]], Settings.node_board.words, no_words
  *     )
  */
-  __PYX_XDEC_MEMVIEW(&__pyx_t_26, 1);
-  __pyx_t_26.memview = NULL;
-  __pyx_t_26.data = NULL;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_25, 1);
+  __pyx_t_25.memview = NULL;
+  __pyx_t_25.data = NULL;
 
-  /* "scrabble/p.pyx":1219
+  /* "scrabble/p.pyx":1232
  * # ):
  * @cython.wraparound(False)
  * cdef void cmain(             # <<<<<<<<<<<<<<
@@ -14895,25 +14325,22 @@ __pyx_f_8scrabble_1p_show_solution(__pyx_t_26, __pyx_v_8scrabble_1p_Settings->no
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_8);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_14, 1);
-  __Pyx_XDECREF(__pyx_t_15);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_16, 1);
-  __Pyx_XDECREF(__pyx_t_17);
-  __Pyx_XDECREF(__pyx_t_18);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
-  __Pyx_XDECREF(((PyObject *)__pyx_t_25));
-  __PYX_XDEC_MEMVIEW(&__pyx_t_26, 1);
+  __Pyx_XDECREF(__pyx_t_9);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_15, 1);
+  __Pyx_XDECREF(__pyx_t_16);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_18, 1);
+  __Pyx_XDECREF(((PyObject *)__pyx_t_24));
+  __PYX_XDEC_MEMVIEW(&__pyx_t_25, 1);
   __Pyx_AddTraceback("scrabble.p.cmain", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_points);
-  __Pyx_XDECREF(__pyx_v_pdboard);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_board, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_default_board, 1);
-  __Pyx_XDECREF(__pyx_v_rack);
-  __Pyx_XDECREF(__pyx_v_board_name);
   __Pyx_XDECREF(__pyx_v_this_board_dir);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_board, 1);
+  __Pyx_XDECREF(__pyx_v_rack);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_default_board, 1);
+  __Pyx_XDECREF(__pyx_v_points);
+  __Pyx_XDECREF(__pyx_v_board_name);
   __Pyx_XDECREF(__pyx_v_el);
-  __Pyx_XDECREF(__pyx_v_l);
   __PYX_XDEC_MEMVIEW(&__pyx_v_cl_points, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_cl_amts, 1);
   __Pyx_XDECREF(__pyx_v_k);
@@ -14923,7 +14350,7 @@ __pyx_f_8scrabble_1p_show_solution(__pyx_t_26, __pyx_v_8scrabble_1p_Settings->no
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/p.pyx":1340
+/* "scrabble/p.pyx":1350
  * 
  * # def
  * def main(             # <<<<<<<<<<<<<<
@@ -14952,7 +14379,7 @@ static PyObject *__pyx_pw_8scrabble_1p_5main(PyObject *__pyx_self, PyObject *__p
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_filename,&__pyx_n_s_dictionary,&__pyx_n_s_no_words,&__pyx_n_s_exclude_letters,&__pyx_n_s_num_results,&__pyx_n_s_log_level,0};
     PyObject* values[6] = {0,0,0,0,0,0};
 
-    /* "scrabble/p.pyx":1341
+    /* "scrabble/p.pyx":1351
  * # def
  * def main(
  *     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,             # <<<<<<<<<<<<<<
@@ -14960,11 +14387,11 @@ static PyObject *__pyx_pw_8scrabble_1p_5main(PyObject *__pyx_self, PyObject *__p
  * ) -> None:
  */
     values[0] = ((PyObject*)Py_None);
-    values[1] = __pyx_k__9;
+    values[1] = __pyx_k__8;
     values[2] = ((PyObject *)Py_False);
     values[3] = ((PyObject*)Py_None);
-    values[4] = __pyx_k__10;
-    values[5] = __pyx_k__11;
+    values[4] = __pyx_k__9;
+    values[5] = __pyx_k__10;
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
@@ -15023,7 +14450,7 @@ static PyObject *__pyx_pw_8scrabble_1p_5main(PyObject *__pyx_self, PyObject *__p
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, __pyx_v__kw, values, pos_args, "main") < 0)) __PYX_ERR(0, 1340, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, __pyx_v__kw, values, pos_args, "main") < 0)) __PYX_ERR(0, 1350, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -15052,20 +14479,20 @@ static PyObject *__pyx_pw_8scrabble_1p_5main(PyObject *__pyx_self, PyObject *__p
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("main", 0, 0, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1340, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("main", 0, 0, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1350, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_DECREF(__pyx_v__kw); __pyx_v__kw = 0;
   __Pyx_AddTraceback("scrabble.p.main", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filename), (&PyUnicode_Type), 1, "filename", 1))) __PYX_ERR(0, 1341, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dictionary), (&PyUnicode_Type), 0, "dictionary", 1))) __PYX_ERR(0, 1341, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_exclude_letters), (&PyList_Type), 1, "exclude_letters", 1))) __PYX_ERR(0, 1341, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_log_level), (&PyUnicode_Type), 0, "log_level", 1))) __PYX_ERR(0, 1342, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filename), (&PyUnicode_Type), 1, "filename", 1))) __PYX_ERR(0, 1351, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dictionary), (&PyUnicode_Type), 0, "dictionary", 1))) __PYX_ERR(0, 1351, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_exclude_letters), (&PyList_Type), 1, "exclude_letters", 1))) __PYX_ERR(0, 1351, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_log_level), (&PyUnicode_Type), 0, "log_level", 1))) __PYX_ERR(0, 1352, __pyx_L1_error)
   __pyx_r = __pyx_pf_8scrabble_1p_4main(__pyx_self, __pyx_v_filename, __pyx_v_dictionary, __pyx_v_no_words, __pyx_v_exclude_letters, __pyx_v_num_results, __pyx_v_log_level, __pyx_v__kw);
 
-  /* "scrabble/p.pyx":1340
+  /* "scrabble/p.pyx":1350
  * 
  * # def
  * def main(             # <<<<<<<<<<<<<<
@@ -15093,7 +14520,7 @@ static PyObject *__pyx_pf_8scrabble_1p_4main(CYTHON_UNUSED PyObject *__pyx_self,
   __Pyx_RefNannySetupContext("main", 0);
   __Pyx_INCREF(__pyx_v_exclude_letters);
 
-  /* "scrabble/p.pyx":1345
+  /* "scrabble/p.pyx":1355
  * ) -> None:
  * 
  *     if exclude_letters is None:             # <<<<<<<<<<<<<<
@@ -15104,19 +14531,19 @@ static PyObject *__pyx_pf_8scrabble_1p_4main(CYTHON_UNUSED PyObject *__pyx_self,
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "scrabble/p.pyx":1346
+    /* "scrabble/p.pyx":1356
  * 
  *     if exclude_letters is None:
  *         exclude_letters = []             # <<<<<<<<<<<<<<
  * 
  *     cmain(filename, dictionary, no_words, exclude_letters, num_results, log_level)
  */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1346, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1356, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF_SET(__pyx_v_exclude_letters, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
 
-    /* "scrabble/p.pyx":1345
+    /* "scrabble/p.pyx":1355
  * ) -> None:
  * 
  *     if exclude_letters is None:             # <<<<<<<<<<<<<<
@@ -15125,16 +14552,16 @@ static PyObject *__pyx_pf_8scrabble_1p_4main(CYTHON_UNUSED PyObject *__pyx_self,
  */
   }
 
-  /* "scrabble/p.pyx":1348
+  /* "scrabble/p.pyx":1358
  *         exclude_letters = []
  * 
  *     cmain(filename, dictionary, no_words, exclude_letters, num_results, log_level)             # <<<<<<<<<<<<<<
  */
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_no_words); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1348, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_num_results); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1348, __pyx_L1_error)
-  __pyx_f_8scrabble_1p_cmain(__pyx_v_filename, __pyx_v_dictionary, __pyx_t_2, __pyx_v_exclude_letters, __pyx_t_4, __pyx_v_log_level); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1348, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_no_words); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1358, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_num_results); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1358, __pyx_L1_error)
+  __pyx_f_8scrabble_1p_cmain(__pyx_v_filename, __pyx_v_dictionary, __pyx_t_2, __pyx_v_exclude_letters, __pyx_t_4, __pyx_v_log_level); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1358, __pyx_L1_error)
 
-  /* "scrabble/p.pyx":1340
+  /* "scrabble/p.pyx":1350
  * 
  * # def
  * def main(             # <<<<<<<<<<<<<<
@@ -15280,7 +14707,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  * 
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 272, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 272, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -15336,7 +14763,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  * 
  *             info.buf = PyArray_DATA(self)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 276, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 276, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -15594,7 +15021,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  *                 if   t == NPY_BYTE:        f = "b"
  *                 elif t == NPY_UBYTE:       f = "B"
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 306, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 306, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -16480,7 +15907,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  * 
  *         if ((child.byteorder == c'>' and little_endian) or
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 856, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 856, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -16548,7 +15975,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             # One could encode it in the format string and have Cython
  *             # complain instead, BUT: < and > in format strings also imply
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 860, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 860, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -16657,7 +16084,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  * 
  *             # Until ticket #99 is fixed, use integers to avoid warnings
  */
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 880, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(2, 880, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_Raise(__pyx_t_4, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -17285,7 +16712,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
  * 
  * cdef inline int import_umath() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__17, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 1038, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 1038, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -17414,7 +16841,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
  * 
  * cdef inline int import_ufunc() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 1044, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__17, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 1044, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -17540,7 +16967,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 1050, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__17, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 1050, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -18110,7 +17537,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if itemsize <= 0:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 133, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -18142,7 +17569,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if not isinstance(format, bytes):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 136, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 136, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -18269,7 +17696,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 148, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -18543,7 +17970,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *             if self.dtype_is_object:
  */
-      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(3, 176, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(3, 176, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_Raise(__pyx_t_10, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -18784,7 +18211,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(stru
  *         info.buf = self.data
  *         info.len = self.len
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 192, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 192, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -19500,7 +18927,7 @@ static PyObject *__pyx_pf___pyx_array___reduce_cython__(CYTHON_UNUSED struct __p
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -19553,7 +18980,7 @@ static PyObject *__pyx_pf___pyx_array_2__setstate_cython__(CYTHON_UNUSED struct 
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -21197,7 +20624,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  * 
  *         have_slices, index = _unellipsify(index, self.view.ndim)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 414, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 414, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -22224,7 +21651,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         else:
  *             if len(self.view.format) == 1:
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(3, 491, __pyx_L5_except_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(3, 491, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_Raise(__pyx_t_6, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -22580,7 +22007,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_8__getbu
  * 
  *         if flags & PyBUF_ND:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 516, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 516, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -23120,7 +22547,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_7strides___get__(st
  * 
  *         return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 566, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 566, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -23234,7 +22661,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_10suboffsets___get_
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 573, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__30, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 573, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__29, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 573, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_r = __pyx_t_3;
@@ -24235,7 +23662,7 @@ static PyObject *__pyx_pf___pyx_memoryview___reduce_cython__(CYTHON_UNUSED struc
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -24288,7 +23715,7 @@ static PyObject *__pyx_pf___pyx_memoryview_2__setstate_cython__(CYTHON_UNUSED st
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__32, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -24639,9 +24066,9 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
         __Pyx_GOTREF(__pyx_t_7);
         { Py_ssize_t __pyx_temp;
           for (__pyx_temp=0; __pyx_temp < ((__pyx_v_ndim - __pyx_t_8) + 1); __pyx_temp++) {
-            __Pyx_INCREF(__pyx_slice__33);
-            __Pyx_GIVEREF(__pyx_slice__33);
-            PyList_SET_ITEM(__pyx_t_7, __pyx_temp, __pyx_slice__33);
+            __Pyx_INCREF(__pyx_slice__32);
+            __Pyx_GIVEREF(__pyx_slice__32);
+            PyList_SET_ITEM(__pyx_t_7, __pyx_temp, __pyx_slice__32);
           }
         }
         __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_7); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(3, 678, __pyx_L1_error)
@@ -24674,7 +24101,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *         else:
  */
       /*else*/ {
-        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__33); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(3, 681, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__32); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(3, 681, __pyx_L1_error)
       }
       __pyx_L7:;
 
@@ -24814,9 +24241,9 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
     __Pyx_GOTREF(__pyx_t_3);
     { Py_ssize_t __pyx_temp;
       for (__pyx_temp=0; __pyx_temp < __pyx_v_nslices; __pyx_temp++) {
-        __Pyx_INCREF(__pyx_slice__33);
-        __Pyx_GIVEREF(__pyx_slice__33);
-        PyList_SET_ITEM(__pyx_t_3, __pyx_temp, __pyx_slice__33);
+        __Pyx_INCREF(__pyx_slice__32);
+        __Pyx_GIVEREF(__pyx_slice__32);
+        PyList_SET_ITEM(__pyx_t_3, __pyx_temp, __pyx_slice__32);
       }
     }
     __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_3); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(3, 692, __pyx_L1_error)
@@ -24940,7 +24367,7 @@ static PyObject *assert_direct_dimensions(Py_ssize_t *__pyx_v_suboffsets, int __
  * 
  * 
  */
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__34, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 699, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__33, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 699, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -27103,7 +26530,7 @@ static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED 
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__35, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__34, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -27156,7 +26583,7 @@ static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUS
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__36, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__35, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -30770,8 +30197,8 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
  *         else:
  *             alignment = b''
  */
-      __Pyx_INCREF(__pyx_kp_b__37);
-      __pyx_v_alignment = __pyx_kp_b__37;
+      __Pyx_INCREF(__pyx_kp_b__36);
+      __pyx_v_alignment = __pyx_kp_b__36;
 
       /* "BufferFormatFromTypeInfo":1468
  *         assert type.fields != NULL and type.fields.type != NULL
@@ -30851,7 +30278,7 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
  *             field += 1
  * 
  */
-      __pyx_t_3 = PyNumber_Add(__pyx_v_part, __pyx_kp_b__38); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 1478, __pyx_L1_error)
+      __pyx_t_3 = PyNumber_Add(__pyx_v_part, __pyx_kp_b__37); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 1478, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_field->name); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 1478, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
@@ -30859,7 +30286,7 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_kp_b__38); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 1478, __pyx_L1_error)
+      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_kp_b__37); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 1478, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_parts, __pyx_t_5); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(3, 1478, __pyx_L1_error)
@@ -30884,7 +30311,7 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
  */
     __pyx_t_5 = __Pyx_PyBytes_Join(__pyx_v_alignment, __pyx_v_parts); if (unlikely(!__pyx_t_5)) __PYX_ERR(3, 1481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_kp_b__39); if (unlikely(!__pyx_t_6)) __PYX_ERR(3, 1481, __pyx_L1_error)
+    __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_kp_b__38); if (unlikely(!__pyx_t_6)) __PYX_ERR(3, 1481, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (!(likely(PyBytes_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(3, 1481, __pyx_L1_error)
@@ -30954,7 +30381,7 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
  */
       __pyx_t_6 = PyUnicode_Join(__pyx_kp_u__3, __pyx_v_extents); if (unlikely(!__pyx_t_6)) __PYX_ERR(3, 1486, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_s_2, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 1486, __pyx_L1_error)
+      __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_s, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(3, 1486, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_6 = PyUnicode_AsASCIIString(((PyObject*)__pyx_t_3)); if (unlikely(!__pyx_t_6)) __PYX_ERR(3, 1486, __pyx_L1_error)
@@ -31033,145 +30460,12 @@ static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_8scrabble_1p_CSettings(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_8scrabble_1p_CSettings *p;
-  PyObject *o;
-  o = (*t->tp_alloc)(t, 0);
-  if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_8scrabble_1p_CSettings *)o);
-  p->rack_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  p->words = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  p->node_board = ((struct __pyx_obj_8scrabble_1p_Board *)Py_None); Py_INCREF(Py_None);
-  p->board.data = NULL;
-  p->board.memview = NULL;
-  p->default_board.data = NULL;
-  p->default_board.memview = NULL;
-  p->rack_v.data = NULL;
-  p->rack_v.memview = NULL;
-  p->points.data = NULL;
-  p->points.memview = NULL;
-  p->amts.data = NULL;
-  p->amts.memview = NULL;
-  if (unlikely(__pyx_pw_8scrabble_1p_9CSettings_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) goto bad;
-  return o;
-  bad:
-  Py_DECREF(o); o = 0;
-  return NULL;
-}
-
-static void __pyx_tp_dealloc_8scrabble_1p_CSettings(PyObject *o) {
-  struct __pyx_obj_8scrabble_1p_CSettings *p = (struct __pyx_obj_8scrabble_1p_CSettings *)o;
-  PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->rack_l);
-  Py_CLEAR(p->words);
-  Py_CLEAR(p->node_board);
-  __PYX_XDEC_MEMVIEW(&p->board, 1);
-  __PYX_XDEC_MEMVIEW(&p->default_board, 1);
-  __PYX_XDEC_MEMVIEW(&p->rack_v, 1);
-  __PYX_XDEC_MEMVIEW(&p->points, 1);
-  __PYX_XDEC_MEMVIEW(&p->amts, 1);
-  (*Py_TYPE(o)->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_8scrabble_1p_CSettings(PyObject *o, visitproc v, void *a) {
-  int e;
-  struct __pyx_obj_8scrabble_1p_CSettings *p = (struct __pyx_obj_8scrabble_1p_CSettings *)o;
-  if (p->rack_l) {
-    e = (*v)(p->rack_l, a); if (e) return e;
-  }
-  if (p->words) {
-    e = (*v)(p->words, a); if (e) return e;
-  }
-  if (p->node_board) {
-    e = (*v)(((PyObject *)p->node_board), a); if (e) return e;
-  }
-  return 0;
-}
-
-static int __pyx_tp_clear_8scrabble_1p_CSettings(PyObject *o) {
-  PyObject* tmp;
-  struct __pyx_obj_8scrabble_1p_CSettings *p = (struct __pyx_obj_8scrabble_1p_CSettings *)o;
-  tmp = ((PyObject*)p->rack_l);
-  p->rack_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  Py_XDECREF(tmp);
-  tmp = ((PyObject*)p->words);
-  p->words = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  Py_XDECREF(tmp);
-  tmp = ((PyObject*)p->node_board);
-  p->node_board = ((struct __pyx_obj_8scrabble_1p_Board *)Py_None); Py_INCREF(Py_None);
-  Py_XDECREF(tmp);
-  return 0;
-}
-
-static PyMethodDef __pyx_methods_8scrabble_1p_CSettings[] = {
-  {0, 0, 0, 0}
-};
-
-static PyTypeObject __pyx_type_8scrabble_1p_CSettings = {
-  PyVarObject_HEAD_INIT(0, 0)
-  "scrabble.p.CSettings", /*tp_name*/
-  sizeof(struct __pyx_obj_8scrabble_1p_CSettings), /*tp_basicsize*/
-  0, /*tp_itemsize*/
-  __pyx_tp_dealloc_8scrabble_1p_CSettings, /*tp_dealloc*/
-  0, /*tp_print*/
-  0, /*tp_getattr*/
-  0, /*tp_setattr*/
-  #if PY_MAJOR_VERSION < 3
-  0, /*tp_compare*/
-  #endif
-  #if PY_MAJOR_VERSION >= 3
-  0, /*tp_as_async*/
-  #endif
-  0, /*tp_repr*/
-  0, /*tp_as_number*/
-  0, /*tp_as_sequence*/
-  0, /*tp_as_mapping*/
-  0, /*tp_hash*/
-  0, /*tp_call*/
-  0, /*tp_str*/
-  0, /*tp_getattro*/
-  0, /*tp_setattro*/
-  0, /*tp_as_buffer*/
-  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
-  0, /*tp_doc*/
-  __pyx_tp_traverse_8scrabble_1p_CSettings, /*tp_traverse*/
-  __pyx_tp_clear_8scrabble_1p_CSettings, /*tp_clear*/
-  0, /*tp_richcompare*/
-  0, /*tp_weaklistoffset*/
-  0, /*tp_iter*/
-  0, /*tp_iternext*/
-  __pyx_methods_8scrabble_1p_CSettings, /*tp_methods*/
-  0, /*tp_members*/
-  0, /*tp_getset*/
-  0, /*tp_base*/
-  0, /*tp_dict*/
-  0, /*tp_descr_get*/
-  0, /*tp_descr_set*/
-  0, /*tp_dictoffset*/
-  0, /*tp_init*/
-  0, /*tp_alloc*/
-  __pyx_tp_new_8scrabble_1p_CSettings, /*tp_new*/
-  0, /*tp_free*/
-  0, /*tp_is_gc*/
-  0, /*tp_bases*/
-  0, /*tp_mro*/
-  0, /*tp_cache*/
-  0, /*tp_subclasses*/
-  0, /*tp_weaklist*/
-  0, /*tp_del*/
-  0, /*tp_version_tag*/
-  #if PY_VERSION_HEX >= 0x030400a1
-  0, /*tp_finalize*/
-  #endif
-};
-
 static PyObject *__pyx_tp_new_8scrabble_1p_Node(PyTypeObject *t, PyObject *a, PyObject *k) {
   struct __pyx_obj_8scrabble_1p_Node *p;
   PyObject *o;
   o = (*t->tp_alloc)(t, 0);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_8scrabble_1p_Node *)o);
-  p->display = ((PyObject*)Py_None); Py_INCREF(Py_None);
   p->up = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None); Py_INCREF(Py_None);
   p->down = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None); Py_INCREF(Py_None);
   p->left = ((struct __pyx_obj_8scrabble_1p_Node *)Py_None); Py_INCREF(Py_None);
@@ -31196,7 +30490,6 @@ static PyObject *__pyx_tp_new_8scrabble_1p_Node(PyTypeObject *t, PyObject *a, Py
 static void __pyx_tp_dealloc_8scrabble_1p_Node(PyObject *o) {
   struct __pyx_obj_8scrabble_1p_Node *p = (struct __pyx_obj_8scrabble_1p_Node *)o;
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->display);
   Py_CLEAR(p->up);
   Py_CLEAR(p->down);
   Py_CLEAR(p->left);
@@ -31289,10 +30582,6 @@ static int __pyx_setprop_8scrabble_1p_4Node_vlen_view(PyObject *o, PyObject *v, 
   }
 }
 
-static PyObject *__pyx_getprop_8scrabble_1p_4Node_display(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_8scrabble_1p_4Node_7display_1__get__(o);
-}
-
 static PyMethodDef __pyx_methods_8scrabble_1p_Node[] = {
   {"str_pos", (PyCFunction)__pyx_pw_8scrabble_1p_4Node_3str_pos, METH_NOARGS, __pyx_doc_8scrabble_1p_4Node_2str_pos},
   {0, 0, 0, 0}
@@ -31300,9 +30589,8 @@ static PyMethodDef __pyx_methods_8scrabble_1p_Node[] = {
 
 static struct PyGetSetDef __pyx_getsets_8scrabble_1p_Node[] = {
   {(char *)"plet_view", __pyx_getprop_8scrabble_1p_4Node_plet_view, __pyx_setprop_8scrabble_1p_4Node_plet_view, (char *)"plet_view: 'long[:, :]'", 0},
-  {(char *)"vlet_view", __pyx_getprop_8scrabble_1p_4Node_vlet_view, __pyx_setprop_8scrabble_1p_4Node_vlet_view, (char *)"vlet_view: 'bint[:, :]'", 0},
-  {(char *)"vlen_view", __pyx_getprop_8scrabble_1p_4Node_vlen_view, __pyx_setprop_8scrabble_1p_4Node_vlen_view, (char *)"vlen_view: 'bint[:, :]'", 0},
-  {(char *)"display", __pyx_getprop_8scrabble_1p_4Node_display, 0, (char *)0, 0},
+  {(char *)"vlet_view", __pyx_getprop_8scrabble_1p_4Node_vlet_view, __pyx_setprop_8scrabble_1p_4Node_vlet_view, (char *)"vlet_view: 'BOOL_t[:, :]'", 0},
+  {(char *)"vlen_view", __pyx_getprop_8scrabble_1p_4Node_vlen_view, __pyx_setprop_8scrabble_1p_4Node_vlen_view, (char *)"vlen_view: 'BOOL_t[:, :]'", 0},
   {0, 0, 0, 0, 0}
 };
 
@@ -31374,6 +30662,8 @@ static PyObject *__pyx_tp_new_8scrabble_1p_Board(PyTypeObject *t, PyObject *a, P
   p->__pyx_vtab = __pyx_vtabptr_8scrabble_1p_Board;
   p->nodes.data = NULL;
   p->nodes.memview = NULL;
+  p->nodesnv.data = NULL;
+  p->nodesnv.memview = NULL;
   if (unlikely(__pyx_pw_8scrabble_1p_5Board_1__cinit__(o, a, k) < 0)) goto bad;
   return o;
   bad:
@@ -31384,6 +30674,7 @@ static PyObject *__pyx_tp_new_8scrabble_1p_Board(PyTypeObject *t, PyObject *a, P
 static void __pyx_tp_dealloc_8scrabble_1p_Board(PyObject *o) {
   struct __pyx_obj_8scrabble_1p_Board *p = (struct __pyx_obj_8scrabble_1p_Board *)o;
   __PYX_XDEC_MEMVIEW(&p->nodes, 1);
+  __PYX_XDEC_MEMVIEW(&p->nodesnv, 1);
   (*Py_TYPE(o)->tp_free)(o);
 }
 
@@ -31449,59 +30740,86 @@ static PyTypeObject __pyx_type_8scrabble_1p_Board = {
   #endif
 };
 
-static struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *__pyx_freelist_8scrabble_1p___pyx_scope_struct__get_by_attr[4096];
-static int __pyx_freecount_8scrabble_1p___pyx_scope_struct__get_by_attr = 0;
-
-static PyObject *__pyx_tp_new_8scrabble_1p___pyx_scope_struct__get_by_attr(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_8scrabble_1p_CSettings(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_8scrabble_1p_CSettings *p;
   PyObject *o;
-  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_8scrabble_1p___pyx_scope_struct__get_by_attr > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr)))) {
-    o = (PyObject*)__pyx_freelist_8scrabble_1p___pyx_scope_struct__get_by_attr[--__pyx_freecount_8scrabble_1p___pyx_scope_struct__get_by_attr];
-    memset(o, 0, sizeof(struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr));
-    (void) PyObject_INIT(o, t);
-    PyObject_GC_Track(o);
-  } else {
-    o = (*t->tp_alloc)(t, 0);
-    if (unlikely(!o)) return 0;
-  }
+  o = (*t->tp_alloc)(t, 0);
+  if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_8scrabble_1p_CSettings *)o);
+  p->rack_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  p->words = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  p->node_board = ((struct __pyx_obj_8scrabble_1p_Board *)Py_None); Py_INCREF(Py_None);
+  p->board.data = NULL;
+  p->board.memview = NULL;
+  p->default_board.data = NULL;
+  p->default_board.memview = NULL;
+  p->points.data = NULL;
+  p->points.memview = NULL;
+  p->amts.data = NULL;
+  p->amts.memview = NULL;
+  p->rack_v.data = NULL;
+  p->rack_v.memview = NULL;
+  if (unlikely(__pyx_pw_8scrabble_1p_9CSettings_1__cinit__(o, __pyx_empty_tuple, NULL) < 0)) goto bad;
   return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
 }
 
-static void __pyx_tp_dealloc_8scrabble_1p___pyx_scope_struct__get_by_attr(PyObject *o) {
-  struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *p = (struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *)o;
+static void __pyx_tp_dealloc_8scrabble_1p_CSettings(PyObject *o) {
+  struct __pyx_obj_8scrabble_1p_CSettings *p = (struct __pyx_obj_8scrabble_1p_CSettings *)o;
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->__pyx_v_attr);
-  Py_CLEAR(p->__pyx_v_v);
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_8scrabble_1p___pyx_scope_struct__get_by_attr < 4096) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr)))) {
-    __pyx_freelist_8scrabble_1p___pyx_scope_struct__get_by_attr[__pyx_freecount_8scrabble_1p___pyx_scope_struct__get_by_attr++] = ((struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *)o);
-  } else {
-    (*Py_TYPE(o)->tp_free)(o);
-  }
+  Py_CLEAR(p->rack_l);
+  Py_CLEAR(p->words);
+  Py_CLEAR(p->node_board);
+  __PYX_XDEC_MEMVIEW(&p->board, 1);
+  __PYX_XDEC_MEMVIEW(&p->default_board, 1);
+  __PYX_XDEC_MEMVIEW(&p->points, 1);
+  __PYX_XDEC_MEMVIEW(&p->amts, 1);
+  __PYX_XDEC_MEMVIEW(&p->rack_v, 1);
+  (*Py_TYPE(o)->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_8scrabble_1p___pyx_scope_struct__get_by_attr(PyObject *o, visitproc v, void *a) {
+static int __pyx_tp_traverse_8scrabble_1p_CSettings(PyObject *o, visitproc v, void *a) {
   int e;
-  struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *p = (struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *)o;
-  if (p->__pyx_v_v) {
-    e = (*v)(p->__pyx_v_v, a); if (e) return e;
+  struct __pyx_obj_8scrabble_1p_CSettings *p = (struct __pyx_obj_8scrabble_1p_CSettings *)o;
+  if (p->rack_l) {
+    e = (*v)(p->rack_l, a); if (e) return e;
+  }
+  if (p->words) {
+    e = (*v)(p->words, a); if (e) return e;
+  }
+  if (p->node_board) {
+    e = (*v)(((PyObject *)p->node_board), a); if (e) return e;
   }
   return 0;
 }
 
-static int __pyx_tp_clear_8scrabble_1p___pyx_scope_struct__get_by_attr(PyObject *o) {
+static int __pyx_tp_clear_8scrabble_1p_CSettings(PyObject *o) {
   PyObject* tmp;
-  struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *p = (struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr *)o;
-  tmp = ((PyObject*)p->__pyx_v_v);
-  p->__pyx_v_v = Py_None; Py_INCREF(Py_None);
+  struct __pyx_obj_8scrabble_1p_CSettings *p = (struct __pyx_obj_8scrabble_1p_CSettings *)o;
+  tmp = ((PyObject*)p->rack_l);
+  p->rack_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->words);
+  p->words = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(tmp);
+  tmp = ((PyObject*)p->node_board);
+  p->node_board = ((struct __pyx_obj_8scrabble_1p_Board *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
 
-static PyTypeObject __pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr = {
+static PyMethodDef __pyx_methods_8scrabble_1p_CSettings[] = {
+  {0, 0, 0, 0}
+};
+
+static PyTypeObject __pyx_type_8scrabble_1p_CSettings = {
   PyVarObject_HEAD_INIT(0, 0)
-  "scrabble.p.__pyx_scope_struct__get_by_attr", /*tp_name*/
-  sizeof(struct __pyx_obj_8scrabble_1p___pyx_scope_struct__get_by_attr), /*tp_basicsize*/
+  "scrabble.p.CSettings", /*tp_name*/
+  sizeof(struct __pyx_obj_8scrabble_1p_CSettings), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_8scrabble_1p___pyx_scope_struct__get_by_attr, /*tp_dealloc*/
+  __pyx_tp_dealloc_8scrabble_1p_CSettings, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -31523,13 +30841,13 @@ static PyTypeObject __pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_8scrabble_1p___pyx_scope_struct__get_by_attr, /*tp_traverse*/
-  __pyx_tp_clear_8scrabble_1p___pyx_scope_struct__get_by_attr, /*tp_clear*/
+  __pyx_tp_traverse_8scrabble_1p_CSettings, /*tp_traverse*/
+  __pyx_tp_clear_8scrabble_1p_CSettings, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  0, /*tp_methods*/
+  __pyx_methods_8scrabble_1p_CSettings, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -31539,7 +30857,7 @@ static PyTypeObject __pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_8scrabble_1p___pyx_scope_struct__get_by_attr, /*tp_new*/
+  __pyx_tp_new_8scrabble_1p_CSettings, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -32226,7 +31544,7 @@ static PyTypeObject __pyx_type___pyx_memoryviewslice = {
 };
 
 static PyMethodDef __pyx_methods[] = {
-  {"loadfile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8scrabble_1p_3loadfile, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8scrabble_1p_2loadfile},
+  {"checkfile", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8scrabble_1p_3checkfile, METH_VARARGS|METH_KEYWORDS, __pyx_doc_8scrabble_1p_2checkfile},
   {0, 0, 0, 0}
 };
 
@@ -32280,7 +31598,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_BOARD_DIR, __pyx_k_BOARD_DIR, sizeof(__pyx_k_BOARD_DIR), 0, 0, 1, 1},
   {&__pyx_n_s_BOARD_FILENAME, __pyx_k_BOARD_FILENAME, sizeof(__pyx_k_BOARD_FILENAME), 0, 0, 1, 1},
   {&__pyx_n_s_Board, __pyx_k_Board, sizeof(__pyx_k_Board), 0, 0, 1, 1},
-  {&__pyx_n_s_Board_get_by_attr_locals_lambda, __pyx_k_Board_get_by_attr_locals_lambda, sizeof(__pyx_k_Board_get_by_attr_locals_lambda), 0, 0, 1, 1},
   {&__pyx_kp_u_Board_size_d_x_d_words, __pyx_k_Board_size_d_x_d_words, sizeof(__pyx_k_Board_size_d_x_d_words), 0, 1, 0, 0},
   {&__pyx_kp_u_Board_size_has_no_match, __pyx_k_Board_size_has_no_match, sizeof(__pyx_k_Board_size_has_no_match), 0, 1, 0, 0},
   {&__pyx_kp_s_Buffer_view_does_not_expose_stri, __pyx_k_Buffer_view_does_not_expose_stri, sizeof(__pyx_k_Buffer_view_does_not_expose_stri), 0, 0, 1, 0},
@@ -32296,7 +31613,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_DEF_BOARD_BIG, __pyx_k_DEF_BOARD_BIG, sizeof(__pyx_k_DEF_BOARD_BIG), 0, 0, 1, 1},
   {&__pyx_n_s_DEF_BOARD_SMALL, __pyx_k_DEF_BOARD_SMALL, sizeof(__pyx_k_DEF_BOARD_SMALL), 0, 0, 1, 1},
   {&__pyx_n_s_DICTIONARY, __pyx_k_DICTIONARY, sizeof(__pyx_k_DICTIONARY), 0, 0, 1, 1},
-  {&__pyx_n_s_DataFrame, __pyx_k_DataFrame, sizeof(__pyx_k_DataFrame), 0, 0, 1, 1},
   {&__pyx_kp_u_Default, __pyx_k_Default, sizeof(__pyx_k_Default), 0, 1, 0, 0},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
@@ -32338,23 +31654,25 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_Solving, __pyx_k_Solving, sizeof(__pyx_k_Solving), 0, 1, 0, 0},
   {&__pyx_kp_b_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 0, 0},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
+  {&__pyx_kp_u_U1, __pyx_k_U1, sizeof(__pyx_k_U1), 0, 1, 0, 0},
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
   {&__pyx_n_s_WORDS_DIR, __pyx_k_WORDS_DIR, sizeof(__pyx_k_WORDS_DIR), 0, 0, 1, 1},
   {&__pyx_kp_u__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 1, 0, 0},
   {&__pyx_kp_u__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 1, 0, 0},
+  {&__pyx_kp_b__36, __pyx_k__36, sizeof(__pyx_k__36), 0, 0, 0, 0},
   {&__pyx_kp_b__37, __pyx_k__37, sizeof(__pyx_k__37), 0, 0, 0, 0},
   {&__pyx_kp_b__38, __pyx_k__38, sizeof(__pyx_k__38), 0, 0, 0, 0},
-  {&__pyx_kp_b__39, __pyx_k__39, sizeof(__pyx_k__39), 0, 0, 0, 0},
+  {&__pyx_n_s__39, __pyx_k__39, sizeof(__pyx_k__39), 0, 0, 1, 1},
   {&__pyx_kp_u__4, __pyx_k__4, sizeof(__pyx_k__4), 0, 1, 0, 0},
-  {&__pyx_n_s__40, __pyx_k__40, sizeof(__pyx_k__40), 0, 0, 1, 1},
   {&__pyx_n_u__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 1, 0, 1},
+  {&__pyx_kp_u__6, __pyx_k__6, sizeof(__pyx_k__6), 0, 1, 0, 0},
   {&__pyx_kp_u__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 1, 0, 0},
-  {&__pyx_kp_u__8, __pyx_k__8, sizeof(__pyx_k__8), 0, 1, 0, 0},
   {&__pyx_n_s_absolute, __pyx_k_absolute, sizeof(__pyx_k_absolute), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_array, __pyx_k_array, sizeof(__pyx_k_array), 0, 0, 1, 1},
+  {&__pyx_n_s_astype, __pyx_k_astype, sizeof(__pyx_k_astype), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
   {&__pyx_n_s_board, __pyx_k_board, sizeof(__pyx_k_board), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
@@ -32367,7 +31685,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_default_board, __pyx_k_default_board, sizeof(__pyx_k_default_board), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_dictionary, __pyx_k_dictionary, sizeof(__pyx_k_dictionary), 0, 0, 1, 1},
-  {&__pyx_n_u_down, __pyx_k_down, sizeof(__pyx_k_down), 0, 1, 0, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_empty, __pyx_k_empty, sizeof(__pyx_k_empty), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -32377,13 +31694,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_exists, __pyx_k_exists, sizeof(__pyx_k_exists), 0, 0, 1, 1},
   {&__pyx_n_s_exit, __pyx_k_exit, sizeof(__pyx_k_exit), 0, 0, 1, 1},
   {&__pyx_n_s_filename, __pyx_k_filename, sizeof(__pyx_k_filename), 0, 0, 1, 1},
-  {&__pyx_n_s_filter, __pyx_k_filter, sizeof(__pyx_k_filter), 0, 0, 1, 1},
   {&__pyx_n_s_flags, __pyx_k_flags, sizeof(__pyx_k_flags), 0, 0, 1, 1},
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 0, 1, 1},
   {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
-  {&__pyx_n_s_getEffectiveLevel, __pyx_k_getEffectiveLevel, sizeof(__pyx_k_getEffectiveLevel), 0, 0, 1, 1},
-  {&__pyx_n_s_get_level, __pyx_k_get_level, sizeof(__pyx_k_get_level), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
@@ -32391,7 +31705,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
   {&__pyx_n_s_intp, __pyx_k_intp, sizeof(__pyx_k_intp), 0, 0, 1, 1},
   {&__pyx_n_s_is_dir, __pyx_k_is_dir, sizeof(__pyx_k_is_dir), 0, 0, 1, 1},
-  {&__pyx_n_s_is_enabled, __pyx_k_is_enabled, sizeof(__pyx_k_is_enabled), 0, 0, 1, 1},
   {&__pyx_n_s_is_file, __pyx_k_is_file, sizeof(__pyx_k_is_file), 0, 0, 1, 1},
   {&__pyx_n_s_is_start, __pyx_k_is_start, sizeof(__pyx_k_is_start), 0, 0, 1, 1},
   {&__pyx_n_s_items, __pyx_k_items, sizeof(__pyx_k_items), 0, 0, 1, 1},
@@ -32401,10 +31714,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_json, __pyx_k_json, sizeof(__pyx_k_json), 0, 1, 0, 0},
   {&__pyx_n_s_json_2, __pyx_k_json_2, sizeof(__pyx_k_json_2), 0, 0, 1, 1},
   {&__pyx_n_s_kw, __pyx_k_kw, sizeof(__pyx_k_kw), 0, 0, 1, 1},
-  {&__pyx_n_u_left, __pyx_k_left, sizeof(__pyx_k_left), 0, 1, 0, 1},
   {&__pyx_n_s_load, __pyx_k_load, sizeof(__pyx_k_load), 0, 0, 1, 1},
   {&__pyx_n_s_log_level, __pyx_k_log_level, sizeof(__pyx_k_log_level), 0, 0, 1, 1},
-  {&__pyx_n_s_logger, __pyx_k_logger, sizeof(__pyx_k_logger), 0, 0, 1, 1},
+  {&__pyx_n_s_lower, __pyx_k_lower, sizeof(__pyx_k_lower), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_main_2, __pyx_k_main_2, sizeof(__pyx_k_main_2), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
@@ -32419,6 +31731,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_new, __pyx_k_new, sizeof(__pyx_k_new), 0, 0, 1, 1},
   {&__pyx_kp_s_no_default___reduce___due_to_non, __pyx_k_no_default___reduce___due_to_non, sizeof(__pyx_k_no_default___reduce___due_to_non), 0, 0, 1, 0},
   {&__pyx_n_s_no_words, __pyx_k_no_words, sizeof(__pyx_k_no_words), 0, 0, 1, 1},
+  {&__pyx_n_s_npe, __pyx_k_npe, sizeof(__pyx_k_npe), 0, 0, 1, 1},
+  {&__pyx_n_s_npz, __pyx_k_npz, sizeof(__pyx_k_npz), 0, 0, 1, 1},
   {&__pyx_n_s_num_results, __pyx_k_num_results, sizeof(__pyx_k_num_results), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_kp_u_numpy_core_multiarray_failed_to, __pyx_k_numpy_core_multiarray_failed_to, sizeof(__pyx_k_numpy_core_multiarray_failed_to), 0, 1, 0, 0},
@@ -32432,6 +31746,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_paths, __pyx_k_paths, sizeof(__pyx_k_paths), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
+  {&__pyx_n_s_pyx_capi, __pyx_k_pyx_capi, sizeof(__pyx_k_pyx_capi), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_getbuffer, __pyx_k_pyx_getbuffer, sizeof(__pyx_k_pyx_getbuffer), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_result, __pyx_k_pyx_result, sizeof(__pyx_k_pyx_result), 0, 0, 1, 1},
@@ -32440,6 +31755,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pyx_unpickle_Enum, __pyx_k_pyx_unpickle_Enum, sizeof(__pyx_k_pyx_unpickle_Enum), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
+  {&__pyx_n_u_rb, __pyx_k_rb, sizeof(__pyx_k_rb), 0, 1, 0, 1},
   {&__pyx_n_s_read_pickle, __pyx_k_read_pickle, sizeof(__pyx_k_read_pickle), 0, 0, 1, 1},
   {&__pyx_n_s_read_text, __pyx_k_read_text, sizeof(__pyx_k_read_text), 0, 0, 1, 1},
   {&__pyx_n_s_reduce, __pyx_k_reduce, sizeof(__pyx_k_reduce), 0, 0, 1, 1},
@@ -32447,17 +31763,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
   {&__pyx_n_s_remove, __pyx_k_remove, sizeof(__pyx_k_remove), 0, 0, 1, 1},
   {&__pyx_n_s_reshape, __pyx_k_reshape, sizeof(__pyx_k_reshape), 0, 0, 1, 1},
-  {&__pyx_n_u_right, __pyx_k_right, sizeof(__pyx_k_right), 0, 1, 0, 1},
-  {&__pyx_n_u_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 1, 0, 1},
-  {&__pyx_kp_u_s_2, __pyx_k_s_2, sizeof(__pyx_k_s_2), 0, 1, 0, 0},
+  {&__pyx_kp_u_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 1, 0, 0},
   {&__pyx_n_s_scrabble_p, __pyx_k_scrabble_p, sizeof(__pyx_k_scrabble_p), 0, 0, 1, 1},
   {&__pyx_kp_s_scrabble_p_pyx, __pyx_k_scrabble_p_pyx, sizeof(__pyx_k_scrabble_p_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_scrabble_settings, __pyx_k_scrabble_settings, sizeof(__pyx_k_scrabble_settings), 0, 0, 1, 1},
-  {&__pyx_n_s_set_level, __pyx_k_set_level, sizeof(__pyx_k_set_level), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
+  {&__pyx_n_u_spam, __pyx_k_spam, sizeof(__pyx_k_spam), 0, 1, 0, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
   {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
   {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
@@ -32478,11 +31792,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_k_unknown_dtype_code_in_numpy_pxd, sizeof(__pyx_k_unknown_dtype_code_in_numpy_pxd), 0, 1, 0, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_unused, __pyx_k_unused, sizeof(__pyx_k_unused), 0, 0, 1, 1},
-  {&__pyx_n_u_up, __pyx_k_up, sizeof(__pyx_k_up), 0, 1, 0, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
-  {&__pyx_n_s_upper, __pyx_k_upper, sizeof(__pyx_k_upper), 0, 0, 1, 1},
-  {&__pyx_n_s_v, __pyx_k_v, sizeof(__pyx_k_v), 0, 0, 1, 1},
-  {&__pyx_n_u_v, __pyx_k_v, sizeof(__pyx_k_v), 0, 1, 0, 1},
   {&__pyx_n_s_val, __pyx_k_val, sizeof(__pyx_k_val), 0, 0, 1, 1},
   {&__pyx_n_s_view, __pyx_k_view, sizeof(__pyx_k_view), 0, 0, 1, 1},
   {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
@@ -32493,10 +31803,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_chr = __Pyx_GetBuiltinName(__pyx_n_s_chr); if (!__pyx_builtin_chr) __PYX_ERR(0, 225, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 258, __pyx_L1_error)
-  __pyx_builtin_filter = __Pyx_GetBuiltinName(__pyx_n_s_filter); if (!__pyx_builtin_filter) __PYX_ERR(0, 315, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 1136, __pyx_L1_error)
+  __pyx_builtin_chr = __Pyx_GetBuiltinName(__pyx_n_s_chr); if (!__pyx_builtin_chr) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 264, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 1156, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 272, __pyx_L1_error)
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(2, 856, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(2, 1038, __pyx_L1_error)
@@ -32515,17 +31824,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "scrabble/p.pyx":299
- *                 self._set_edge(r, c)
- * 
- *                 for d in ('up', 'down', 'left', 'right'):             # <<<<<<<<<<<<<<
- *                     self._set_adj_words(node, d)
- * 
- */
-  __pyx_tuple__6 = PyTuple_Pack(4, __pyx_n_u_up, __pyx_n_u_down, __pyx_n_u_left, __pyx_n_u_right); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 299, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
-
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":272
  *             if ((flags & pybuf.PyBUF_C_CONTIGUOUS == pybuf.PyBUF_C_CONTIGUOUS)
  *                 and not PyArray_CHKFLAGS(self, NPY_ARRAY_C_CONTIGUOUS)):
@@ -32533,9 +31831,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_C_contiguous); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(2, 272, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__12);
-  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_C_contiguous); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(2, 272, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
 
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":276
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
@@ -32544,9 +31842,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *             info.buf = PyArray_DATA(self)
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_Fortran_contiguou); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(2, 276, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_Fortran_contiguou); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(2, 276, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
 
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":306
  *                 if ((descr.byteorder == c'>' and little_endian) or
@@ -32555,9 +31853,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *                 if   t == NPY_BYTE:        f = "b"
  *                 elif t == NPY_UBYTE:       f = "B"
  */
-  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(2, 306, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__14);
-  __Pyx_GIVEREF(__pyx_tuple__14);
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(2, 306, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
 
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":856
  * 
@@ -32566,9 +31864,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if ((child.byteorder == c'>' and little_endian) or
  */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(2, 856, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__15);
-  __Pyx_GIVEREF(__pyx_tuple__15);
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(2, 856, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
+  __Pyx_GIVEREF(__pyx_tuple__14);
 
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":880
  *             t = child.type_num
@@ -32577,9 +31875,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *             # Until ticket #99 is fixed, use integers to avoid warnings
  */
-  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor_2); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(2, 880, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__16);
-  __Pyx_GIVEREF(__pyx_tuple__16);
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor_2); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(2, 880, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__15);
+  __Pyx_GIVEREF(__pyx_tuple__15);
 
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":1038
  *         _import_array()
@@ -32588,9 +31886,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * cdef inline int import_umath() except -1:
  */
-  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(2, 1038, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__17);
-  __Pyx_GIVEREF(__pyx_tuple__17);
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(2, 1038, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
 
   /* "../../../../usr/local/lib/python3.6/dist-packages/Cython/Includes/numpy/__init__.pxd":1044
  *         _import_umath()
@@ -32599,9 +31897,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * cdef inline int import_ufunc() except -1:
  */
-  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(2, 1044, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__18);
-  __Pyx_GIVEREF(__pyx_tuple__18);
+  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(2, 1044, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__17);
+  __Pyx_GIVEREF(__pyx_tuple__17);
 
   /* "View.MemoryView":133
  * 
@@ -32610,9 +31908,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if itemsize <= 0:
  */
-  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(3, 133, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__19);
-  __Pyx_GIVEREF(__pyx_tuple__19);
+  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(3, 133, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__18);
+  __Pyx_GIVEREF(__pyx_tuple__18);
 
   /* "View.MemoryView":136
  * 
@@ -32621,9 +31919,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if not isinstance(format, bytes):
  */
-  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(3, 136, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__20);
-  __Pyx_GIVEREF(__pyx_tuple__20);
+  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(3, 136, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
 
   /* "View.MemoryView":148
  * 
@@ -32632,9 +31930,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(3, 148, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__21);
-  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(3, 148, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__20);
+  __Pyx_GIVEREF(__pyx_tuple__20);
 
   /* "View.MemoryView":176
  *             self.data = <char *>malloc(self.len)
@@ -32643,9 +31941,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *             if self.dtype_is_object:
  */
-  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(3, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__22);
-  __Pyx_GIVEREF(__pyx_tuple__22);
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(3, 176, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
 
   /* "View.MemoryView":192
  *             bufmode = PyBUF_F_CONTIGUOUS | PyBUF_ANY_CONTIGUOUS
@@ -32654,9 +31952,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         info.buf = self.data
  *         info.len = self.len
  */
-  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(3, 192, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__23);
-  __Pyx_GIVEREF(__pyx_tuple__23);
+  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(3, 192, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -32664,18 +31962,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(3, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__24);
-  __Pyx_GIVEREF(__pyx_tuple__24);
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(3, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(3, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__25);
-  __Pyx_GIVEREF(__pyx_tuple__25);
+  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__24);
+  __Pyx_GIVEREF(__pyx_tuple__24);
 
   /* "View.MemoryView":414
  *     def __setitem__(memoryview self, object index, object value):
@@ -32684,9 +31982,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         have_slices, index = _unellipsify(index, self.view.ndim)
  */
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_Cannot_assign_to_read_only_memor); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(3, 414, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_Cannot_assign_to_read_only_memor); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(3, 414, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__25);
+  __Pyx_GIVEREF(__pyx_tuple__25);
 
   /* "View.MemoryView":491
  *             result = struct.unpack(self.view.format, bytesitem)
@@ -32695,9 +31993,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         else:
  *             if len(self.view.format) == 1:
  */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(3, 491, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
+  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(3, 491, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
 
   /* "View.MemoryView":516
  *     def __getbuffer__(self, Py_buffer *info, int flags):
@@ -32706,9 +32004,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if flags & PyBUF_ND:
  */
-  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_Cannot_create_writable_memory_vi); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(3, 516, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_Cannot_create_writable_memory_vi); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(3, 516, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__27);
+  __Pyx_GIVEREF(__pyx_tuple__27);
 
   /* "View.MemoryView":566
  *         if self.view.strides == NULL:
@@ -32717,9 +32015,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(3, 566, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(3, 566, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
 
   /* "View.MemoryView":573
  *     def suboffsets(self):
@@ -32728,12 +32026,12 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         return tuple([suboffset for suboffset in self.view.suboffsets[:self.view.ndim]])
  */
-  __pyx_tuple__30 = PyTuple_New(1); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(3, 573, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
+  __pyx_tuple__29 = PyTuple_New(1); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(3, 573, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_INCREF(__pyx_int_neg_1);
   __Pyx_GIVEREF(__pyx_int_neg_1);
-  PyTuple_SET_ITEM(__pyx_tuple__30, 0, __pyx_int_neg_1);
-  __Pyx_GIVEREF(__pyx_tuple__30);
+  PyTuple_SET_ITEM(__pyx_tuple__29, 0, __pyx_int_neg_1);
+  __Pyx_GIVEREF(__pyx_tuple__29);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -32741,18 +32039,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(3, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
+  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(3, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__30);
+  __Pyx_GIVEREF(__pyx_tuple__30);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(3, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
+  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__31);
+  __Pyx_GIVEREF(__pyx_tuple__31);
 
   /* "View.MemoryView":678
  *         if item is Ellipsis:
@@ -32761,9 +32059,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *                 seen_ellipsis = True
  *             else:
  */
-  __pyx_slice__33 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__33)) __PYX_ERR(3, 678, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_slice__33);
-  __Pyx_GIVEREF(__pyx_slice__33);
+  __pyx_slice__32 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__32)) __PYX_ERR(3, 678, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_slice__32);
+  __Pyx_GIVEREF(__pyx_slice__32);
 
   /* "View.MemoryView":699
  *     for suboffset in suboffsets[:ndim]:
@@ -32772,9 +32070,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__34 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(3, 699, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__34);
-  __Pyx_GIVEREF(__pyx_tuple__34);
+  __pyx_tuple__33 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(3, 699, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__33);
+  __Pyx_GIVEREF(__pyx_tuple__33);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -32782,39 +32080,39 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(3, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__35);
-  __Pyx_GIVEREF(__pyx_tuple__35);
+  __pyx_tuple__34 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(3, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__34);
+  __Pyx_GIVEREF(__pyx_tuple__34);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__36 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(3, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__36);
-  __Pyx_GIVEREF(__pyx_tuple__36);
+  __pyx_tuple__35 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__35);
+  __Pyx_GIVEREF(__pyx_tuple__35);
 
-  /* "scrabble/p.pyx":834
+  /* "scrabble/p.pyx":853
  * 
  * 
  * def _unused(): pass             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_scrabble_p_pyx, __pyx_n_s_unused, 834, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 834, __pyx_L1_error)
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_scrabble_p_pyx, __pyx_n_s_unused, 853, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 853, __pyx_L1_error)
 
-  /* "scrabble/p.pyx":1340
+  /* "scrabble/p.pyx":1350
  * 
  * # def
  * def main(             # <<<<<<<<<<<<<<
  *     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,
  *     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
  */
-  __pyx_tuple__42 = PyTuple_Pack(7, __pyx_n_s_filename, __pyx_n_s_dictionary, __pyx_n_s_no_words, __pyx_n_s_exclude_letters, __pyx_n_s_num_results, __pyx_n_s_log_level, __pyx_n_s_kw); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 1340, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__42);
-  __Pyx_GIVEREF(__pyx_tuple__42);
-  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(6, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_scrabble_p_pyx, __pyx_n_s_main_2, 1340, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 1340, __pyx_L1_error)
+  __pyx_tuple__41 = PyTuple_Pack(7, __pyx_n_s_filename, __pyx_n_s_dictionary, __pyx_n_s_no_words, __pyx_n_s_exclude_letters, __pyx_n_s_num_results, __pyx_n_s_log_level, __pyx_n_s_kw); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 1350, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__41);
+  __Pyx_GIVEREF(__pyx_tuple__41);
+  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(6, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS|CO_VARKEYWORDS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_scrabble_p_pyx, __pyx_n_s_main_2, 1350, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 1350, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -32823,9 +32121,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__44 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(3, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__44);
-  __Pyx_GIVEREF(__pyx_tuple__44);
+  __pyx_tuple__43 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(3, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__43);
+  __Pyx_GIVEREF(__pyx_tuple__43);
 
   /* "View.MemoryView":287
  * 
@@ -32834,9 +32132,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__45 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(3, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__45);
-  __Pyx_GIVEREF(__pyx_tuple__45);
+  __pyx_tuple__44 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(3, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__44);
+  __Pyx_GIVEREF(__pyx_tuple__44);
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -32845,9 +32143,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__46 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(3, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__46);
-  __Pyx_GIVEREF(__pyx_tuple__46);
+  __pyx_tuple__45 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(3, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__45);
+  __Pyx_GIVEREF(__pyx_tuple__45);
 
   /* "View.MemoryView":291
  * 
@@ -32856,9 +32154,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__47 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(3, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__47);
-  __Pyx_GIVEREF(__pyx_tuple__47);
+  __pyx_tuple__46 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(3, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__46);
+  __Pyx_GIVEREF(__pyx_tuple__46);
 
   /* "View.MemoryView":292
  * 
@@ -32867,19 +32165,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__48 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(3, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__48);
-  __Pyx_GIVEREF(__pyx_tuple__48);
+  __pyx_tuple__47 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(3, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__47);
+  __Pyx_GIVEREF(__pyx_tuple__47);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__49 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(3, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__49);
-  __Pyx_GIVEREF(__pyx_tuple__49);
-  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(3, 1, __pyx_L1_error)
+  __pyx_tuple__48 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(3, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__48);
+  __Pyx_GIVEREF(__pyx_tuple__48);
+  __pyx_codeobj__49 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__48, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__49)) __PYX_ERR(3, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -32913,7 +32211,10 @@ static int __Pyx_modinit_global_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_global_init_code", 0);
   /*--- Global init code ---*/
+  __pyx_v_8scrabble_1p_npz = Py_None; Py_INCREF(Py_None);
+  __pyx_v_8scrabble_1p_npe = Py_None; Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_json = Py_None; Py_INCREF(Py_None);
+  __pyx_v_8scrabble_1p_pickle = Py_None; Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_sys = Py_None; Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_np = Py_None; Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_pd = Py_None; Py_INCREF(Py_None);
@@ -32922,8 +32223,6 @@ static int __Pyx_modinit_global_init_code(void) {
   __pyx_v_8scrabble_1p_STR = ((PyTypeObject*)Py_None); Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_BOOL = ((PyTypeObject*)Py_None); Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_SIZE = ((PyTypeObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_1p_npz = Py_None; Py_INCREF(Py_None);
-  __pyx_v_8scrabble_1p_npe = Py_None; Py_INCREF(Py_None);
   __pyx_v_8scrabble_1p_Settings = ((struct __pyx_obj_8scrabble_1p_CSettings *)Py_None); Py_INCREF(Py_None);
   generic = Py_None; Py_INCREF(Py_None);
   strided = Py_None; Py_INCREF(Py_None);
@@ -32938,8 +32237,13 @@ static int __Pyx_modinit_variable_export_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_export_code", 0);
   /*--- Variable export code ---*/
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_npz, (void *)&__pyx_v_8scrabble_1p_npz, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_npe, (void *)&__pyx_v_8scrabble_1p_npe, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_modinit_function_export_code(void) {
@@ -32947,15 +32251,15 @@ static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
   if (__Pyx_ExportFunction("sol", (void (*)(void))__pyx_f_8scrabble_1p_sol, "void (__pyx_t_8scrabble_1p_WordDict, char *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("calc_pts", (void (*)(void))__pyx_f_8scrabble_1p_calc_pts, "__pyx_t_8scrabble_1p_STRU_t (__pyx_t_8scrabble_1p_Letter_List, __pyx_t_8scrabble_1p_N *, int, Py_ssize_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("lets_match", (void (*)(void))__pyx_f_8scrabble_1p_lets_match, "int (__Pyx_memviewslice, Py_ssize_t, __pyx_t_8scrabble_1p_N *, Py_ssize_t, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("calc_pts", (void (*)(void))__pyx_f_8scrabble_1p_calc_pts, "__pyx_t_8scrabble_1p_STRU_t (__pyx_t_8scrabble_1p_Letter_List, __Pyx_memviewslice, int, Py_ssize_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("lets_match", (void (*)(void))__pyx_f_8scrabble_1p_lets_match, "int (__Pyx_memviewslice, Py_ssize_t, __Pyx_memviewslice, Py_ssize_t, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("rack_check", (void (*)(void))__pyx_f_8scrabble_1p_rack_check, "int (__Pyx_memviewslice, Py_ssize_t, int *, Py_ssize_t, __pyx_t_8scrabble_1p_BOOL_t, __Pyx_memviewslice)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("rack_match", (void (*)(void))__pyx_f_8scrabble_1p_rack_match, "__pyx_t_8scrabble_1p_Letter_List (__Pyx_memviewslice, Py_ssize_t, __pyx_t_8scrabble_1p_N *, Py_ssize_t, __Pyx_memviewslice)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("parse_nodes", (void (*)(void))__pyx_f_8scrabble_1p_parse_nodes, "void (__pyx_t_8scrabble_1p_N *, __Pyx_memviewslice, __Pyx_memviewslice, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("rack_match", (void (*)(void))__pyx_f_8scrabble_1p_rack_match, "__pyx_t_8scrabble_1p_Letter_List (__Pyx_memviewslice, Py_ssize_t, __Pyx_memviewslice, Py_ssize_t, __Pyx_memviewslice)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("parse_nodes", (void (*)(void))__pyx_f_8scrabble_1p_parse_nodes, "void (__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("print_board", (void (*)(void))__pyx_f_8scrabble_1p_print_board, "void (__Pyx_memviewslice, __pyx_t_8scrabble_1p_Letter_List)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("mycmp", (void (*)(void))__pyx_f_8scrabble_1p_mycmp, "int (__pyx_t_8scrabble_1p_c_void, __pyx_t_8scrabble_1p_c_void)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("show_solution", (void (*)(void))__pyx_f_8scrabble_1p_show_solution, "void (__Pyx_memviewslice, __pyx_t_8scrabble_1p_WordDict_List, int)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("loadfile", (void (*)(void))__pyx_f_8scrabble_1p_loadfile, "PyObject *(PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8scrabble_1p_loadfile *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("checkfile", (void (*)(void))__pyx_f_8scrabble_1p_checkfile, "PyObject *(PyObject *, int __pyx_skip_dispatch, struct __pyx_opt_args_8scrabble_1p_checkfile *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("solve", (void (*)(void))__pyx_f_8scrabble_1p_solve, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportFunction("cmain", (void (*)(void))__pyx_f_8scrabble_1p_cmain, "void (PyObject *, PyObject *, int, PyObject *, int, PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
@@ -32969,42 +32273,34 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_8scrabble_1p_CSettings) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
-  __pyx_type_8scrabble_1p_CSettings.tp_print = 0;
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8scrabble_1p_CSettings.tp_dictoffset && __pyx_type_8scrabble_1p_CSettings.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_8scrabble_1p_CSettings.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
-  }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_CSettings, (PyObject *)&__pyx_type_8scrabble_1p_CSettings) < 0) __PYX_ERR(0, 64, __pyx_L1_error)
-  __pyx_ptype_8scrabble_1p_CSettings = &__pyx_type_8scrabble_1p_CSettings;
-  if (PyType_Ready(&__pyx_type_8scrabble_1p_Node) < 0) __PYX_ERR(0, 140, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8scrabble_1p_Node) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
   __pyx_type_8scrabble_1p_Node.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8scrabble_1p_Node.tp_dictoffset && __pyx_type_8scrabble_1p_Node.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_8scrabble_1p_Node.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Node, (PyObject *)&__pyx_type_8scrabble_1p_Node) < 0) __PYX_ERR(0, 140, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Node, (PyObject *)&__pyx_type_8scrabble_1p_Node) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
   __pyx_ptype_8scrabble_1p_Node = &__pyx_type_8scrabble_1p_Node;
   __pyx_vtabptr_8scrabble_1p_Board = &__pyx_vtable_8scrabble_1p_Board;
-  __pyx_vtable_8scrabble_1p_Board.get = (struct __pyx_obj_8scrabble_1p_Node *(*)(struct __pyx_obj_8scrabble_1p_Board *, int, int))__pyx_f_8scrabble_1p_5Board_get;
-  __pyx_vtable_8scrabble_1p_Board.get_by_attr = (struct __pyx_obj_8scrabble_1p_Node *(*)(struct __pyx_obj_8scrabble_1p_Board *, PyObject *, PyObject *))__pyx_f_8scrabble_1p_5Board_get_by_attr;
   __pyx_vtable_8scrabble_1p_Board._set_edge = (void (*)(struct __pyx_obj_8scrabble_1p_Board *, Py_ssize_t, Py_ssize_t))__pyx_f_8scrabble_1p_5Board__set_edge;
-  __pyx_vtable_8scrabble_1p_Board._set_adj_words = (void (*)(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *, PyObject *))__pyx_f_8scrabble_1p_5Board__set_adj_words;
+  __pyx_vtable_8scrabble_1p_Board._set_adj_words = (void (*)(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *, Py_ssize_t))__pyx_f_8scrabble_1p_5Board__set_adj_words;
   __pyx_vtable_8scrabble_1p_Board._set_lets = (void (*)(struct __pyx_obj_8scrabble_1p_Board *, struct __pyx_obj_8scrabble_1p_Node *))__pyx_f_8scrabble_1p_5Board__set_lets;
   __pyx_vtable_8scrabble_1p_Board._check_adj_words = (int (*)(struct __pyx_obj_8scrabble_1p_Board *, __pyx_t_8scrabble_1p_BOOL_t, struct __pyx_obj_8scrabble_1p_Node *, struct __pyx_obj_8scrabble_1p_Node *, PyObject *, PyObject *))__pyx_f_8scrabble_1p_5Board__check_adj_words;
   __pyx_vtable_8scrabble_1p_Board._set_map = (void (*)(struct __pyx_obj_8scrabble_1p_Board *, __Pyx_memviewslice, int))__pyx_f_8scrabble_1p_5Board__set_map;
-  if (PyType_Ready(&__pyx_type_8scrabble_1p_Board) < 0) __PYX_ERR(0, 235, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_8scrabble_1p_Board) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
   __pyx_type_8scrabble_1p_Board.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8scrabble_1p_Board.tp_dictoffset && __pyx_type_8scrabble_1p_Board.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_8scrabble_1p_Board.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  if (__Pyx_SetVtable(__pyx_type_8scrabble_1p_Board.tp_dict, __pyx_vtabptr_8scrabble_1p_Board) < 0) __PYX_ERR(0, 235, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Board, (PyObject *)&__pyx_type_8scrabble_1p_Board) < 0) __PYX_ERR(0, 235, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_type_8scrabble_1p_Board.tp_dict, __pyx_vtabptr_8scrabble_1p_Board) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_Board, (PyObject *)&__pyx_type_8scrabble_1p_Board) < 0) __PYX_ERR(0, 240, __pyx_L1_error)
   __pyx_ptype_8scrabble_1p_Board = &__pyx_type_8scrabble_1p_Board;
-  if (PyType_Ready(&__pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
-  __pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr.tp_print = 0;
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr.tp_dictoffset && __pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
+  if (PyType_Ready(&__pyx_type_8scrabble_1p_CSettings) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_type_8scrabble_1p_CSettings.tp_print = 0;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_8scrabble_1p_CSettings.tp_dictoffset && __pyx_type_8scrabble_1p_CSettings.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_8scrabble_1p_CSettings.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  __pyx_ptype_8scrabble_1p___pyx_scope_struct__get_by_attr = &__pyx_type_8scrabble_1p___pyx_scope_struct__get_by_attr;
+  if (PyObject_SetAttr(__pyx_m, __pyx_n_s_CSettings, (PyObject *)&__pyx_type_8scrabble_1p_CSettings) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_ptype_8scrabble_1p_CSettings = &__pyx_type_8scrabble_1p_CSettings;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) __PYX_ERR(3, 105, __pyx_L1_error)
@@ -33098,6 +32394,7 @@ static int __Pyx_modinit_variable_import_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_import_code", 0);
   /*--- Variable import code ---*/
   __pyx_t_1 = PyImport_ImportModule("scrabble.logger"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportVoidPtr(__pyx_t_1, "lvl_alias", (void **)&__pyx_vp_8scrabble_6logger_lvl_alias, "int [0x7F]") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "lo", (void **)&__pyx_vp_8scrabble_6logger_lo, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "lo_lvl", (void **)&__pyx_vp_8scrabble_6logger_lo_lvl, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "KS_RES", (void **)&__pyx_vp_8scrabble_6logger_KS_RES, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -33133,6 +32430,7 @@ static int __Pyx_modinit_function_import_code(void) {
   /*--- Function import code ---*/
   __pyx_t_1 = PyImport_ImportModule("scrabble.logger"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "can_log", (void (**)(void))&__pyx_f_8scrabble_6logger_can_log, "int (Py_UNICODE)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "lov", (void (**)(void))&__pyx_f_8scrabble_6logger_lov, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "los", (void (**)(void))&__pyx_f_8scrabble_6logger_los, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "loe", (void (**)(void))&__pyx_f_8scrabble_6logger_loe, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "loc", (void (**)(void))&__pyx_f_8scrabble_6logger_loc, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -33334,7 +32632,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_InitCachedConstants() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
-  (void)__Pyx_modinit_variable_export_code();
+  if (unlikely(__Pyx_modinit_variable_export_code() != 0)) goto __pyx_L1_error;
   if (unlikely(__Pyx_modinit_function_export_code() != 0)) goto __pyx_L1_error;
   if (unlikely(__Pyx_modinit_type_init_code() != 0)) goto __pyx_L1_error;
   if (unlikely(__Pyx_modinit_type_import_code() != 0)) goto __pyx_L1_error;
@@ -33345,78 +32643,92 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "scrabble/p.pyx":19
+  /* "scrabble/p.pyx":21
  * #cdef module np
  * 
  * import json             # <<<<<<<<<<<<<<
+ * import pickle
  * import sys
- * import numpy as np
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_json_2, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_json_2, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_json);
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_json, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":20
+  /* "scrabble/p.pyx":22
  * 
  * import json
+ * import pickle             # <<<<<<<<<<<<<<
+ * import sys
+ * import numpy as np
+ */
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_pickle, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_XGOTREF(__pyx_v_8scrabble_1p_pickle);
+  __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_pickle, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "scrabble/p.pyx":23
+ * import json
+ * import pickle
  * import sys             # <<<<<<<<<<<<<<
  * import numpy as np
  * import pandas as pd  # remove
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_sys, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_sys, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_sys);
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_sys, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":21
- * import json
+  /* "scrabble/p.pyx":24
+ * import pickle
  * import sys
  * import numpy as np             # <<<<<<<<<<<<<<
  * import pandas as pd  # remove
  * from pathlib import Path
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_np);
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_np, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":22
+  /* "scrabble/p.pyx":25
  * import sys
  * import numpy as np
  * import pandas as pd  # remove             # <<<<<<<<<<<<<<
  * from pathlib import Path
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_pandas, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_pandas, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_pd);
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_pd, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":23
+  /* "scrabble/p.pyx":26
  * import numpy as np
  * import pandas as pd  # remove
  * from pathlib import Path             # <<<<<<<<<<<<<<
  * 
  * import scrabble.settings as _s
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_Path);
   __Pyx_GIVEREF(__pyx_n_s_Path);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_Path);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_pathlib, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_pathlib, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_Path); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_Path); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_t_1);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_Path);
@@ -33425,19 +32737,19 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":25
+  /* "scrabble/p.pyx":28
  * from pathlib import Path
  * 
  * import scrabble.settings as _s             # <<<<<<<<<<<<<<
  * 
  * #import signal
  */
-  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_n_s__40);
-  __Pyx_GIVEREF(__pyx_n_s__40);
-  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s__40);
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_scrabble_settings, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_INCREF(__pyx_n_s__39);
+  __Pyx_GIVEREF(__pyx_n_s__39);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s__39);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_scrabble_settings, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p__s);
@@ -33445,14 +32757,14 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":35
+  /* "scrabble/p.pyx":38
  * 
  * 
  * cdef type STR = <type>np.int32             # <<<<<<<<<<<<<<
  * cdef type BOOL = <type>np.uint8
  * cdef type SIZE = <type>np.intp
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_int32); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_int32); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_t_1;
   __Pyx_INCREF(__pyx_t_2);
@@ -33462,14 +32774,14 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":36
+  /* "scrabble/p.pyx":39
  * 
  * cdef type STR = <type>np.int32
  * cdef type BOOL = <type>np.uint8             # <<<<<<<<<<<<<<
  * cdef type SIZE = <type>np.intp
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_uint8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_uint8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_1 = __pyx_t_2;
   __Pyx_INCREF(__pyx_t_1);
@@ -33479,14 +32791,14 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "scrabble/p.pyx":37
+  /* "scrabble/p.pyx":40
  * cdef type STR = <type>np.int32
  * cdef type BOOL = <type>np.uint8
  * cdef type SIZE = <type>np.intp             # <<<<<<<<<<<<<<
  * 
  * cdef object npz = np.zeros
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_intp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_intp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __pyx_t_1;
   __Pyx_INCREF(__pyx_t_2);
@@ -33496,103 +32808,103 @@ if (!__Pyx_RefNanny) {
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":39
+  /* "scrabble/p.pyx":42
  * cdef type SIZE = <type>np.intp
  * 
  * cdef object npz = np.zeros             # <<<<<<<<<<<<<<
  * cdef object npe = np.empty
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_npz);
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_npz, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":40
+  /* "scrabble/p.pyx":43
  * 
  * cdef object npz = np.zeros
  * cdef object npe = np.empty             # <<<<<<<<<<<<<<
  * 
  * #DTYPE = np.intc
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p_np, __pyx_n_s_empty); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(__pyx_v_8scrabble_1p_npe);
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_npe, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":95
+  /* "scrabble/p.pyx":98
  * 
  * 
  * cdef CSettings Settings = CSettings()             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8scrabble_1p_CSettings)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_8scrabble_1p_CSettings)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(((PyObject *)__pyx_v_8scrabble_1p_Settings));
   __Pyx_DECREF_SET(__pyx_v_8scrabble_1p_Settings, ((struct __pyx_obj_8scrabble_1p_CSettings *)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":834
+  /* "scrabble/p.pyx":853
  * 
  * 
  * def _unused(): pass             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8scrabble_1p_1_unused, NULL, __pyx_n_s_scrabble_p); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 834, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8scrabble_1p_1_unused, NULL, __pyx_n_s_scrabble_p); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 853, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_unused, __pyx_t_2) < 0) __PYX_ERR(0, 834, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_unused, __pyx_t_2) < 0) __PYX_ERR(0, 853, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":1341
+  /* "scrabble/p.pyx":1351
  * # def
  * def main(
  *     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,             # <<<<<<<<<<<<<<
  *     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
  * ) -> None:
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DICTIONARY); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1341, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DICTIONARY); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1351, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1341, __pyx_L1_error)
-  __pyx_k__9 = ((PyObject*)__pyx_t_2);
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1351, __pyx_L1_error)
+  __pyx_k__8 = ((PyObject*)__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_NUM_RESULTS); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1341, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_NUM_RESULTS); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1351, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_k__10 = __pyx_t_2;
+  __pyx_k__9 = __pyx_t_2;
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":1342
+  /* "scrabble/p.pyx":1352
  * def main(
  *     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,
  *     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict             # <<<<<<<<<<<<<<
  * ) -> None:
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DEFAULT_LOGLEVEL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1342, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_DEFAULT_LOGLEVEL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1352, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1342, __pyx_L1_error)
-  __pyx_k__11 = ((PyObject*)__pyx_t_2);
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 1352, __pyx_L1_error)
+  __pyx_k__10 = ((PyObject*)__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "scrabble/p.pyx":1340
+  /* "scrabble/p.pyx":1350
  * 
  * # def
  * def main(             # <<<<<<<<<<<<<<
  *     filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,
  *     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8scrabble_1p_5main, NULL, __pyx_n_s_scrabble_p); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1340, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8scrabble_1p_5main, NULL, __pyx_n_s_scrabble_p); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1350, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_main_2, __pyx_t_2) < 0) __PYX_ERR(0, 1340, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_main_2, __pyx_t_2) < 0) __PYX_ERR(0, 1350, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "View.MemoryView":209
@@ -33615,7 +32927,7 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__44, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 286, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__43, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 286, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_2);
@@ -33629,7 +32941,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__45, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 287, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__44, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_2);
@@ -33643,7 +32955,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__46, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 288, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__45, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_2);
@@ -33657,7 +32969,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__47, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 291, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__46, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_2);
@@ -33671,7 +32983,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__48, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 292, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__47, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
@@ -34165,87 +33477,6 @@ invalid_keyword:
     #endif
 bad:
     return -1;
-}
-
-/* ArgTypeTest */
-static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
-{
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    else if (exact) {
-        #if PY_MAJOR_VERSION == 2
-        if ((type == &PyBaseString_Type) && likely(__Pyx_PyBaseString_CheckExact(obj))) return 1;
-        #endif
-    }
-    else {
-        if (likely(__Pyx_TypeCheck(obj, type))) return 1;
-    }
-    PyErr_Format(PyExc_TypeError,
-        "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
-        name, type->tp_name, Py_TYPE(obj)->tp_name);
-    return 0;
-}
-
-/* UnicodeAsUCS4 */
-static CYTHON_INLINE Py_UCS4 __Pyx_PyUnicode_AsPy_UCS4(PyObject* x) {
-   Py_ssize_t length;
-   #if CYTHON_PEP393_ENABLED
-   length = PyUnicode_GET_LENGTH(x);
-   if (likely(length == 1)) {
-       return PyUnicode_READ_CHAR(x, 0);
-   }
-   #else
-   length = PyUnicode_GET_SIZE(x);
-   if (likely(length == 1)) {
-       return PyUnicode_AS_UNICODE(x)[0];
-   }
-   #if Py_UNICODE_SIZE == 2
-   else if (PyUnicode_GET_SIZE(x) == 2) {
-       Py_UCS4 high_val = PyUnicode_AS_UNICODE(x)[0];
-       if (high_val >= 0xD800 && high_val <= 0xDBFF) {
-           Py_UCS4 low_val = PyUnicode_AS_UNICODE(x)[1];
-           if (low_val >= 0xDC00 && low_val <= 0xDFFF) {
-               return 0x10000 + (((high_val & ((1<<10)-1)) << 10) | (low_val & ((1<<10)-1)));
-           }
-       }
-   }
-   #endif
-   #endif
-   PyErr_Format(PyExc_ValueError,
-                "only single character unicode strings can be converted to Py_UCS4, "
-                "got length %" CYTHON_FORMAT_SSIZE_T "d", length);
-   return (Py_UCS4)-1;
-}
-
-/* object_ord */
-static long __Pyx__PyObject_Ord(PyObject* c) {
-    Py_ssize_t size;
-    if (PyBytes_Check(c)) {
-        size = PyBytes_GET_SIZE(c);
-        if (likely(size == 1)) {
-            return (unsigned char) PyBytes_AS_STRING(c)[0];
-        }
-#if PY_MAJOR_VERSION < 3
-    } else if (PyUnicode_Check(c)) {
-        return (long)__Pyx_PyUnicode_AsPy_UCS4(c);
-#endif
-#if (!CYTHON_COMPILING_IN_PYPY) || (defined(PyByteArray_AS_STRING) && defined(PyByteArray_GET_SIZE))
-    } else if (PyByteArray_Check(c)) {
-        size = PyByteArray_GET_SIZE(c);
-        if (likely(size == 1)) {
-            return (unsigned char) PyByteArray_AS_STRING(c)[0];
-        }
-#endif
-    } else {
-        PyErr_Format(PyExc_TypeError,
-            "ord() expected string of length 1, but %.200s found", c->ob_type->tp_name);
-        return (long)(Py_UCS4)-1;
-    }
-    PyErr_Format(PyExc_TypeError,
-        "ord() expected a character, but string of length %zd found", size);
-    return (long)(Py_UCS4)-1;
 }
 
 /* PyObjectFormat */
@@ -34797,672 +34028,6 @@ static CYTHON_INLINE Py_UCS4 __Pyx_GetItemInt_Unicode_Fast(PyObject* ustring, Py
     }
 }
 
-/* GetAttr */
-static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
-#if CYTHON_USE_TYPE_SLOTS
-#if PY_MAJOR_VERSION >= 3
-    if (likely(PyUnicode_Check(n)))
-#else
-    if (likely(PyString_Check(n)))
-#endif
-        return __Pyx_PyObject_GetAttrStr(o, n);
-#endif
-    return PyObject_GetAttr(o, n);
-}
-
-/* None */
-static CYTHON_INLINE void __Pyx_RaiseClosureNameError(const char *varname) {
-    PyErr_Format(PyExc_NameError, "free variable '%s' referenced before assignment in enclosing scope", varname);
-}
-
-/* FetchCommonType */
-static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type) {
-    PyObject* fake_module;
-    PyTypeObject* cached_type = NULL;
-    fake_module = PyImport_AddModule((char*) "_cython_" CYTHON_ABI);
-    if (!fake_module) return NULL;
-    Py_INCREF(fake_module);
-    cached_type = (PyTypeObject*) PyObject_GetAttrString(fake_module, type->tp_name);
-    if (cached_type) {
-        if (!PyType_Check((PyObject*)cached_type)) {
-            PyErr_Format(PyExc_TypeError,
-                "Shared Cython type %.200s is not a type object",
-                type->tp_name);
-            goto bad;
-        }
-        if (cached_type->tp_basicsize != type->tp_basicsize) {
-            PyErr_Format(PyExc_TypeError,
-                "Shared Cython type %.200s has the wrong size, try recompiling",
-                type->tp_name);
-            goto bad;
-        }
-    } else {
-        if (!PyErr_ExceptionMatches(PyExc_AttributeError)) goto bad;
-        PyErr_Clear();
-        if (PyType_Ready(type) < 0) goto bad;
-        if (PyObject_SetAttrString(fake_module, type->tp_name, (PyObject*) type) < 0)
-            goto bad;
-        Py_INCREF(type);
-        cached_type = type;
-    }
-done:
-    Py_DECREF(fake_module);
-    return cached_type;
-bad:
-    Py_XDECREF(cached_type);
-    cached_type = NULL;
-    goto done;
-}
-
-/* CythonFunction */
-#include <structmember.h>
-static PyObject *
-__Pyx_CyFunction_get_doc(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *closure)
-{
-    if (unlikely(op->func_doc == NULL)) {
-        if (op->func.m_ml->ml_doc) {
-#if PY_MAJOR_VERSION >= 3
-            op->func_doc = PyUnicode_FromString(op->func.m_ml->ml_doc);
-#else
-            op->func_doc = PyString_FromString(op->func.m_ml->ml_doc);
-#endif
-            if (unlikely(op->func_doc == NULL))
-                return NULL;
-        } else {
-            Py_INCREF(Py_None);
-            return Py_None;
-        }
-    }
-    Py_INCREF(op->func_doc);
-    return op->func_doc;
-}
-static int
-__Pyx_CyFunction_set_doc(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp = op->func_doc;
-    if (value == NULL) {
-        value = Py_None;
-    }
-    Py_INCREF(value);
-    op->func_doc = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_name(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    if (unlikely(op->func_name == NULL)) {
-#if PY_MAJOR_VERSION >= 3
-        op->func_name = PyUnicode_InternFromString(op->func.m_ml->ml_name);
-#else
-        op->func_name = PyString_InternFromString(op->func.m_ml->ml_name);
-#endif
-        if (unlikely(op->func_name == NULL))
-            return NULL;
-    }
-    Py_INCREF(op->func_name);
-    return op->func_name;
-}
-static int
-__Pyx_CyFunction_set_name(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-#if PY_MAJOR_VERSION >= 3
-    if (unlikely(value == NULL || !PyUnicode_Check(value)))
-#else
-    if (unlikely(value == NULL || !PyString_Check(value)))
-#endif
-    {
-        PyErr_SetString(PyExc_TypeError,
-                        "__name__ must be set to a string object");
-        return -1;
-    }
-    tmp = op->func_name;
-    Py_INCREF(value);
-    op->func_name = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_qualname(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(op->func_qualname);
-    return op->func_qualname;
-}
-static int
-__Pyx_CyFunction_set_qualname(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-#if PY_MAJOR_VERSION >= 3
-    if (unlikely(value == NULL || !PyUnicode_Check(value)))
-#else
-    if (unlikely(value == NULL || !PyString_Check(value)))
-#endif
-    {
-        PyErr_SetString(PyExc_TypeError,
-                        "__qualname__ must be set to a string object");
-        return -1;
-    }
-    tmp = op->func_qualname;
-    Py_INCREF(value);
-    op->func_qualname = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_self(__pyx_CyFunctionObject *m, CYTHON_UNUSED void *closure)
-{
-    PyObject *self;
-    self = m->func_closure;
-    if (self == NULL)
-        self = Py_None;
-    Py_INCREF(self);
-    return self;
-}
-static PyObject *
-__Pyx_CyFunction_get_dict(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    if (unlikely(op->func_dict == NULL)) {
-        op->func_dict = PyDict_New();
-        if (unlikely(op->func_dict == NULL))
-            return NULL;
-    }
-    Py_INCREF(op->func_dict);
-    return op->func_dict;
-}
-static int
-__Pyx_CyFunction_set_dict(__pyx_CyFunctionObject *op, PyObject *value, CYTHON_UNUSED void *context)
-{
-    PyObject *tmp;
-    if (unlikely(value == NULL)) {
-        PyErr_SetString(PyExc_TypeError,
-               "function's dictionary may not be deleted");
-        return -1;
-    }
-    if (unlikely(!PyDict_Check(value))) {
-        PyErr_SetString(PyExc_TypeError,
-               "setting function's dictionary to a non-dict");
-        return -1;
-    }
-    tmp = op->func_dict;
-    Py_INCREF(value);
-    op->func_dict = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_globals(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(op->func_globals);
-    return op->func_globals;
-}
-static PyObject *
-__Pyx_CyFunction_get_closure(CYTHON_UNUSED __pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-static PyObject *
-__Pyx_CyFunction_get_code(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context)
-{
-    PyObject* result = (op->func_code) ? op->func_code : Py_None;
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_init_defaults(__pyx_CyFunctionObject *op) {
-    int result = 0;
-    PyObject *res = op->defaults_getter((PyObject *) op);
-    if (unlikely(!res))
-        return -1;
-    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    op->defaults_tuple = PyTuple_GET_ITEM(res, 0);
-    Py_INCREF(op->defaults_tuple);
-    op->defaults_kwdict = PyTuple_GET_ITEM(res, 1);
-    Py_INCREF(op->defaults_kwdict);
-    #else
-    op->defaults_tuple = PySequence_ITEM(res, 0);
-    if (unlikely(!op->defaults_tuple)) result = -1;
-    else {
-        op->defaults_kwdict = PySequence_ITEM(res, 1);
-        if (unlikely(!op->defaults_kwdict)) result = -1;
-    }
-    #endif
-    Py_DECREF(res);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_defaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value) {
-        value = Py_None;
-    } else if (value != Py_None && !PyTuple_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__defaults__ must be set to a tuple object");
-        return -1;
-    }
-    Py_INCREF(value);
-    tmp = op->defaults_tuple;
-    op->defaults_tuple = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_defaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->defaults_tuple;
-    if (unlikely(!result)) {
-        if (op->defaults_getter) {
-            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
-            result = op->defaults_tuple;
-        } else {
-            result = Py_None;
-        }
-    }
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_kwdefaults(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value) {
-        value = Py_None;
-    } else if (value != Py_None && !PyDict_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__kwdefaults__ must be set to a dict object");
-        return -1;
-    }
-    Py_INCREF(value);
-    tmp = op->defaults_kwdict;
-    op->defaults_kwdict = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_kwdefaults(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->defaults_kwdict;
-    if (unlikely(!result)) {
-        if (op->defaults_getter) {
-            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
-            result = op->defaults_kwdict;
-        } else {
-            result = Py_None;
-        }
-    }
-    Py_INCREF(result);
-    return result;
-}
-static int
-__Pyx_CyFunction_set_annotations(__pyx_CyFunctionObject *op, PyObject* value, CYTHON_UNUSED void *context) {
-    PyObject* tmp;
-    if (!value || value == Py_None) {
-        value = NULL;
-    } else if (!PyDict_Check(value)) {
-        PyErr_SetString(PyExc_TypeError,
-                        "__annotations__ must be set to a dict object");
-        return -1;
-    }
-    Py_XINCREF(value);
-    tmp = op->func_annotations;
-    op->func_annotations = value;
-    Py_XDECREF(tmp);
-    return 0;
-}
-static PyObject *
-__Pyx_CyFunction_get_annotations(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *context) {
-    PyObject* result = op->func_annotations;
-    if (unlikely(!result)) {
-        result = PyDict_New();
-        if (unlikely(!result)) return NULL;
-        op->func_annotations = result;
-    }
-    Py_INCREF(result);
-    return result;
-}
-static PyGetSetDef __pyx_CyFunction_getsets[] = {
-    {(char *) "func_doc", (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
-    {(char *) "__doc__",  (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
-    {(char *) "func_name", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
-    {(char *) "__name__", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
-    {(char *) "__qualname__", (getter)__Pyx_CyFunction_get_qualname, (setter)__Pyx_CyFunction_set_qualname, 0, 0},
-    {(char *) "__self__", (getter)__Pyx_CyFunction_get_self, 0, 0, 0},
-    {(char *) "func_dict", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
-    {(char *) "__dict__", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
-    {(char *) "func_globals", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
-    {(char *) "__globals__", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
-    {(char *) "func_closure", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
-    {(char *) "__closure__", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
-    {(char *) "func_code", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
-    {(char *) "__code__", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
-    {(char *) "func_defaults", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
-    {(char *) "__defaults__", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
-    {(char *) "__kwdefaults__", (getter)__Pyx_CyFunction_get_kwdefaults, (setter)__Pyx_CyFunction_set_kwdefaults, 0, 0},
-    {(char *) "__annotations__", (getter)__Pyx_CyFunction_get_annotations, (setter)__Pyx_CyFunction_set_annotations, 0, 0},
-    {0, 0, 0, 0, 0}
-};
-static PyMemberDef __pyx_CyFunction_members[] = {
-    {(char *) "__module__", T_OBJECT, offsetof(PyCFunctionObject, m_module), PY_WRITE_RESTRICTED, 0},
-    {0, 0, 0,  0, 0}
-};
-static PyObject *
-__Pyx_CyFunction_reduce(__pyx_CyFunctionObject *m, CYTHON_UNUSED PyObject *args)
-{
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromString(m->func.m_ml->ml_name);
-#else
-    return PyString_FromString(m->func.m_ml->ml_name);
-#endif
-}
-static PyMethodDef __pyx_CyFunction_methods[] = {
-    {"__reduce__", (PyCFunction)__Pyx_CyFunction_reduce, METH_VARARGS, 0},
-    {0, 0, 0, 0}
-};
-#if PY_VERSION_HEX < 0x030500A0
-#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func_weakreflist)
-#else
-#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func.m_weakreflist)
-#endif
-static PyObject *__Pyx_CyFunction_New(PyTypeObject *type, PyMethodDef *ml, int flags, PyObject* qualname,
-                                      PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
-    __pyx_CyFunctionObject *op = PyObject_GC_New(__pyx_CyFunctionObject, type);
-    if (op == NULL)
-        return NULL;
-    op->flags = flags;
-    __Pyx_CyFunction_weakreflist(op) = NULL;
-    op->func.m_ml = ml;
-    op->func.m_self = (PyObject *) op;
-    Py_XINCREF(closure);
-    op->func_closure = closure;
-    Py_XINCREF(module);
-    op->func.m_module = module;
-    op->func_dict = NULL;
-    op->func_name = NULL;
-    Py_INCREF(qualname);
-    op->func_qualname = qualname;
-    op->func_doc = NULL;
-    op->func_classobj = NULL;
-    op->func_globals = globals;
-    Py_INCREF(op->func_globals);
-    Py_XINCREF(code);
-    op->func_code = code;
-    op->defaults_pyobjects = 0;
-    op->defaults = NULL;
-    op->defaults_tuple = NULL;
-    op->defaults_kwdict = NULL;
-    op->defaults_getter = NULL;
-    op->func_annotations = NULL;
-    PyObject_GC_Track(op);
-    return (PyObject *) op;
-}
-static int
-__Pyx_CyFunction_clear(__pyx_CyFunctionObject *m)
-{
-    Py_CLEAR(m->func_closure);
-    Py_CLEAR(m->func.m_module);
-    Py_CLEAR(m->func_dict);
-    Py_CLEAR(m->func_name);
-    Py_CLEAR(m->func_qualname);
-    Py_CLEAR(m->func_doc);
-    Py_CLEAR(m->func_globals);
-    Py_CLEAR(m->func_code);
-    Py_CLEAR(m->func_classobj);
-    Py_CLEAR(m->defaults_tuple);
-    Py_CLEAR(m->defaults_kwdict);
-    Py_CLEAR(m->func_annotations);
-    if (m->defaults) {
-        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
-        int i;
-        for (i = 0; i < m->defaults_pyobjects; i++)
-            Py_XDECREF(pydefaults[i]);
-        PyObject_Free(m->defaults);
-        m->defaults = NULL;
-    }
-    return 0;
-}
-static void __Pyx__CyFunction_dealloc(__pyx_CyFunctionObject *m)
-{
-    if (__Pyx_CyFunction_weakreflist(m) != NULL)
-        PyObject_ClearWeakRefs((PyObject *) m);
-    __Pyx_CyFunction_clear(m);
-    PyObject_GC_Del(m);
-}
-static void __Pyx_CyFunction_dealloc(__pyx_CyFunctionObject *m)
-{
-    PyObject_GC_UnTrack(m);
-    __Pyx__CyFunction_dealloc(m);
-}
-static int __Pyx_CyFunction_traverse(__pyx_CyFunctionObject *m, visitproc visit, void *arg)
-{
-    Py_VISIT(m->func_closure);
-    Py_VISIT(m->func.m_module);
-    Py_VISIT(m->func_dict);
-    Py_VISIT(m->func_name);
-    Py_VISIT(m->func_qualname);
-    Py_VISIT(m->func_doc);
-    Py_VISIT(m->func_globals);
-    Py_VISIT(m->func_code);
-    Py_VISIT(m->func_classobj);
-    Py_VISIT(m->defaults_tuple);
-    Py_VISIT(m->defaults_kwdict);
-    if (m->defaults) {
-        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
-        int i;
-        for (i = 0; i < m->defaults_pyobjects; i++)
-            Py_VISIT(pydefaults[i]);
-    }
-    return 0;
-}
-static PyObject *__Pyx_CyFunction_descr_get(PyObject *func, PyObject *obj, PyObject *type)
-{
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    if (m->flags & __Pyx_CYFUNCTION_STATICMETHOD) {
-        Py_INCREF(func);
-        return func;
-    }
-    if (m->flags & __Pyx_CYFUNCTION_CLASSMETHOD) {
-        if (type == NULL)
-            type = (PyObject *)(Py_TYPE(obj));
-        return __Pyx_PyMethod_New(func, type, (PyObject *)(Py_TYPE(type)));
-    }
-    if (obj == Py_None)
-        obj = NULL;
-    return __Pyx_PyMethod_New(func, obj, type);
-}
-static PyObject*
-__Pyx_CyFunction_repr(__pyx_CyFunctionObject *op)
-{
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromFormat("<cyfunction %U at %p>",
-                                op->func_qualname, (void *)op);
-#else
-    return PyString_FromFormat("<cyfunction %s at %p>",
-                               PyString_AsString(op->func_qualname), (void *)op);
-#endif
-}
-static PyObject * __Pyx_CyFunction_CallMethod(PyObject *func, PyObject *self, PyObject *arg, PyObject *kw) {
-    PyCFunctionObject* f = (PyCFunctionObject*)func;
-    PyCFunction meth = f->m_ml->ml_meth;
-    Py_ssize_t size;
-    switch (f->m_ml->ml_flags & (METH_VARARGS | METH_KEYWORDS | METH_NOARGS | METH_O)) {
-    case METH_VARARGS:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0))
-            return (*meth)(self, arg);
-        break;
-    case METH_VARARGS | METH_KEYWORDS:
-        return (*(PyCFunctionWithKeywords)(void*)meth)(self, arg, kw);
-    case METH_NOARGS:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
-            size = PyTuple_GET_SIZE(arg);
-            if (likely(size == 0))
-                return (*meth)(self, NULL);
-            PyErr_Format(PyExc_TypeError,
-                "%.200s() takes no arguments (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                f->m_ml->ml_name, size);
-            return NULL;
-        }
-        break;
-    case METH_O:
-        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
-            size = PyTuple_GET_SIZE(arg);
-            if (likely(size == 1)) {
-                PyObject *result, *arg0;
-                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                arg0 = PyTuple_GET_ITEM(arg, 0);
-                #else
-                arg0 = PySequence_ITEM(arg, 0); if (unlikely(!arg0)) return NULL;
-                #endif
-                result = (*meth)(self, arg0);
-                #if !(CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS)
-                Py_DECREF(arg0);
-                #endif
-                return result;
-            }
-            PyErr_Format(PyExc_TypeError,
-                "%.200s() takes exactly one argument (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                f->m_ml->ml_name, size);
-            return NULL;
-        }
-        break;
-    default:
-        PyErr_SetString(PyExc_SystemError, "Bad call flags in "
-                        "__Pyx_CyFunction_Call. METH_OLDARGS is no "
-                        "longer supported!");
-        return NULL;
-    }
-    PyErr_Format(PyExc_TypeError, "%.200s() takes no keyword arguments",
-                 f->m_ml->ml_name);
-    return NULL;
-}
-static CYTHON_INLINE PyObject *__Pyx_CyFunction_Call(PyObject *func, PyObject *arg, PyObject *kw) {
-    return __Pyx_CyFunction_CallMethod(func, ((PyCFunctionObject*)func)->m_self, arg, kw);
-}
-static PyObject *__Pyx_CyFunction_CallAsMethod(PyObject *func, PyObject *args, PyObject *kw) {
-    PyObject *result;
-    __pyx_CyFunctionObject *cyfunc = (__pyx_CyFunctionObject *) func;
-    if ((cyfunc->flags & __Pyx_CYFUNCTION_CCLASS) && !(cyfunc->flags & __Pyx_CYFUNCTION_STATICMETHOD)) {
-        Py_ssize_t argc;
-        PyObject *new_args;
-        PyObject *self;
-        argc = PyTuple_GET_SIZE(args);
-        new_args = PyTuple_GetSlice(args, 1, argc);
-        if (unlikely(!new_args))
-            return NULL;
-        self = PyTuple_GetItem(args, 0);
-        if (unlikely(!self)) {
-            Py_DECREF(new_args);
-            return NULL;
-        }
-        result = __Pyx_CyFunction_CallMethod(func, self, new_args, kw);
-        Py_DECREF(new_args);
-    } else {
-        result = __Pyx_CyFunction_Call(func, args, kw);
-    }
-    return result;
-}
-static PyTypeObject __pyx_CyFunctionType_type = {
-    PyVarObject_HEAD_INIT(0, 0)
-    "cython_function_or_method",
-    sizeof(__pyx_CyFunctionObject),
-    0,
-    (destructor) __Pyx_CyFunction_dealloc,
-    0,
-    0,
-    0,
-#if PY_MAJOR_VERSION < 3
-    0,
-#else
-    0,
-#endif
-    (reprfunc) __Pyx_CyFunction_repr,
-    0,
-    0,
-    0,
-    0,
-    __Pyx_CyFunction_CallAsMethod,
-    0,
-    0,
-    0,
-    0,
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
-    0,
-    (traverseproc) __Pyx_CyFunction_traverse,
-    (inquiry) __Pyx_CyFunction_clear,
-    0,
-#if PY_VERSION_HEX < 0x030500A0
-    offsetof(__pyx_CyFunctionObject, func_weakreflist),
-#else
-    offsetof(PyCFunctionObject, m_weakreflist),
-#endif
-    0,
-    0,
-    __pyx_CyFunction_methods,
-    __pyx_CyFunction_members,
-    __pyx_CyFunction_getsets,
-    0,
-    0,
-    __Pyx_CyFunction_descr_get,
-    0,
-    offsetof(__pyx_CyFunctionObject, func_dict),
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-#if PY_VERSION_HEX >= 0x030400a1
-    0,
-#endif
-};
-static int __pyx_CyFunction_init(void) {
-    __pyx_CyFunctionType = __Pyx_FetchCommonType(&__pyx_CyFunctionType_type);
-    if (unlikely(__pyx_CyFunctionType == NULL)) {
-        return -1;
-    }
-    return 0;
-}
-static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *func, size_t size, int pyobjects) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults = PyObject_Malloc(size);
-    if (unlikely(!m->defaults))
-        return PyErr_NoMemory();
-    memset(m->defaults, 0, size);
-    m->defaults_pyobjects = pyobjects;
-    return m->defaults;
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *func, PyObject *tuple) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults_tuple = tuple;
-    Py_INCREF(tuple);
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *func, PyObject *dict) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->defaults_kwdict = dict;
-    Py_INCREF(dict);
-}
-static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *func, PyObject *dict) {
-    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
-    m->func_annotations = dict;
-    Py_INCREF(dict);
-}
-
-/* ExtTypeTest */
-static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    if (likely(__Pyx_TypeCheck(obj, type)))
-        return 1;
-    PyErr_Format(PyExc_TypeError, "Cannot convert %.200s to %.200s",
-                 Py_TYPE(obj)->tp_name, type->tp_name);
-    return 0;
-}
-
 /* PyErrFetchRestore */
 #if CYTHON_FAST_THREAD_STATE
 static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
@@ -35556,6 +34121,27 @@ static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyOb
     Py_DECREF(function);
 done:
     return result;
+}
+
+/* ArgTypeTest */
+static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
+{
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    else if (exact) {
+        #if PY_MAJOR_VERSION == 2
+        if ((type == &PyBaseString_Type) && likely(__Pyx_PyBaseString_CheckExact(obj))) return 1;
+        #endif
+    }
+    else {
+        if (likely(__Pyx_TypeCheck(obj, type))) return 1;
+    }
+    PyErr_Format(PyExc_TypeError,
+        "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
+        name, type->tp_name, Py_TYPE(obj)->tp_name);
+    return 0;
 }
 
 /* GetItemInt */
@@ -36160,6 +34746,66 @@ static CYTHON_INLINE int __Pyx_dict_iter_next(
     return 1;
 }
 
+/* UnicodeAsUCS4 */
+static CYTHON_INLINE Py_UCS4 __Pyx_PyUnicode_AsPy_UCS4(PyObject* x) {
+   Py_ssize_t length;
+   #if CYTHON_PEP393_ENABLED
+   length = PyUnicode_GET_LENGTH(x);
+   if (likely(length == 1)) {
+       return PyUnicode_READ_CHAR(x, 0);
+   }
+   #else
+   length = PyUnicode_GET_SIZE(x);
+   if (likely(length == 1)) {
+       return PyUnicode_AS_UNICODE(x)[0];
+   }
+   #if Py_UNICODE_SIZE == 2
+   else if (PyUnicode_GET_SIZE(x) == 2) {
+       Py_UCS4 high_val = PyUnicode_AS_UNICODE(x)[0];
+       if (high_val >= 0xD800 && high_val <= 0xDBFF) {
+           Py_UCS4 low_val = PyUnicode_AS_UNICODE(x)[1];
+           if (low_val >= 0xDC00 && low_val <= 0xDFFF) {
+               return 0x10000 + (((high_val & ((1<<10)-1)) << 10) | (low_val & ((1<<10)-1)));
+           }
+       }
+   }
+   #endif
+   #endif
+   PyErr_Format(PyExc_ValueError,
+                "only single character unicode strings can be converted to Py_UCS4, "
+                "got length %" CYTHON_FORMAT_SSIZE_T "d", length);
+   return (Py_UCS4)-1;
+}
+
+/* object_ord */
+static long __Pyx__PyObject_Ord(PyObject* c) {
+    Py_ssize_t size;
+    if (PyBytes_Check(c)) {
+        size = PyBytes_GET_SIZE(c);
+        if (likely(size == 1)) {
+            return (unsigned char) PyBytes_AS_STRING(c)[0];
+        }
+#if PY_MAJOR_VERSION < 3
+    } else if (PyUnicode_Check(c)) {
+        return (long)__Pyx_PyUnicode_AsPy_UCS4(c);
+#endif
+#if (!CYTHON_COMPILING_IN_PYPY) || (defined(PyByteArray_AS_STRING) && defined(PyByteArray_GET_SIZE))
+    } else if (PyByteArray_Check(c)) {
+        size = PyByteArray_GET_SIZE(c);
+        if (likely(size == 1)) {
+            return (unsigned char) PyByteArray_AS_STRING(c)[0];
+        }
+#endif
+    } else {
+        PyErr_Format(PyExc_TypeError,
+            "ord() expected string of length 1, but %.200s found", c->ob_type->tp_name);
+        return (long)(Py_UCS4)-1;
+    }
+    PyErr_Format(PyExc_TypeError,
+        "ord() expected a character, but string of length %zd found", size);
+    return (long)(Py_UCS4)-1;
+}
+
 /* RaiseException */
 #if PY_MAJOR_VERSION < 3
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
@@ -36343,6 +34989,19 @@ static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key) {
 }
 #endif
 
+/* ExtTypeTest */
+static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    if (likely(__Pyx_TypeCheck(obj, type)))
+        return 1;
+    PyErr_Format(PyExc_TypeError, "Cannot convert %.200s to %.200s",
+                 Py_TYPE(obj)->tp_name, type->tp_name);
+    return 0;
+}
+
 /* GetTopmostException */
 #if CYTHON_USE_EXC_INFO_STACK
 static _PyErr_StackItem *
@@ -36504,6 +35163,19 @@ static CYTHON_INLINE Py_ssize_t __Pyx_div_Py_ssize_t(Py_ssize_t a, Py_ssize_t b)
     Py_ssize_t r = a - q*b;
     q -= ((r != 0) & ((r ^ b) < 0));
     return q;
+}
+
+/* GetAttr */
+static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
+#if CYTHON_USE_TYPE_SLOTS
+#if PY_MAJOR_VERSION >= 3
+    if (likely(PyUnicode_Check(n)))
+#else
+    if (likely(PyString_Check(n)))
+#endif
+        return __Pyx_PyObject_GetAttrStr(o, n);
+#endif
+    return PyObject_GetAttr(o, n);
 }
 
 /* ObjectGetItem */
@@ -38286,7 +36958,7 @@ no_fail:
 }
 
 /* ObjectToMemviewSlice */
-  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(PyObject *obj, int writable_flag) {
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_char(PyObject *obj, int writable_flag) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
     __Pyx_BufFmt_StackElem stack[1];
     int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_CONTIG) };
@@ -38297,7 +36969,7 @@ no_fail:
     }
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
                                                  (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT) | writable_flag, 2,
-                                                 &__Pyx_TypeInfo_object, stack,
+                                                 &__Pyx_TypeInfo_char, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -38332,37 +37004,6 @@ __pyx_fail:
 }
 
 /* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_uint8(npy_uint8 value) {
-    const npy_uint8 neg_one = (npy_uint8) ((npy_uint8) 0 - (npy_uint8) 1), const_zero = (npy_uint8) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(npy_uint8) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(npy_uint8) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(npy_uint8) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(npy_uint8) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(npy_uint8) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(npy_uint8),
-                                     little, !is_unsigned);
-    }
-}
-
-/* CIntToPy */
   static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value) {
     const unsigned char neg_one = (unsigned char) ((unsigned char) 0 - (unsigned char) 1), const_zero = (unsigned char) 0;
     const int is_unsigned = neg_one > const_zero;
@@ -38389,6 +37030,37 @@ __pyx_fail:
         int one = 1; int little = (int)*(unsigned char *)&one;
         unsigned char *bytes = (unsigned char *)&value;
         return _PyLong_FromByteArray(bytes, sizeof(unsigned char),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_uint8(npy_uint8 value) {
+    const npy_uint8 neg_one = (npy_uint8) ((npy_uint8) 0 - (npy_uint8) 1), const_zero = (npy_uint8) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(npy_uint8) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(npy_uint8) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_uint8) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(npy_uint8) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_uint8) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(npy_uint8),
                                      little, !is_unsigned);
     }
 }
@@ -38437,14 +37109,14 @@ static CYTHON_INLINE int __pyx_memview_set_long(const char *itemp, PyObject *obj
 }
 
 /* MemviewDtypeToObject */
-  static CYTHON_INLINE PyObject *__pyx_memview_get_int(const char *itemp) {
-    return (PyObject *) __Pyx_PyBool_FromLong(*(int *) itemp);
+  static CYTHON_INLINE PyObject *__pyx_memview_get_nn___pyx_t_8scrabble_1p_BOOL_t(const char *itemp) {
+    return (PyObject *) __Pyx_PyInt_From_npy_uint8(*(__pyx_t_8scrabble_1p_BOOL_t *) itemp);
 }
-static CYTHON_INLINE int __pyx_memview_set_int(const char *itemp, PyObject *obj) {
-    int value = __Pyx_PyObject_IsTrue(obj);
-    if ((value == (int)-1) && PyErr_Occurred())
+static CYTHON_INLINE int __pyx_memview_set_nn___pyx_t_8scrabble_1p_BOOL_t(const char *itemp, PyObject *obj) {
+    __pyx_t_8scrabble_1p_BOOL_t value = __Pyx_PyInt_As_npy_uint8(obj);
+    if ((value == ((npy_uint8)-1)) && PyErr_Occurred())
         return 0;
-    *(int *) itemp = value;
+    *(__pyx_t_8scrabble_1p_BOOL_t *) itemp = value;
     return 1;
 }
 
@@ -38459,6 +37131,37 @@ static int __pyx_memview_set_object(const char *itemp, PyObject *obj) {
     Py_DECREF(*(PyObject **) itemp);
     *(PyObject **) itemp = obj;
     return 1;
+}
+
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_char(char value) {
+    const char neg_one = (char) ((char) 0 - (char) 1), const_zero = (char) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(char) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(char) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(char) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(char) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(char) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(char),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntToPy */
@@ -38490,6 +37193,49 @@ static int __pyx_memview_set_object(const char *itemp, PyObject *obj) {
         return _PyLong_FromByteArray(bytes, sizeof(int),
                                      little, !is_unsigned);
     }
+}
+
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_uint32(npy_uint32 value) {
+    const npy_uint32 neg_one = (npy_uint32) ((npy_uint32) 0 - (npy_uint32) 1), const_zero = (npy_uint32) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(npy_uint32) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(npy_uint32) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_uint32) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(npy_uint32) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_uint32) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(npy_uint32),
+                                     little, !is_unsigned);
+    }
+}
+
+/* MemviewDtypeToObject */
+  static CYTHON_INLINE PyObject *__pyx_memview_get_char(const char *itemp) {
+    return (PyObject *) __Pyx_PyInt_From_char(*(char *) itemp);
+}
+static CYTHON_INLINE int __pyx_memview_set_char(const char *itemp, PyObject *obj) {
+    char value = __Pyx_PyInt_As_char(obj);
+    if ((value == (char)-1) && PyErr_Occurred())
+        return 0;
+    *(char *) itemp = value;
+    return 1;
 }
 
 /* Declarations */
@@ -39134,6 +37880,195 @@ raise_neg_overflow:
 }
 
 /* CIntFromPy */
+  static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *x) {
+    const char neg_one = (char) ((char) 0 - (char) 1), const_zero = (char) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(char) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(char, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (char) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (char) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(char, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(char) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) >= 2 * PyLong_SHIFT) {
+                            return (char) (((((char)digits[1]) << PyLong_SHIFT) | (char)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(char) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) >= 3 * PyLong_SHIFT) {
+                            return (char) (((((((char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(char) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) >= 4 * PyLong_SHIFT) {
+                            return (char) (((((((((char)digits[3]) << PyLong_SHIFT) | (char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (char) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(char) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(char, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(char) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(char, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (char) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(char, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(char,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(char) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) - 1 > 2 * PyLong_SHIFT) {
+                            return (char) (((char)-1)*(((((char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(char) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) - 1 > 2 * PyLong_SHIFT) {
+                            return (char) ((((((char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(char) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) - 1 > 3 * PyLong_SHIFT) {
+                            return (char) (((char)-1)*(((((((char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(char) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) - 1 > 3 * PyLong_SHIFT) {
+                            return (char) ((((((((char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(char) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) - 1 > 4 * PyLong_SHIFT) {
+                            return (char) (((char)-1)*(((((((((char)digits[3]) << PyLong_SHIFT) | (char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(char) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(char) - 1 > 4 * PyLong_SHIFT) {
+                            return (char) ((((((((((char)digits[3]) << PyLong_SHIFT) | (char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(char) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(char, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(char) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(char, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            char val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (char) -1;
+        }
+    } else {
+        char val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (char) -1;
+        val = __Pyx_PyInt_As_char(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to char");
+    return (char) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to char");
+    return (char) -1;
+}
+
+/* CIntFromPy */
   static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
     const int neg_one = (int) ((int) 0 - (int) 1), const_zero = (int) 0;
     const int is_unsigned = neg_one > const_zero;
@@ -39511,193 +38446,25 @@ raise_neg_overflow:
     return (long) -1;
 }
 
-/* CIntFromPy */
-  static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *x) {
-    const char neg_one = (char) ((char) 0 - (char) 1), const_zero = (char) 0;
-    const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(char) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(char, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (char) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (char) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(char, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(char) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) >= 2 * PyLong_SHIFT) {
-                            return (char) (((((char)digits[1]) << PyLong_SHIFT) | (char)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(char) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) >= 3 * PyLong_SHIFT) {
-                            return (char) (((((((char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(char) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) >= 4 * PyLong_SHIFT) {
-                            return (char) (((((((((char)digits[3]) << PyLong_SHIFT) | (char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (char) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(char) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(char, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(char) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(char, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (char) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(char, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(char,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(char) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) - 1 > 2 * PyLong_SHIFT) {
-                            return (char) (((char)-1)*(((((char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(char) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) - 1 > 2 * PyLong_SHIFT) {
-                            return (char) ((((((char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(char) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) - 1 > 3 * PyLong_SHIFT) {
-                            return (char) (((char)-1)*(((((((char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(char) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) - 1 > 3 * PyLong_SHIFT) {
-                            return (char) ((((((((char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(char) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) - 1 > 4 * PyLong_SHIFT) {
-                            return (char) (((char)-1)*(((((((((char)digits[3]) << PyLong_SHIFT) | (char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(char) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(char, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(char) - 1 > 4 * PyLong_SHIFT) {
-                            return (char) ((((((((((char)digits[3]) << PyLong_SHIFT) | (char)digits[2]) << PyLong_SHIFT) | (char)digits[1]) << PyLong_SHIFT) | (char)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(char) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(char, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(char) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(char, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            char val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (char) -1;
-        }
-    } else {
-        char val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (char) -1;
-        val = __Pyx_PyInt_As_char(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to char");
-    return (char) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to char");
-    return (char) -1;
+/* ObjectAsUCS4 */
+  static Py_UCS4 __Pyx__PyObject_AsPy_UCS4_raise_error(long ival) {
+   if (ival < 0) {
+       if (!PyErr_Occurred())
+           PyErr_SetString(PyExc_OverflowError,
+                           "cannot convert negative value to Py_UCS4");
+   } else {
+       PyErr_SetString(PyExc_OverflowError,
+                       "value too large to convert to Py_UCS4");
+   }
+   return (Py_UCS4)-1;
+}
+static Py_UCS4 __Pyx__PyObject_AsPy_UCS4(PyObject* x) {
+   long ival;
+   ival = __Pyx_PyInt_As_long(x);
+   if (unlikely(!__Pyx_is_valid_index(ival, 1114111 + 1))) {
+       return __Pyx__PyObject_AsPy_UCS4_raise_error(ival);
+   }
+   return (Py_UCS4)ival;
 }
 
 /* ObjectToMemviewSlice */
@@ -39770,7 +38537,7 @@ __pyx_fail:
 }
 
 /* ObjectToMemviewSlice */
-  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_int(PyObject *obj, int writable_flag) {
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_BOOL_t(PyObject *obj, int writable_flag) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
     __Pyx_BufFmt_StackElem stack[1];
     int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
@@ -39781,7 +38548,53 @@ __pyx_fail:
     }
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
                                                  PyBUF_RECORDS_RO | writable_flag, 2,
-                                                 &__Pyx_TypeInfo_int, stack,
+                                                 &__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_BOOL_t, stack,
+                                                 &result, obj);
+    if (unlikely(retcode == -1))
+        goto __pyx_fail;
+    return result;
+__pyx_fail:
+    result.memview = NULL;
+    result.data = NULL;
+    return result;
+}
+
+/* ObjectToMemviewSlice */
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_object(PyObject *obj, int writable_flag) {
+    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
+    __Pyx_BufFmt_StackElem stack[1];
+    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_CONTIG) };
+    int retcode;
+    if (obj == Py_None) {
+        result.memview = (struct __pyx_memoryview_obj *) Py_None;
+        return result;
+    }
+    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
+                                                 (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT) | writable_flag, 2,
+                                                 &__Pyx_TypeInfo_object, stack,
+                                                 &result, obj);
+    if (unlikely(retcode == -1))
+        goto __pyx_fail;
+    return result;
+__pyx_fail:
+    result.memview = NULL;
+    result.data = NULL;
+    return result;
+}
+
+/* ObjectToMemviewSlice */
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_8scrabble_1p_N(PyObject *obj, int writable_flag) {
+    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
+    __Pyx_BufFmt_StackElem stack[3];
+    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
+    int retcode;
+    if (obj == Py_None) {
+        result.memview = (struct __pyx_memoryview_obj *) Py_None;
+        return result;
+    }
+    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
+                                                 PyBUF_RECORDS_RO | writable_flag, 2,
+                                                 &__Pyx_TypeInfo_nn___pyx_t_8scrabble_1p_N, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -39875,6 +38688,51 @@ __pyx_fail:
         return PyErr_WarnEx(NULL, message, 1);
     }
     return 0;
+}
+
+/* PyObjectSetAttrStr */
+  #if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_setattro))
+        return tp->tp_setattro(obj, attr_name, value);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_setattr))
+        return tp->tp_setattr(obj, PyString_AS_STRING(attr_name), value);
+#endif
+    return PyObject_SetAttr(obj, attr_name, value);
+}
+#endif
+
+/* VoidPtrExport */
+  static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig) {
+    PyObject *d;
+    PyObject *cobj = 0;
+    d = PyDict_GetItem(__pyx_d, __pyx_n_s_pyx_capi);
+    Py_XINCREF(d);
+    if (!d) {
+        d = PyDict_New();
+        if (!d)
+            goto bad;
+        if (__Pyx_PyObject_SetAttrStr(__pyx_m, __pyx_n_s_pyx_capi, d) < 0)
+            goto bad;
+    }
+#if PY_VERSION_HEX >= 0x02070000
+    cobj = PyCapsule_New(p, sig, 0);
+#else
+    cobj = PyCObject_FromVoidPtrAndDesc(p, (void *)sig, 0);
+#endif
+    if (!cobj)
+        goto bad;
+    if (PyDict_SetItem(d, name, cobj) < 0)
+        goto bad;
+    Py_DECREF(cobj);
+    Py_DECREF(d);
+    return 0;
+bad:
+    Py_XDECREF(cobj);
+    Py_XDECREF(d);
+    return -1;
 }
 
 /* FunctionExport */

@@ -8,6 +8,7 @@ ctypedef const unsigned char* cuchrp
 #from cpython.getargs cimport
 
 cdef bint can_log(Py_UNICODE lvl) nogil
+cdef int lvl_alias[127]
 
 cdef extern from "stdarg.h":
     ctypedef struct va_list:

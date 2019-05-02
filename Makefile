@@ -1,43 +1,58 @@
-BUILD_CMD=python3 ./setup.py build_ext -i
-PARSE_CMD=time -p python3 -m scrabble.e
-OCR_CMD=time -p python3 -m scrabble.o
+_PY=python3
+_PYTHON_CMD=time -p $(_PY) -m
+
+BUILD=$(_PY) ./setup.py build_ext -i
+
+PARSE=$(_PYTHON_CMD) scrabble.e
+OCR=$(_PYTHON_CMD) scrabble.o
 
 
-.PHONY: run run-p run-t
+.PHONY: run run-p run-t run-ocr
 
-run: build parse
-run-p: build-p parse-p
-run-t: build-t parse-t
+run: | build-scrabble parse
+run-p: | build-p parse-p
+run-t: | build-t parse-t
+run-ocr: | build-ocr space ocr
+
+.PHONY: space
+space:
+	@echo -e '\n\n======= Done Building =======\n\n'
 
 
-.PHONY: build build-p build-t
+.PHONY: build build-p build-t build-scrabble build-ocr build-logger
 
 build:
-	$(BUILD_CMD)
+	$(BUILD) $(args)
 build-p:
-	$(BUILD_CMD) --profile
+	$(BUILD) --profile $(args)
 build-t:
-	$(BUILD_CMD) --trace
+	$(BUILD) --trace $(args)
+build-scrabble:  ##args?
+	$(BUILD) --scrabble
+build-ocr:
+	$(BUILD) --ocr
+build-logger:
+	$(BUILD) --logger
 
 
 .PHONY: parse parse-p parse-t
 
 parse:
-	$(PARSE_CMD) $(args)
-parse-p:
-	$(PARSE_CMD) -p $(args)
+	$(PARSE) $(args)
+parse-p: ## remove
+	$(PARSE) -p $(args)
 parse-t:
-	$(PARSE_CMD) -x $(args)
+	$(PARSE) -x $(args)
 
 
 .PHONY: ocr ocr-p ocr-t
 
 ocr:
-	$(OCR_CMD) $(args)
+	$(OCR) $(args)
 ocr-p:
-	$(OCR_CMD) -p $(args)
+	$(OCR) -p $(args)
 ocr-t:
-	$(OCR_CMD) -x $(args)
+	$(OCR) -x $(args)
 
 
 .PHONY: clean

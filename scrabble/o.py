@@ -4,18 +4,15 @@
 
 __version__ = 1.0
 
-# noinspection PyUnreachableCode
-if False: from argparse import Namespace
-
 
 DEFAULT_LOGLEVEL = 'INFO'
 
 
-def parse_args() -> 'Namespace':
+def parse_args():
     #TODO: set customnamespace for completion here
     #https://stackoverflow.com/questions/42279063/python-typehints-for-argparse-namespace-objects
 
-    from parser_defaults import parser_init
+    from .parser_defaults import parser_init
 
     parser = parser_init(
         description=__doc__,
@@ -35,13 +32,13 @@ def parse_args() -> 'Namespace':
     parser.add_argument('-x', '--trace', action='store_true',
         help='Trace the app')
 
-    return parser.parse_args()
+    return parser.parse_known_args() # todo put everywhere
 
 
 if __name__ == '__main__':
-    pargs = parse_args()
+    pargs, ext_args = parse_args()
 
-    import ocr
+    from scrabble import ocr
 
     dargs = vars(pargs)
 

@@ -2,11 +2,11 @@
 
 from libc.stdio cimport printf, puts
 
-cdef object log_init
+#cdef object log_init
 cdef str DEFAULT_LOGLEVEL
 
-from .logs import log_init
-from .settings import DEFAULT_LOGLEVEL
+#from scrabble.logs import log_init
+from scrabble.settings import DEFAULT_LOGLEVEL
 
 
 DEF NUL = b'\0'
@@ -80,10 +80,6 @@ cdef cchrp KS_CYN_L = _ks_cyn_l
 cdef cchrp KS_WHT_L = _ks_wht_l
 
 
-cdef object lo = log_init(DEFAULT_LOGLEVEL)
-cdef int lo_lvl = lo.get_level(DEFAULT_LOGLEVEL)
-
-
 cdef int lvl_alias[127]
 cdef int[:] lvl_alias_v = lvl_alias
 lvl_alias_v[:] = 0
@@ -97,6 +93,9 @@ lvl_alias_v[ord('s')] = 35
 lvl_alias_v[ord('e')] = 40
 lvl_alias_v[ord('c')] = 50
 lvl_alias_v[ord('a')] = 60
+
+cdef char def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]
+cdef int lo_lvl = lvl_alias_v[def_lvl]
 
 cdef bint can_log(Py_UNICODE lvl) nogil:
     cdef int lal = lvl_alias_v[lvl]
