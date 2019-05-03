@@ -1,11 +1,9 @@
-ctypedef const char cchr
-ctypedef const char* cchrp
-ctypedef unsigned char uchr
-ctypedef unsigned char* uchrp
-ctypedef const unsigned char cuchr
-ctypedef const unsigned char* cuchrp
+#from scrabble cimport *
 
 #from cpython.getargs cimport
+
+ctypedef const unsigned char cuchr
+ctypedef const char* cchrp
 
 cdef bint can_log(Py_UNICODE lvl) nogil
 cdef int lvl_alias[127]
@@ -42,8 +40,6 @@ cdef void clos(cchrp s, ...) nogil
 
 cdef object lo
 cdef int lo_lvl
-
-cdef cchrp KS_RES, KS_BLK, KS_RED, KS_GRN, KS_YEL, KS_BLU, KS_MAG, KS_CYN, KS_WHT, KS_BLK_L, KS_RED_L, KS_GRN_L, KS_YEL_L, KS_BLU_L, KS_MAG_L, KS_CYN_L, KS_WHT_L
 
 ctypedef enum LogLvl:
     NOTSET = 0

@@ -4,7 +4,7 @@
 
 cimport cython
 
-cdef object pickle, sys, Path, tpg, cv2, np, pd, Image, _s , log_init
+cdef object pickle, sys, Path, tpg, cv2, np, Image, _s , log_init
 
 import pickle
 import sys
@@ -26,14 +26,13 @@ from scrabble.logs import log_init
 cnp.import_array()
 
 
+DEF MAX_NODES = 15
+
+
 cdef object lo = log_init('INFO')
 
 
-# STR = np.int32
-cdef type BOOL = <type>np.uint8
-cdef type UINT16 = <type>np.uint16
-cdef type INTC = <type>np.intc
-cdef type FLO = <type>np.float32
+cdef type UINT16 = <type>np.uint16  # move to init
 #what happens if i use a DEF here?
 
 cdef object npa = np.array
@@ -60,6 +59,8 @@ cdef cnparr LOWER_BLACK_GR = npa([16, 54, 0], UINT16)
 cdef cnparr UPPER_BLACK_GR = npa([30, 68, 24], UINT16)
 cdef cnparr LOWER_BLACK_PU = npa([52, 0, 66], UINT16)
 cdef cnparr UPPER_BLACK_PU = npa([66, 12, 80], UINT16)
+cdef cnparr LOWER_BLACK_PA = npa([38, 0, 66], UINT16)
+cdef cnparr UPPER_BLACK_PA = npa([52, 10, 80], UINT16)
 cdef cnparr LOWER_BLACK_TE = npa([0, 15, 66], UINT16)
 cdef cnparr UPPER_BLACK_TE = npa([12, 29, 80], UINT16)
 
@@ -97,7 +98,6 @@ IMG_CUT_RANGE[1][1][1][1] = -10
 # todo put loadfile into here, maybe make utils file
 # this can be converted todo
 
-@cython.final(True)
 cdef class Dirs:
     def __cinit__(self, str img_file):
         cdef object img_file_root = Path(img_file).stem
@@ -162,6 +162,8 @@ cdef void create_letter_templates(bint is_big) except *:
 
     cdef dict kw = {'flags': 0}
     cdef tuple dsize = (0, 0)
+    cdef dict res_kw_s = {'dsize': dsize, 'fx': 1.12, 'fy': 1.13}
+    cdef dict res_kw_r = {'dsize': dsize, 'fx': 2.1, 'fy': 2.1}
 
     for l in 'abcdefghijklmnopqrstuvwxyz':
         #fname[0] = l
@@ -177,8 +179,11 @@ cdef void create_letter_templates(bint is_big) except *:
         #templ_big = cv_imread(**kw)   # todo is typetest faster than the extra refs?
         templ_big = <cnparr>cv2_imread(**kw)
 
-        templ_small = cv2_resize(src=templ_big.base, dsize=dsize, fx=1.12, fy=1.13)
-        templ_rack = cv2_resize(src=templ_big.base, dsize=dsize, fx=2.1, fy=2.1)
+        (<dict>res_kw_s)['src'] = templ_big.base
+        (<dict>res_kw_r)['src'] = templ_big.base
+
+        templ_small = cv2_resize(**res_kw_s)
+        templ_rack = cv2_resize(**res_kw_r)
 
         if is_big:
             tmp_list = [templ_big]
@@ -197,104 +202,9 @@ cdef void create_letter_templates(bint is_big) except *:
 # @cython.binding(True)
 # @cython.linetrace(True)
 # cpdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
-#cdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
 
 @cython.wraparound(False)
 cdef void find_letter_match(
-    object gimg, bint is_rack, float spacing, BOOL_t[:, ::1] dest
-) except *:
-    cdef:
-        dict seen = {}  # type: tpg.Dict[str, tpg.Tuple[str, float]]
-        #float _seen[rows][cols][127]
-        #FLO_t[:, :, :] seen
-
-        #list ld
-        #str l, exist_l
-        str exist_l
-        object l, ld
-
-        Py_ssize_t h, w, row_num, col_num, x, y
-        float colx, rowx
-        str pos
-        FLO_t confidence, exist_conf
-
-        FLO_t[:, :] res
-        #cnparr res
-        #cnparr[FLO_t, ndim=2] res
-        #cdef object res
-        #(W-w+1) \times (H-h+1)
-
-        #cnparr[BOOL_t, ndim=2] gb
-        #cnparr[BOOL_t, ndim=2] tb
-        BOOL_t[:, ::1] tb
-
-        tuple match_locations
-        INTC_t[:] match_x
-        INTC_t[:] match_y
-
-        BOOL_t match_type = cv2.TM_CCOEFF_NORMED
-        object mat = cv2.matchTemplate
-        object npw = np.where
-        #PyArray_Where
-
-
-    for l, ld in letter_templates.items():
-        l = l.upper()
-
-        tb = ld[is_rack]
-
-        h = tb.shape[0]
-        w = tb.shape[1]
-
-        #gb = gimg.base
-        #tb = template.base
-
-        res = mat(image=gimg, templ=tb.base, method=match_type)
-        #res = mat(image=gb, templ=tb, res=res, method=match_type)
-        #res = mat(np.array(gimg), template.base, cv2.TM_CCOEFF_NORMED)
-
-        #match_locations = res[(res >= MIN_THRESH)]
-        match_locations = npw(res.base >= MIN_THRESH)
-
-        match_x = (<tuple>match_locations)[0]
-        match_y = (<tuple>match_locations)[1]
-
-        for x, y in zip(match_y, match_x):
-            colx = (x + x + w) / 2
-            rowx = (y + y + h) / 2
-
-            col_num = int(colx // spacing)
-            row_num = int(rowx // spacing)
-
-            pos = f'{row_num}x{col_num}'
-            confidence = res[y, x]
-            #confidence = res[y][x]
-
-            #todo switch seen to a numpy 2d array
-            if pos in seen:
-                exist_conf = (<dict>seen)[pos][1] # combo?
-                if confidence <= exist_conf:
-                    continue
-
-                else:
-                    exist_l = (<dict>seen)[pos][0]
-                    (<dict>seen)[pos] = (l, confidence)
-
-                    if l == exist_l:
-                        continue
-
-                    if lo.is_enabled('x'):
-                        lo.x(f'overriding {exist_l, exist_conf} with new {l, confidence}')
-
-            (<dict>seen)[pos] = (l, confidence)
-            dest[row_num, col_num] = ord(l)
-
-    #return dest
-
-DEF MAX_NODES = 15
-
-@cython.wraparound(False)
-cdef void find_letter_match2(
     object gimg, bint is_rack, float spacing, Py_UCS4[:, ::1] dest
 ) except *:
     cdef:
@@ -390,10 +300,10 @@ cpdef void show_img(cnparr img_array):
 
 
 @cython.wraparound(False)
-cdef BOOL_t[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
+cdef Py_UCS4[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
     cdef float spacing
     #cdef int shape[2]
-    cdef INTP_t shape[2]
+    cdef NINTP shape[2]
 
     if is_big:
         shape[:] = [15, 15]
@@ -408,6 +318,7 @@ cdef BOOL_t[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
     black_mask = cv2_inrange(board, LOWER_BLACK, UPPER_BLACK) + \
                  cv2_inrange(board, LOWER_BLACK_GR, UPPER_BLACK_GR) + \
                  cv2_inrange(board, LOWER_BLACK_PU, UPPER_BLACK_PU) + \
+                 cv2_inrange(board, LOWER_BLACK_PA, UPPER_BLACK_PA) + \
                  cv2_inrange(board, LOWER_BLACK_TE, UPPER_BLACK_TE)
     white_mask = cv2_inrange(board, LOWER_WHITE, UPPER_WHITE)
     comb = black_mask + white_mask
@@ -420,14 +331,14 @@ cdef BOOL_t[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
         show_img(gimg)
 
     #cdef char[:, ::1] table = npz(shape, '|S1')
-    cdef BOOL_t[:, ::1] table = cnp.PyArray_ZEROS(2, shape, cnp.NPY_UBYTE, 0)
-    #cdef Py_UCS4[:, ::1] table = cnp.PyArray_ZEROS(2, shape, cnp.NPY_UBYTE, 0)
+    #cdef BOOL_t[:, ::1] table = cnp.PyArray_ZEROS(2, shape, cnp.NPY_UBYTE, 0)
+    cdef Py_UCS4[:, ::1] table = cnp.PyArray_ZEROS(2, shape, cnp.NPY_UINT32, 0)
 
     find_letter_match(gimg, False, spacing, table)
 
-    #cdef object df = pd.DataFrame(table.base.astype('<U1'))
     if lo.is_enabled('n'):
-        lo.n(f'Board:\n{table.base.view("S1").astype("U1")}')
+        #pd.DataFrame(table.base.astype('<U1'))
+        lo.n(f'Board:\n{table.base.view("U1")}')
 
     return table
 
@@ -441,7 +352,9 @@ cdef list get_rack(BOOL_t[:, :, :] img):
     black_mask = (
         <cnparr>(cv2_inrange(img_base, LOWER_BLACK, UPPER_BLACK) +
         cv2_inrange(img_base, LOWER_BLACK_GR, UPPER_BLACK_GR)) +
-        cv2_inrange(img_base, LOWER_BLACK_PU, UPPER_BLACK_PU)
+        cv2_inrange(img_base, LOWER_BLACK_PU, UPPER_BLACK_PU) +
+        cv2_inrange(img_base, LOWER_BLACK_PA, UPPER_BLACK_PA) +
+        cv2_inrange(img_base, LOWER_BLACK_TE, UPPER_BLACK_TE)
     )
 
     # cdef cnparr[BOOL_t, ndim=2] gimg = cv2.bitwise_not(black_mask)
@@ -450,7 +363,7 @@ cdef list get_rack(BOOL_t[:, :, :] img):
     if lo.is_enabled('d'):
         show_img(gimg)
 
-    cdef INTP_t dims_rack[2]
+    cdef NINTP dims_rack[2]
     dims_rack[:] = [1, 7]
 
     #todo interchangeable
@@ -465,7 +378,7 @@ cdef list get_rack(BOOL_t[:, :, :] img):
     #cdef char[:, ::1] rack3 = cnp.PyArray_ZEROS(2, dims_rack, cnp.NPY_UINT8, 0)
     cdef Py_UCS4[:, ::1] rack = cnp.PyArray_ZEROS(2, dims_rack, cnp.NPY_UINT32, 0)
 
-    find_letter_match2(gimg, True, RACK_SPACE, rack)
+    find_letter_match(gimg, True, RACK_SPACE, rack)
 
     cdef int buffer = 20
 
@@ -495,7 +408,7 @@ cdef list get_rack(BOOL_t[:, :, :] img):
         imgflat = <cnparr>npravel(img[start_y:end_y, start_x:end_x]) # flatten()
 
         allwhite = True
-        for p in range(imgflat.size):
+        for p in range(imgflat.shape[0]):
             pixel = imgflat[p]
             if pixel != 255:
                 allwhite = False
@@ -552,13 +465,15 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
     cdef bint has_board = not overwrite and this_board.exists()
     cdef bint has_letters = not overwrite and this_letters.exists()
 
-    cdef BOOL_t[:, ::1] board
+    cdef Py_UCS4[:, ::1] board
+    cdef list rack
 
     if has_board and has_letters:
         lo.n('Info exists, skipping (override with overwrite = True)')
 
         if lo.is_enabled('i'):
             board = pickle.load(this_board.open('rb')) # open better? todo
+            rack = pickle.load(this_letters.open("rb"))
 
             #df_board = df_board.to_string(justify='left', col_space=2)
             #df_board.columns.rename('x', inplace=True)
@@ -568,7 +483,7 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
             #todo why?
 
             lo.i(f'Board:\n{board.base}')
-            lo.i(f'Letters: {pickle.load(this_letters.open("rb"))}')
+            lo.i(f'Letters: {rack}')
 
         lo.s('Done')
 
@@ -597,7 +512,7 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
             pickle.dump(board.base, f)
 
     #cdef Py_UCS4[:] rack
-    cdef list rack
+
     if not has_letters:
         lo.i('Parsing letters...')
 

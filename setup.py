@@ -68,8 +68,8 @@ extra_compile_args = [
     #"-Wall",
     "-Wextra",
     "-ffast-math",  # speed?
-    #"-O3"
-    "-O0"
+    "-O3"
+    #"-O0"
     #'-fopenmp'
 ]
 

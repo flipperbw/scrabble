@@ -1,23 +1,10 @@
 cimport cython
-cimport numpy as cnp
+
+from scrabble cimport *
 
 DEF MAX_NODES = 15
 DEF MAX_ORD = 127  # todo replace 127
 
-ctypedef cnp.uint32_t INT_32
-ctypedef unsigned short STRU_t
-ctypedef cnp.int32_t STR_t
-ctypedef cnp.uint8_t BOOL_t
-ctypedef cnp.intp_t SIZE_t
-
-ctypedef const void * c_void
-
-ctypedef unsigned char uchr
-ctypedef unsigned char* uchrp
-ctypedef const unsigned char cuchr
-ctypedef const unsigned char* cuchrp
-ctypedef const char cchr
-ctypedef const char* cchrp
 
 #ctypedef unsigned short us
 #ctypedef (us, us) dual
@@ -27,8 +14,6 @@ ctypedef const char* cchrp
 #     uchr amt
 #     uchr pts
 
-cdef object npz
-cdef object npe
 
 ctypedef packed struct Letter:
     BOOL_t is_blank

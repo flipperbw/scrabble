@@ -1,6 +1,4 @@
-# cython: warn.maybe_uninitialized=True, warn.undeclared=True, warn.unused=True, warn.unused_arg=True, warn.unused_result=True
-
-# , infer_types.verbose=True
+# cython: warn.maybe_uninitialized=True, warn.undeclared=True, warn.unused=True, warn.unused_arg=True, warn.unused_result=True, infer_types.verbose=True
 
 """Parse and solve a scrabble board."""
 
@@ -13,7 +11,6 @@ from libc.stdlib cimport qsort
 #from scrabble import logger as log
 from scrabble cimport logger as log
 from scrabble.logger cimport can_log, los, lov, loe, loc, clos
-
 
 cdef object json, pickle, sys, np, pd, Path, _s
 #cdef module np
@@ -166,9 +163,7 @@ cdef class Node:
         else:
             self.n.has_val = True
             self.n.letter.value = val
-            loe(self.n.letter.value)
             self.n.pts = Settings.points[self.n.letter.value]
-            loe(self.n.pts)
             #self.display = val.upper()
 
             # try:
@@ -870,8 +865,7 @@ cdef str _print_node_range(
 
 cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:
     cdef:
-        Py_ssize_t i
-        Py_ssize_t rown, colt = 0, colb = 0
+        Py_ssize_t i, rown, colt = 0, colb = 0
 
         # todo fix small 10.
         int smalltens = 9361
@@ -1115,7 +1109,7 @@ cdef void solve(str dictionary) except *:
         loc('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
         sys.exit(1)
 
-    cdef INT_32 swl = len(search_words)
+    cdef UINT32_t swl = len(search_words)
     if swl == 0:
         loc('No search words')
         sys.exit(1)
@@ -1234,7 +1228,7 @@ cdef void cmain(
 ) except *:
     cdef:
         object this_board_dir # type: Path
-        char[:, ::1] board
+        char[:, ::1] board  # todo switch to Py_UCS4
         list rack
 
         object[:, :] default_board  # type: np.ndarray
@@ -1253,11 +1247,11 @@ cdef void cmain(
     if filename is not None:
         this_board_dir = checkfile((_s.BOARD_DIR, filename), is_file=False)
         #with checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb') as f:
-        board = pickle.load(checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb'))
+        board = pickle.load(checkfile((this_board_dir, _s.BOARD_FILENAME)).open('rb')).astype(BOOL)
         rack = pickle.load(checkfile((this_board_dir, _s.LETTERS_FILENAME)).open('rb'))
 
     else:
-        board = np.array(_s.BOARD, dtype='|S1')
+        board = np.array(_s.BOARD, dtype='|S1')  # s1?
         rack = _s.LETTERS
 
     if not rack:
@@ -1296,7 +1290,8 @@ cdef void cmain(
     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
 
     if can_log('s'):
-        los('Game Board:\n{}'.format(board.base.astype('<U1')))  # formatting?
+        #los('Game Board:\n{}'.format(board.base.astype('|S1').view('<U1')))  # formatting?
+        los('Game Board:\n{}'.format(board.base.view('S1').astype('<U1')))  # formatting?
         if can_log('v'):
             #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
             lov('Default:\n{}'.format(default_board))

@@ -2,11 +2,10 @@
 
 from libc.stdio cimport printf, puts
 
-#cdef object log_init
 cdef str DEFAULT_LOGLEVEL
-
-#from scrabble.logs import log_init
 from scrabble.settings import DEFAULT_LOGLEVEL
+#cdef object log_init
+#from scrabble.logs import log_init
 
 
 DEF NUL = b'\0'
@@ -123,7 +122,7 @@ cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:
 cdef cuchr[:] chklog(s, int lvl):
     if lo_lvl > lvl: return NUL
     if s is None: return NUL
-    if type(s) is not unicode: return NUL
+    #if type(s) is not unicode: return NUL  # todo
 
     cdef bytes s_st
     if lvl == 0:    s_st = l__
@@ -137,7 +136,7 @@ cdef cuchr[:] chklog(s, int lvl):
     elif lvl == 40: s_st = l_e
     elif lvl == 50: s_st = l_c
     elif lvl == 60: s_st = l_a
-    else: s_st = bytes(lvl)
+    else: s_st = b'(' + bytes(lvl) + b')'
 
     #cdef str sp = '(' + s_st + ') ' + s
     #s = '(' + s_st + ') ' + s
@@ -148,6 +147,9 @@ cdef cuchr[:] chklog(s, int lvl):
     #s = s % ar
 
     #return <bytes>s_st + <bytes>((<unicode>s).encode('utf8'))
+
+    if type(s) is not unicode:
+        return <bytes>s_st + str(s).encode('utf8')  # todo
     return <bytes>s_st + (<unicode>s).encode('utf8')
 
 
