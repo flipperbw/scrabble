@@ -22,7 +22,7 @@ space:
 .PHONY: build build-p build-t build-scrabble build-ocr build-logger
 
 build:
-	$(BUILD)
+	$(BUILD) $(args)
 build-p:
 	$(BUILD) --profile $(args)
 build-t:

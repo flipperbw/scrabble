@@ -28,37 +28,27 @@ Options.annotate = True
 # noinspection PyDictCreation
 comp_directives = {
     'allow_none_for_extension_args': False,
-    #'annotation_typing': True,
-
     "auto_pickle": False,
     "autotestdict": False,
     "boundscheck": False,
+    "embedsignature": True,
+    "initializedcheck": False,
+    "language_level": '3',  # '3str',
+    'overflowcheck.fold': False,
 
+    #'annotation_typing': True,
     # "c_string_encoding": "",
     # "c_string_type": "bytes",
     # "control_flow.dot_annotate_defs": false,
     # "control_flow.dot_output": "",
-
-    "embedsignature": True,
-
     #'fast_gil': True,
     #'final': True,  # todo check
-
-    "initializedcheck": False,
-
     #'internal': True,
-
-    "language_level": '3',  # '3str',
     #"np_pythran": True,
-
     #"set_initial_path": null,
-
     # "optimize.inline_defnode_calls": true,
     # "optimize.unpack_method_calls": true,
     # "optimize.unpack_method_calls_in_pyinit": false,
-
-    'overflowcheck.fold': False,
-
     #"wraparound": true
 }
 
@@ -106,7 +96,8 @@ all_macros = define_macros + debug_macros
 poss_exts = {
     '--scrabble': False,
     '--ocr': False,
-    '--logger': False
+    '--logger': False,
+    '--utils': True,
 }
 
 build_all = True
@@ -148,6 +139,15 @@ if poss_exts['--logger']:
     extensions.append(Extension(
         "scrabble.logger",
         [f"{MOD_DIR}/logger.pyx"],
+        include_dirs=include_dirs,
+        extra_compile_args=extra_compile_args,
+        define_macros=debug_macros,
+    ))
+
+if poss_exts['--utils']:
+    extensions.append(Extension(
+        "scrabble.utils",
+        [f"{MOD_DIR}/utils.pyx"],
         include_dirs=include_dirs,
         extra_compile_args=extra_compile_args,
         define_macros=debug_macros,

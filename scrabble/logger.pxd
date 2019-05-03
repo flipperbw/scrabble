@@ -5,6 +5,11 @@
 ctypedef const unsigned char cuchr
 ctypedef const char* cchrp
 
+
+cdef:
+    cchrp KS_RES, KS_BLK, KS_RED, KS_GRN, KS_YEL, KS_BLU, KS_MAG, KS_CYN, KS_WHT, KS_BLK_L, KS_RED_L, KS_GRN_L, KS_YEL_L, KS_BLU_L, KS_MAG_L, KS_CYN_L, KS_WHT_L
+
+
 cdef bint can_log(Py_UNICODE lvl) nogil
 cdef int lvl_alias[127]
 

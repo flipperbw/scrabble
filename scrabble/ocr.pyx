@@ -4,6 +4,12 @@
 
 cimport cython
 
+from scrabble cimport logger as log
+from scrabble.logger cimport can_log, lox, loi, lon, los, loc
+#lod, lov, loe, clos
+
+from scrabble.utils cimport print_board_clr
+
 cdef object pickle, sys, Path, tpg, cv2, np, Image, _s , log_init
 
 import pickle
@@ -16,7 +22,6 @@ import numpy as np
 from PIL import Image
 
 import scrabble.settings as _s
-from scrabble.logs import log_init
 
 #from cpython.object cimport PyObject_Call
 #from cpython.ref cimport PyObject, Py_TYPE, PyTypeObject
@@ -29,9 +34,7 @@ cnp.import_array()
 DEF MAX_NODES = 15
 
 
-cdef object lo = log_init('INFO')
-
-
+cdef type BOOL = <type>np.uint8
 cdef type UINT16 = <type>np.uint16  # move to init
 #what happens if i use a DEF here?
 
@@ -110,27 +113,25 @@ cdef class Dirs:
         self.this_letters = Path(self.this_board_dir, _s.LETTERS_FILENAME)
 
 
-cdef BOOL_t[:, :, :] get_img(str img_name):
-    cdef cnparr[BOOL_t, ndim=3] image
-    cdef BOOL_t[:, :, :] colored
+cdef cnparr get_img(str img_name):
+    # cdef cnparr[BOOL_t, ndim=3] image
+    # cdef BOOL_t[:, :, :] colored
     cdef object img_path = Path(img_name).expanduser().as_posix()
+    cdef cnparr image
 
-    image = cv2_imread(img_path)
+    image = <cnparr>cv2_imread(img_path)
 
     if not np.any(image):
-        lo.c(f'Could not find image, or it\'s empty: {img_name}')
+        loc(f'Could not find image, or it\'s empty: {img_name}')
         sys.exit(1)
 
     #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    colored = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    return colored
+    return <cnparr>cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 
-cdef cnparr[BOOL_t, ndim=3] cut_img(BOOL_t[:, :, :] img, bint is_big, bint is_lets):
+cdef cnparr cut_img(cnparr img, bint is_big, bint is_lets):
     cdef int[:, :] r = IMG_CUT_RANGE[is_big, is_lets]
-    cdef cnparr[BOOL_t, ndim=3] new_img = img.base[r[0,0]:r[0,1], r[1,0]:r[1,1]]
-    return new_img
+    return img[r[0,0]:r[0,1], r[1,0]:r[1,1]]
 
 
 # todo: pickle this
@@ -280,8 +281,8 @@ cdef void find_letter_match(
                 if confidence <= old_tup.conf:
                     continue
 
-                if l != old_tup.l and lo.is_enabled('x'):
-                    lo.x(f'overriding {old_tup.l, old_tup.conf} with new {l, confidence}')
+                if l != old_tup.l and can_log('x'):
+                    lox(f'overriding {old_tup.l, old_tup.conf} with new {l, confidence}')
 
                 old_tup.l = l
                 old_tup.conf = confidence
@@ -300,7 +301,7 @@ cpdef void show_img(cnparr img_array):
 
 
 @cython.wraparound(False)
-cdef Py_UCS4[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
+cdef Py_UCS4[:, ::1] create_board(cnparr board, bint is_big):
     cdef float spacing
     #cdef int shape[2]
     cdef NINTP shape[2]
@@ -327,7 +328,7 @@ cdef Py_UCS4[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
     #cdef cnparr[BOOL_t, ndim=2] gimg = cv2.bitwise_not(comb)
     cdef object gimg = cv2.bitwise_not(comb)  # type: np.ndarray
 
-    if lo.is_enabled('d'):
+    if can_log('d'):
         show_img(gimg)
 
     #cdef char[:, ::1] table = npz(shape, '|S1')
@@ -336,9 +337,11 @@ cdef Py_UCS4[:, ::1] create_board(cnparr[BOOL_t, ndim=3] board, bint is_big):
 
     find_letter_match(gimg, False, spacing, table)
 
-    if lo.is_enabled('n'):
+    if can_log('n'):
         #pd.DataFrame(table.base.astype('<U1'))
-        lo.n(f'Board:\n{table.base.view("U1")}')
+        #{table.base.view("U1")}')
+        lon('Board:')
+        print_board_clr(table.base.astype(BOOL), log.KS_MAG)
 
     return table
 
@@ -360,7 +363,7 @@ cdef list get_rack(BOOL_t[:, :, :] img):
     # cdef cnparr[BOOL_t, ndim=2] gimg = cv2.bitwise_not(black_mask)
     cdef cnparr gimg = cv2.bitwise_not(black_mask)
 
-    if lo.is_enabled('d'):
+    if can_log('d'):
         show_img(gimg)
 
     cdef NINTP dims_rack[2]
@@ -422,18 +425,22 @@ cdef list get_rack(BOOL_t[:, :, :] img):
         else:
             letters.append(l)  # vs encode? chr
 
-    lo.n(f'Letters:\n{letters}')
+    lon(f'Letters:\n{letters}')
 
     return letters
 
 
 cdef void cmain(str filename, bint overwrite, str log_level) except *:
-    log_level = log_level.upper()
-    if log_level != lo.logger.getEffectiveLevel():
-        lo.set_level(log_level)
+    cdef Py_UCS4 log_lvl_ch
+    log_level = log_level.lower()
+    if log_level == 'spam':
+        log_lvl_ch = 'x'
+    else:
+        log_lvl_ch = (<str>log_level)[0]
+    log.lo_lvl = log.lvl_alias[log_lvl_ch]
 
     cdef bint is_big = False
-    cdef BOOL_t[:, :, :] cv2_image = get_img(filename)
+    cdef cnparr cv2_image = <cnparr>get_img(filename)  # bool_t ndim3
 
     # cdef BOOL_t[:, :, :] check_typ_pixels = cv2_image[650:850, 10:30]
     # cdef BOOL_t[:, :] row_val
@@ -441,9 +448,13 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
     # cdef list row_val_l
     # cdef Py_ssize_t cti
 
-    check_typ_pixels = cv2_image.base[650:850, 10:30]
-    check_first = check_typ_pixels[0].tolist()
-    for row_val in check_typ_pixels:
+    cdef cnparr check_typ_pixels = cv2_image[650:850, 10:30]  # type: np.ndarray
+    cdef BOOL_t[:, :, :] check_typ_pixels_v = check_typ_pixels
+    cdef list check_first = check_typ_pixels[0].tolist()
+    cdef cnparr row_val
+    cdef Py_ssize_t ci
+    for ci in range(check_typ_pixels_v.shape[0]):
+        row_val = check_typ_pixels[ci]
         if not row_val.tolist() == check_first:
             is_big = True
             break
@@ -469,9 +480,9 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
     cdef list rack
 
     if has_board and has_letters:
-        lo.n('Info exists, skipping (override with overwrite = True)')
+        lon('Info exists, skipping (override with overwrite = True)')
 
-        if lo.is_enabled('i'):
+        if can_log('i'):
             board = pickle.load(this_board.open('rb')) # open better? todo
             rack = pickle.load(this_letters.open("rb"))
 
@@ -482,29 +493,28 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
             #df_board.style.set_table_styles([dict(selector='th', props=[('text-align', 'left')])])
             #todo why?
 
-            lo.i(f'Board:\n{board.base}')
-            lo.i(f'Letters: {rack}')
+            loi(f'Board:\n{board.base}')
+            loi(f'Letters: {rack}')
 
-        lo.s('Done')
+        los('Done')
 
         return
 
     create_letter_templates(is_big)
 
     #cdef cnparr[BOOL_t, ndim=3] cv2_board, cv2_letters
-    cdef cnparr[BOOL_t, ndim=3] cv2_board
-    cdef cnparr cv2_letters_b
+    cdef cnparr cv2_board, cv2_letters_b
     cdef BOOL_t[:, :, :] cv2_letters
     cdef object f
 
     if not has_board:
-        lo.i('Parsing image...')
+        loi('Parsing image...')
 
         cv2_board = cut_img(cv2_image, is_big, False)
-        if lo.is_enabled('d'):
+        if can_log('d'):
             show_img(cv2_board)
 
-        lo.i('Creating board...')
+        loi('Creating board...')
         board = create_board(cv2_board, is_big)
         #this_board.write_bytes(pickle.dumps(board.base))
         with this_board.open('wb') as f:
@@ -514,11 +524,11 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
     #cdef Py_UCS4[:] rack
 
     if not has_letters:
-        lo.i('Parsing letters...')
+        loi('Parsing letters...')
 
         cv2_letters_b = cut_img(cv2_image, is_big, True)
         cv2_letters = cv2_letters_b
-        if lo.is_enabled('d'):
+        if can_log('d'):
             show_img(cv2_letters_b)
 
         rack = get_rack(cv2_letters)
@@ -527,7 +537,7 @@ cdef void cmain(str filename, bint overwrite, str log_level) except *:
         with this_letters.open('wb') as f:
             pickle.dump(rack, f)
 
-    lo.s('Done parsing image.')
+    los('Done parsing image.')
 
 def main(filename: str, overwrite: bool = False, log_level: str = _s.DEFAULT_LOGLEVEL, **_kw) -> None:
     cmain(filename, overwrite, log_level)

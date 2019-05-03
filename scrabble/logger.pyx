@@ -22,8 +22,6 @@ DEF l_e = b'(e) '
 DEF l_c = b'(c) '
 DEF l_a = b'(a) '
 
-DEF _ks = b'\x1B['
-#DEF _ke = b'm'
 DEF K_RES = 0
 DEF K_BLK = 30
 DEF K_RED = 31
@@ -42,62 +40,65 @@ DEF K_MAG_L = 95
 DEF K_CYN_L = 96
 DEF K_WHT_L = 97
 
-cdef bytes _ks_res = _ks + b'0m'
-cdef bytes _ks_blk = _ks + b'30m'
-cdef bytes _ks_red = _ks + b'31m'
-cdef bytes _ks_grn = _ks + b'32m'
-cdef bytes _ks_yel = _ks + b'33m'
-cdef bytes _ks_blu = _ks + b'34m'
-cdef bytes _ks_mag = _ks + b'35m'
-cdef bytes _ks_cyn = _ks + b'36m'
-cdef bytes _ks_wht = _ks + b'37m'
-cdef bytes _ks_blk_l = _ks + b'90m'
-cdef bytes _ks_red_l = _ks + b'91m'
-cdef bytes _ks_grn_l = _ks + b'92m'
-cdef bytes _ks_yel_l = _ks + b'93m'
-cdef bytes _ks_blu_l = _ks + b'94m'
-cdef bytes _ks_mag_l = _ks + b'95m'
-cdef bytes _ks_cyn_l = _ks + b'96m'
-cdef bytes _ks_wht_l = _ks + b'97m'
+#cdef cchrp _ks = b'\x1B['
+DEF _ks = b'\x1B['
+#DEF _ke = b'm'
 
-cdef cchrp KS_RES = _ks_res
-cdef cchrp KS_BLK = _ks_blk
-cdef cchrp KS_RED = _ks_red
-cdef cchrp KS_GRN = _ks_grn
-cdef cchrp KS_YEL = _ks_yel
-cdef cchrp KS_BLU = _ks_blu
-cdef cchrp KS_MAG = _ks_mag
-cdef cchrp KS_CYN = _ks_cyn
-cdef cchrp KS_WHT = _ks_wht
-cdef cchrp KS_BLK_L = _ks_blk_l
-cdef cchrp KS_RED_L = _ks_red_l
-cdef cchrp KS_GRN_L = _ks_grn_l
-cdef cchrp KS_YEL_L = _ks_yel_l
-cdef cchrp KS_BLU_L = _ks_blu_l
-cdef cchrp KS_MAG_L = _ks_mag_l
-cdef cchrp KS_CYN_L = _ks_cyn_l
-cdef cchrp KS_WHT_L = _ks_wht_l
+#cdef bytes _ks_res = _ks + b'0m'
+DEF _ks_res = _ks + b'0m'
+DEF _ks_blk = _ks + b'30m'
+DEF _ks_red = _ks + b'31m'
+DEF _ks_grn = _ks + b'32m'
+DEF _ks_yel = _ks + b'33m'
+DEF _ks_blu = _ks + b'34m'
+DEF _ks_mag = _ks + b'35m'
+DEF _ks_cyn = _ks + b'36m'
+DEF _ks_wht = _ks + b'37m'
+DEF _ks_blk_l = _ks + b'90m'
+DEF _ks_red_l = _ks + b'91m'
+DEF _ks_grn_l = _ks + b'92m'
+DEF _ks_yel_l = _ks + b'93m'
+DEF _ks_blu_l = _ks + b'94m'
+DEF _ks_mag_l = _ks + b'95m'
+DEF _ks_cyn_l = _ks + b'96m'
+DEF _ks_wht_l = _ks + b'97m'
 
+KS_RES = _ks_res
+KS_BLK = _ks_blk
+KS_RED = _ks_red
+KS_GRN = _ks_grn
+KS_YEL = _ks_yel
+KS_BLU = _ks_blu
+KS_MAG = _ks_mag
+KS_CYN = _ks_cyn
+KS_WHT = _ks_wht
+KS_BLK_L = _ks_blk_l
+KS_RED_L = _ks_red_l
+KS_GRN_L = _ks_grn_l
+KS_YEL_L = _ks_yel_l
+KS_BLU_L = _ks_blu_l
+KS_MAG_L = _ks_mag_l
+KS_CYN_L = _ks_cyn_l
+KS_WHT_L = _ks_wht_l
 
 cdef int lvl_alias[127]
-cdef int[:] lvl_alias_v = lvl_alias
-lvl_alias_v[:] = 0
-lvl_alias_v[ord('x')] = 5
-lvl_alias_v[ord('d')] = 10
-lvl_alias_v[ord('v')] = 15
-lvl_alias_v[ord('i')] = 20
-lvl_alias_v[ord('n')] = 25
-lvl_alias_v[ord('w')] = 30
-lvl_alias_v[ord('s')] = 35
-lvl_alias_v[ord('e')] = 40
-lvl_alias_v[ord('c')] = 50
-lvl_alias_v[ord('a')] = 60
+lvl_alias[ord('x')] = 5
+lvl_alias[ord('d')] = 10
+lvl_alias[ord('v')] = 15
+lvl_alias[ord('i')] = 20
+lvl_alias[ord('n')] = 25
+lvl_alias[ord('w')] = 30
+lvl_alias[ord('s')] = 35
+lvl_alias[ord('e')] = 40
+lvl_alias[ord('c')] = 50
+lvl_alias[ord('a')] = 60
 
-cdef char def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]
-cdef int lo_lvl = lvl_alias_v[def_lvl]
+
+cdef int def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]
+cdef int lo_lvl = lvl_alias[def_lvl]
 
 cdef bint can_log(Py_UNICODE lvl) nogil:
-    cdef int lal = lvl_alias_v[lvl]
+    cdef int lal = lvl_alias[lvl]
     return lo_lvl <= lal
 
 
@@ -227,4 +228,3 @@ cdef void loc(s):
     cdef cuchr[:] txt = chklog(s, lvl)
     cdef Py_ssize_t ts = len(txt)
     if ts > 3: clog(txt, ts, color)
-

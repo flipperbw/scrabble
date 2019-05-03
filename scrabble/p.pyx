@@ -11,6 +11,7 @@ from libc.stdlib cimport qsort
 #from scrabble import logger as log
 from scrabble cimport logger as log
 from scrabble.logger cimport can_log, los, lov, loe, loc, clos
+from scrabble.utils cimport print_board_clr, print_board_top, print_board_btm
 
 cdef object json, pickle, sys, np, pd, Path, _s
 #cdef module np
@@ -139,7 +140,7 @@ cdef void sol(WordDict wd, char* buff) nogil:
 @cython.final(True)
 cdef class Node:
     # todo test no types in cinit
-    def __cinit__(self, BOOL_t x, BOOL_t y, char val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
+    def __cinit__(self, BOOL_t x, BOOL_t y, uchr val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
         self.n.letter.x = x
         self.n.letter.y = y
 
@@ -233,11 +234,11 @@ cdef class Node:
 
 @cython.final(True)
 cdef class Board:
-    def __cinit__(self, char[:, ::1] board, object[:, :] default_board):  # todo fix c contig
+    def __cinit__(self, uchr[:, ::1] board, object[:, :] default_board):  # todo fix c contig
         cdef:
             Py_ssize_t r, c, du
             str dbval, x #, d, bval
-            char bval
+            uchr bval
             BOOL_t mult_a, mult_w
             Node node
             #cnp.ndarray board
@@ -458,7 +459,7 @@ cdef class Board:
 
         return new_word in Settings.words
 
-
+    @cython.wraparound(False)
     cdef void _set_map(self, Node[:] nodes, bint is_col):
         cdef:
             Py_ssize_t t, l, e, ai1
@@ -468,7 +469,7 @@ cdef class Board:
             # todo this vs numpy bint?
             bint has_edge, has_blanks
 
-            Node no
+            N* no
 
             BOOL_t valid_lengths[MAX_NODES][MAX_NODES]
             BOOL_t[:, :] vlen_view = valid_lengths
@@ -498,8 +499,8 @@ cdef class Board:
                 vlen_view[t, nlen-t:] = False
 
                 # if prev node has a val, disable for all lengths
-                no = nodes[t - 1]
-                if no.n.has_val:
+                no = &nodes[t - 1].n
+                if no.has_val:
                     vlen_view[t, :] = False
                     continue
 
@@ -509,9 +510,9 @@ cdef class Board:
                 #lo.v(l)
                 ai1 = t + l + 1
                 if ai1 < nlen:
-                    no = nodes[ai1]
+                    no = &nodes[ai1].n
                     #lo.d(no)
-                    if no.n.has_val:
+                    if no.has_val:
                         #lo.d(f'810: {t} {l}')
                         vlen_view[t, l] = False
                         #lo.e(f'{vlen_view.base[t]}')
@@ -529,10 +530,10 @@ cdef class Board:
                 #for e in range(t, ai1):
                 e = t
                 while e < ai1:
-                    no = nodes[e]
-                    if no.n.has_edge:
+                    no = &nodes[e].n
+                    if no.has_edge:
                         has_edge = True
-                    if not no.n.has_val:
+                    if not no.has_val:
                         has_blanks = True
 
                     if has_edge and has_blanks:
@@ -634,7 +635,6 @@ cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t star
 
     for i in range(wl):
         nv = word[i]
-        # mismatch in nv?
         if not nodes[i + start].valid_lets[is_col][nv]:
             return False
 
@@ -659,7 +659,7 @@ cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t star
 
 # todo combine this with below?
 @cython.wraparound(False)
-cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil:  # or memview for nvals?
+cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil:  # or memview for nvals?
     # todo this vs numpy ssize?
     cdef:
         BOOL_t nval
@@ -787,6 +787,7 @@ cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_
         Py_ssize_t i
         bint nvals[MAX_NODES]
         Py_ssize_t s, wl, wl1, sn
+        #SIZE_t *wl
         STR_t[::1] ww
         BOOL_t blanks = Settings.blanks
         int[:] base_rack = Settings.rack_v
@@ -808,7 +809,7 @@ cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_
         if wl > nlen:
             continue
 
-        wl1 =  wl - 1
+        wl1 = wl - 1
 
         ww = sw[s]
         #lo.d(sw.base.view(f'<U{sw.shape[1]}')[s, 0])
@@ -865,64 +866,36 @@ cdef str _print_node_range(
 
 cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:
     cdef:
-        Py_ssize_t i, rown, colt = 0, colb = 0
-
-        # todo fix small 10.
-        int smalltens = 9361
-        Py_UNICODE smallten_char
-
-        Py_UNICODE u_dash = '\u2500'
-
-        Py_UNICODE u_bx_ul = '\u250c'
-        Py_UNICODE u_bx_ur = '\u2510'
-        Py_UNICODE u_bx_bl = '\u2514'
-        Py_UNICODE u_bx_br = '\u2518'
+        Py_ssize_t r, c, l, rown, coln
 
         Py_UNICODE u_sep_hor_le = '\u2524'
         Py_UNICODE u_sep_hor_ri = '\u251C'
-        Py_UNICODE u_sep_ver_up = '\u2534'
-        Py_UNICODE u_sep_ver_dn = '\u252C'
 
         char* board_hl = b'\x1b[33m'  # yellow
         char* board_cl = b'\x1b[0m'
 
-
-    # - col nums
-    printf('\n      ')
-    for i in range(nodes.shape[0]):
-        if i < 10 or i > 20:
-            printf('%zu', i)
-        else:
-            smallten_char = smalltens + (i - 10)
-            printf('%lc', smallten_char)
-        if i != nodes.shape[0] - 1:
-            printf(' ')
-    printf('\n')
-
-    # - col seps top
-    printf('   %lc%lc', u_bx_ul, u_dash)
-    while colt < nodes.shape[1]:
-        printf('%lc%lc', u_dash, u_sep_ver_up)
-        colt += 1
-    printf('%lc%lc%lc\n', u_dash, u_dash, u_bx_ur)
-
-
-    cdef:
         uchr best_map[MAX_NODES][MAX_NODES]
         #uchr[:, ::1] best_map_v = best_map
         uchr nval, bval
-        Py_ssize_t l
-        Py_ssize_t r = 0, c
         Letter letter
         BOOL_t x, y
 
-    #best_map_v[:, :] = 0
-    while r < MAX_NODES:
-        c = 0
-        while c < MAX_NODES:
+
+    print_board_top(nodes.shape[1])
+
+    # best_map_v[:, :] = 0
+
+    # while r < MAX_NODES:
+    #     c = 0
+    #     while c < MAX_NODES:
+    #         best_map[r][c] = 0
+    #         c += 1
+    #     r += 1
+
+    # - set best map
+    for r in range(MAX_NODES):
+        for c in range(MAX_NODES):
             best_map[r][c] = 0
-            c += 1
-        r += 1
 
     for l in range(lets.len):
         letter = lets.l[l]
@@ -935,10 +908,10 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:
     # - rows
     for rown in range(nodes.shape[0]):
         printf('%2zu %lc  ', rown, u_sep_hor_le)
-        for i in range(nodes.shape[1]):
-            nval = nodes[rown, i]
+        for coln in range(nodes.shape[1]):
+            nval = nodes[rown, coln]
             if not nval:
-                bval = best_map[rown][i]
+                bval = best_map[rown][coln]
                 if bval:
                     printf('%s%c%s', board_hl, bval, board_cl)
                 else:
@@ -946,17 +919,12 @@ cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:
             else:
                 printf('%c', nval)
 
-            if i != nodes.shape[1] - 1:
+            if coln != nodes.shape[1] - 1:
                 printf(' ')
 
         printf('  %lc\n', u_sep_hor_ri)
 
-    # - col seps bottom
-    printf('   %lc%lc', u_bx_bl, u_dash)
-    while colb < nodes.shape[1]:
-        printf('%lc%lc', u_dash, u_sep_ver_dn)
-        colb += 1
-    printf('%lc%lc%lc\n', u_dash, u_dash, u_bx_br)
+    print_board_btm(nodes.shape[1])
 
 
 cdef int mycmp(c_void pa, c_void pb) nogil:
@@ -981,6 +949,11 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) 
         WordDict* word_list = words.l
 
     qsort(word_list, words.len, sizeof(WordDict), &mycmp)
+    best = &word_list[0]
+
+    if no_words:  # todo: print xs instead?
+        printf('\n<solution hidden> (len: %zu, pts: %i)\n', best.letters.len, best.pts)
+        return
 
     if can_log('s'):
         if Settings.num_results == 0:
@@ -1002,16 +975,8 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) 
             clos('%s', word_list[cut_num].word)
             cut_num -= 1
 
-    best = &word_list[0]
-
-    if no_words:  # todo: print xs instead?
-        #printf('\n<solution hidden> (len: %zu)\n', best.letters.len)
-        printf('\n<solution hidden> (len: %i)\n', 12)
-
-    else:
-        print_board(nodes, best.letters)
-
-
+    printf('\n')
+    print_board(nodes, best.letters)
     printf('\nPoints: %i\n', best.pts)
 
 
@@ -1228,9 +1193,10 @@ cdef void cmain(
 ) except *:
     cdef:
         object this_board_dir # type: Path
-        char[:, ::1] board  # todo switch to Py_UCS4
+        uchr[:, ::1] board  # todo switch to Py_UCS4
         list rack
 
+        object _default_board  # type: pd.DataFrame
         object[:, :] default_board  # type: np.ndarray
 
         dict points
@@ -1285,16 +1251,16 @@ cdef void cmain(
         loc('Board size ({}) has no match'.format(board_size))
         return
 
-    default_board = pd.read_pickle(checkfile((board_name,))).to_numpy(np.object_) # .to_numpy('|S2')
+    _default_board = pd.read_pickle(checkfile((board_name,)))
+    default_board = _default_board.to_numpy(np.object_) # .to_numpy('|S2')
 
     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
 
     if can_log('s'):
-        #los('Game Board:\n{}'.format(board.base.astype('|S1').view('<U1')))  # formatting?
-        los('Game Board:\n{}'.format(board.base.view('S1').astype('<U1')))  # formatting?
+        los('Game Board:')
+        print_board_clr(board.base, log.KS_GRN_L)
         if can_log('v'):
-            #lov('Default:\n{}'.format(pd.read_pickle(board_name)))
-            lov('Default:\n{}'.format(default_board))
+            lov('Default:\n{}'.format(_default_board))
         los('Rack:\n{}\n'.format(rack))
     else:
         printf('Running...\n')
@@ -1324,7 +1290,6 @@ cdef void cmain(
     Settings.num_results = num_results
 
     # todo add search words and nodes
-
 
     solve(dictionary)
 

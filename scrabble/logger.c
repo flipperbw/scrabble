@@ -952,7 +952,7 @@ struct __pyx_memoryview_obj;
 struct __pyx_memoryviewslice_obj;
 struct __pyx_opt_args_8scrabble_6logger_clog;
 
-/* "scrabble/logger.pxd":44
+/* "scrabble/logger.pxd":49
  * cdef int lo_lvl
  * 
  * ctypedef enum LogLvl:             # <<<<<<<<<<<<<<
@@ -979,11 +979,11 @@ typedef enum __pyx_t_8scrabble_6logger_LogLvl __pyx_t_8scrabble_6logger_LogLvl;
  * ctypedef const unsigned char cuchr
  * ctypedef const char* cchrp             # <<<<<<<<<<<<<<
  * 
- * cdef bint can_log(Py_UNICODE lvl) nogil
+ * 
  */
 typedef char const *__pyx_t_8scrabble_6logger_cchrp;
 
-/* "scrabble/logger.pxd":26
+/* "scrabble/logger.pxd":31
  * 
  * 
  * cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold=*) nogil             # <<<<<<<<<<<<<<
@@ -1593,33 +1593,6 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
 /* HasAttr.proto */
 static CYTHON_INLINE int __Pyx_HasAttr(PyObject *, PyObject *);
 
-/* StringJoin.proto */
-#if PY_MAJOR_VERSION < 3
-#define __Pyx_PyString_Join __Pyx_PyBytes_Join
-#define __Pyx_PyBaseString_Join(s, v) (PyUnicode_CheckExact(s) ? PyUnicode_Join(s, v) : __Pyx_PyBytes_Join(s, v))
-#else
-#define __Pyx_PyString_Join PyUnicode_Join
-#define __Pyx_PyBaseString_Join PyUnicode_Join
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-    #if PY_MAJOR_VERSION < 3
-    #define __Pyx_PyBytes_Join _PyString_Join
-    #else
-    #define __Pyx_PyBytes_Join _PyBytes_Join
-    #endif
-#else
-static CYTHON_INLINE PyObject* __Pyx_PyBytes_Join(PyObject* sep, PyObject* values);
-#endif
-
-/* PyObject_Unicode.proto */
-#if PY_MAJOR_VERSION >= 3
-#define __Pyx_PyObject_Unicode(obj)\
-    (likely(PyUnicode_CheckExact(obj)) ? __Pyx_NewRef(obj) : PyObject_Str(obj))
-#else
-#define __Pyx_PyObject_Unicode(obj)\
-    (likely(PyUnicode_CheckExact(obj)) ? __Pyx_NewRef(obj) : PyObject_Unicode(obj))
-#endif
-
 /* PyObject_GenericGetAttrNoDict.proto */
 #if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
 static CYTHON_INLINE PyObject* __Pyx_PyObject_GenericGetAttrNoDict(PyObject* obj, PyObject* attr_name);
@@ -1734,12 +1707,6 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
                                  size_t sizeof_dtype, int contig_flag,
                                  int dtype_is_object);
 
-/* TypeInfoToFormat.proto */
-struct __pyx_typeinfo_string {
-    char string[3];
-};
-static struct __pyx_typeinfo_string __Pyx_TypeInfoToFormat(__Pyx_TypeInfo *type);
-
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
@@ -1793,9 +1760,6 @@ static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig);
 /* FunctionExport.proto */
 static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
 
-/* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_int(PyObject *, int writable_flag);
-
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
@@ -1819,27 +1783,6 @@ static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
 static PyTypeObject *__pyx_memoryviewslice_type = 0;
-static int __pyx_v_8scrabble_6logger_lvl_alias[0x7F];
-static PyObject *__pyx_v_8scrabble_6logger_lo = 0;
-static int __pyx_v_8scrabble_6logger_lo_lvl;
-static PyObject *__pyx_v_8scrabble_6logger_DEFAULT_LOGLEVEL = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_res = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_blk = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_red = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_grn = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_yel = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_blu = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_mag = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_cyn = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_wht = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_blk_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_red_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_grn_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_yel_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_blu_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_mag_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_cyn_l = 0;
-static PyObject *__pyx_v_8scrabble_6logger__ks_wht_l = 0;
 static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_RES;
 static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_BLK;
 static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_RED;
@@ -1857,8 +1800,11 @@ static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_BLU_L;
 static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_MAG_L;
 static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_CYN_L;
 static __pyx_t_8scrabble_6logger_cchrp __pyx_v_8scrabble_6logger_KS_WHT_L;
-static __Pyx_memviewslice __pyx_v_8scrabble_6logger_lvl_alias_v = { 0, 0, { 0 }, { 0 }, { 0 } };
-static char __pyx_v_8scrabble_6logger_def_lvl;
+static int __pyx_v_8scrabble_6logger_lvl_alias[0x7F];
+static PyObject *__pyx_v_8scrabble_6logger_lo = 0;
+static int __pyx_v_8scrabble_6logger_lo_lvl;
+static PyObject *__pyx_v_8scrabble_6logger_DEFAULT_LOGLEVEL = 0;
+static int __pyx_v_8scrabble_6logger_def_lvl;
 static PyObject *generic = 0;
 static PyObject *strided = 0;
 static PyObject *indirect = 0;
@@ -1901,8 +1847,6 @@ static void __pyx_memoryview_refcount_objects_in_slice(char *, Py_ssize_t *, Py_
 static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size_t, void *, int); /*proto*/
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
 static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, PyObject *); /*proto*/
-static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "int", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_8scrabble_6logger_cuchr = { "cuchr", NULL, sizeof(__pyx_t_8scrabble_6logger_cuchr), { 0 }, 0, IS_UNSIGNED(__pyx_t_8scrabble_6logger_cuchr) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_8scrabble_6logger_cuchr), 0 };
 #define __Pyx_MODULE_NAME "scrabble.logger"
 extern int __pyx_module_is_main_scrabble__logger;
@@ -1919,52 +1863,26 @@ static PyObject *__pyx_builtin_id;
 static PyObject *__pyx_builtin_IndexError;
 static const char __pyx_k_[] = "\000";
 static const char __pyx_k_O[] = "O";
-static const char __pyx_k_T[] = "T{";
-  static const char __pyx_k_a[] = "(a) ";
-  static const char __pyx_k_c[] = "(c) ";
-  static const char __pyx_k_d[] = "(d) ";
-  static const char __pyx_k_e[] = "(e) ";
-  static const char __pyx_k_i[] = "(i) ";
-  static const char __pyx_k_n[] = "(n) ";
-  static const char __pyx_k_s[] = "(s) ";
-  static const char __pyx_k_v[] = "(v) ";
-  static const char __pyx_k_w[] = "(w) ";
-  static const char __pyx_k_x[] = "(x) ";
-  static const char __pyx_k_0m[] = "0m";
-  static const char __pyx_k__2[] = "(_) ";
-  static const char __pyx_k__3[] = "(";
-  static const char __pyx_k__4[] = ")";
-  static const char __pyx_k_id[] = "id";
-  static const char __pyx_k_lo[] = "lo";
-  static const char __pyx_k_30m[] = "30m";
-  static const char __pyx_k_31m[] = "31m";
-  static const char __pyx_k_32m[] = "32m";
-  static const char __pyx_k_33m[] = "33m";
-  static const char __pyx_k_34m[] = "34m";
-  static const char __pyx_k_35m[] = "35m";
-  static const char __pyx_k_36m[] = "36m";
-  static const char __pyx_k_37m[] = "37m";
-  static const char __pyx_k_90m[] = "90m";
-  static const char __pyx_k_91m[] = "91m";
-  static const char __pyx_k_92m[] = "92m";
-  static const char __pyx_k_93m[] = "93m";
-  static const char __pyx_k_94m[] = "94m";
-  static const char __pyx_k_95m[] = "95m";
-  static const char __pyx_k_96m[] = "96m";
-  static const char __pyx_k_97m[] = "97m";
-  static const char __pyx_k__23[] = "^";
-  static const char __pyx_k__24[] = "";
-  static const char __pyx_k__25[] = ":";
-static const char __pyx_k__26[] = "}";
-static const char __pyx_k__27[] = ",";
-static const char __pyx_k__28[] = "\033[";
+static const char __pyx_k_a[] = "(a) ";
+static const char __pyx_k_c[] = "(c) ";
+static const char __pyx_k_d[] = "(d) ";
+static const char __pyx_k_e[] = "(e) ";
+static const char __pyx_k_i[] = "(i) ";
+static const char __pyx_k_n[] = "(n) ";
+static const char __pyx_k_s[] = "(s) ";
+static const char __pyx_k_v[] = "(v) ";
+static const char __pyx_k_w[] = "(w) ";
+static const char __pyx_k_x[] = "(x) ";
+static const char __pyx_k__2[] = "(_) ";
+static const char __pyx_k__3[] = "(";
+static const char __pyx_k__4[] = ")";
+static const char __pyx_k_id[] = "id";
+static const char __pyx_k_lo[] = "lo";
 static const char __pyx_k_c_2[] = "c";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
-static const char __pyx_k_s_2[] = "(%s)";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_dict[] = "__dict__";
-static const char __pyx_k_join[] = "join";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_mode[] = "mode";
 static const char __pyx_k_name[] = "name";
@@ -1981,6 +1899,15 @@ static const char __pyx_k_lower[] = "lower";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_start[] = "start";
+static const char __pyx_k_KS_BLK[] = "KS_BLK";
+static const char __pyx_k_KS_BLU[] = "KS_BLU";
+static const char __pyx_k_KS_CYN[] = "KS_CYN";
+static const char __pyx_k_KS_GRN[] = "KS_GRN";
+static const char __pyx_k_KS_MAG[] = "KS_MAG";
+static const char __pyx_k_KS_RED[] = "KS_RED";
+static const char __pyx_k_KS_RES[] = "KS_RES";
+static const char __pyx_k_KS_WHT[] = "KS_WHT";
+static const char __pyx_k_KS_YEL[] = "KS_YEL";
 static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_format[] = "format";
 static const char __pyx_k_import[] = "__import__";
@@ -1994,6 +1921,14 @@ static const char __pyx_k_update[] = "update";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
+static const char __pyx_k_KS_BLK_L[] = "KS_BLK_L";
+static const char __pyx_k_KS_BLU_L[] = "KS_BLU_L";
+static const char __pyx_k_KS_CYN_L[] = "KS_CYN_L";
+static const char __pyx_k_KS_GRN_L[] = "KS_GRN_L";
+static const char __pyx_k_KS_MAG_L[] = "KS_MAG_L";
+static const char __pyx_k_KS_RED_L[] = "KS_RED_L";
+static const char __pyx_k_KS_WHT_L[] = "KS_WHT_L";
+static const char __pyx_k_KS_YEL_L[] = "KS_YEL_L";
 static const char __pyx_k_getstate[] = "__getstate__";
 static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_pyx_capi[] = "__pyx_capi__";
@@ -2048,23 +1983,6 @@ static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing ex
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static PyObject *__pyx_kp_b_;
-static PyObject *__pyx_kp_b_0m;
-static PyObject *__pyx_kp_b_30m;
-static PyObject *__pyx_kp_b_31m;
-static PyObject *__pyx_kp_b_32m;
-static PyObject *__pyx_kp_b_33m;
-static PyObject *__pyx_kp_b_34m;
-static PyObject *__pyx_kp_b_35m;
-static PyObject *__pyx_kp_b_36m;
-static PyObject *__pyx_kp_b_37m;
-static PyObject *__pyx_kp_b_90m;
-static PyObject *__pyx_kp_b_91m;
-static PyObject *__pyx_kp_b_92m;
-static PyObject *__pyx_kp_b_93m;
-static PyObject *__pyx_kp_b_94m;
-static PyObject *__pyx_kp_b_95m;
-static PyObject *__pyx_kp_b_96m;
-static PyObject *__pyx_kp_b_97m;
 static PyObject *__pyx_n_s_ASCII;
 static PyObject *__pyx_kp_s_Buffer_view_does_not_expose_stri;
 static PyObject *__pyx_kp_s_Can_only_create_a_buffer_that_is;
@@ -2079,24 +1997,34 @@ static PyObject *__pyx_n_s_IndexError;
 static PyObject *__pyx_kp_s_Indirect_dimensions_not_supporte;
 static PyObject *__pyx_kp_s_Invalid_mode_expected_c_or_fortr;
 static PyObject *__pyx_kp_s_Invalid_shape_in_axis_d_d;
+static PyObject *__pyx_n_s_KS_BLK;
+static PyObject *__pyx_n_s_KS_BLK_L;
+static PyObject *__pyx_n_s_KS_BLU;
+static PyObject *__pyx_n_s_KS_BLU_L;
+static PyObject *__pyx_n_s_KS_CYN;
+static PyObject *__pyx_n_s_KS_CYN_L;
+static PyObject *__pyx_n_s_KS_GRN;
+static PyObject *__pyx_n_s_KS_GRN_L;
+static PyObject *__pyx_n_s_KS_MAG;
+static PyObject *__pyx_n_s_KS_MAG_L;
+static PyObject *__pyx_n_s_KS_RED;
+static PyObject *__pyx_n_s_KS_RED_L;
+static PyObject *__pyx_n_s_KS_RES;
+static PyObject *__pyx_n_s_KS_WHT;
+static PyObject *__pyx_n_s_KS_WHT_L;
+static PyObject *__pyx_n_s_KS_YEL;
+static PyObject *__pyx_n_s_KS_YEL_L;
 static PyObject *__pyx_n_s_MemoryError;
 static PyObject *__pyx_kp_s_MemoryView_of_r_at_0x_x;
 static PyObject *__pyx_kp_s_MemoryView_of_r_object;
 static PyObject *__pyx_n_b_O;
 static PyObject *__pyx_kp_s_Out_of_bounds_on_buffer_access_a;
 static PyObject *__pyx_n_s_PickleError;
-static PyObject *__pyx_kp_b_T;
 static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_kp_b__2;
-static PyObject *__pyx_kp_b__23;
-static PyObject *__pyx_kp_b__24;
-static PyObject *__pyx_kp_b__25;
-static PyObject *__pyx_kp_b__26;
-static PyObject *__pyx_kp_u__27;
-static PyObject *__pyx_kp_b__28;
 static PyObject *__pyx_kp_b__3;
 static PyObject *__pyx_kp_b__4;
 static PyObject *__pyx_kp_b_a;
@@ -2127,7 +2055,6 @@ static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
-static PyObject *__pyx_n_s_join;
 static PyObject *__pyx_n_s_lo;
 static PyObject *__pyx_n_s_lo_lvl;
 static PyObject *__pyx_n_s_lower;
@@ -2158,7 +2085,6 @@ static PyObject *__pyx_n_s_reduce;
 static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_kp_b_s;
-static PyObject *__pyx_kp_u_s_2;
 static PyObject *__pyx_n_s_scrabble_settings;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
@@ -2247,41 +2173,39 @@ static PyObject *__pyx_tuple__18;
 static PyObject *__pyx_tuple__20;
 static PyObject *__pyx_tuple__21;
 static PyObject *__pyx_tuple__22;
-static PyObject *__pyx_tuple__29;
-static PyObject *__pyx_tuple__30;
-static PyObject *__pyx_tuple__31;
-static PyObject *__pyx_tuple__32;
-static PyObject *__pyx_tuple__33;
-static PyObject *__pyx_tuple__34;
-static PyObject *__pyx_codeobj__35;
+static PyObject *__pyx_tuple__23;
+static PyObject *__pyx_tuple__24;
+static PyObject *__pyx_tuple__25;
+static PyObject *__pyx_tuple__26;
+static PyObject *__pyx_tuple__27;
+static PyObject *__pyx_tuple__28;
+static PyObject *__pyx_codeobj__29;
 /* Late includes */
 
-/* "scrabble/logger.pyx":99
- * cdef int lo_lvl = lvl_alias_v[def_lvl]
+/* "scrabble/logger.pyx":100
+ * cdef int lo_lvl = lvl_alias[def_lvl]
  * 
  * cdef bint can_log(Py_UNICODE lvl) nogil:             # <<<<<<<<<<<<<<
- *     cdef int lal = lvl_alias_v[lvl]
+ *     cdef int lal = lvl_alias[lvl]
  *     return lo_lvl <= lal
  */
 
 static int __pyx_f_8scrabble_6logger_can_log(Py_UNICODE __pyx_v_lvl) {
   int __pyx_v_lal;
   int __pyx_r;
-  size_t __pyx_t_1;
 
-  /* "scrabble/logger.pyx":100
+  /* "scrabble/logger.pyx":101
  * 
  * cdef bint can_log(Py_UNICODE lvl) nogil:
- *     cdef int lal = lvl_alias_v[lvl]             # <<<<<<<<<<<<<<
+ *     cdef int lal = lvl_alias[lvl]             # <<<<<<<<<<<<<<
  *     return lo_lvl <= lal
  * 
  */
-  __pyx_t_1 = __pyx_v_lvl;
-  __pyx_v_lal = (*((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_1 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )));
+  __pyx_v_lal = (__pyx_v_8scrabble_6logger_lvl_alias[__pyx_v_lvl]);
 
-  /* "scrabble/logger.pyx":101
+  /* "scrabble/logger.pyx":102
  * cdef bint can_log(Py_UNICODE lvl) nogil:
- *     cdef int lal = lvl_alias_v[lvl]
+ *     cdef int lal = lvl_alias[lvl]
  *     return lo_lvl <= lal             # <<<<<<<<<<<<<<
  * 
  * 
@@ -2289,11 +2213,11 @@ static int __pyx_f_8scrabble_6logger_can_log(Py_UNICODE __pyx_v_lvl) {
   __pyx_r = (__pyx_v_8scrabble_6logger_lo_lvl <= __pyx_v_lal);
   goto __pyx_L0;
 
-  /* "scrabble/logger.pyx":99
- * cdef int lo_lvl = lvl_alias_v[def_lvl]
+  /* "scrabble/logger.pyx":100
+ * cdef int lo_lvl = lvl_alias[def_lvl]
  * 
  * cdef bint can_log(Py_UNICODE lvl) nogil:             # <<<<<<<<<<<<<<
- *     cdef int lal = lvl_alias_v[lvl]
+ *     cdef int lal = lvl_alias[lvl]
  *     return lo_lvl <= lal
  */
 
@@ -2302,7 +2226,7 @@ static int __pyx_f_8scrabble_6logger_can_log(Py_UNICODE __pyx_v_lvl) {
   return __pyx_r;
 }
 
-/* "scrabble/logger.pyx":105
+/* "scrabble/logger.pyx":106
  * 
  * #todo add bold and stuff
  * cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:             # <<<<<<<<<<<<<<
@@ -2322,7 +2246,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     }
   }
 
-  /* "scrabble/logger.pyx":106
+  /* "scrabble/logger.pyx":107
  * #todo add bold and stuff
  * cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:
  *     cdef Py_ssize_t i = 0             # <<<<<<<<<<<<<<
@@ -2331,7 +2255,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
  */
   __pyx_v_i = 0;
 
-  /* "scrabble/logger.pyx":108
+  /* "scrabble/logger.pyx":109
  *     cdef Py_ssize_t i = 0
  * 
  *     printf('%s', KS_BLK_L)             # <<<<<<<<<<<<<<
@@ -2340,7 +2264,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
  */
   (void)(printf(((char const *)"%s"), __pyx_v_8scrabble_6logger_KS_BLK_L));
 
-  /* "scrabble/logger.pyx":109
+  /* "scrabble/logger.pyx":110
  * 
  *     printf('%s', KS_BLK_L)
  *     while i < 3:             # <<<<<<<<<<<<<<
@@ -2351,7 +2275,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     __pyx_t_1 = ((__pyx_v_i < 3) != 0);
     if (!__pyx_t_1) break;
 
-    /* "scrabble/logger.pyx":110
+    /* "scrabble/logger.pyx":111
  *     printf('%s', KS_BLK_L)
  *     while i < 3:
  *         printf('%c', ctxt[i])             # <<<<<<<<<<<<<<
@@ -2362,7 +2286,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     if (__pyx_t_2 < 0) __pyx_t_2 += __pyx_v_ctxt.shape[0];
     (void)(printf(((char const *)"%c"), (*((__pyx_t_8scrabble_6logger_cuchr *) ( /* dim=0 */ (__pyx_v_ctxt.data + __pyx_t_2 * __pyx_v_ctxt.strides[0]) )))));
 
-    /* "scrabble/logger.pyx":111
+    /* "scrabble/logger.pyx":112
  *     while i < 3:
  *         printf('%c', ctxt[i])
  *         i += 1             # <<<<<<<<<<<<<<
@@ -2372,7 +2296,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     __pyx_v_i = (__pyx_v_i + 1);
   }
 
-  /* "scrabble/logger.pyx":113
+  /* "scrabble/logger.pyx":114
  *         i += 1
  * 
  *     printf('%s%s%d;%dm', KS_RES, _ks, bold, c)             # <<<<<<<<<<<<<<
@@ -2381,7 +2305,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
  */
   (void)(printf(((char const *)"%s%s%d;%dm"), __pyx_v_8scrabble_6logger_KS_RES, ((char *)"\033["), __pyx_v_bold, __pyx_v_c));
 
-  /* "scrabble/logger.pyx":114
+  /* "scrabble/logger.pyx":115
  * 
  *     printf('%s%s%d;%dm', KS_RES, _ks, bold, c)
  *     while i < ts:             # <<<<<<<<<<<<<<
@@ -2392,7 +2316,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     __pyx_t_1 = ((__pyx_v_i < __pyx_v_ts) != 0);
     if (!__pyx_t_1) break;
 
-    /* "scrabble/logger.pyx":115
+    /* "scrabble/logger.pyx":116
  *     printf('%s%s%d;%dm', KS_RES, _ks, bold, c)
  *     while i < ts:
  *         printf('%c', ctxt[i])             # <<<<<<<<<<<<<<
@@ -2403,7 +2327,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     if (__pyx_t_3 < 0) __pyx_t_3 += __pyx_v_ctxt.shape[0];
     (void)(printf(((char const *)"%c"), (*((__pyx_t_8scrabble_6logger_cuchr *) ( /* dim=0 */ (__pyx_v_ctxt.data + __pyx_t_3 * __pyx_v_ctxt.strides[0]) )))));
 
-    /* "scrabble/logger.pyx":116
+    /* "scrabble/logger.pyx":117
  *     while i < ts:
  *         printf('%c', ctxt[i])
  *         i += 1             # <<<<<<<<<<<<<<
@@ -2413,7 +2337,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
     __pyx_v_i = (__pyx_v_i + 1);
   }
 
-  /* "scrabble/logger.pyx":117
+  /* "scrabble/logger.pyx":118
  *         printf('%c', ctxt[i])
  *         i += 1
  *     puts(KS_RES)             # <<<<<<<<<<<<<<
@@ -2422,7 +2346,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
  */
   (void)(puts(__pyx_v_8scrabble_6logger_KS_RES));
 
-  /* "scrabble/logger.pyx":105
+  /* "scrabble/logger.pyx":106
  * 
  * #todo add bold and stuff
  * cdef void clog(cuchr[:] ctxt, Py_ssize_t ts, int c, bint bold = False) nogil:             # <<<<<<<<<<<<<<
@@ -2433,7 +2357,7 @@ static void __pyx_f_8scrabble_6logger_clog(__Pyx_memviewslice __pyx_v_ctxt, Py_s
   /* function exit code */
 }
 
-/* "scrabble/logger.pyx":122
+/* "scrabble/logger.pyx":123
  * 
  * #def chklog(s, int lvl, *ar) -> cchr[:]:
  * cdef cuchr[:] chklog(s, int lvl):             # <<<<<<<<<<<<<<
@@ -2452,7 +2376,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("chklog", 0);
 
-  /* "scrabble/logger.pyx":123
+  /* "scrabble/logger.pyx":124
  * #def chklog(s, int lvl, *ar) -> cchr[:]:
  * cdef cuchr[:] chklog(s, int lvl):
  *     if lo_lvl > lvl: return NUL             # <<<<<<<<<<<<<<
@@ -2461,14 +2385,14 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
  */
   __pyx_t_1 = ((__pyx_v_8scrabble_6logger_lo_lvl > __pyx_v_lvl) != 0);
   if (__pyx_t_1) {
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_kp_b_, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 123, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_kp_b_, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 124, __pyx_L1_error)
     __pyx_r = __pyx_t_2;
     __pyx_t_2.memview = NULL;
     __pyx_t_2.data = NULL;
     goto __pyx_L0;
   }
 
-  /* "scrabble/logger.pyx":124
+  /* "scrabble/logger.pyx":125
  * cdef cuchr[:] chklog(s, int lvl):
  *     if lo_lvl > lvl: return NUL
  *     if s is None: return NUL             # <<<<<<<<<<<<<<
@@ -2478,14 +2402,14 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
   __pyx_t_1 = (__pyx_v_s == Py_None);
   __pyx_t_3 = (__pyx_t_1 != 0);
   if (__pyx_t_3) {
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_kp_b_, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_kp_b_, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 125, __pyx_L1_error)
     __pyx_r = __pyx_t_2;
     __pyx_t_2.memview = NULL;
     __pyx_t_2.data = NULL;
     goto __pyx_L0;
   }
 
-  /* "scrabble/logger.pyx":128
+  /* "scrabble/logger.pyx":129
  * 
  *     cdef bytes s_st
  *     if lvl == 0:    s_st = l__             # <<<<<<<<<<<<<<
@@ -2499,7 +2423,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 5:
 
-    /* "scrabble/logger.pyx":129
+    /* "scrabble/logger.pyx":130
  *     cdef bytes s_st
  *     if lvl == 0:    s_st = l__
  *     elif lvl == 5:  s_st = l_x             # <<<<<<<<<<<<<<
@@ -2511,7 +2435,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 10:
 
-    /* "scrabble/logger.pyx":130
+    /* "scrabble/logger.pyx":131
  *     if lvl == 0:    s_st = l__
  *     elif lvl == 5:  s_st = l_x
  *     elif lvl == 10: s_st = l_d             # <<<<<<<<<<<<<<
@@ -2523,7 +2447,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 15:
 
-    /* "scrabble/logger.pyx":131
+    /* "scrabble/logger.pyx":132
  *     elif lvl == 5:  s_st = l_x
  *     elif lvl == 10: s_st = l_d
  *     elif lvl == 15: s_st = l_v             # <<<<<<<<<<<<<<
@@ -2535,7 +2459,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 20:
 
-    /* "scrabble/logger.pyx":132
+    /* "scrabble/logger.pyx":133
  *     elif lvl == 10: s_st = l_d
  *     elif lvl == 15: s_st = l_v
  *     elif lvl == 20: s_st = l_i             # <<<<<<<<<<<<<<
@@ -2547,7 +2471,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 25:
 
-    /* "scrabble/logger.pyx":133
+    /* "scrabble/logger.pyx":134
  *     elif lvl == 15: s_st = l_v
  *     elif lvl == 20: s_st = l_i
  *     elif lvl == 25: s_st = l_n             # <<<<<<<<<<<<<<
@@ -2559,7 +2483,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 30:
 
-    /* "scrabble/logger.pyx":134
+    /* "scrabble/logger.pyx":135
  *     elif lvl == 20: s_st = l_i
  *     elif lvl == 25: s_st = l_n
  *     elif lvl == 30: s_st = l_w             # <<<<<<<<<<<<<<
@@ -2571,7 +2495,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 35:
 
-    /* "scrabble/logger.pyx":135
+    /* "scrabble/logger.pyx":136
  *     elif lvl == 25: s_st = l_n
  *     elif lvl == 30: s_st = l_w
  *     elif lvl == 35: s_st = l_s             # <<<<<<<<<<<<<<
@@ -2583,7 +2507,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 40:
 
-    /* "scrabble/logger.pyx":136
+    /* "scrabble/logger.pyx":137
  *     elif lvl == 30: s_st = l_w
  *     elif lvl == 35: s_st = l_s
  *     elif lvl == 40: s_st = l_e             # <<<<<<<<<<<<<<
@@ -2595,7 +2519,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 50:
 
-    /* "scrabble/logger.pyx":137
+    /* "scrabble/logger.pyx":138
  *     elif lvl == 35: s_st = l_s
  *     elif lvl == 40: s_st = l_e
  *     elif lvl == 50: s_st = l_c             # <<<<<<<<<<<<<<
@@ -2607,7 +2531,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     case 60:
 
-    /* "scrabble/logger.pyx":138
+    /* "scrabble/logger.pyx":139
  *     elif lvl == 40: s_st = l_e
  *     elif lvl == 50: s_st = l_c
  *     elif lvl == 60: s_st = l_a             # <<<<<<<<<<<<<<
@@ -2619,22 +2543,22 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
     default:
 
-    /* "scrabble/logger.pyx":139
+    /* "scrabble/logger.pyx":140
  *     elif lvl == 50: s_st = l_c
  *     elif lvl == 60: s_st = l_a
  *     else: s_st = b'(' + bytes(lvl) + b')'             # <<<<<<<<<<<<<<
  * 
  *     #cdef str sp = '(' + s_st + ') ' + s
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_lvl); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 139, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_lvl); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 140, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyBytes_Type)), __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 139, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyBytes_Type)), __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 140, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyNumber_Add(__pyx_kp_b__3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 139, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_Add(__pyx_kp_b__3, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 140, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyNumber_Add(__pyx_t_4, __pyx_kp_b__4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 139, __pyx_L1_error)
+    __pyx_t_5 = PyNumber_Add(__pyx_t_4, __pyx_kp_b__4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 140, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_s_st = ((PyObject*)__pyx_t_5);
@@ -2642,72 +2566,72 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
     break;
   }
 
-  /* "scrabble/logger.pyx":151
+  /* "scrabble/logger.pyx":152
  *     #return <bytes>s_st + <bytes>((<unicode>s).encode('utf8'))
  * 
  *     if type(s) is not unicode:             # <<<<<<<<<<<<<<
- *         return <bytes>s_st + str(s).encode('utf8')
+ *         return <bytes>s_st + str(s).encode('utf8')  # todo
  *     return <bytes>s_st + (<unicode>s).encode('utf8')
  */
   __pyx_t_3 = (((PyObject *)Py_TYPE(__pyx_v_s)) != ((PyObject *)(&PyUnicode_Type)));
   __pyx_t_1 = (__pyx_t_3 != 0);
   if (__pyx_t_1) {
 
-    /* "scrabble/logger.pyx":152
+    /* "scrabble/logger.pyx":153
  * 
  *     if type(s) is not unicode:
- *         return <bytes>s_st + str(s).encode('utf8')             # <<<<<<<<<<<<<<
+ *         return <bytes>s_st + str(s).encode('utf8')  # todo             # <<<<<<<<<<<<<<
  *     return <bytes>s_st + (<unicode>s).encode('utf8')
  * 
  */
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_s); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyUnicode_Type)), __pyx_v_s); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_4 = PyUnicode_AsUTF8String(((PyObject*)__pyx_t_5)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_4 = PyUnicode_AsUTF8String(((PyObject*)__pyx_t_5)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = PyNumber_Add(__pyx_v_s_st, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_5 = PyNumber_Add(__pyx_v_s_st, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_t_5, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_t_5, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 153, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_r = __pyx_t_2;
     __pyx_t_2.memview = NULL;
     __pyx_t_2.data = NULL;
     goto __pyx_L0;
 
-    /* "scrabble/logger.pyx":151
+    /* "scrabble/logger.pyx":152
  *     #return <bytes>s_st + <bytes>((<unicode>s).encode('utf8'))
  * 
  *     if type(s) is not unicode:             # <<<<<<<<<<<<<<
- *         return <bytes>s_st + str(s).encode('utf8')
+ *         return <bytes>s_st + str(s).encode('utf8')  # todo
  *     return <bytes>s_st + (<unicode>s).encode('utf8')
  */
   }
 
-  /* "scrabble/logger.pyx":153
+  /* "scrabble/logger.pyx":154
  *     if type(s) is not unicode:
- *         return <bytes>s_st + str(s).encode('utf8')
+ *         return <bytes>s_st + str(s).encode('utf8')  # todo
  *     return <bytes>s_st + (<unicode>s).encode('utf8')             # <<<<<<<<<<<<<<
  * 
  * 
  */
   if (unlikely(__pyx_v_s == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-    __PYX_ERR(0, 153, __pyx_L1_error)
+    __PYX_ERR(0, 154, __pyx_L1_error)
   }
-  __pyx_t_5 = PyUnicode_AsUTF8String(((PyObject*)__pyx_v_s)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_5 = PyUnicode_AsUTF8String(((PyObject*)__pyx_v_s)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = PyNumber_Add(__pyx_v_s_st, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_v_s_st, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_t_4, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_8scrabble_6logger_cuchr(__pyx_t_4, 0); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2.memview = NULL;
   __pyx_t_2.data = NULL;
   goto __pyx_L0;
 
-  /* "scrabble/logger.pyx":122
+  /* "scrabble/logger.pyx":123
  * 
  * #def chklog(s, int lvl, *ar) -> cchr[:]:
  * cdef cuchr[:] chklog(s, int lvl):             # <<<<<<<<<<<<<<
@@ -2734,7 +2658,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
   return __pyx_r;
 }
 
-/* "scrabble/logger.pyx":156
+/* "scrabble/logger.pyx":157
  * 
  * 
  * cdef void clos(cchrp s, ...) nogil:             # <<<<<<<<<<<<<<
@@ -2745,7 +2669,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
 static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx_v_s, ...) {
   va_list __pyx_v_args;
 
-  /* "scrabble/logger.pyx":158
+  /* "scrabble/logger.pyx":159
  * cdef void clos(cchrp s, ...) nogil:
  *     cdef va_list args
  *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)             # <<<<<<<<<<<<<<
@@ -2754,7 +2678,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
  */
   (void)(printf(((char const *)"%s%s%s %s"), __pyx_v_8scrabble_6logger_KS_BLK_L, ((char *)"(s) "), __pyx_v_8scrabble_6logger_KS_RES, __pyx_v_8scrabble_6logger_KS_GRN_L));
 
-  /* "scrabble/logger.pyx":159
+  /* "scrabble/logger.pyx":160
  *     cdef va_list args
  *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
  *     va_start(args, <void*>s)             # <<<<<<<<<<<<<<
@@ -2763,7 +2687,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
  */
   va_start(__pyx_v_args, ((void *)__pyx_v_s));
 
-  /* "scrabble/logger.pyx":160
+  /* "scrabble/logger.pyx":161
  *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
  *     va_start(args, <void*>s)
  *     vprintf(s, args)             # <<<<<<<<<<<<<<
@@ -2772,7 +2696,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
  */
   vprintf(__pyx_v_s, __pyx_v_args);
 
-  /* "scrabble/logger.pyx":161
+  /* "scrabble/logger.pyx":162
  *     va_start(args, <void*>s)
  *     vprintf(s, args)
  *     va_end(args)             # <<<<<<<<<<<<<<
@@ -2781,7 +2705,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
  */
   va_end(__pyx_v_args);
 
-  /* "scrabble/logger.pyx":162
+  /* "scrabble/logger.pyx":163
  *     vprintf(s, args)
  *     va_end(args)
  *     puts(KS_RES)             # <<<<<<<<<<<<<<
@@ -2790,7 +2714,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
  */
   (void)(puts(__pyx_v_8scrabble_6logger_KS_RES));
 
-  /* "scrabble/logger.pyx":156
+  /* "scrabble/logger.pyx":157
  * 
  * 
  * cdef void clos(cchrp s, ...) nogil:             # <<<<<<<<<<<<<<
@@ -2801,7 +2725,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
   /* function exit code */
 }
 
-/* "scrabble/logger.pyx":166
+/* "scrabble/logger.pyx":167
  * 
  * 
  * cdef void lox(s):             # <<<<<<<<<<<<<<
@@ -2820,7 +2744,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lox", 0);
 
-  /* "scrabble/logger.pyx":167
+  /* "scrabble/logger.pyx":168
  * 
  * cdef void lox(s):
  *     cdef LogLvl lvl = SPAM             # <<<<<<<<<<<<<<
@@ -2829,7 +2753,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_SPAM;
 
-  /* "scrabble/logger.pyx":168
+  /* "scrabble/logger.pyx":169
  * cdef void lox(s):
  *     cdef LogLvl lvl = SPAM
  *     cdef Py_ssize_t color = K_WHT             # <<<<<<<<<<<<<<
@@ -2838,19 +2762,19 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 37;
 
-  /* "scrabble/logger.pyx":169
+  /* "scrabble/logger.pyx":170
  *     cdef LogLvl lvl = SPAM
  *     cdef Py_ssize_t color = K_WHT
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 170, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":170
+  /* "scrabble/logger.pyx":171
  *     cdef Py_ssize_t color = K_WHT
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -2860,7 +2784,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":171
+  /* "scrabble/logger.pyx":172
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -2872,7 +2796,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":166
+  /* "scrabble/logger.pyx":167
  * 
  * 
  * cdef void lox(s):             # <<<<<<<<<<<<<<
@@ -2890,7 +2814,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":173
+/* "scrabble/logger.pyx":174
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lod(s):             # <<<<<<<<<<<<<<
@@ -2909,7 +2833,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lod", 0);
 
-  /* "scrabble/logger.pyx":174
+  /* "scrabble/logger.pyx":175
  * 
  * cdef void lod(s):
  *     cdef LogLvl lvl = DEBUG             # <<<<<<<<<<<<<<
@@ -2918,7 +2842,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_DEBUG;
 
-  /* "scrabble/logger.pyx":175
+  /* "scrabble/logger.pyx":176
  * cdef void lod(s):
  *     cdef LogLvl lvl = DEBUG
  *     cdef Py_ssize_t color = K_CYN             # <<<<<<<<<<<<<<
@@ -2927,19 +2851,19 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 36;
 
-  /* "scrabble/logger.pyx":176
+  /* "scrabble/logger.pyx":177
  *     cdef LogLvl lvl = DEBUG
  *     cdef Py_ssize_t color = K_CYN
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 177, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":177
+  /* "scrabble/logger.pyx":178
  *     cdef Py_ssize_t color = K_CYN
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -2949,7 +2873,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":178
+  /* "scrabble/logger.pyx":179
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -2961,7 +2885,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":173
+  /* "scrabble/logger.pyx":174
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lod(s):             # <<<<<<<<<<<<<<
@@ -2979,7 +2903,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":180
+/* "scrabble/logger.pyx":181
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lov(s):             # <<<<<<<<<<<<<<
@@ -2998,7 +2922,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lov", 0);
 
-  /* "scrabble/logger.pyx":181
+  /* "scrabble/logger.pyx":182
  * 
  * cdef void lov(s):
  *     cdef LogLvl lvl = VERBOSE             # <<<<<<<<<<<<<<
@@ -3007,7 +2931,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_VERBOSE;
 
-  /* "scrabble/logger.pyx":182
+  /* "scrabble/logger.pyx":183
  * cdef void lov(s):
  *     cdef LogLvl lvl = VERBOSE
  *     cdef Py_ssize_t color = K_BLU             # <<<<<<<<<<<<<<
@@ -3016,19 +2940,19 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 34;
 
-  /* "scrabble/logger.pyx":183
+  /* "scrabble/logger.pyx":184
  *     cdef LogLvl lvl = VERBOSE
  *     cdef Py_ssize_t color = K_BLU
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 184, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":184
+  /* "scrabble/logger.pyx":185
  *     cdef Py_ssize_t color = K_BLU
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3038,7 +2962,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":185
+  /* "scrabble/logger.pyx":186
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3050,7 +2974,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":180
+  /* "scrabble/logger.pyx":181
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lov(s):             # <<<<<<<<<<<<<<
@@ -3068,7 +2992,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":187
+/* "scrabble/logger.pyx":188
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loi(s):             # <<<<<<<<<<<<<<
@@ -3087,7 +3011,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("loi", 0);
 
-  /* "scrabble/logger.pyx":188
+  /* "scrabble/logger.pyx":189
  * 
  * cdef void loi(s):
  *     cdef LogLvl lvl = INFO             # <<<<<<<<<<<<<<
@@ -3096,7 +3020,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_INFO;
 
-  /* "scrabble/logger.pyx":189
+  /* "scrabble/logger.pyx":190
  * cdef void loi(s):
  *     cdef LogLvl lvl = INFO
  *     cdef Py_ssize_t color = K_RES             # <<<<<<<<<<<<<<
@@ -3105,19 +3029,19 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 0;
 
-  /* "scrabble/logger.pyx":190
+  /* "scrabble/logger.pyx":191
  *     cdef LogLvl lvl = INFO
  *     cdef Py_ssize_t color = K_RES
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 191, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":191
+  /* "scrabble/logger.pyx":192
  *     cdef Py_ssize_t color = K_RES
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3127,7 +3051,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":192
+  /* "scrabble/logger.pyx":193
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3139,7 +3063,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":187
+  /* "scrabble/logger.pyx":188
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loi(s):             # <<<<<<<<<<<<<<
@@ -3157,7 +3081,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":194
+/* "scrabble/logger.pyx":195
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lon(s):             # <<<<<<<<<<<<<<
@@ -3176,7 +3100,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lon", 0);
 
-  /* "scrabble/logger.pyx":195
+  /* "scrabble/logger.pyx":196
  * 
  * cdef void lon(s):
  *     cdef LogLvl lvl = NOTICE             # <<<<<<<<<<<<<<
@@ -3185,7 +3109,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_NOTICE;
 
-  /* "scrabble/logger.pyx":196
+  /* "scrabble/logger.pyx":197
  * cdef void lon(s):
  *     cdef LogLvl lvl = NOTICE
  *     cdef Py_ssize_t color = K_MAG             # <<<<<<<<<<<<<<
@@ -3194,19 +3118,19 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 35;
 
-  /* "scrabble/logger.pyx":197
+  /* "scrabble/logger.pyx":198
  *     cdef LogLvl lvl = NOTICE
  *     cdef Py_ssize_t color = K_MAG
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 197, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 198, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":198
+  /* "scrabble/logger.pyx":199
  *     cdef Py_ssize_t color = K_MAG
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3216,7 +3140,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":199
+  /* "scrabble/logger.pyx":200
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3228,7 +3152,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":194
+  /* "scrabble/logger.pyx":195
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lon(s):             # <<<<<<<<<<<<<<
@@ -3246,7 +3170,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":201
+/* "scrabble/logger.pyx":202
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void low(s):             # <<<<<<<<<<<<<<
@@ -3265,7 +3189,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("low", 0);
 
-  /* "scrabble/logger.pyx":202
+  /* "scrabble/logger.pyx":203
  * 
  * cdef void low(s):
  *     cdef LogLvl lvl = WARNING             # <<<<<<<<<<<<<<
@@ -3274,7 +3198,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_WARNING;
 
-  /* "scrabble/logger.pyx":203
+  /* "scrabble/logger.pyx":204
  * cdef void low(s):
  *     cdef LogLvl lvl = WARNING
  *     cdef Py_ssize_t color = K_YEL             # <<<<<<<<<<<<<<
@@ -3283,19 +3207,19 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 33;
 
-  /* "scrabble/logger.pyx":204
+  /* "scrabble/logger.pyx":205
  *     cdef LogLvl lvl = WARNING
  *     cdef Py_ssize_t color = K_YEL
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":205
+  /* "scrabble/logger.pyx":206
  *     cdef Py_ssize_t color = K_YEL
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3305,7 +3229,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":206
+  /* "scrabble/logger.pyx":207
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3317,7 +3241,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":201
+  /* "scrabble/logger.pyx":202
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void low(s):             # <<<<<<<<<<<<<<
@@ -3335,7 +3259,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":208
+/* "scrabble/logger.pyx":209
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void los(s):             # <<<<<<<<<<<<<<
@@ -3354,7 +3278,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("los", 0);
 
-  /* "scrabble/logger.pyx":209
+  /* "scrabble/logger.pyx":210
  * 
  * cdef void los(s):
  *     cdef LogLvl lvl = SUCCESS ##             # <<<<<<<<<<<<<<
@@ -3363,7 +3287,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_SUCCESS;
 
-  /* "scrabble/logger.pyx":210
+  /* "scrabble/logger.pyx":211
  * cdef void los(s):
  *     cdef LogLvl lvl = SUCCESS ##
  *     cdef Py_ssize_t color = K_GRN_L ##             # <<<<<<<<<<<<<<
@@ -3372,19 +3296,19 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 92;
 
-  /* "scrabble/logger.pyx":212
+  /* "scrabble/logger.pyx":213
  *     cdef Py_ssize_t color = K_GRN_L ##
  * 
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  * 
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":213
+  /* "scrabble/logger.pyx":214
  * 
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3394,7 +3318,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":215
+  /* "scrabble/logger.pyx":216
  *     cdef Py_ssize_t ts = len(txt)
  * 
  *     if ts > 3: clog(txt, ts, color) #bold             # <<<<<<<<<<<<<<
@@ -3406,7 +3330,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":208
+  /* "scrabble/logger.pyx":209
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void los(s):             # <<<<<<<<<<<<<<
@@ -3424,7 +3348,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":217
+/* "scrabble/logger.pyx":218
  *     if ts > 3: clog(txt, ts, color) #bold
  * 
  * cdef void loe(s):             # <<<<<<<<<<<<<<
@@ -3443,7 +3367,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("loe", 0);
 
-  /* "scrabble/logger.pyx":218
+  /* "scrabble/logger.pyx":219
  * 
  * cdef void loe(s):
  *     cdef LogLvl lvl = ERROR             # <<<<<<<<<<<<<<
@@ -3452,7 +3376,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_ERROR;
 
-  /* "scrabble/logger.pyx":219
+  /* "scrabble/logger.pyx":220
  * cdef void loe(s):
  *     cdef LogLvl lvl = ERROR
  *     cdef Py_ssize_t color = K_RED_L             # <<<<<<<<<<<<<<
@@ -3461,19 +3385,19 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 91;
 
-  /* "scrabble/logger.pyx":220
+  /* "scrabble/logger.pyx":221
  *     cdef LogLvl lvl = ERROR
  *     cdef Py_ssize_t color = K_RED_L
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 220, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 221, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":221
+  /* "scrabble/logger.pyx":222
  *     cdef Py_ssize_t color = K_RED_L
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3483,7 +3407,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":222
+  /* "scrabble/logger.pyx":223
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3495,7 +3419,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":217
+  /* "scrabble/logger.pyx":218
  *     if ts > 3: clog(txt, ts, color) #bold
  * 
  * cdef void loe(s):             # <<<<<<<<<<<<<<
@@ -3513,7 +3437,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":224
+/* "scrabble/logger.pyx":225
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loc(s):             # <<<<<<<<<<<<<<
@@ -3532,7 +3456,7 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("loc", 0);
 
-  /* "scrabble/logger.pyx":225
+  /* "scrabble/logger.pyx":226
  * 
  * cdef void loc(s):
  *     cdef LogLvl lvl = CRITICAL             # <<<<<<<<<<<<<<
@@ -3541,7 +3465,7 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_CRITICAL;
 
-  /* "scrabble/logger.pyx":226
+  /* "scrabble/logger.pyx":227
  * cdef void loc(s):
  *     cdef LogLvl lvl = CRITICAL
  *     cdef Py_ssize_t color = K_RED             # <<<<<<<<<<<<<<
@@ -3550,40 +3474,38 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 31;
 
-  /* "scrabble/logger.pyx":227
+  /* "scrabble/logger.pyx":228
  *     cdef LogLvl lvl = CRITICAL
  *     cdef Py_ssize_t color = K_RED
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 228, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":228
+  /* "scrabble/logger.pyx":229
  *     cdef Py_ssize_t color = K_RED
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
  *     if ts > 3: clog(txt, ts, color)
- * 
  */
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":229
+  /* "scrabble/logger.pyx":230
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
- * 
  */
   __pyx_t_3 = ((__pyx_v_ts > 3) != 0);
   if (__pyx_t_3) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":224
+  /* "scrabble/logger.pyx":225
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loc(s):             # <<<<<<<<<<<<<<
@@ -16374,352 +16296,6 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *__
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-
-/* "BufferFormatFromTypeInfo":1460
- * 
- * @cname('__pyx_format_from_typeinfo')
- * cdef bytes format_from_typeinfo(__Pyx_TypeInfo *type):             # <<<<<<<<<<<<<<
- *     cdef __Pyx_StructField *field
- *     cdef __pyx_typeinfo_string fmt
- */
-
-static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
-  __Pyx_StructField *__pyx_v_field;
-  struct __pyx_typeinfo_string __pyx_v_fmt;
-  PyObject *__pyx_v_part = 0;
-  PyObject *__pyx_v_result = 0;
-  PyObject *__pyx_v_alignment = NULL;
-  PyObject *__pyx_v_parts = NULL;
-  PyObject *__pyx_v_extents = NULL;
-  int __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_StructField *__pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  int __pyx_t_9;
-  int __pyx_t_10;
-  __Pyx_RefNannySetupContext("format_from_typeinfo", 0);
-
-  /* "BufferFormatFromTypeInfo":1465
- *     cdef bytes part, result
- * 
- *     if type.typegroup == 'S':             # <<<<<<<<<<<<<<
- *         assert type.fields != NULL and type.fields.type != NULL
- * 
- */
-  __pyx_t_1 = ((__pyx_v_type->typegroup == 'S') != 0);
-  if (__pyx_t_1) {
-
-    /* "BufferFormatFromTypeInfo":1466
- * 
- *     if type.typegroup == 'S':
- *         assert type.fields != NULL and type.fields.type != NULL             # <<<<<<<<<<<<<<
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:
- */
-    #ifndef CYTHON_WITHOUT_ASSERTIONS
-    if (unlikely(!Py_OptimizeFlag)) {
-      __pyx_t_2 = ((__pyx_v_type->fields != NULL) != 0);
-      if (__pyx_t_2) {
-      } else {
-        __pyx_t_1 = __pyx_t_2;
-        goto __pyx_L4_bool_binop_done;
-      }
-      __pyx_t_2 = ((__pyx_v_type->fields->type != NULL) != 0);
-      __pyx_t_1 = __pyx_t_2;
-      __pyx_L4_bool_binop_done:;
-      if (unlikely(!__pyx_t_1)) {
-        PyErr_SetNone(PyExc_AssertionError);
-        __PYX_ERR(1, 1466, __pyx_L1_error)
-      }
-    }
-    #endif
-
-    /* "BufferFormatFromTypeInfo":1468
- *         assert type.fields != NULL and type.fields.type != NULL
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:             # <<<<<<<<<<<<<<
- *             alignment = b'^'
- *         else:
- */
-    __pyx_t_1 = ((__pyx_v_type->flags & __PYX_BUF_FLAGS_PACKED_STRUCT) != 0);
-    if (__pyx_t_1) {
-
-      /* "BufferFormatFromTypeInfo":1469
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:
- *             alignment = b'^'             # <<<<<<<<<<<<<<
- *         else:
- *             alignment = b''
- */
-      __Pyx_INCREF(__pyx_kp_b__23);
-      __pyx_v_alignment = __pyx_kp_b__23;
-
-      /* "BufferFormatFromTypeInfo":1468
- *         assert type.fields != NULL and type.fields.type != NULL
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:             # <<<<<<<<<<<<<<
- *             alignment = b'^'
- *         else:
- */
-      goto __pyx_L6;
-    }
-
-    /* "BufferFormatFromTypeInfo":1471
- *             alignment = b'^'
- *         else:
- *             alignment = b''             # <<<<<<<<<<<<<<
- * 
- *         parts = [b"T{"]
- */
-    /*else*/ {
-      __Pyx_INCREF(__pyx_kp_b__24);
-      __pyx_v_alignment = __pyx_kp_b__24;
-    }
-    __pyx_L6:;
-
-    /* "BufferFormatFromTypeInfo":1473
- *             alignment = b''
- * 
- *         parts = [b"T{"]             # <<<<<<<<<<<<<<
- *         field = type.fields
- * 
- */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1473, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_kp_b_T);
-    __Pyx_GIVEREF(__pyx_kp_b_T);
-    PyList_SET_ITEM(__pyx_t_3, 0, __pyx_kp_b_T);
-    __pyx_v_parts = ((PyObject*)__pyx_t_3);
-    __pyx_t_3 = 0;
-
-    /* "BufferFormatFromTypeInfo":1474
- * 
- *         parts = [b"T{"]
- *         field = type.fields             # <<<<<<<<<<<<<<
- * 
- *         while field.type:
- */
-    __pyx_t_4 = __pyx_v_type->fields;
-    __pyx_v_field = __pyx_t_4;
-
-    /* "BufferFormatFromTypeInfo":1476
- *         field = type.fields
- * 
- *         while field.type:             # <<<<<<<<<<<<<<
- *             part = format_from_typeinfo(field.type)
- *             parts.append(part + b':' + field.name + b':')
- */
-    while (1) {
-      __pyx_t_1 = (__pyx_v_field->type != 0);
-      if (!__pyx_t_1) break;
-
-      /* "BufferFormatFromTypeInfo":1477
- * 
- *         while field.type:
- *             part = format_from_typeinfo(field.type)             # <<<<<<<<<<<<<<
- *             parts.append(part + b':' + field.name + b':')
- *             field += 1
- */
-      __pyx_t_3 = __pyx_format_from_typeinfo(__pyx_v_field->type); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1477, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_XDECREF_SET(__pyx_v_part, ((PyObject*)__pyx_t_3));
-      __pyx_t_3 = 0;
-
-      /* "BufferFormatFromTypeInfo":1478
- *         while field.type:
- *             part = format_from_typeinfo(field.type)
- *             parts.append(part + b':' + field.name + b':')             # <<<<<<<<<<<<<<
- *             field += 1
- * 
- */
-      __pyx_t_3 = PyNumber_Add(__pyx_v_part, __pyx_kp_b__25); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1478, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_field->name); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 1478, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyNumber_Add(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 1478, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_kp_b__25); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 1478, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_parts, __pyx_t_5); if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(1, 1478, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-      /* "BufferFormatFromTypeInfo":1479
- *             part = format_from_typeinfo(field.type)
- *             parts.append(part + b':' + field.name + b':')
- *             field += 1             # <<<<<<<<<<<<<<
- * 
- *         result = alignment.join(parts) + b'}'
- */
-      __pyx_v_field = (__pyx_v_field + 1);
-    }
-
-    /* "BufferFormatFromTypeInfo":1481
- *             field += 1
- * 
- *         result = alignment.join(parts) + b'}'             # <<<<<<<<<<<<<<
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)
- */
-    __pyx_t_5 = __Pyx_PyBytes_Join(__pyx_v_alignment, __pyx_v_parts); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 1481, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_kp_b__26); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 1481, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (!(likely(PyBytes_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(1, 1481, __pyx_L1_error)
-    __pyx_v_result = ((PyObject*)__pyx_t_6);
-    __pyx_t_6 = 0;
-
-    /* "BufferFormatFromTypeInfo":1465
- *     cdef bytes part, result
- * 
- *     if type.typegroup == 'S':             # <<<<<<<<<<<<<<
- *         assert type.fields != NULL and type.fields.type != NULL
- * 
- */
-    goto __pyx_L3;
-  }
-
-  /* "BufferFormatFromTypeInfo":1483
- *         result = alignment.join(parts) + b'}'
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)             # <<<<<<<<<<<<<<
- *         if type.arraysize[0]:
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- */
-  /*else*/ {
-    __pyx_v_fmt = __Pyx_TypeInfoToFormat(__pyx_v_type);
-
-    /* "BufferFormatFromTypeInfo":1484
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)
- *         if type.arraysize[0]:             # <<<<<<<<<<<<<<
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- */
-    __pyx_t_1 = ((__pyx_v_type->arraysize[0]) != 0);
-    if (__pyx_t_1) {
-
-      /* "BufferFormatFromTypeInfo":1485
- *         fmt = __Pyx_TypeInfoToFormat(type)
- *         if type.arraysize[0]:
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]             # <<<<<<<<<<<<<<
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- *         else:
- */
-      __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 1485, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_8 = __pyx_v_type->ndim;
-      __pyx_t_9 = __pyx_t_8;
-      for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
-        __pyx_v_i = __pyx_t_10;
-        __pyx_t_5 = __Pyx_PyInt_FromSize_t((__pyx_v_type->arraysize[__pyx_v_i])); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 1485, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_3 = __Pyx_PyObject_Unicode(__pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1485, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_3))) __PYX_ERR(1, 1485, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      }
-      __pyx_v_extents = ((PyObject*)__pyx_t_6);
-      __pyx_t_6 = 0;
-
-      /* "BufferFormatFromTypeInfo":1486
- *         if type.arraysize[0]:
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string             # <<<<<<<<<<<<<<
- *         else:
- *             result = fmt.string
- */
-      __pyx_t_6 = PyUnicode_Join(__pyx_kp_u__27, __pyx_v_extents); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 1486, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_s_2, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1486, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyUnicode_AsASCIIString(((PyObject*)__pyx_t_3)); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 1486, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = __Pyx_PyObject_FromString(__pyx_v_fmt.string); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1486, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 1486, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (!(likely(PyBytes_CheckExact(__pyx_t_5))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_5)->tp_name), 0))) __PYX_ERR(1, 1486, __pyx_L1_error)
-      __pyx_v_result = ((PyObject*)__pyx_t_5);
-      __pyx_t_5 = 0;
-
-      /* "BufferFormatFromTypeInfo":1484
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)
- *         if type.arraysize[0]:             # <<<<<<<<<<<<<<
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- */
-      goto __pyx_L9;
-    }
-
-    /* "BufferFormatFromTypeInfo":1488
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- *         else:
- *             result = fmt.string             # <<<<<<<<<<<<<<
- * 
- *     return result
- */
-    /*else*/ {
-      __pyx_t_5 = __Pyx_PyObject_FromString(__pyx_v_fmt.string); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 1488, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_v_result = ((PyObject*)__pyx_t_5);
-      __pyx_t_5 = 0;
-    }
-    __pyx_L9:;
-  }
-  __pyx_L3:;
-
-  /* "BufferFormatFromTypeInfo":1490
- *             result = fmt.string
- * 
- *     return result             # <<<<<<<<<<<<<<
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_result);
-  __pyx_r = __pyx_v_result;
-  goto __pyx_L0;
-
-  /* "BufferFormatFromTypeInfo":1460
- * 
- * @cname('__pyx_format_from_typeinfo')
- * cdef bytes format_from_typeinfo(__Pyx_TypeInfo *type):             # <<<<<<<<<<<<<<
- *     cdef __Pyx_StructField *field
- *     cdef __pyx_typeinfo_string fmt
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("BufferFormatFromTypeInfo.format_from_typeinfo", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_part);
-  __Pyx_XDECREF(__pyx_v_result);
-  __Pyx_XDECREF(__pyx_v_alignment);
-  __Pyx_XDECREF(__pyx_v_parts);
-  __Pyx_XDECREF(__pyx_v_extents);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
 static struct __pyx_vtabstruct_array __pyx_vtable_array;
 
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k) {
@@ -17439,23 +17015,6 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_b_, __pyx_k_, sizeof(__pyx_k_), 0, 0, 0, 0},
-  {&__pyx_kp_b_0m, __pyx_k_0m, sizeof(__pyx_k_0m), 0, 0, 0, 0},
-  {&__pyx_kp_b_30m, __pyx_k_30m, sizeof(__pyx_k_30m), 0, 0, 0, 0},
-  {&__pyx_kp_b_31m, __pyx_k_31m, sizeof(__pyx_k_31m), 0, 0, 0, 0},
-  {&__pyx_kp_b_32m, __pyx_k_32m, sizeof(__pyx_k_32m), 0, 0, 0, 0},
-  {&__pyx_kp_b_33m, __pyx_k_33m, sizeof(__pyx_k_33m), 0, 0, 0, 0},
-  {&__pyx_kp_b_34m, __pyx_k_34m, sizeof(__pyx_k_34m), 0, 0, 0, 0},
-  {&__pyx_kp_b_35m, __pyx_k_35m, sizeof(__pyx_k_35m), 0, 0, 0, 0},
-  {&__pyx_kp_b_36m, __pyx_k_36m, sizeof(__pyx_k_36m), 0, 0, 0, 0},
-  {&__pyx_kp_b_37m, __pyx_k_37m, sizeof(__pyx_k_37m), 0, 0, 0, 0},
-  {&__pyx_kp_b_90m, __pyx_k_90m, sizeof(__pyx_k_90m), 0, 0, 0, 0},
-  {&__pyx_kp_b_91m, __pyx_k_91m, sizeof(__pyx_k_91m), 0, 0, 0, 0},
-  {&__pyx_kp_b_92m, __pyx_k_92m, sizeof(__pyx_k_92m), 0, 0, 0, 0},
-  {&__pyx_kp_b_93m, __pyx_k_93m, sizeof(__pyx_k_93m), 0, 0, 0, 0},
-  {&__pyx_kp_b_94m, __pyx_k_94m, sizeof(__pyx_k_94m), 0, 0, 0, 0},
-  {&__pyx_kp_b_95m, __pyx_k_95m, sizeof(__pyx_k_95m), 0, 0, 0, 0},
-  {&__pyx_kp_b_96m, __pyx_k_96m, sizeof(__pyx_k_96m), 0, 0, 0, 0},
-  {&__pyx_kp_b_97m, __pyx_k_97m, sizeof(__pyx_k_97m), 0, 0, 0, 0},
   {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
   {&__pyx_kp_s_Buffer_view_does_not_expose_stri, __pyx_k_Buffer_view_does_not_expose_stri, sizeof(__pyx_k_Buffer_view_does_not_expose_stri), 0, 0, 1, 0},
   {&__pyx_kp_s_Can_only_create_a_buffer_that_is, __pyx_k_Can_only_create_a_buffer_that_is, sizeof(__pyx_k_Can_only_create_a_buffer_that_is), 0, 0, 1, 0},
@@ -17470,24 +17029,34 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Indirect_dimensions_not_supporte, __pyx_k_Indirect_dimensions_not_supporte, sizeof(__pyx_k_Indirect_dimensions_not_supporte), 0, 0, 1, 0},
   {&__pyx_kp_s_Invalid_mode_expected_c_or_fortr, __pyx_k_Invalid_mode_expected_c_or_fortr, sizeof(__pyx_k_Invalid_mode_expected_c_or_fortr), 0, 0, 1, 0},
   {&__pyx_kp_s_Invalid_shape_in_axis_d_d, __pyx_k_Invalid_shape_in_axis_d_d, sizeof(__pyx_k_Invalid_shape_in_axis_d_d), 0, 0, 1, 0},
+  {&__pyx_n_s_KS_BLK, __pyx_k_KS_BLK, sizeof(__pyx_k_KS_BLK), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_BLK_L, __pyx_k_KS_BLK_L, sizeof(__pyx_k_KS_BLK_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_BLU, __pyx_k_KS_BLU, sizeof(__pyx_k_KS_BLU), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_BLU_L, __pyx_k_KS_BLU_L, sizeof(__pyx_k_KS_BLU_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_CYN, __pyx_k_KS_CYN, sizeof(__pyx_k_KS_CYN), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_CYN_L, __pyx_k_KS_CYN_L, sizeof(__pyx_k_KS_CYN_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_GRN, __pyx_k_KS_GRN, sizeof(__pyx_k_KS_GRN), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_GRN_L, __pyx_k_KS_GRN_L, sizeof(__pyx_k_KS_GRN_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_MAG, __pyx_k_KS_MAG, sizeof(__pyx_k_KS_MAG), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_MAG_L, __pyx_k_KS_MAG_L, sizeof(__pyx_k_KS_MAG_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_RED, __pyx_k_KS_RED, sizeof(__pyx_k_KS_RED), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_RED_L, __pyx_k_KS_RED_L, sizeof(__pyx_k_KS_RED_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_RES, __pyx_k_KS_RES, sizeof(__pyx_k_KS_RES), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_WHT, __pyx_k_KS_WHT, sizeof(__pyx_k_KS_WHT), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_WHT_L, __pyx_k_KS_WHT_L, sizeof(__pyx_k_KS_WHT_L), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_YEL, __pyx_k_KS_YEL, sizeof(__pyx_k_KS_YEL), 0, 0, 1, 1},
+  {&__pyx_n_s_KS_YEL_L, __pyx_k_KS_YEL_L, sizeof(__pyx_k_KS_YEL_L), 0, 0, 1, 1},
   {&__pyx_n_s_MemoryError, __pyx_k_MemoryError, sizeof(__pyx_k_MemoryError), 0, 0, 1, 1},
   {&__pyx_kp_s_MemoryView_of_r_at_0x_x, __pyx_k_MemoryView_of_r_at_0x_x, sizeof(__pyx_k_MemoryView_of_r_at_0x_x), 0, 0, 1, 0},
   {&__pyx_kp_s_MemoryView_of_r_object, __pyx_k_MemoryView_of_r_object, sizeof(__pyx_k_MemoryView_of_r_object), 0, 0, 1, 0},
   {&__pyx_n_b_O, __pyx_k_O, sizeof(__pyx_k_O), 0, 0, 0, 1},
   {&__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_k_Out_of_bounds_on_buffer_access_a, sizeof(__pyx_k_Out_of_bounds_on_buffer_access_a), 0, 0, 1, 0},
   {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
-  {&__pyx_kp_b_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 0, 0},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
   {&__pyx_kp_b__2, __pyx_k__2, sizeof(__pyx_k__2), 0, 0, 0, 0},
-  {&__pyx_kp_b__23, __pyx_k__23, sizeof(__pyx_k__23), 0, 0, 0, 0},
-  {&__pyx_kp_b__24, __pyx_k__24, sizeof(__pyx_k__24), 0, 0, 0, 0},
-  {&__pyx_kp_b__25, __pyx_k__25, sizeof(__pyx_k__25), 0, 0, 0, 0},
-  {&__pyx_kp_b__26, __pyx_k__26, sizeof(__pyx_k__26), 0, 0, 0, 0},
-  {&__pyx_kp_u__27, __pyx_k__27, sizeof(__pyx_k__27), 0, 1, 0, 0},
-  {&__pyx_kp_b__28, __pyx_k__28, sizeof(__pyx_k__28), 0, 0, 0, 0},
   {&__pyx_kp_b__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 0, 0, 0},
   {&__pyx_kp_b__4, __pyx_k__4, sizeof(__pyx_k__4), 0, 0, 0, 0},
   {&__pyx_kp_b_a, __pyx_k_a, sizeof(__pyx_k_a), 0, 0, 0, 0},
@@ -17518,7 +17087,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
-  {&__pyx_n_s_join, __pyx_k_join, sizeof(__pyx_k_join), 0, 0, 1, 1},
   {&__pyx_n_s_lo, __pyx_k_lo, sizeof(__pyx_k_lo), 0, 0, 1, 1},
   {&__pyx_n_s_lo_lvl, __pyx_k_lo_lvl, sizeof(__pyx_k_lo_lvl), 0, 0, 1, 1},
   {&__pyx_n_s_lower, __pyx_k_lower, sizeof(__pyx_k_lower), 0, 0, 1, 1},
@@ -17549,7 +17117,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce_cython, __pyx_k_reduce_cython, sizeof(__pyx_k_reduce_cython), 0, 0, 1, 1},
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
   {&__pyx_kp_b_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 0, 0, 0},
-  {&__pyx_kp_u_s_2, __pyx_k_s_2, sizeof(__pyx_k_s_2), 0, 1, 0, 0},
   {&__pyx_n_s_scrabble_settings, __pyx_k_scrabble_settings, sizeof(__pyx_k_scrabble_settings), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
@@ -17789,9 +17356,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(1, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
 
   /* "View.MemoryView":287
  * 
@@ -17800,9 +17367,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(1, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
+  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__24);
+  __Pyx_GIVEREF(__pyx_tuple__24);
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -17811,9 +17378,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(1, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
+  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__25);
+  __Pyx_GIVEREF(__pyx_tuple__25);
 
   /* "View.MemoryView":291
  * 
@@ -17822,9 +17389,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(1, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
+  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(1, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
 
   /* "View.MemoryView":292
  * 
@@ -17833,19 +17400,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__33 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(1, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__33);
-  __Pyx_GIVEREF(__pyx_tuple__33);
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__27);
+  __Pyx_GIVEREF(__pyx_tuple__27);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__34 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__34);
-  __Pyx_GIVEREF(__pyx_tuple__34);
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__28 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -17878,23 +17445,6 @@ static int __Pyx_modinit_global_init_code(void) {
   /*--- Global init code ---*/
   __pyx_v_8scrabble_6logger_lo = Py_None; Py_INCREF(Py_None);
   __pyx_v_8scrabble_6logger_DEFAULT_LOGLEVEL = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_res = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_blk = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_red = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_grn = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_yel = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_blu = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_mag = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_cyn = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_wht = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_blk_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_red_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_grn_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_yel_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_blu_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_mag_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_cyn_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  __pyx_v_8scrabble_6logger__ks_wht_l = ((PyObject*)Py_None); Py_INCREF(Py_None);
   generic = Py_None; Py_INCREF(Py_None);
   strided = Py_None; Py_INCREF(Py_None);
   indirect = Py_None; Py_INCREF(Py_None);
@@ -17908,6 +17458,23 @@ static int __Pyx_modinit_variable_export_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_export_code", 0);
   /*--- Variable export code ---*/
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_RES, (void *)&__pyx_v_8scrabble_6logger_KS_RES, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_BLK, (void *)&__pyx_v_8scrabble_6logger_KS_BLK, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_RED, (void *)&__pyx_v_8scrabble_6logger_KS_RED, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_GRN, (void *)&__pyx_v_8scrabble_6logger_KS_GRN, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_YEL, (void *)&__pyx_v_8scrabble_6logger_KS_YEL, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_BLU, (void *)&__pyx_v_8scrabble_6logger_KS_BLU, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_MAG, (void *)&__pyx_v_8scrabble_6logger_KS_MAG, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_CYN, (void *)&__pyx_v_8scrabble_6logger_KS_CYN, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_WHT, (void *)&__pyx_v_8scrabble_6logger_KS_WHT, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_BLK_L, (void *)&__pyx_v_8scrabble_6logger_KS_BLK_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_RED_L, (void *)&__pyx_v_8scrabble_6logger_KS_RED_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_GRN_L, (void *)&__pyx_v_8scrabble_6logger_KS_GRN_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_YEL_L, (void *)&__pyx_v_8scrabble_6logger_KS_YEL_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_BLU_L, (void *)&__pyx_v_8scrabble_6logger_KS_BLU_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_MAG_L, (void *)&__pyx_v_8scrabble_6logger_KS_MAG_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_CYN_L, (void *)&__pyx_v_8scrabble_6logger_KS_CYN_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportVoidPtr(__pyx_n_s_KS_WHT_L, (void *)&__pyx_v_8scrabble_6logger_KS_WHT_L, "__pyx_t_8scrabble_6logger_cchrp") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportVoidPtr(__pyx_n_s_lvl_alias, (void *)&__pyx_v_8scrabble_6logger_lvl_alias, "int [0x7F]") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportVoidPtr(__pyx_n_s_lo, (void *)&__pyx_v_8scrabble_6logger_lo, "PyObject *") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ExportVoidPtr(__pyx_n_s_lo_lvl, (void *)&__pyx_v_8scrabble_6logger_lo_lvl, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -18115,22 +17682,8 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_logger(PyObject *__pyx_pyinit_modu
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  __pyx_t_8scrabble_6logger_cchrp __pyx_t_4;
-  struct __pyx_array_obj *__pyx_t_5 = NULL;
-  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
-  Py_UCS4 __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  static PyThread_type_lock __pyx_t_19[8];
+  Py_UCS4 __pyx_t_4;
+  static PyThread_type_lock __pyx_t_5[8];
   __Pyx_RefNannyDeclarations
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
@@ -18260,664 +17813,273 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "scrabble/logger.pyx":45
- * DEF K_WHT_L = 97
- * 
- * cdef bytes _ks_res = _ks + b'0m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_blk = _ks + b'30m'
- * cdef bytes _ks_red = _ks + b'31m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_0m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 45, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_res);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_res, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":46
- * 
- * cdef bytes _ks_res = _ks + b'0m'
- * cdef bytes _ks_blk = _ks + b'30m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_red = _ks + b'31m'
- * cdef bytes _ks_grn = _ks + b'32m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_30m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 46, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_blk);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_blk, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":47
- * cdef bytes _ks_res = _ks + b'0m'
- * cdef bytes _ks_blk = _ks + b'30m'
- * cdef bytes _ks_red = _ks + b'31m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_grn = _ks + b'32m'
- * cdef bytes _ks_yel = _ks + b'33m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_31m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_red);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_red, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":48
- * cdef bytes _ks_blk = _ks + b'30m'
- * cdef bytes _ks_red = _ks + b'31m'
- * cdef bytes _ks_grn = _ks + b'32m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_yel = _ks + b'33m'
- * cdef bytes _ks_blu = _ks + b'34m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_32m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_grn);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_grn, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":49
- * cdef bytes _ks_red = _ks + b'31m'
- * cdef bytes _ks_grn = _ks + b'32m'
- * cdef bytes _ks_yel = _ks + b'33m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_blu = _ks + b'34m'
- * cdef bytes _ks_mag = _ks + b'35m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_33m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_yel);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_yel, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":50
- * cdef bytes _ks_grn = _ks + b'32m'
- * cdef bytes _ks_yel = _ks + b'33m'
- * cdef bytes _ks_blu = _ks + b'34m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_mag = _ks + b'35m'
- * cdef bytes _ks_cyn = _ks + b'36m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_34m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_blu);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_blu, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":51
- * cdef bytes _ks_yel = _ks + b'33m'
- * cdef bytes _ks_blu = _ks + b'34m'
- * cdef bytes _ks_mag = _ks + b'35m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_cyn = _ks + b'36m'
- * cdef bytes _ks_wht = _ks + b'37m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_35m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 51, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_mag);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_mag, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":52
- * cdef bytes _ks_blu = _ks + b'34m'
- * cdef bytes _ks_mag = _ks + b'35m'
- * cdef bytes _ks_cyn = _ks + b'36m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_wht = _ks + b'37m'
- * cdef bytes _ks_blk_l = _ks + b'90m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_36m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 52, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_cyn);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_cyn, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":53
- * cdef bytes _ks_mag = _ks + b'35m'
- * cdef bytes _ks_cyn = _ks + b'36m'
- * cdef bytes _ks_wht = _ks + b'37m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_blk_l = _ks + b'90m'
- * cdef bytes _ks_red_l = _ks + b'91m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_37m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_wht);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_wht, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":54
- * cdef bytes _ks_cyn = _ks + b'36m'
- * cdef bytes _ks_wht = _ks + b'37m'
- * cdef bytes _ks_blk_l = _ks + b'90m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_red_l = _ks + b'91m'
- * cdef bytes _ks_grn_l = _ks + b'92m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_90m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_blk_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_blk_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":55
- * cdef bytes _ks_wht = _ks + b'37m'
- * cdef bytes _ks_blk_l = _ks + b'90m'
- * cdef bytes _ks_red_l = _ks + b'91m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_grn_l = _ks + b'92m'
- * cdef bytes _ks_yel_l = _ks + b'93m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_91m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_red_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_red_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":56
- * cdef bytes _ks_blk_l = _ks + b'90m'
- * cdef bytes _ks_red_l = _ks + b'91m'
- * cdef bytes _ks_grn_l = _ks + b'92m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_yel_l = _ks + b'93m'
- * cdef bytes _ks_blu_l = _ks + b'94m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_92m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_grn_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_grn_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":57
- * cdef bytes _ks_red_l = _ks + b'91m'
- * cdef bytes _ks_grn_l = _ks + b'92m'
- * cdef bytes _ks_yel_l = _ks + b'93m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_blu_l = _ks + b'94m'
- * cdef bytes _ks_mag_l = _ks + b'95m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_93m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_yel_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_yel_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":58
- * cdef bytes _ks_grn_l = _ks + b'92m'
- * cdef bytes _ks_yel_l = _ks + b'93m'
- * cdef bytes _ks_blu_l = _ks + b'94m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_mag_l = _ks + b'95m'
- * cdef bytes _ks_cyn_l = _ks + b'96m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_94m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_blu_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_blu_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":59
- * cdef bytes _ks_yel_l = _ks + b'93m'
- * cdef bytes _ks_blu_l = _ks + b'94m'
- * cdef bytes _ks_mag_l = _ks + b'95m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_cyn_l = _ks + b'96m'
- * cdef bytes _ks_wht_l = _ks + b'97m'
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_95m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_mag_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_mag_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":60
- * cdef bytes _ks_blu_l = _ks + b'94m'
- * cdef bytes _ks_mag_l = _ks + b'95m'
- * cdef bytes _ks_cyn_l = _ks + b'96m'             # <<<<<<<<<<<<<<
- * cdef bytes _ks_wht_l = _ks + b'97m'
- * 
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_96m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_cyn_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_cyn_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":61
- * cdef bytes _ks_mag_l = _ks + b'95m'
- * cdef bytes _ks_cyn_l = _ks + b'96m'
- * cdef bytes _ks_wht_l = _ks + b'97m'             # <<<<<<<<<<<<<<
- * 
- * cdef cchrp KS_RES = _ks_res
- */
-  __pyx_t_2 = PyNumber_Add(__pyx_kp_b__28, __pyx_kp_b_97m); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_XGOTREF(__pyx_v_8scrabble_6logger__ks_wht_l);
-  __Pyx_DECREF_SET(__pyx_v_8scrabble_6logger__ks_wht_l, ((PyObject*)__pyx_t_2));
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "scrabble/logger.pyx":63
- * cdef bytes _ks_wht_l = _ks + b'97m'
- * 
- * cdef cchrp KS_RES = _ks_res             # <<<<<<<<<<<<<<
- * cdef cchrp KS_BLK = _ks_blk
- * cdef cchrp KS_RED = _ks_red
- */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_res == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 63, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_res); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 63, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_RES = __pyx_t_4;
-
-  /* "scrabble/logger.pyx":64
- * 
- * cdef cchrp KS_RES = _ks_res
- * cdef cchrp KS_BLK = _ks_blk             # <<<<<<<<<<<<<<
- * cdef cchrp KS_RED = _ks_red
- * cdef cchrp KS_GRN = _ks_grn
- */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_blk == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 64, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_blk); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_BLK = __pyx_t_4;
-
-  /* "scrabble/logger.pyx":65
- * cdef cchrp KS_RES = _ks_res
- * cdef cchrp KS_BLK = _ks_blk
- * cdef cchrp KS_RED = _ks_red             # <<<<<<<<<<<<<<
- * cdef cchrp KS_GRN = _ks_grn
- * cdef cchrp KS_YEL = _ks_yel
- */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_red == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 65, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_red); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_RED = __pyx_t_4;
-
   /* "scrabble/logger.pyx":66
- * cdef cchrp KS_BLK = _ks_blk
- * cdef cchrp KS_RED = _ks_red
- * cdef cchrp KS_GRN = _ks_grn             # <<<<<<<<<<<<<<
- * cdef cchrp KS_YEL = _ks_yel
- * cdef cchrp KS_BLU = _ks_blu
+ * DEF _ks_wht_l = _ks + b'97m'
+ * 
+ * KS_RES = _ks_res             # <<<<<<<<<<<<<<
+ * KS_BLK = _ks_blk
+ * KS_RED = _ks_red
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_grn == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 66, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_grn); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_GRN = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_RES = ((__pyx_t_8scrabble_6logger_cchrp)"\033[0m");
 
   /* "scrabble/logger.pyx":67
- * cdef cchrp KS_RED = _ks_red
- * cdef cchrp KS_GRN = _ks_grn
- * cdef cchrp KS_YEL = _ks_yel             # <<<<<<<<<<<<<<
- * cdef cchrp KS_BLU = _ks_blu
- * cdef cchrp KS_MAG = _ks_mag
+ * 
+ * KS_RES = _ks_res
+ * KS_BLK = _ks_blk             # <<<<<<<<<<<<<<
+ * KS_RED = _ks_red
+ * KS_GRN = _ks_grn
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_yel == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 67, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_yel); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_YEL = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_BLK = ((__pyx_t_8scrabble_6logger_cchrp)"\033[30m");
 
   /* "scrabble/logger.pyx":68
- * cdef cchrp KS_GRN = _ks_grn
- * cdef cchrp KS_YEL = _ks_yel
- * cdef cchrp KS_BLU = _ks_blu             # <<<<<<<<<<<<<<
- * cdef cchrp KS_MAG = _ks_mag
- * cdef cchrp KS_CYN = _ks_cyn
+ * KS_RES = _ks_res
+ * KS_BLK = _ks_blk
+ * KS_RED = _ks_red             # <<<<<<<<<<<<<<
+ * KS_GRN = _ks_grn
+ * KS_YEL = _ks_yel
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_blu == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 68, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_blu); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_BLU = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_RED = ((__pyx_t_8scrabble_6logger_cchrp)"\033[31m");
 
   /* "scrabble/logger.pyx":69
- * cdef cchrp KS_YEL = _ks_yel
- * cdef cchrp KS_BLU = _ks_blu
- * cdef cchrp KS_MAG = _ks_mag             # <<<<<<<<<<<<<<
- * cdef cchrp KS_CYN = _ks_cyn
- * cdef cchrp KS_WHT = _ks_wht
+ * KS_BLK = _ks_blk
+ * KS_RED = _ks_red
+ * KS_GRN = _ks_grn             # <<<<<<<<<<<<<<
+ * KS_YEL = _ks_yel
+ * KS_BLU = _ks_blu
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_mag == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 69, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_mag); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_MAG = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_GRN = ((__pyx_t_8scrabble_6logger_cchrp)"\033[32m");
 
   /* "scrabble/logger.pyx":70
- * cdef cchrp KS_BLU = _ks_blu
- * cdef cchrp KS_MAG = _ks_mag
- * cdef cchrp KS_CYN = _ks_cyn             # <<<<<<<<<<<<<<
- * cdef cchrp KS_WHT = _ks_wht
- * cdef cchrp KS_BLK_L = _ks_blk_l
+ * KS_RED = _ks_red
+ * KS_GRN = _ks_grn
+ * KS_YEL = _ks_yel             # <<<<<<<<<<<<<<
+ * KS_BLU = _ks_blu
+ * KS_MAG = _ks_mag
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_cyn == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 70, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_cyn); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_CYN = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_YEL = ((__pyx_t_8scrabble_6logger_cchrp)"\033[33m");
 
   /* "scrabble/logger.pyx":71
- * cdef cchrp KS_MAG = _ks_mag
- * cdef cchrp KS_CYN = _ks_cyn
- * cdef cchrp KS_WHT = _ks_wht             # <<<<<<<<<<<<<<
- * cdef cchrp KS_BLK_L = _ks_blk_l
- * cdef cchrp KS_RED_L = _ks_red_l
+ * KS_GRN = _ks_grn
+ * KS_YEL = _ks_yel
+ * KS_BLU = _ks_blu             # <<<<<<<<<<<<<<
+ * KS_MAG = _ks_mag
+ * KS_CYN = _ks_cyn
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_wht == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 71, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_wht); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_WHT = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_BLU = ((__pyx_t_8scrabble_6logger_cchrp)"\033[34m");
 
   /* "scrabble/logger.pyx":72
- * cdef cchrp KS_CYN = _ks_cyn
- * cdef cchrp KS_WHT = _ks_wht
- * cdef cchrp KS_BLK_L = _ks_blk_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_RED_L = _ks_red_l
- * cdef cchrp KS_GRN_L = _ks_grn_l
+ * KS_YEL = _ks_yel
+ * KS_BLU = _ks_blu
+ * KS_MAG = _ks_mag             # <<<<<<<<<<<<<<
+ * KS_CYN = _ks_cyn
+ * KS_WHT = _ks_wht
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_blk_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 72, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_blk_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 72, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_BLK_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_MAG = ((__pyx_t_8scrabble_6logger_cchrp)"\033[35m");
 
   /* "scrabble/logger.pyx":73
- * cdef cchrp KS_WHT = _ks_wht
- * cdef cchrp KS_BLK_L = _ks_blk_l
- * cdef cchrp KS_RED_L = _ks_red_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_GRN_L = _ks_grn_l
- * cdef cchrp KS_YEL_L = _ks_yel_l
+ * KS_BLU = _ks_blu
+ * KS_MAG = _ks_mag
+ * KS_CYN = _ks_cyn             # <<<<<<<<<<<<<<
+ * KS_WHT = _ks_wht
+ * KS_BLK_L = _ks_blk_l
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_red_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 73, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_red_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_RED_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_CYN = ((__pyx_t_8scrabble_6logger_cchrp)"\033[36m");
 
   /* "scrabble/logger.pyx":74
- * cdef cchrp KS_BLK_L = _ks_blk_l
- * cdef cchrp KS_RED_L = _ks_red_l
- * cdef cchrp KS_GRN_L = _ks_grn_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_YEL_L = _ks_yel_l
- * cdef cchrp KS_BLU_L = _ks_blu_l
+ * KS_MAG = _ks_mag
+ * KS_CYN = _ks_cyn
+ * KS_WHT = _ks_wht             # <<<<<<<<<<<<<<
+ * KS_BLK_L = _ks_blk_l
+ * KS_RED_L = _ks_red_l
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_grn_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 74, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_grn_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_GRN_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_WHT = ((__pyx_t_8scrabble_6logger_cchrp)"\033[37m");
 
   /* "scrabble/logger.pyx":75
- * cdef cchrp KS_RED_L = _ks_red_l
- * cdef cchrp KS_GRN_L = _ks_grn_l
- * cdef cchrp KS_YEL_L = _ks_yel_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_BLU_L = _ks_blu_l
- * cdef cchrp KS_MAG_L = _ks_mag_l
+ * KS_CYN = _ks_cyn
+ * KS_WHT = _ks_wht
+ * KS_BLK_L = _ks_blk_l             # <<<<<<<<<<<<<<
+ * KS_RED_L = _ks_red_l
+ * KS_GRN_L = _ks_grn_l
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_yel_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 75, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_yel_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 75, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_YEL_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_BLK_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[90m");
 
   /* "scrabble/logger.pyx":76
- * cdef cchrp KS_GRN_L = _ks_grn_l
- * cdef cchrp KS_YEL_L = _ks_yel_l
- * cdef cchrp KS_BLU_L = _ks_blu_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_MAG_L = _ks_mag_l
- * cdef cchrp KS_CYN_L = _ks_cyn_l
+ * KS_WHT = _ks_wht
+ * KS_BLK_L = _ks_blk_l
+ * KS_RED_L = _ks_red_l             # <<<<<<<<<<<<<<
+ * KS_GRN_L = _ks_grn_l
+ * KS_YEL_L = _ks_yel_l
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_blu_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 76, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_blu_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_BLU_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_RED_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[91m");
 
   /* "scrabble/logger.pyx":77
- * cdef cchrp KS_YEL_L = _ks_yel_l
- * cdef cchrp KS_BLU_L = _ks_blu_l
- * cdef cchrp KS_MAG_L = _ks_mag_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_CYN_L = _ks_cyn_l
- * cdef cchrp KS_WHT_L = _ks_wht_l
+ * KS_BLK_L = _ks_blk_l
+ * KS_RED_L = _ks_red_l
+ * KS_GRN_L = _ks_grn_l             # <<<<<<<<<<<<<<
+ * KS_YEL_L = _ks_yel_l
+ * KS_BLU_L = _ks_blu_l
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_mag_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 77, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_mag_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_MAG_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_GRN_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[92m");
 
   /* "scrabble/logger.pyx":78
- * cdef cchrp KS_BLU_L = _ks_blu_l
- * cdef cchrp KS_MAG_L = _ks_mag_l
- * cdef cchrp KS_CYN_L = _ks_cyn_l             # <<<<<<<<<<<<<<
- * cdef cchrp KS_WHT_L = _ks_wht_l
- * 
+ * KS_RED_L = _ks_red_l
+ * KS_GRN_L = _ks_grn_l
+ * KS_YEL_L = _ks_yel_l             # <<<<<<<<<<<<<<
+ * KS_BLU_L = _ks_blu_l
+ * KS_MAG_L = _ks_mag_l
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_cyn_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 78, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_cyn_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_CYN_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_YEL_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[93m");
 
   /* "scrabble/logger.pyx":79
- * cdef cchrp KS_MAG_L = _ks_mag_l
- * cdef cchrp KS_CYN_L = _ks_cyn_l
- * cdef cchrp KS_WHT_L = _ks_wht_l             # <<<<<<<<<<<<<<
- * 
+ * KS_GRN_L = _ks_grn_l
+ * KS_YEL_L = _ks_yel_l
+ * KS_BLU_L = _ks_blu_l             # <<<<<<<<<<<<<<
+ * KS_MAG_L = _ks_mag_l
+ * KS_CYN_L = _ks_cyn_l
+ */
+  __pyx_v_8scrabble_6logger_KS_BLU_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[94m");
+
+  /* "scrabble/logger.pyx":80
+ * KS_YEL_L = _ks_yel_l
+ * KS_BLU_L = _ks_blu_l
+ * KS_MAG_L = _ks_mag_l             # <<<<<<<<<<<<<<
+ * KS_CYN_L = _ks_cyn_l
+ * KS_WHT_L = _ks_wht_l
+ */
+  __pyx_v_8scrabble_6logger_KS_MAG_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[95m");
+
+  /* "scrabble/logger.pyx":81
+ * KS_BLU_L = _ks_blu_l
+ * KS_MAG_L = _ks_mag_l
+ * KS_CYN_L = _ks_cyn_l             # <<<<<<<<<<<<<<
+ * KS_WHT_L = _ks_wht_l
  * 
  */
-  if (unlikely(__pyx_v_8scrabble_6logger__ks_wht_l == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 79, __pyx_L1_error)
-  }
-  __pyx_t_4 = __Pyx_PyBytes_AsString(__pyx_v_8scrabble_6logger__ks_wht_l); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L1_error)
-  __pyx_v_8scrabble_6logger_KS_WHT_L = __pyx_t_4;
+  __pyx_v_8scrabble_6logger_KS_CYN_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[96m");
 
-  /* "scrabble/logger.pyx":83
+  /* "scrabble/logger.pyx":82
+ * KS_MAG_L = _ks_mag_l
+ * KS_CYN_L = _ks_cyn_l
+ * KS_WHT_L = _ks_wht_l             # <<<<<<<<<<<<<<
  * 
  * cdef int lvl_alias[127]
- * cdef int[:] lvl_alias_v = lvl_alias             # <<<<<<<<<<<<<<
- * lvl_alias_v[:] = 0
- * lvl_alias_v[ord('x')] = 5
  */
-  __pyx_t_1 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_int);
-  __pyx_t_2 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)0x7F));
-  if (unlikely(!__pyx_t_1 || !__pyx_t_2 || !PyBytes_AsString(__pyx_t_1))) __PYX_ERR(0, 83, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = __pyx_array_new(__pyx_t_2, sizeof(int), PyBytes_AS_STRING(__pyx_t_1), (char *) "fortran", (char *) __pyx_v_8scrabble_6logger_lvl_alias);
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 83, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_int(((PyObject *)__pyx_t_5), PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 83, __pyx_L1_error)
-  __Pyx_DECREF(((PyObject *)__pyx_t_5)); __pyx_t_5 = 0;
-  __PYX_XDEC_MEMVIEW(&__pyx_v_8scrabble_6logger_lvl_alias_v, 1);
-  __pyx_v_8scrabble_6logger_lvl_alias_v = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "scrabble/logger.pyx":84
- * cdef int lvl_alias[127]
- * cdef int[:] lvl_alias_v = lvl_alias
- * lvl_alias_v[:] = 0             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('x')] = 5
- * lvl_alias_v[ord('d')] = 10
- */
-  {
-      int __pyx_temp_scalar = 0;
-      {
-          Py_ssize_t __pyx_temp_extent_0 = __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-          Py_ssize_t __pyx_temp_stride_0 = __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0];
-          char *__pyx_temp_pointer_0;
-          Py_ssize_t __pyx_temp_idx_0;
-          __pyx_temp_pointer_0 = __pyx_v_8scrabble_6logger_lvl_alias_v.data;
-          for (__pyx_temp_idx_0 = 0; __pyx_temp_idx_0 < __pyx_temp_extent_0; __pyx_temp_idx_0++) {
-            *((int *) __pyx_temp_pointer_0) = __pyx_temp_scalar;
-            __pyx_temp_pointer_0 += __pyx_temp_stride_0;
-          }
-      }
-  }
+  __pyx_v_8scrabble_6logger_KS_WHT_L = ((__pyx_t_8scrabble_6logger_cchrp)"\033[97m");
 
   /* "scrabble/logger.pyx":85
- * cdef int[:] lvl_alias_v = lvl_alias
- * lvl_alias_v[:] = 0
- * lvl_alias_v[ord('x')] = 5             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('d')] = 10
- * lvl_alias_v[ord('v')] = 15
+ * 
+ * cdef int lvl_alias[127]
+ * lvl_alias[ord('x')] = 5             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('d')] = 10
+ * lvl_alias[ord('v')] = 15
  */
-  __pyx_t_7 = 0x78;
-  if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_7 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 5;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x78]) = 5;
 
   /* "scrabble/logger.pyx":86
- * lvl_alias_v[:] = 0
- * lvl_alias_v[ord('x')] = 5
- * lvl_alias_v[ord('d')] = 10             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('v')] = 15
- * lvl_alias_v[ord('i')] = 20
+ * cdef int lvl_alias[127]
+ * lvl_alias[ord('x')] = 5
+ * lvl_alias[ord('d')] = 10             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('v')] = 15
+ * lvl_alias[ord('i')] = 20
  */
-  __pyx_t_8 = 0x64;
-  if (__pyx_t_8 < 0) __pyx_t_8 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_8 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 10;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x64]) = 10;
 
   /* "scrabble/logger.pyx":87
- * lvl_alias_v[ord('x')] = 5
- * lvl_alias_v[ord('d')] = 10
- * lvl_alias_v[ord('v')] = 15             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('i')] = 20
- * lvl_alias_v[ord('n')] = 25
+ * lvl_alias[ord('x')] = 5
+ * lvl_alias[ord('d')] = 10
+ * lvl_alias[ord('v')] = 15             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('i')] = 20
+ * lvl_alias[ord('n')] = 25
  */
-  __pyx_t_9 = 0x76;
-  if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_9 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 15;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x76]) = 15;
 
   /* "scrabble/logger.pyx":88
- * lvl_alias_v[ord('d')] = 10
- * lvl_alias_v[ord('v')] = 15
- * lvl_alias_v[ord('i')] = 20             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('n')] = 25
- * lvl_alias_v[ord('w')] = 30
+ * lvl_alias[ord('d')] = 10
+ * lvl_alias[ord('v')] = 15
+ * lvl_alias[ord('i')] = 20             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('n')] = 25
+ * lvl_alias[ord('w')] = 30
  */
-  __pyx_t_10 = 0x69;
-  if (__pyx_t_10 < 0) __pyx_t_10 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_10 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 20;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x69]) = 20;
 
   /* "scrabble/logger.pyx":89
- * lvl_alias_v[ord('v')] = 15
- * lvl_alias_v[ord('i')] = 20
- * lvl_alias_v[ord('n')] = 25             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('w')] = 30
- * lvl_alias_v[ord('s')] = 35
+ * lvl_alias[ord('v')] = 15
+ * lvl_alias[ord('i')] = 20
+ * lvl_alias[ord('n')] = 25             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('w')] = 30
+ * lvl_alias[ord('s')] = 35
  */
-  __pyx_t_11 = 0x6E;
-  if (__pyx_t_11 < 0) __pyx_t_11 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_11 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 25;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x6E]) = 25;
 
   /* "scrabble/logger.pyx":90
- * lvl_alias_v[ord('i')] = 20
- * lvl_alias_v[ord('n')] = 25
- * lvl_alias_v[ord('w')] = 30             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('s')] = 35
- * lvl_alias_v[ord('e')] = 40
+ * lvl_alias[ord('i')] = 20
+ * lvl_alias[ord('n')] = 25
+ * lvl_alias[ord('w')] = 30             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('s')] = 35
+ * lvl_alias[ord('e')] = 40
  */
-  __pyx_t_12 = 0x77;
-  if (__pyx_t_12 < 0) __pyx_t_12 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_12 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 30;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x77]) = 30;
 
   /* "scrabble/logger.pyx":91
- * lvl_alias_v[ord('n')] = 25
- * lvl_alias_v[ord('w')] = 30
- * lvl_alias_v[ord('s')] = 35             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('e')] = 40
- * lvl_alias_v[ord('c')] = 50
+ * lvl_alias[ord('n')] = 25
+ * lvl_alias[ord('w')] = 30
+ * lvl_alias[ord('s')] = 35             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('e')] = 40
+ * lvl_alias[ord('c')] = 50
  */
-  __pyx_t_13 = 0x73;
-  if (__pyx_t_13 < 0) __pyx_t_13 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_13 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 35;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x73]) = 35;
 
   /* "scrabble/logger.pyx":92
- * lvl_alias_v[ord('w')] = 30
- * lvl_alias_v[ord('s')] = 35
- * lvl_alias_v[ord('e')] = 40             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('c')] = 50
- * lvl_alias_v[ord('a')] = 60
+ * lvl_alias[ord('w')] = 30
+ * lvl_alias[ord('s')] = 35
+ * lvl_alias[ord('e')] = 40             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('c')] = 50
+ * lvl_alias[ord('a')] = 60
  */
-  __pyx_t_14 = 0x65;
-  if (__pyx_t_14 < 0) __pyx_t_14 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_14 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 40;
+  (__pyx_v_8scrabble_6logger_lvl_alias[0x65]) = 40;
 
   /* "scrabble/logger.pyx":93
- * lvl_alias_v[ord('s')] = 35
- * lvl_alias_v[ord('e')] = 40
- * lvl_alias_v[ord('c')] = 50             # <<<<<<<<<<<<<<
- * lvl_alias_v[ord('a')] = 60
+ * lvl_alias[ord('s')] = 35
+ * lvl_alias[ord('e')] = 40
+ * lvl_alias[ord('c')] = 50             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('a')] = 60
  * 
  */
-  __pyx_t_15 = 99;
-  if (__pyx_t_15 < 0) __pyx_t_15 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_15 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 50;
+  (__pyx_v_8scrabble_6logger_lvl_alias[99]) = 50;
 
   /* "scrabble/logger.pyx":94
- * lvl_alias_v[ord('e')] = 40
- * lvl_alias_v[ord('c')] = 50
- * lvl_alias_v[ord('a')] = 60             # <<<<<<<<<<<<<<
+ * lvl_alias[ord('e')] = 40
+ * lvl_alias[ord('c')] = 50
+ * lvl_alias[ord('a')] = 60             # <<<<<<<<<<<<<<
  * 
- * cdef char def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]
- */
-  __pyx_t_16 = 97;
-  if (__pyx_t_16 < 0) __pyx_t_16 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  *((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_16 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )) = 60;
-
-  /* "scrabble/logger.pyx":96
- * lvl_alias_v[ord('a')] = 60
- * 
- * cdef char def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]             # <<<<<<<<<<<<<<
- * cdef int lo_lvl = lvl_alias_v[def_lvl]
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_DEFAULT_LOGLEVEL, __pyx_n_s_lower); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 96, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_17 = __Pyx_GetItemInt_Unicode(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_17 == (Py_UCS4)-1)) __PYX_ERR(0, 96, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_8scrabble_6logger_def_lvl = __pyx_t_17;
+  (__pyx_v_8scrabble_6logger_lvl_alias[97]) = 60;
 
   /* "scrabble/logger.pyx":97
  * 
- * cdef char def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]
- * cdef int lo_lvl = lvl_alias_v[def_lvl]             # <<<<<<<<<<<<<<
+ * 
+ * cdef int def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]             # <<<<<<<<<<<<<<
+ * cdef int lo_lvl = lvl_alias[def_lvl]
+ * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_6logger_DEFAULT_LOGLEVEL, __pyx_n_s_lower); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_4 = __Pyx_GetItemInt_Unicode(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == (Py_UCS4)-1)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_8scrabble_6logger_def_lvl = __pyx_t_4;
+
+  /* "scrabble/logger.pyx":98
+ * 
+ * cdef int def_lvl = (<str>DEFAULT_LOGLEVEL.lower())[0]
+ * cdef int lo_lvl = lvl_alias[def_lvl]             # <<<<<<<<<<<<<<
  * 
  * cdef bint can_log(Py_UNICODE lvl) nogil:
  */
-  __pyx_t_18 = __pyx_v_8scrabble_6logger_def_lvl;
-  if (__pyx_t_18 < 0) __pyx_t_18 += __pyx_v_8scrabble_6logger_lvl_alias_v.shape[0];
-  __pyx_v_8scrabble_6logger_lo_lvl = (*((int *) ( /* dim=0 */ (__pyx_v_8scrabble_6logger_lvl_alias_v.data + __pyx_t_18 * __pyx_v_8scrabble_6logger_lvl_alias_v.strides[0]) )));
+  __pyx_v_8scrabble_6logger_lo_lvl = (__pyx_v_8scrabble_6logger_lvl_alias[__pyx_v_8scrabble_6logger_def_lvl]);
 
   /* "View.MemoryView":209
  *         info.obj = self
@@ -18926,10 +18088,10 @@ if (!__Pyx_RefNanny) {
  * 
  *     def __dealloc__(array self):
  */
-  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_array_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 209, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_array_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) __PYX_ERR(1, 209, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __pyx_capsule_create(((void *)(&__pyx_array_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 209, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem((PyObject *)__pyx_array_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_1) < 0) __PYX_ERR(1, 209, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_array_type);
 
   /* "View.MemoryView":286
@@ -18939,12 +18101,12 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(generic);
-  __Pyx_DECREF_SET(generic, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(generic, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
 
   /* "View.MemoryView":287
  * 
@@ -18953,12 +18115,12 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(strided);
-  __Pyx_DECREF_SET(strided, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(strided, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -18967,12 +18129,12 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(indirect);
-  __Pyx_DECREF_SET(indirect, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(indirect, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
 
   /* "View.MemoryView":291
  * 
@@ -18981,12 +18143,12 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__32, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(contiguous);
-  __Pyx_DECREF_SET(contiguous, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(contiguous, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
 
   /* "View.MemoryView":292
  * 
@@ -18995,12 +18157,12 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__33, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(indirect_contiguous);
-  __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
 
   /* "View.MemoryView":316
  * 
@@ -19018,15 +18180,15 @@ if (!__Pyx_RefNanny) {
  *     PyThread_allocate_lock(),
  *     PyThread_allocate_lock(),
  */
-  __pyx_t_19[0] = PyThread_allocate_lock();
-  __pyx_t_19[1] = PyThread_allocate_lock();
-  __pyx_t_19[2] = PyThread_allocate_lock();
-  __pyx_t_19[3] = PyThread_allocate_lock();
-  __pyx_t_19[4] = PyThread_allocate_lock();
-  __pyx_t_19[5] = PyThread_allocate_lock();
-  __pyx_t_19[6] = PyThread_allocate_lock();
-  __pyx_t_19[7] = PyThread_allocate_lock();
-  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_19, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
+  __pyx_t_5[0] = PyThread_allocate_lock();
+  __pyx_t_5[1] = PyThread_allocate_lock();
+  __pyx_t_5[2] = PyThread_allocate_lock();
+  __pyx_t_5[3] = PyThread_allocate_lock();
+  __pyx_t_5[4] = PyThread_allocate_lock();
+  __pyx_t_5[5] = PyThread_allocate_lock();
+  __pyx_t_5[6] = PyThread_allocate_lock();
+  __pyx_t_5[7] = PyThread_allocate_lock();
+  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_5, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
 
   /* "View.MemoryView":545
  *         info.obj = self
@@ -19035,10 +18197,10 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 545, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_memoryview_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) __PYX_ERR(1, 545, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 545, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem((PyObject *)__pyx_memoryview_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_1) < 0) __PYX_ERR(1, 545, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_memoryview_type);
 
   /* "View.MemoryView":991
@@ -19048,10 +18210,10 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 991, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem((PyObject *)__pyx_memoryviewslice_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) __PYX_ERR(1, 991, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem((PyObject *)__pyx_memoryviewslice_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_1) < 0) __PYX_ERR(1, 991, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   PyType_Modified(__pyx_memoryviewslice_type);
 
   /* "(tree fragment)":1
@@ -19059,17 +18221,17 @@ if (!__Pyx_RefNanny) {
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_15View_dot_MemoryView_1__pyx_unpickle_Enum, NULL, __pyx_n_s_View_MemoryView); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Enum, __pyx_t_2) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15View_dot_MemoryView_1__pyx_unpickle_Enum, NULL, __pyx_n_s_View_MemoryView); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Enum, __pyx_t_1) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "BufferFormatFromTypeInfo":1460
- * 
- * @cname('__pyx_format_from_typeinfo')
- * cdef bytes format_from_typeinfo(__Pyx_TypeInfo *type):             # <<<<<<<<<<<<<<
- *     cdef __Pyx_StructField *field
- *     cdef __pyx_typeinfo_string fmt
+  /* "(tree fragment)":11
+ *         __pyx_unpickle_Enum__set_state(<Enum> __pyx_result, __pyx_state)
+ *     return __pyx_result
+ * cdef __pyx_unpickle_Enum__set_state(Enum __pyx_result, tuple __pyx_state):             # <<<<<<<<<<<<<<
+ *     __pyx_result.name = __pyx_state[0]
+ *     if len(__pyx_state) > 1 and hasattr(__pyx_result, '__dict__'):
  */
 
   /*--- Wrapped vars code ---*/
@@ -19079,8 +18241,6 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(((PyObject *)__pyx_t_5));
-  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init scrabble.logger", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -20869,13 +20029,6 @@ static CYTHON_INLINE int __Pyx_HasAttr(PyObject *o, PyObject *n) {
     }
 }
 
-/* StringJoin */
-#if !CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyBytes_Join(PyObject* sep, PyObject* values) {
-    return PyObject_CallMethodObjArgs(sep, __pyx_n_s_join, values, NULL);
-}
-#endif
-
 /* PyObject_GenericGetAttrNoDict */
 #if CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP && PY_VERSION_HEX < 0x03070000
 static PyObject *__Pyx_RaiseGenericGetAttributeError(PyTypeObject *tp, PyObject *attr_name) {
@@ -21524,50 +20677,6 @@ no_fail:
     __Pyx_XDECREF(array_obj);
     __Pyx_RefNannyFinishContext();
     return new_mvs;
-}
-
-/* TypeInfoToFormat */
-static struct __pyx_typeinfo_string __Pyx_TypeInfoToFormat(__Pyx_TypeInfo *type) {
-    struct __pyx_typeinfo_string result = { {0} };
-    char *buf = (char *) result.string;
-    size_t size = type->size;
-    switch (type->typegroup) {
-        case 'H':
-            *buf = 'c';
-            break;
-        case 'I':
-        case 'U':
-            if (size == 1)
-                *buf = (type->is_unsigned) ? 'B' : 'b';
-            else if (size == 2)
-                *buf = (type->is_unsigned) ? 'H' : 'h';
-            else if (size == 4)
-                *buf = (type->is_unsigned) ? 'I' : 'i';
-            else if (size == 8)
-                *buf = (type->is_unsigned) ? 'Q' : 'q';
-            break;
-        case 'P':
-            *buf = 'P';
-            break;
-        case 'C':
-         {
-            __Pyx_TypeInfo complex_type = *type;
-            complex_type.typegroup = 'R';
-            complex_type.size /= 2;
-            *buf++ = 'Z';
-            *buf = __Pyx_TypeInfoToFormat(&complex_type).string[0];
-            break;
-         }
-        case 'R':
-            if (size == 4)
-                *buf = 'f';
-            else if (size == 8)
-                *buf = 'd';
-            else
-                *buf = 'g';
-            break;
-    }
-    return result;
 }
 
 /* CIntFromPyVerify */
@@ -23014,29 +22123,6 @@ bad:
     Py_XDECREF(cobj);
     Py_XDECREF(d);
     return -1;
-}
-
-/* ObjectToMemviewSlice */
-  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_int(PyObject *obj, int writable_flag) {
-    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
-    __Pyx_BufFmt_StackElem stack[1];
-    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
-    int retcode;
-    if (obj == Py_None) {
-        result.memview = (struct __pyx_memoryview_obj *) Py_None;
-        return result;
-    }
-    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
-                                                 PyBUF_RECORDS_RO | writable_flag, 1,
-                                                 &__Pyx_TypeInfo_int, stack,
-                                                 &result, obj);
-    if (unlikely(retcode == -1))
-        goto __pyx_fail;
-    return result;
-__pyx_fail:
-    result.memview = NULL;
-    result.data = NULL;
-    return result;
 }
 
 /* InitStrings */
