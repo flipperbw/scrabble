@@ -205,9 +205,7 @@ cdef void create_letter_templates(bint is_big) except *:
 # cpdef char[:, :] find_letter_match(BOOL_t[:, :] gimg, str typ, float spacing, char[:, :] dest):
 
 @cython.wraparound(False)
-cdef void find_letter_match(
-    object gimg, bint is_rack, float spacing, Py_UCS4[:, ::1] dest
-) except *:
+cdef void find_letter_match(object gimg, bint is_rack, float spacing, Py_UCS4[:, ::1] dest) except *:
     cdef:
         seen_tup seen[MAX_NODES][MAX_NODES]
         seen_tup *old_tup

@@ -75,7 +75,6 @@ ctypedef packed struct N:
 
     BOOL_t pts
 
-    bint is_start
     bint has_edge
     bint has_val
 
@@ -148,33 +147,13 @@ cdef class CSettings:
         Py_ssize_t rack_s
         BOOL_t blanks
 
+        list include_lets
+        uchr include_lets_c[7]
+
         #set words
         frozenset words
         Board node_board
         int num_results
 
-
-# cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil
-#
-# #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil
-# cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) nogil
-#
-# cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int* base_rack) nogil
-#
-# cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int* base_rack, BOOL_t* base_pts) nogil
-#
-# cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil
-#
-
-cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil
-cdef int mycmp(c_void pa, c_void pb) nogil
-cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) nogil
-
-
-cpdef object checkfile(tuple paths, bint is_file=*)
-
-cdef void solve(str dictionary) except *
-
-cdef void cmain(str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level) except *
 
 # todo check if need func sig

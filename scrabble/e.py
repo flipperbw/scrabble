@@ -29,6 +29,9 @@ def parse_args() -> 'Namespace':
     parser.add_argument('-e', '--exclude-letters', type=lambda x: [y.upper() for y in x.split(',')], metavar='L [,L...]',
         help='Letters to exclude from rack for solution')
 
+    parser.add_argument('-i', '--include-letters', type=lambda x: [y.upper() for y in x.split(',')], metavar='L [,L...]',
+        help='Letters to include from rack for solution')
+
     parser.add_argument('-r', '--num-results', type=int, default=NUM_RESULTS,
         help='Number of solutions to show [0 for all] (default: %(default)d)')
 

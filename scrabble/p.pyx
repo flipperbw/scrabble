@@ -13,14 +13,14 @@ from scrabble cimport logger as log
 from scrabble.logger cimport can_log, los, lov, loe, loc, clos
 from scrabble.utils cimport print_board_clr, print_board_top, print_board_btm
 
-cdef object json, pickle, sys, np, pd, Path, _s
+cdef object json, pickle, sys, np, Path, _s
 #cdef module np
 
 import json
 import pickle
 import sys
+
 import numpy as np
-import pandas as pd  # remove
 from pathlib import Path
 
 import scrabble.settings as _s
@@ -85,6 +85,10 @@ cdef class CSettings:
         self.rack_s = 0
         self.blanks = 0
 
+        self.include_lets = []
+        for i in range(7):
+            self.include_lets_c[i] = 0
+
         self.words = frozenset()  ## type: Set[bytes]
         self.node_board = None
         self.num_results = _s.NUM_RESULTS
@@ -137,7 +141,7 @@ cdef void sol(WordDict wd, char* buff) nogil:
 @cython.final(True)
 cdef class Node:
     # todo test no types in cinit
-    def __cinit__(self, BOOL_t x, BOOL_t y, uchr val, BOOL_t mult_a, BOOL_t mult_w, bint is_start):
+    def __cinit__(self, BOOL_t x, BOOL_t y, uchr val, BOOL_t mult_a, BOOL_t mult_w):
         self.n.letter.x = x
         self.n.letter.y = y
 
@@ -148,7 +152,7 @@ cdef class Node:
         self.n.mult_a = mult_a
         self.n.mult_w = mult_w
 
-        self.n.is_start = is_start
+        #self.n.is_start = is_start
         self.n.has_edge = False
 
         #cdef lpts_t lpt
@@ -254,19 +258,9 @@ cdef class Board:
         self.words.len = 0
         #self.words_view = self.words.l
 
-        for r in range(self.nodes.shape[0]):
-            for c in range(self.nodes.shape[1]):
+        for r in range(default_board.shape[0]):
+            for c in range(default_board.shape[1]):
                 bval = board[r, c]
-
-                # if bval: # = NUL?
-                #     bval = None
-                # else:
-                #     bval = bval.strip()
-                #     if not bval:
-                #         bval = None
-                #     else:
-                #         bval = bval.upper()
-
                 dbval = default_board[r, c]
 
                 mult_a = 1
@@ -283,28 +277,40 @@ cdef class Board:
                         if (<str>dbval)[1] == 'w':
                             mult_w = 1
 
-                # if bval is None:
-                #     bval = ''
-
-                #node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, True if self.new_game else False)
-                node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w, <BOOL_t>self.new_game)
+                node = Node(<BOOL_t>r, <BOOL_t>c, bval, mult_a, mult_w)
                 self.nodes[r, c] = node
 
-        for r in range(self.nodes.shape[0]):
-            for c in range(self.nodes.shape[1]):
-                node = self.nodes[r, c]
+        cdef Py_ssize_t midx, st #midy
 
-                self._set_edge(r, c)
+        if not self.new_game:
+            for r in range(default_board.shape[0]):
+                for c in range(default_board.shape[1]):
+                    node = self.nodes[r, c]
 
-                for du in range(4): # u, d, l, r
-                    self._set_adj_words(node, du)
+                    self._set_edge(r, c)
 
-                self._set_lets(node)
+                    for du in range(4): # u, d, l, r
+                        self._set_adj_words(node, du)
 
-        for r in range(Settings.shape[0]):
-            self._set_map(self.nodes[r], 0)
-        for r in range(Settings.shape[1]):
-            self._set_map(self.nodes[:, r], 1)
+                    self._set_lets(node)
+
+            for r in range(default_board.shape[0]):
+                self._set_map(self.nodes[r], 0)
+            for r in range(default_board.shape[1]):
+                self._set_map(self.nodes[:, r], 1)
+
+        else:
+            midx = default_board.shape[0] // 2
+            for r in range(midx + 1):
+                node = self.nodes[midx, r]
+                st = 1 if r == midx else (midx - r)
+                node.vlen_view[0, st:(default_board.shape[0] - r)] = True
+
+            # midy = default_board.shape[1] // 2
+            # for c in range(midy + 1):
+            #     node = self.nodes[c, midy]
+            #     st = 1 if c == midy else (midy - c)
+            #     node.vlen_view[1, st:(default_board.shape[1] - c)] = True
 
         self.nodesnv = <N[:self.nodes.shape[0], :self.nodes.shape[1]]>self.nodesn
         #self.nodesnv = self.nodesn[:self.nodes_rl, :self.nodes_cl]
@@ -752,6 +758,64 @@ cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t st
     return lets_info
 
 
+#todo combine
+@cython.wraparound(False)
+cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl) nogil:
+    cdef:
+        bint is_col = False
+        Py_ssize_t nlen = Settings.shape[is_col]
+        Py_ssize_t s, wl, wl1, sn
+        bint nvals[MAX_NODES]
+
+        cchrp ww
+
+        BOOL_t blanks = Settings.blanks
+        int* base_rack = Settings.rack
+        BOOL_t* base_pts = Settings.points
+
+        Letter_List lets_info
+        STRU_t tot_pts
+
+        WordDict wd
+        SIZE_t orig_len = Settings.node_board.words.len
+
+    for s in range(MAX_NODES):
+        nvals[s] = 0
+
+    for s in range(swl):
+        wl = swlens[s]
+        if wl > nlen:
+            continue
+        wl1 = wl - 1
+
+        ww = sw[s]
+
+        for sn in range(nlen):
+            # - is the word a valid length?
+            if nodes[sn].valid_lengths[is_col][wl1] is False:
+                #lo.e('not valid')
+                continue
+
+            # - do we have enough in the rack?
+            if rack_check(ww, wl, nvals, sn, blanks, base_rack) is False:
+                #lo.e('not enough rack')
+                continue
+
+            lets_info = rack_match(ww, wl, nodes, sn, base_rack, base_pts)
+            tot_pts = calc_pts(lets_info, nodes, is_col, sn)
+
+            wd.is_col = is_col
+            wd.pts = tot_pts
+            wd.letters = lets_info
+            sol(wd, wd.word)
+
+            Settings.node_board.words.l[orig_len] = wd
+            orig_len += 1
+
+    Settings.node_board.words.len = orig_len
+
+
+
 #cdef loi
 
 
@@ -760,7 +824,7 @@ cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t st
 # @cython.wraparound(False)
 # cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
 @cython.wraparound(False)
-cdef void parse_nodes(N[:] nodes, cchr **sw, SIZE_t[::1] swlens, bint is_col) nogil:
+cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col) nogil:
     cdef:
         Py_ssize_t t
         Py_ssize_t nlen = Settings.shape[is_col]
@@ -804,7 +868,7 @@ cdef void parse_nodes(N[:] nodes, cchr **sw, SIZE_t[::1] swlens, bint is_col) no
         n = nodes[i]
         nvals[i] = n.has_val
 
-    for s in range(swlens.shape[0]):
+    for s in range(swl):
         # is there a problem with the conversion here
         wl = swlens[s]
         if wl > nlen:
@@ -812,7 +876,7 @@ cdef void parse_nodes(N[:] nodes, cchr **sw, SIZE_t[::1] swlens, bint is_col) no
 
         wl1 = wl - 1
 
-        ww = sw[s]
+        ww = sw[s]  # put limiter here?
         #lo.d(sw.base.view(f'<U{sw.shape[1]}')[s, 0])
 
         #for i in prange(nlen - wl + 1, nogil=True):
@@ -999,6 +1063,54 @@ cpdef object checkfile(tuple paths, bint is_file = True):
     return filepath
 
 
+#def?
+cdef list get_sw(list wordlist, BOOL_t blanks):
+    cdef list incl
+    cdef object s_sw = _s.SEARCH_WORDS
+    #cdef int* swlens = <int*>malloc(swl * sizeof(int*))
+    #cdef Py_ssize_t i
+
+    if s_sw is None:
+        incl = [l for l in Settings.include_lets if l != '?']
+        # incl = []
+        # for i in range(7):
+        #     incl
+
+        #s_search_words = set()
+
+        # for w in words:
+        #     for sl in range(Settings.rack_s):
+        #         l = Settings.rack_l[sl]
+        #         if l in w:
+        #             s_search_words.add(w)
+        #             break
+
+        #search_words = frozenset(s_search_words)
+
+        if not incl:
+            if blanks > 0:
+                return wordlist
+            else:
+                #return wordlist
+                return [w for w in wordlist if any([l in w for l in Settings.rack_l])]
+
+        else:
+            return [w for w in wordlist if all([l in w for l in incl])]  # technically wrong for >1
+            # print(len(wordlist))
+            # search_words = [w for w in wordlist if all(l in w for l in incl)]
+            # print(len(search_words))
+            # return search_words
+
+    elif isinstance(s_sw, tuple):
+        return wordlist[s_sw[0]: s_sw[1]]
+
+    elif isinstance(s_sw, list):
+        return s_sw
+
+    loc('Incompatible search words type: {}'.format(type(s_sw)))
+    sys.exit(1)
+
+
 # todo: set default for dict? put in settings? move all settings out to options?
 #cpdef, def
 
@@ -1044,39 +1156,7 @@ cdef void solve(str dictionary) except *:
 
     cdef BOOL_t blanks = Settings.rack[bl]
 
-    if _s.SEARCH_WORDS is None:
-        if blanks > 0:
-            search_words = wordlist
-        else:
-            # TODO FIX THIS
-            #lo.e(len(words))
-
-            # todo: faster if str? why gen slower?
-            #search_words = frozenset({w for w in words if any([l in w for l in Settings.rack_l])})
-
-            #s_search_words = set()
-
-            # for w in words:
-            #     for sl in range(Settings.rack_s):
-            #         l = Settings.rack_l[sl]
-            #         if l in w:
-            #             s_search_words.add(w)
-            #             break
-
-            #search_words = frozenset(s_search_words)
-
-            search_words = wordlist
-
-            #lo.e(len(search_words))
-
-    elif isinstance(_s.SEARCH_WORDS, tuple):
-        search_words = wordlist[_s.SEARCH_WORDS[0]: _s.SEARCH_WORDS[1]]
-    elif isinstance(_s.SEARCH_WORDS, list):
-        search_words = _s.SEARCH_WORDS
-    else:
-        search_words = []  # why necessary?
-        loc('Incompatible search words type: {}'.format(type(_s.SEARCH_WORDS)))
-        sys.exit(1)
+    search_words = get_sw(wordlist, blanks)
 
     cdef UINT32_t swl = len(search_words)
     if swl == 0:
@@ -1112,10 +1192,9 @@ cdef void solve(str dictionary) except *:
     # print(xx.dtype)
 
     #cdef STR_t[:, ::1] sw = np.array(list(search_words)).view(STR).reshape(swl, -1)
-    cdef cchr **sw = <cchr**>malloc(swl * sizeof(cchrp))
 
-    #cdef cnp.ndarray[cnp.uint8_t, ndim=1] swlens = np.empty(swl, np.uint8)
-    cdef SIZE_t[::1] swlens = npe(swl, SIZE)
+    cdef cchr** sw = <cchr**>malloc(swl * sizeof(cchrp))
+    cdef int* swlens = <int*>malloc(swl * sizeof(int*))
 
     for swi in range(swl):
         sws = (<list>search_words)[swi]
@@ -1136,18 +1215,16 @@ cdef void solve(str dictionary) except *:
     # cdef N[::1] ns_rv = <N[:Settings.shape[0]]>ns_r
     # cdef N[::1] ns_cv = <N[:Settings.shape[1]]>ns_c
 
-    cdef Py_ssize_t ir, ic
     cdef list search_rows, search_cols
+    cdef Py_ssize_t ir, ic
     cdef bint is_col
 
     los('Solving...\n')
 
     if full.new_game:
         los(' = Fresh game = ')
-        #todo fix
-        #no = next(full.get_by_attr('is_start', True), None)
-        # if no:
-        #     check_node(no)
+        parse_new(full.nodesnv[(Settings.shape[0] // 2)], sw, swlens, swl)
+        #parse_new(full.nodesnv[:, (Settings.shape[1] // 2)], sw, swlens, swl, True)
 
     else:
         if _s.SEARCH_NODES is None:
@@ -1164,14 +1241,7 @@ cdef void solve(str dictionary) except *:
 
         is_col = False
         for ir in search_rows:
-            #sing_nodes = nodes[i]
-
-            # for ni in range(Settings.shape[0]):
-            #     no = full.nodes[ir, ni]
-            #     ns_r[ni] = no.n
-
-            #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
-            parse_nodes(full.nodesnv[ir], sw, swlens, is_col)
+            parse_nodes(full.nodesnv[ir], sw, swlens, swl, is_col)
 
         is_col = True
         for ic in search_cols:
@@ -1183,9 +1253,12 @@ cdef void solve(str dictionary) except *:
             #     no = full.nodes[ni, ic]
             #     ns_c[ni] = no.n
 
-            parse_nodes(full.nodesnv[:, ic], sw, swlens, is_col)
+            #parse_nodes(ns_rv[:Settings.shape[0]], sw, swlens, is_col)
+            parse_nodes(full.nodesnv[:, ic], sw, swlens, swl, is_col)
 
     free(sw)
+    free(swlens)
+
 
 # except *
 
@@ -1196,7 +1269,7 @@ cdef void solve(str dictionary) except *:
 # ):
 @cython.wraparound(False)
 cdef void cmain(
-    str filename, str dictionary, bint no_words, list exclude_letters, int num_results, str log_level
+    str filename, str dictionary, bint no_words, list exclude_letters, list include_letters, int num_results, str log_level
 ) except *:
     log_level = log_level.lower()
     if log_level == 'spam': log_level = 'x'
@@ -1222,10 +1295,27 @@ cdef void cmain(
         loc('Rack is empty')
         return
 
-
     cdef str el
+
+    cdef uchr incl_c[7]
+    incl_c[:] = [0, 0, 0, 0, 0, 0, 0]
+    cdef Py_ssize_t eli
+
+    for eli in range(len(include_letters)):
+        el = (<list>include_letters)[eli]
+        if el not in rack:
+            loc(f'Include letter "{el}" not in rack')
+            sys.exit(1)
+        incl_c[eli] = ord(el)
+
     for el in exclude_letters:
+        if el not in rack:
+            loc(f'Exclude letter "{el}" not in rack')
+            sys.exit(1)
         rack.remove(el)
+
+    Settings.include_lets = include_letters
+    Settings.include_lets_c = incl_c
 
     Settings.rack_l = rack
     Settings.rack_s = len(rack)
@@ -1252,12 +1342,10 @@ cdef void cmain(
         loc('Board size ({}) has no match'.format(board_size))
         return
 
-    cdef object _default_board
     cdef object[:, :] default_board
     cdef dict points
 
-    _default_board = pd.read_pickle(checkfile((board_name,)))   # type: pd.DataFrame
-    default_board = _default_board.to_numpy(np.object_)  # type: np.ndarray  # .to_numpy('|S2')
+    default_board = pickle.load(checkfile((board_name,)).open('rb'))  # type: np.ndarray  # .to_numpy('|S2')
 
     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
 
@@ -1265,7 +1353,7 @@ cdef void cmain(
         los('Game Board:')
         print_board_clr(board.base, log.KS_GRN_L)
         if can_log('v'):
-            lov('Default:\n{}'.format(_default_board))
+            lov('Default:\n{}'.format(default_board))
         los('Rack:\n{}\n'.format(rack))
     else:
         printf('Running...\n')
@@ -1307,11 +1395,13 @@ cdef void cmain(
 
 # def
 def main(
-    filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, num_results: int = _s.NUM_RESULTS,
+    filename: str = None, dictionary: str = _s.DICTIONARY, no_words: bool = False, exclude_letters: list = None, include_letters: list = None, num_results: int = _s.NUM_RESULTS,
     log_level: str = _s.DEFAULT_LOGLEVEL, **_kw: dict
 ) -> None:
 
     if exclude_letters is None:
         exclude_letters = []
+    if include_letters is None:
+        include_letters = []
 
-    cmain(filename, dictionary, no_words, exclude_letters, num_results, log_level)
+    cmain(filename, dictionary, no_words, exclude_letters, include_letters, num_results, log_level)
