@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Set, Tuple, Union
+from typing import List, Tuple, Union
 
 # - DEFAULTS
 
@@ -83,8 +83,8 @@ LETTERS = [] # type: List[str]
 
 # - WORDS
 
-SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], Set[str]]
-#SEARCH_WORDS = {'SOX', 'OXIDANT', 'ANOXIA', 'ATAXIA', 'ASTOUND', 'SEXTAN'}
+SEARCH_WORDS = None  # type: Union[None, Tuple[int, int], List[str]]
+#SEARCH_WORDS = ['SOX', 'OXIDANT', 'ANOXIA', 'ATAXIA', 'ASTOUND', 'SEXTAN']
 #SEARCH_WORDS = (0, 120000)
 
 

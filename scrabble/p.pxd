@@ -15,6 +15,10 @@ DEF MAX_ORD = 127  # todo replace 127
 #     uchr pts
 
 
+cdef extern from "Python.h":
+    cchrp PyUnicode_AsUTF8(object unicode)
+
+
 ctypedef packed struct Letter:
     BOOL_t is_blank
     BOOL_t from_rack
@@ -130,12 +134,12 @@ cdef class CSettings:
         #Node[:, :] board, default_board  # todo
 
         # ord = uint8
-        BOOL_t[::1] points
-        BOOL_t[::1] amts
+        BOOL_t amts[MAX_ORD]
+        BOOL_t points[MAX_ORD]
 
         # ord = uint8
         int rack[MAX_ORD]
-        int[:] rack_v
+        #int[:] rack_v
 
         #(Py_ssize_t, Py_ssize_t) shape
         Py_ssize_t shape[2]
@@ -150,17 +154,17 @@ cdef class CSettings:
         int num_results
 
 
-cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil
-
-#cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil
+# cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil
+#
+# #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil
 # cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) nogil
-
-# cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int[:] base_rack) nogil
-
-cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int[:] base_rack) nogil
-
-cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil
-
+#
+# cdef bint rack_check(STR_t[::1] word, Py_ssize_t wl, bint nvals[MAX_NODES], Py_ssize_t start, BOOL_t blanks, int* base_rack) nogil
+#
+# cdef Letter_List rack_match(STR_t[::1] word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int* base_rack, BOOL_t* base_pts) nogil
+#
+# cdef void parse_nodes(N[:] nodes, STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) nogil
+#
 
 cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil
 cdef int mycmp(c_void pa, c_void pb) nogil
