@@ -156,12 +156,11 @@ cdef cuchr[:] chklog(s, int lvl):
 
 cdef void clos(cchrp s, ...) nogil:
     cdef va_list args
-    printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
+    printf('%s%s%s%s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
     va_start(args, <void*>s)
     vprintf(s, args)
     va_end(args)
     puts(KS_RES)
-
 
 
 cdef void lox(s):

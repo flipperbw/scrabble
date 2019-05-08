@@ -2663,7 +2663,7 @@ static __Pyx_memviewslice __pyx_f_8scrabble_6logger_chklog(PyObject *__pyx_v_s, 
  * 
  * cdef void clos(cchrp s, ...) nogil:             # <<<<<<<<<<<<<<
  *     cdef va_list args
- *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
+ *     printf('%s%s%s%s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
  */
 
 static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx_v_s, ...) {
@@ -2672,15 +2672,15 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
   /* "scrabble/logger.pyx":159
  * cdef void clos(cchrp s, ...) nogil:
  *     cdef va_list args
- *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)             # <<<<<<<<<<<<<<
+ *     printf('%s%s%s%s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)             # <<<<<<<<<<<<<<
  *     va_start(args, <void*>s)
  *     vprintf(s, args)
  */
-  (void)(printf(((char const *)"%s%s%s %s"), __pyx_v_8scrabble_6logger_KS_BLK_L, ((char *)"(s) "), __pyx_v_8scrabble_6logger_KS_RES, __pyx_v_8scrabble_6logger_KS_GRN_L));
+  (void)(printf(((char const *)"%s%s%s%s"), __pyx_v_8scrabble_6logger_KS_BLK_L, ((char *)"(s) "), __pyx_v_8scrabble_6logger_KS_RES, __pyx_v_8scrabble_6logger_KS_GRN_L));
 
   /* "scrabble/logger.pyx":160
  *     cdef va_list args
- *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
+ *     printf('%s%s%s%s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
  *     va_start(args, <void*>s)             # <<<<<<<<<<<<<<
  *     vprintf(s, args)
  *     va_end(args)
@@ -2688,7 +2688,7 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
   va_start(__pyx_v_args, ((void *)__pyx_v_s));
 
   /* "scrabble/logger.pyx":161
- *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
+ *     printf('%s%s%s%s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
  *     va_start(args, <void*>s)
  *     vprintf(s, args)             # <<<<<<<<<<<<<<
  *     va_end(args)
@@ -2719,13 +2719,13 @@ static void __pyx_f_8scrabble_6logger_clos(__pyx_t_8scrabble_6logger_cchrp __pyx
  * 
  * cdef void clos(cchrp s, ...) nogil:             # <<<<<<<<<<<<<<
  *     cdef va_list args
- *     printf('%s%s%s %s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
+ *     printf('%s%s%s%s', KS_BLK_L, l_s, KS_RES, KS_GRN_L)
  */
 
   /* function exit code */
 }
 
-/* "scrabble/logger.pyx":167
+/* "scrabble/logger.pyx":166
  * 
  * 
  * cdef void lox(s):             # <<<<<<<<<<<<<<
@@ -2744,7 +2744,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lox", 0);
 
-  /* "scrabble/logger.pyx":168
+  /* "scrabble/logger.pyx":167
  * 
  * cdef void lox(s):
  *     cdef LogLvl lvl = SPAM             # <<<<<<<<<<<<<<
@@ -2753,7 +2753,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_SPAM;
 
-  /* "scrabble/logger.pyx":169
+  /* "scrabble/logger.pyx":168
  * cdef void lox(s):
  *     cdef LogLvl lvl = SPAM
  *     cdef Py_ssize_t color = K_WHT             # <<<<<<<<<<<<<<
@@ -2762,19 +2762,19 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 37;
 
-  /* "scrabble/logger.pyx":170
+  /* "scrabble/logger.pyx":169
  *     cdef LogLvl lvl = SPAM
  *     cdef Py_ssize_t color = K_WHT
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 169, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":171
+  /* "scrabble/logger.pyx":170
  *     cdef Py_ssize_t color = K_WHT
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -2784,7 +2784,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":172
+  /* "scrabble/logger.pyx":171
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -2796,7 +2796,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":167
+  /* "scrabble/logger.pyx":166
  * 
  * 
  * cdef void lox(s):             # <<<<<<<<<<<<<<
@@ -2814,7 +2814,7 @@ static void __pyx_f_8scrabble_6logger_lox(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":174
+/* "scrabble/logger.pyx":173
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lod(s):             # <<<<<<<<<<<<<<
@@ -2833,7 +2833,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lod", 0);
 
-  /* "scrabble/logger.pyx":175
+  /* "scrabble/logger.pyx":174
  * 
  * cdef void lod(s):
  *     cdef LogLvl lvl = DEBUG             # <<<<<<<<<<<<<<
@@ -2842,7 +2842,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_DEBUG;
 
-  /* "scrabble/logger.pyx":176
+  /* "scrabble/logger.pyx":175
  * cdef void lod(s):
  *     cdef LogLvl lvl = DEBUG
  *     cdef Py_ssize_t color = K_CYN             # <<<<<<<<<<<<<<
@@ -2851,19 +2851,19 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 36;
 
-  /* "scrabble/logger.pyx":177
+  /* "scrabble/logger.pyx":176
  *     cdef LogLvl lvl = DEBUG
  *     cdef Py_ssize_t color = K_CYN
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 177, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":178
+  /* "scrabble/logger.pyx":177
  *     cdef Py_ssize_t color = K_CYN
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -2873,7 +2873,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":179
+  /* "scrabble/logger.pyx":178
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -2885,7 +2885,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":174
+  /* "scrabble/logger.pyx":173
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lod(s):             # <<<<<<<<<<<<<<
@@ -2903,7 +2903,7 @@ static void __pyx_f_8scrabble_6logger_lod(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":181
+/* "scrabble/logger.pyx":180
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lov(s):             # <<<<<<<<<<<<<<
@@ -2922,7 +2922,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lov", 0);
 
-  /* "scrabble/logger.pyx":182
+  /* "scrabble/logger.pyx":181
  * 
  * cdef void lov(s):
  *     cdef LogLvl lvl = VERBOSE             # <<<<<<<<<<<<<<
@@ -2931,7 +2931,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_VERBOSE;
 
-  /* "scrabble/logger.pyx":183
+  /* "scrabble/logger.pyx":182
  * cdef void lov(s):
  *     cdef LogLvl lvl = VERBOSE
  *     cdef Py_ssize_t color = K_BLU             # <<<<<<<<<<<<<<
@@ -2940,19 +2940,19 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 34;
 
-  /* "scrabble/logger.pyx":184
+  /* "scrabble/logger.pyx":183
  *     cdef LogLvl lvl = VERBOSE
  *     cdef Py_ssize_t color = K_BLU
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 183, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":185
+  /* "scrabble/logger.pyx":184
  *     cdef Py_ssize_t color = K_BLU
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -2962,7 +2962,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":186
+  /* "scrabble/logger.pyx":185
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -2974,7 +2974,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":181
+  /* "scrabble/logger.pyx":180
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lov(s):             # <<<<<<<<<<<<<<
@@ -2992,7 +2992,7 @@ static void __pyx_f_8scrabble_6logger_lov(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":188
+/* "scrabble/logger.pyx":187
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loi(s):             # <<<<<<<<<<<<<<
@@ -3011,7 +3011,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("loi", 0);
 
-  /* "scrabble/logger.pyx":189
+  /* "scrabble/logger.pyx":188
  * 
  * cdef void loi(s):
  *     cdef LogLvl lvl = INFO             # <<<<<<<<<<<<<<
@@ -3020,7 +3020,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_INFO;
 
-  /* "scrabble/logger.pyx":190
+  /* "scrabble/logger.pyx":189
  * cdef void loi(s):
  *     cdef LogLvl lvl = INFO
  *     cdef Py_ssize_t color = K_RES             # <<<<<<<<<<<<<<
@@ -3029,19 +3029,19 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 0;
 
-  /* "scrabble/logger.pyx":191
+  /* "scrabble/logger.pyx":190
  *     cdef LogLvl lvl = INFO
  *     cdef Py_ssize_t color = K_RES
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 190, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":192
+  /* "scrabble/logger.pyx":191
  *     cdef Py_ssize_t color = K_RES
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3051,7 +3051,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":193
+  /* "scrabble/logger.pyx":192
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3063,7 +3063,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":188
+  /* "scrabble/logger.pyx":187
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loi(s):             # <<<<<<<<<<<<<<
@@ -3081,7 +3081,7 @@ static void __pyx_f_8scrabble_6logger_loi(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":195
+/* "scrabble/logger.pyx":194
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lon(s):             # <<<<<<<<<<<<<<
@@ -3100,7 +3100,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("lon", 0);
 
-  /* "scrabble/logger.pyx":196
+  /* "scrabble/logger.pyx":195
  * 
  * cdef void lon(s):
  *     cdef LogLvl lvl = NOTICE             # <<<<<<<<<<<<<<
@@ -3109,7 +3109,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_NOTICE;
 
-  /* "scrabble/logger.pyx":197
+  /* "scrabble/logger.pyx":196
  * cdef void lon(s):
  *     cdef LogLvl lvl = NOTICE
  *     cdef Py_ssize_t color = K_MAG             # <<<<<<<<<<<<<<
@@ -3118,19 +3118,19 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 35;
 
-  /* "scrabble/logger.pyx":198
+  /* "scrabble/logger.pyx":197
  *     cdef LogLvl lvl = NOTICE
  *     cdef Py_ssize_t color = K_MAG
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 197, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":199
+  /* "scrabble/logger.pyx":198
  *     cdef Py_ssize_t color = K_MAG
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3140,7 +3140,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":200
+  /* "scrabble/logger.pyx":199
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3152,7 +3152,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":195
+  /* "scrabble/logger.pyx":194
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void lon(s):             # <<<<<<<<<<<<<<
@@ -3170,7 +3170,7 @@ static void __pyx_f_8scrabble_6logger_lon(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":202
+/* "scrabble/logger.pyx":201
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void low(s):             # <<<<<<<<<<<<<<
@@ -3189,7 +3189,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("low", 0);
 
-  /* "scrabble/logger.pyx":203
+  /* "scrabble/logger.pyx":202
  * 
  * cdef void low(s):
  *     cdef LogLvl lvl = WARNING             # <<<<<<<<<<<<<<
@@ -3198,7 +3198,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_WARNING;
 
-  /* "scrabble/logger.pyx":204
+  /* "scrabble/logger.pyx":203
  * cdef void low(s):
  *     cdef LogLvl lvl = WARNING
  *     cdef Py_ssize_t color = K_YEL             # <<<<<<<<<<<<<<
@@ -3207,19 +3207,19 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 33;
 
-  /* "scrabble/logger.pyx":205
+  /* "scrabble/logger.pyx":204
  *     cdef LogLvl lvl = WARNING
  *     cdef Py_ssize_t color = K_YEL
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 204, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":206
+  /* "scrabble/logger.pyx":205
  *     cdef Py_ssize_t color = K_YEL
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3229,7 +3229,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":207
+  /* "scrabble/logger.pyx":206
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3241,7 +3241,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":202
+  /* "scrabble/logger.pyx":201
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void low(s):             # <<<<<<<<<<<<<<
@@ -3259,7 +3259,7 @@ static void __pyx_f_8scrabble_6logger_low(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":209
+/* "scrabble/logger.pyx":208
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void los(s):             # <<<<<<<<<<<<<<
@@ -3278,7 +3278,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("los", 0);
 
-  /* "scrabble/logger.pyx":210
+  /* "scrabble/logger.pyx":209
  * 
  * cdef void los(s):
  *     cdef LogLvl lvl = SUCCESS ##             # <<<<<<<<<<<<<<
@@ -3287,7 +3287,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_SUCCESS;
 
-  /* "scrabble/logger.pyx":211
+  /* "scrabble/logger.pyx":210
  * cdef void los(s):
  *     cdef LogLvl lvl = SUCCESS ##
  *     cdef Py_ssize_t color = K_GRN_L ##             # <<<<<<<<<<<<<<
@@ -3296,19 +3296,19 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 92;
 
-  /* "scrabble/logger.pyx":213
+  /* "scrabble/logger.pyx":212
  *     cdef Py_ssize_t color = K_GRN_L ##
  * 
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  * 
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 213, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 212, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":214
+  /* "scrabble/logger.pyx":213
  * 
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3318,7 +3318,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":216
+  /* "scrabble/logger.pyx":215
  *     cdef Py_ssize_t ts = len(txt)
  * 
  *     if ts > 3: clog(txt, ts, color) #bold             # <<<<<<<<<<<<<<
@@ -3330,7 +3330,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":209
+  /* "scrabble/logger.pyx":208
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void los(s):             # <<<<<<<<<<<<<<
@@ -3348,7 +3348,7 @@ static void __pyx_f_8scrabble_6logger_los(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":218
+/* "scrabble/logger.pyx":217
  *     if ts > 3: clog(txt, ts, color) #bold
  * 
  * cdef void loe(s):             # <<<<<<<<<<<<<<
@@ -3367,7 +3367,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("loe", 0);
 
-  /* "scrabble/logger.pyx":219
+  /* "scrabble/logger.pyx":218
  * 
  * cdef void loe(s):
  *     cdef LogLvl lvl = ERROR             # <<<<<<<<<<<<<<
@@ -3376,7 +3376,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_ERROR;
 
-  /* "scrabble/logger.pyx":220
+  /* "scrabble/logger.pyx":219
  * cdef void loe(s):
  *     cdef LogLvl lvl = ERROR
  *     cdef Py_ssize_t color = K_RED_L             # <<<<<<<<<<<<<<
@@ -3385,19 +3385,19 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 91;
 
-  /* "scrabble/logger.pyx":221
+  /* "scrabble/logger.pyx":220
  *     cdef LogLvl lvl = ERROR
  *     cdef Py_ssize_t color = K_RED_L
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 221, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 220, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":222
+  /* "scrabble/logger.pyx":221
  *     cdef Py_ssize_t color = K_RED_L
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3407,7 +3407,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":223
+  /* "scrabble/logger.pyx":222
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3419,7 +3419,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":218
+  /* "scrabble/logger.pyx":217
  *     if ts > 3: clog(txt, ts, color) #bold
  * 
  * cdef void loe(s):             # <<<<<<<<<<<<<<
@@ -3437,7 +3437,7 @@ static void __pyx_f_8scrabble_6logger_loe(PyObject *__pyx_v_s) {
   __Pyx_RefNannyFinishContext();
 }
 
-/* "scrabble/logger.pyx":225
+/* "scrabble/logger.pyx":224
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loc(s):             # <<<<<<<<<<<<<<
@@ -3456,7 +3456,7 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("loc", 0);
 
-  /* "scrabble/logger.pyx":226
+  /* "scrabble/logger.pyx":225
  * 
  * cdef void loc(s):
  *     cdef LogLvl lvl = CRITICAL             # <<<<<<<<<<<<<<
@@ -3465,7 +3465,7 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
  */
   __pyx_v_lvl = __pyx_e_8scrabble_6logger_CRITICAL;
 
-  /* "scrabble/logger.pyx":227
+  /* "scrabble/logger.pyx":226
  * cdef void loc(s):
  *     cdef LogLvl lvl = CRITICAL
  *     cdef Py_ssize_t color = K_RED             # <<<<<<<<<<<<<<
@@ -3474,19 +3474,19 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
  */
   __pyx_v_color = 31;
 
-  /* "scrabble/logger.pyx":228
+  /* "scrabble/logger.pyx":227
  *     cdef LogLvl lvl = CRITICAL
  *     cdef Py_ssize_t color = K_RED
  *     cdef cuchr[:] txt = chklog(s, lvl)             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)
  */
-  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 228, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_8scrabble_6logger_chklog(__pyx_v_s, __pyx_v_lvl); if (unlikely(!__pyx_t_1.memview)) __PYX_ERR(0, 227, __pyx_L1_error)
   __pyx_v_txt = __pyx_t_1;
   __pyx_t_1.memview = NULL;
   __pyx_t_1.data = NULL;
 
-  /* "scrabble/logger.pyx":229
+  /* "scrabble/logger.pyx":228
  *     cdef Py_ssize_t color = K_RED
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)             # <<<<<<<<<<<<<<
@@ -3495,7 +3495,7 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
   __pyx_t_2 = __Pyx_MemoryView_Len(__pyx_v_txt); 
   __pyx_v_ts = __pyx_t_2;
 
-  /* "scrabble/logger.pyx":230
+  /* "scrabble/logger.pyx":229
  *     cdef cuchr[:] txt = chklog(s, lvl)
  *     cdef Py_ssize_t ts = len(txt)
  *     if ts > 3: clog(txt, ts, color)             # <<<<<<<<<<<<<<
@@ -3505,7 +3505,7 @@ static void __pyx_f_8scrabble_6logger_loc(PyObject *__pyx_v_s) {
     __pyx_f_8scrabble_6logger_clog(__pyx_v_txt, __pyx_v_ts, __pyx_v_color, NULL);
   }
 
-  /* "scrabble/logger.pyx":225
+  /* "scrabble/logger.pyx":224
  *     if ts > 3: clog(txt, ts, color)
  * 
  * cdef void loc(s):             # <<<<<<<<<<<<<<

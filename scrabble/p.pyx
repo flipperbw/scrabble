@@ -5,7 +5,7 @@
 cimport cython
 #from cython.parallel import prange
 
-from libc.stdio cimport printf, snprintf
+from libc.stdio cimport printf, snprintf, puts
 from libc.stdlib cimport qsort, malloc, free
 
 #from scrabble import logger as log
@@ -1349,11 +1349,27 @@ cdef void cmain(
 
     points = json.load(checkfile((_s.POINTS_DIR, <str>dictionary + '.json')).open())  # Dict[str, List[int]]
 
+    cdef Py_ssize_t dx, dy, ds
+    cdef Py_UNICODE* do
+    cdef char du[2]
     if can_log('s'):
         los('Game Board:')
         print_board_clr(board.base, log.KS_GRN_L)
         if can_log('v'):
-            lov('Default:\n{}'.format(default_board))
+            # todo make a func
+            lov('Default:')
+            printf('%s', log.KS_BLU)
+            for dx in range(default_board.shape[0]):
+                for dy in range(default_board.shape[1]):
+                    do = default_board[dx, dy]
+                    ds = len(do)
+                    if ds == 0: du = [NUL, NUL]
+                    elif ds == 1: du = [do[0], NUL]
+                    else: du = [do[0], do[1]]
+                    printf('%-2s', du)
+                puts('')
+            puts(log.KS_RES)
+
         los('Rack:\n{}\n'.format(rack))
     else:
         printf('Running...\n')
