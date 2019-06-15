@@ -24,9 +24,9 @@ space:
 build:
 	$(BUILD) $(args)
 build-p:
-	$(BUILD) --profile $(args)
+	$(BUILD) --profile
 build-t:
-	$(BUILD) --trace $(args)
+	$(BUILD) --trace
 build-scrabble:  ##args?
 	$(BUILD) --scrabble
 build-ocr:

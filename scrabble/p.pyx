@@ -51,7 +51,8 @@ cdef object npe = np.empty
 #todo more of these
 #cdef bytes NUL = b'\0'
 DEF NUL = b'\0'
-DEF bl = ord('?')
+DEF BL = ord('?')
+DEF MAX_BL = 2
 DEF L_ST = 65
 DEF L_EN = 91
 DEF MAX_NODES = 15
@@ -103,7 +104,7 @@ cdef CSettings Settings = CSettings()
 
 # *
 @cython.wraparound(False)
-cdef void sol(WordDict wd, char* buff) nogil:
+cdef void sol(WordDict wd, char* buff): # nogil:
     cdef Letter lf = wd.letters.l[0]
     cdef Letter ll = wd.letters.l[wd.letters.len - 1]
 
@@ -577,7 +578,7 @@ cdef class Board:
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) nogil:
+cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start): # nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
@@ -631,7 +632,7 @@ cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t 
 #todo test nogil more
 
 @cython.wraparound(False)
-cdef bint lets_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) nogil:
+cdef bint lets_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col): # nogil:
 #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil:
     cdef Py_ssize_t i
     cdef STR_t nv
@@ -662,7 +663,7 @@ cdef bint lets_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bi
 
 # todo combine this with below?
 @cython.wraparound(False)
-cdef bint rack_check(cchrp word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, BOOL_t blanks, int* base_rack) nogil:  # or memview for nvals?
+cdef bint rack_check(cchrp word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, BOOL_t blanks, int* base_rack): # nogil:  # or memview for nvals?
     # todo this vs numpy ssize?
     cdef:
         BOOL_t nval
@@ -704,7 +705,7 @@ cdef bint rack_check(cchrp word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, B
 
 
 @cython.wraparound(False)
-cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int* base_rack, BOOL_t* spts) nogil:
+cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int* base_rack, BOOL_t* spts): # nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t r = 0
@@ -760,7 +761,7 @@ cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t st
 
 #todo combine
 @cython.wraparound(False)
-cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl) nogil:
+cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl): # nogil:
     cdef:
         bint is_col = False
         Py_ssize_t nlen = Settings.shape[is_col]
@@ -819,12 +820,12 @@ cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl) nogil:
 #cdef loi
 
 
-# @cython.binding(True)
-# @cython.linetrace(True)
-# @cython.wraparound(False)
-# cpdef void parse_nodes(N nodes[MAX_NODES], STR_t[:, ::1] sw, SIZE_t[::1] swlens, bint is_col) except *:
+@cython.binding(True)
+@cython.linetrace(True)
 @cython.wraparound(False)
-cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col) nogil:
+cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col):
+# @cython.wraparound(False)
+# cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col): # nogil:
     cdef:
         Py_ssize_t t
         Py_ssize_t nlen = Settings.shape[is_col]
@@ -929,7 +930,7 @@ cdef str _print_node_range(
 """
 
 
-cdef void print_board(uchr[:, ::1] nodes, Letter_List lets) nogil:
+cdef void print_board(uchr[:, ::1] nodes, Letter_List lets): # nogil:
     cdef:
         Py_ssize_t r, c, l, rown, coln
 
@@ -1000,8 +1001,9 @@ cdef int mycmp(c_void pa, c_void pb) nogil:
     return 0
 
 
+
 #[:]
-cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words) nogil:
+cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words): # nogil:
     # todo mark blanks
 
     if words.len == 0:
@@ -1154,7 +1156,11 @@ cdef void solve(str dictionary) except *:
 
     words = frozenset(wordlist)
 
-    cdef BOOL_t blanks = Settings.rack[bl]
+    cdef BOOL_t blanks = Settings.rack[BL]
+
+    if blanks > MAX_BL:
+        loc(f'Blanks greater than allowed (found {blanks}, max {MAX_BL})')
+        sys.exit(1)
 
     search_words = get_sw(wordlist, blanks)
 

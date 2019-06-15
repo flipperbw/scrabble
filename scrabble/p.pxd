@@ -48,8 +48,6 @@ ctypedef packed struct WordDict_List:
     Py_ssize_t len
 
 
-cdef void sol(WordDict wd, char* buff) nogil
-
 #ctypedef long valid_let_t[MAX_ORD][2]
 
 # cdef packed struct multiplier_t:
