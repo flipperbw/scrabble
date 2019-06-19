@@ -20,6 +20,8 @@ def parse_args() -> 'Namespace':
         version=__version__
     )
 
+    # TODO nargs
+
     parser.add_argument('filename', type=str, default='',
         help='File path for the image')
 

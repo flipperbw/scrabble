@@ -3106,6 +3106,7 @@ static int *__pyx_vp_8scrabble_6logger_lo_lvl = 0;
 #define __pyx_v_8scrabble_6logger_lo_lvl (*__pyx_vp_8scrabble_6logger_lo_lvl)
 static int (*__pyx_f_8scrabble_6logger_can_log)(Py_UNICODE); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_lov)(PyObject *); /*proto*/
+static void (*__pyx_f_8scrabble_6logger_low)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_los)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_loe)(PyObject *); /*proto*/
 static void (*__pyx_f_8scrabble_6logger_loc)(PyObject *); /*proto*/
@@ -13123,17 +13124,17 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
   /* "scrabble/p.pyx":1228
  *     cdef bint is_col
  * 
- *     los('Solving...\n')             # <<<<<<<<<<<<<<
+ *     low('Solving...\n')             # <<<<<<<<<<<<<<
  * 
  *     if full.new_game:
  */
-  __pyx_f_8scrabble_6logger_los(__pyx_kp_u_Solving);
+  __pyx_f_8scrabble_6logger_low(__pyx_kp_u_Solving);
 
   /* "scrabble/p.pyx":1230
- *     los('Solving...\n')
+ *     low('Solving...\n')
  * 
  *     if full.new_game:             # <<<<<<<<<<<<<<
- *         los(' = Fresh game = ')
+ *         low(' = Fresh game = ')
  *         parse_new(full.nodesnv[(Settings.shape[0] // 2)], sw, swlens, swl)
  */
   __pyx_t_5 = (__pyx_v_full->new_game != 0);
@@ -13142,15 +13143,15 @@ static void __pyx_f_8scrabble_1p_solve(PyObject *__pyx_v_dictionary) {
     /* "scrabble/p.pyx":1231
  * 
  *     if full.new_game:
- *         los(' = Fresh game = ')             # <<<<<<<<<<<<<<
+ *         low(' = Fresh game = ')             # <<<<<<<<<<<<<<
  *         parse_new(full.nodesnv[(Settings.shape[0] // 2)], sw, swlens, swl)
  *         #parse_new(full.nodesnv[:, (Settings.shape[1] // 2)], sw, swlens, swl, True)
  */
-    __pyx_f_8scrabble_6logger_los(__pyx_kp_u_Fresh_game);
+    __pyx_f_8scrabble_6logger_low(__pyx_kp_u_Fresh_game);
 
     /* "scrabble/p.pyx":1232
  *     if full.new_game:
- *         los(' = Fresh game = ')
+ *         low(' = Fresh game = ')
  *         parse_new(full.nodesnv[(Settings.shape[0] // 2)], sw, swlens, swl)             # <<<<<<<<<<<<<<
  *         #parse_new(full.nodesnv[:, (Settings.shape[1] // 2)], sw, swlens, swl, True)
  * 
@@ -13175,10 +13176,10 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
     __pyx_t_12.data = NULL;
 
     /* "scrabble/p.pyx":1230
- *     los('Solving...\n')
+ *     low('Solving...\n')
  * 
  *     if full.new_game:             # <<<<<<<<<<<<<<
- *         los(' = Fresh game = ')
+ *         low(' = Fresh game = ')
  *         parse_new(full.nodesnv[(Settings.shape[0] // 2)], sw, swlens, swl)
  */
     goto __pyx_L16;
@@ -13222,7 +13223,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
  *             search_rows = list(range(Settings.shape[0]))
  *             search_cols = list(range(Settings.shape[1]))             # <<<<<<<<<<<<<<
  *             if can_log('s'):
- *                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
+ *                 low('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
  */
       __pyx_t_1 = PyInt_FromSsize_t((__pyx_v_8scrabble_1p_Settings->shape[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1238, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
@@ -13239,7 +13240,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
  *             search_rows = list(range(Settings.shape[0]))
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):             # <<<<<<<<<<<<<<
- *                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
+ *                 low('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
  * 
  */
       __pyx_t_6 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
@@ -13248,7 +13249,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
         /* "scrabble/p.pyx":1240
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):
- *                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))             # <<<<<<<<<<<<<<
+ *                 low('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
@@ -13267,14 +13268,14 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
         __pyx_t_4 = PyUnicode_Format(__pyx_kp_u_Checking_all_lines_2i_x_2i, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1240, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_f_8scrabble_6logger_los(__pyx_t_4);
+        __pyx_f_8scrabble_6logger_low(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
         /* "scrabble/p.pyx":1239
  *             search_rows = list(range(Settings.shape[0]))
  *             search_cols = list(range(Settings.shape[1]))
  *             if can_log('s'):             # <<<<<<<<<<<<<<
- *                 los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
+ *                 low('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
  * 
  */
       }
@@ -13311,7 +13312,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
  *             search_rows = _s.SEARCH_NODES[0]
  *             search_cols = _s.SEARCH_NODES[1]             # <<<<<<<<<<<<<<
  *             if can_log('s'):
- *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
+ *                 low(f'Checking custom lines ({search_rows}, {search_cols})...')
  */
       __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_8scrabble_1p__s, __pyx_n_s_SEARCH_NODES); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1244, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
@@ -13326,7 +13327,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
  *             search_rows = _s.SEARCH_NODES[0]
  *             search_cols = _s.SEARCH_NODES[1]
  *             if can_log('s'):             # <<<<<<<<<<<<<<
- *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
+ *                 low(f'Checking custom lines ({search_rows}, {search_cols})...')
  * 
  */
       __pyx_t_6 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
@@ -13335,7 +13336,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
         /* "scrabble/p.pyx":1246
  *             search_cols = _s.SEARCH_NODES[1]
  *             if can_log('s'):
- *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')             # <<<<<<<<<<<<<<
+ *                 low(f'Checking custom lines ({search_rows}, {search_cols})...')             # <<<<<<<<<<<<<<
  * 
  *         is_col = False
  */
@@ -13372,14 +13373,14 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
         __pyx_t_3 = __Pyx_PyUnicode_Join(__pyx_t_4, 5, __pyx_t_7, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1246, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_f_8scrabble_6logger_los(__pyx_t_3);
+        __pyx_f_8scrabble_6logger_low(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
         /* "scrabble/p.pyx":1245
  *             search_rows = _s.SEARCH_NODES[0]
  *             search_cols = _s.SEARCH_NODES[1]
  *             if can_log('s'):             # <<<<<<<<<<<<<<
- *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
+ *                 low(f'Checking custom lines ({search_rows}, {search_cols})...')
  * 
  */
       }
@@ -13387,7 +13388,7 @@ __pyx_f_8scrabble_1p_parse_new(__pyx_t_12, __pyx_v_sw, __pyx_v_swlens, __pyx_v_s
     __pyx_L17:;
 
     /* "scrabble/p.pyx":1248
- *                 los(f'Checking custom lines ({search_rows}, {search_cols})...')
+ *                 low(f'Checking custom lines ({search_rows}, {search_cols})...')
  * 
  *         is_col = False             # <<<<<<<<<<<<<<
  *         for ir in search_rows:
@@ -33278,6 +33279,7 @@ static int __Pyx_modinit_function_import_code(void) {
   __pyx_t_1 = PyImport_ImportModule("scrabble.logger"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "can_log", (void (**)(void))&__pyx_f_8scrabble_6logger_can_log, "int (Py_UNICODE)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "lov", (void (**)(void))&__pyx_f_8scrabble_6logger_lov, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "low", (void (**)(void))&__pyx_f_8scrabble_6logger_low, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "los", (void (**)(void))&__pyx_f_8scrabble_6logger_los, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "loe", (void (**)(void))&__pyx_f_8scrabble_6logger_loe, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "loc", (void (**)(void))&__pyx_f_8scrabble_6logger_loc, "void (PyObject *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)

@@ -10,7 +10,7 @@ from libc.stdlib cimport qsort, malloc, free
 
 #from scrabble import logger as log
 from scrabble cimport logger as log
-from scrabble.logger cimport can_log, los, lov, loe, loc, clos
+from scrabble.logger cimport can_log, los, low, lov, loe, loc, clos
 from scrabble.utils cimport print_board_clr, print_board_top, print_board_btm
 
 cdef object json, pickle, sys, np, Path, _s
@@ -1225,10 +1225,10 @@ cdef void solve(str dictionary) except *:
     cdef Py_ssize_t ir, ic
     cdef bint is_col
 
-    los('Solving...\n')
+    low('Solving...\n')
 
     if full.new_game:
-        los(' = Fresh game = ')
+        low(' = Fresh game = ')
         parse_new(full.nodesnv[(Settings.shape[0] // 2)], sw, swlens, swl)
         #parse_new(full.nodesnv[:, (Settings.shape[1] // 2)], sw, swlens, swl, True)
 
@@ -1237,13 +1237,13 @@ cdef void solve(str dictionary) except *:
             search_rows = list(range(Settings.shape[0]))
             search_cols = list(range(Settings.shape[1]))
             if can_log('s'):
-                los('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
+                low('Checking all lines (%2i x %2i)...' % (Settings.shape[0], Settings.shape[1]))
 
         else:
             search_rows = _s.SEARCH_NODES[0]
             search_cols = _s.SEARCH_NODES[1]
             if can_log('s'):
-                los(f'Checking custom lines ({search_rows}, {search_cols})...')
+                low(f'Checking custom lines ({search_rows}, {search_cols})...')
 
         is_col = False
         for ir in search_rows:
