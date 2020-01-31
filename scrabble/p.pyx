@@ -104,7 +104,7 @@ cdef CSettings Settings = CSettings()
 
 # *
 @cython.wraparound(False)
-cdef void sol(WordDict wd, char* buff): # nogil:
+cdef void sol(WordDict wd, char* buff) except *: # nogil:
     cdef Letter lf = wd.letters.l[0]
     cdef Letter ll = wd.letters.l[wd.letters.len - 1]
 
@@ -335,7 +335,7 @@ cdef class Board:
 
 
     @cython.wraparound(False)
-    cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c):
+    cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c) except *:
         cdef Node node = self.nodes[r, c]
 
         if r > 0:
@@ -359,7 +359,7 @@ cdef class Board:
                 node.n.has_edge = True
 
 
-    cdef void _set_adj_words(self, Node n, Py_ssize_t d):
+    cdef void _set_adj_words(self, Node n, Py_ssize_t d) except *:
         cdef:
             Node[:] loop_nodes
             #cnp.ndarray loop_nodes
@@ -423,7 +423,7 @@ cdef class Board:
 
 
     # move to checknodes?
-    cdef void _set_lets(self, Node n):
+    cdef void _set_lets(self, Node n) except *:
         if n.n.has_val:
             n.vlet_view[:, n.n.letter.value] = True
             return
@@ -449,7 +449,7 @@ cdef class Board:
             i_s += 1
 
 
-    cdef bint _check_adj_words(self, uchr i, Node bef, Node aft, str bef_w, str aft_w):
+    cdef bint _check_adj_words(self, uchr i, Node bef, Node aft, str bef_w, str aft_w) except *:
         cdef str new_word
 
         if (bef is None or not bef.n.has_val) and (aft is None or not aft.n.has_val):
@@ -464,7 +464,7 @@ cdef class Board:
         return new_word in Settings.words
 
     @cython.wraparound(False)
-    cdef void _set_map(self, Node[:] nodes, bint is_col):
+    cdef void _set_map(self, Node[:] nodes, bint is_col) except *:
         cdef:
             Py_ssize_t t, l, e, ai1
             Py_ssize_t nlen = nodes.shape[0]
@@ -578,7 +578,7 @@ cdef class Board:
 # @cython.wraparound(False)
 # cpdef void set_word_dict(STR_t[:] ww, Py_ssize_t wl, Node[:] nodes, Letter[:] lets_info, bint is_col, Py_ssize_t start):
 @cython.wraparound(False)
-cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start): # nogil:
+cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t start) except *: # nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t lcnt = 0
@@ -632,7 +632,7 @@ cdef STRU_t calc_pts(Letter_List lets_info, N[:] nodes, bint is_col, Py_ssize_t 
 #todo test nogil more
 
 @cython.wraparound(False)
-cdef bint lets_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col): # nogil:
+cdef bint lets_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bint is_col) except *: # nogil:
 #cdef bint lets_match(STR_t[::1] word, Py_ssize_t wl, valid_let_t[:] vl_list, Py_ssize_t start) nogil:
     cdef Py_ssize_t i
     cdef STR_t nv
@@ -663,7 +663,7 @@ cdef bint lets_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, bi
 
 # todo combine this with below?
 @cython.wraparound(False)
-cdef bint rack_check(cchrp word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, BOOL_t blanks, int* base_rack): # nogil:  # or memview for nvals?
+cdef bint rack_check(cchrp word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, BOOL_t blanks, int* base_rack) except *: # nogil:  # or memview for nvals?
     # todo this vs numpy ssize?
     cdef:
         BOOL_t nval
@@ -705,7 +705,7 @@ cdef bint rack_check(cchrp word, Py_ssize_t wl, bint *nvals, Py_ssize_t start, B
 
 
 @cython.wraparound(False)
-cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int* base_rack, BOOL_t* spts): # nogil:
+cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t start, int* base_rack, BOOL_t* spts) except *: # nogil:
     cdef:
         Py_ssize_t i
         Py_ssize_t r = 0
@@ -761,7 +761,7 @@ cdef Letter_List rack_match(cchrp word, Py_ssize_t wl, N[:] nodes, Py_ssize_t st
 
 #todo combine
 @cython.wraparound(False)
-cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl): # nogil:
+cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl) except *: # nogil:
     cdef:
         bint is_col = False
         Py_ssize_t nlen = Settings.shape[is_col]
@@ -823,7 +823,7 @@ cdef void parse_new(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl): # nogil:
 @cython.binding(True)
 @cython.linetrace(True)
 @cython.wraparound(False)
-cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col):
+cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col) except *:
 # @cython.wraparound(False)
 # cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_col): # nogil:
     cdef:
@@ -912,6 +912,7 @@ cdef void parse_nodes(N[:] nodes, cchr **sw, int* swlens, UINT32_t swl, bint is_
     Settings.node_board.words.len = orig_len
 
 
+# this is for profiling, bug in cProfile
 def _unused(): pass
 
 
@@ -1001,6 +1002,7 @@ cdef int mycmp(c_void pa, c_void pb) nogil:
     return 0
 
 
+# TODO put found words into dict if not exist
 
 #[:]
 cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words): # nogil:
@@ -1014,10 +1016,10 @@ cdef void show_solution(uchr[:, ::1] nodes, WordDict_List words, bint no_words):
         WordDict* best
         Py_ssize_t cut_num
         WordDict* word_list = words.l
-
+   
     qsort(word_list, words.len, sizeof(WordDict), &mycmp)
     best = &word_list[0]
-
+    
     if no_words:  # todo: print xs instead?
         printf('\n<solution hidden> (len: %zu, pts: %i)\n', best.letters.len, best.pts)
         return

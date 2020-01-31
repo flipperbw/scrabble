@@ -44,7 +44,7 @@ ctypedef packed struct WordDict:
     STRU_t pts
 
 ctypedef packed struct WordDict_List:
-    WordDict l[10000]  # todo catch 10000
+    WordDict l[50001]  # todo catch this number, why is anything beyond ~50,600 segfaulting?
     Py_ssize_t len
 
 
@@ -115,11 +115,11 @@ cdef class Board:
 
         bint new_game
 
-    cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c)
-    cdef void _set_adj_words(self, Node n, Py_ssize_t d)
-    cdef void _set_lets(self, Node n)
-    cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w)
-    cdef void _set_map(self, Node[:] nodes, bint is_col)
+    cdef void _set_edge(self, Py_ssize_t r, Py_ssize_t c) except *
+    cdef void _set_adj_words(self, Node n, Py_ssize_t d) except *
+    cdef void _set_lets(self, Node n) except *
+    cdef bint _check_adj_words(self, BOOL_t i, Node bef, Node aft, str bef_w, str aft_w) except *
+    cdef void _set_map(self, Node[:] nodes, bint is_col) except *
 
 
 @cython.final(True)
