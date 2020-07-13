@@ -57,7 +57,7 @@ cdef cnparr UPPER_BLACK = npa([78, 36, 24], UINT16)
 cdef cnparr LOWER_WHITE = npa([230, 230, 230], UINT16)
 cdef cnparr UPPER_WHITE = npa([255, 255, 255], UINT16)
 
-# todo all colors
+# todo all colors, currently taking color, subtract 7 from each num
 cdef cnparr LOWER_BLACK_GR = npa([16, 54, 0], UINT16)
 cdef cnparr UPPER_BLACK_GR = npa([30, 68, 24], UINT16)
 cdef cnparr LOWER_BLACK_PU = npa([52, 0, 66], UINT16)
@@ -68,6 +68,8 @@ cdef cnparr LOWER_BLACK_TE = npa([0, 15, 66], UINT16)
 cdef cnparr UPPER_BLACK_TE = npa([12, 29, 80], UINT16)
 cdef cnparr LOWER_BLACK_BL = npa([8, 35, 51], UINT16)
 cdef cnparr UPPER_BLACK_BL = npa([22, 49, 65], UINT16)
+cdef cnparr LOWER_BLACK_BR = npa([51, 0, 0], UINT16)
+cdef cnparr UPPER_BLACK_BR = npa([65, 13, 10], UINT16)
 
 #sm/big, board/lets, height/wid: start/end
 cdef int _img_cut_range[2][2][2][2]
@@ -321,7 +323,8 @@ cdef Py_UCS4[:, ::1] create_board(cnparr board, bint is_big):
                  cv2_inrange(board, LOWER_BLACK_PU, UPPER_BLACK_PU) + \
                  cv2_inrange(board, LOWER_BLACK_PA, UPPER_BLACK_PA) + \
                  cv2_inrange(board, LOWER_BLACK_TE, UPPER_BLACK_TE) + \
-                 cv2_inrange(board, LOWER_BLACK_BL, UPPER_BLACK_BL)
+                 cv2_inrange(board, LOWER_BLACK_BL, UPPER_BLACK_BL) + \
+                 cv2_inrange(board, LOWER_BLACK_BR, UPPER_BLACK_BR)
     white_mask = cv2_inrange(board, LOWER_WHITE, UPPER_WHITE)
     comb = black_mask + white_mask
 
@@ -359,7 +362,8 @@ cdef list get_rack(BOOL_t[:, :, :] img):
         cv2_inrange(img_base, LOWER_BLACK_PU, UPPER_BLACK_PU) +
         cv2_inrange(img_base, LOWER_BLACK_PA, UPPER_BLACK_PA) +
         cv2_inrange(img_base, LOWER_BLACK_TE, UPPER_BLACK_TE) +
-        cv2_inrange(img_base, LOWER_BLACK_BL, UPPER_BLACK_BL)
+        cv2_inrange(img_base, LOWER_BLACK_BL, UPPER_BLACK_BL) +
+        cv2_inrange(img_base, LOWER_BLACK_BR, UPPER_BLACK_BR)
     )
 
     # cdef cnparr[BOOL_t, ndim=2] gimg = cv2.bitwise_not(black_mask)

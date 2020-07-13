@@ -1,5 +1,6 @@
 _PY=python3
-_PYTHON_CMD=time -p $(_PY) -m
+#_PYTHON_CMD=time -p $(_PY) -m
+_PYTHON_CMD=$(_PY) -m
 
 BUILD=$(_PY) ./setup.py build_ext -i
 
