@@ -1360,8 +1360,8 @@ cdef void cmain(
     cdef Py_ssize_t dx, dy, ds
     cdef Py_UNICODE* do
     cdef char du[2]
-    if can_log('s'):
-        los('Game Board:')
+    if can_log('w'):
+        low('Game Board:')
         print_board_clr(board.base, log.KS_GRN_L)
         if can_log('v'):
             # todo make a func

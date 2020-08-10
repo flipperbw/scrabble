@@ -14640,25 +14640,25 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
   /* "scrabble/p.pyx":1363
  *     cdef Py_UNICODE* do
  *     cdef char du[2]
- *     if can_log('s'):             # <<<<<<<<<<<<<<
- *         los('Game Board:')
+ *     if can_log('w'):             # <<<<<<<<<<<<<<
+ *         low('Game Board:')
  *         print_board_clr(board.base, log.KS_GRN_L)
  */
-  __pyx_t_5 = (__pyx_f_8scrabble_6logger_can_log(0x73) != 0);
+  __pyx_t_5 = (__pyx_f_8scrabble_6logger_can_log(0x77) != 0);
   if (__pyx_t_5) {
 
     /* "scrabble/p.pyx":1364
  *     cdef char du[2]
- *     if can_log('s'):
- *         los('Game Board:')             # <<<<<<<<<<<<<<
+ *     if can_log('w'):
+ *         low('Game Board:')             # <<<<<<<<<<<<<<
  *         print_board_clr(board.base, log.KS_GRN_L)
  *         if can_log('v'):
  */
-    __pyx_f_8scrabble_6logger_los(__pyx_kp_u_Game_Board);
+    __pyx_f_8scrabble_6logger_low(__pyx_kp_u_Game_Board);
 
     /* "scrabble/p.pyx":1365
- *     if can_log('s'):
- *         los('Game Board:')
+ *     if can_log('w'):
+ *         low('Game Board:')
  *         print_board_clr(board.base, log.KS_GRN_L)             # <<<<<<<<<<<<<<
  *         if can_log('v'):
  *             # todo make a func
@@ -14676,7 +14676,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
     __pyx_t_20.data = NULL;
 
     /* "scrabble/p.pyx":1366
- *         los('Game Board:')
+ *         low('Game Board:')
  *         print_board_clr(board.base, log.KS_GRN_L)
  *         if can_log('v'):             # <<<<<<<<<<<<<<
  *             # todo make a func
@@ -14823,7 +14823,7 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
       (void)(puts(__pyx_v_8scrabble_6logger_KS_RES));
 
       /* "scrabble/p.pyx":1366
- *         los('Game Board:')
+ *         low('Game Board:')
  *         print_board_clr(board.base, log.KS_GRN_L)
  *         if can_log('v'):             # <<<<<<<<<<<<<<
  *             # todo make a func
@@ -14861,8 +14861,8 @@ static void __pyx_f_8scrabble_1p_cmain(PyObject *__pyx_v_filename, PyObject *__p
     /* "scrabble/p.pyx":1363
  *     cdef Py_UNICODE* do
  *     cdef char du[2]
- *     if can_log('s'):             # <<<<<<<<<<<<<<
- *         los('Game Board:')
+ *     if can_log('w'):             # <<<<<<<<<<<<<<
+ *         low('Game Board:')
  *         print_board_clr(board.base, log.KS_GRN_L)
  */
     goto __pyx_L15;
